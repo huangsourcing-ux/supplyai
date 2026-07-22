@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
+  "globalEnv": ["APP_ENV", "DATABASE_URL"],
   "ui": "stream",
   "tasks": {
     "build": {

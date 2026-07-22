@@ -7,5 +7,8 @@ Available exports:
 - `@chinasupply/config/eslint/base`
 - `@chinasupply/config/typescript/base`
 - `@chinasupply/config/tailwind/preset`
+- `@chinasupply/config/env/api`
+- `@chinasupply/config/env/web`
+- `@chinasupply/config/env/mobile`
 
 Framework-specific presets will be added with the corresponding application task rather than preselecting unverified framework combinations in M0-T1.

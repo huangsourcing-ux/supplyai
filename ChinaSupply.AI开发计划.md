@@ -63,7 +63,7 @@ chinasupply/
 
 - [ ] **M0-T0 外部账号与标识符（人工前置，最容易拖延，立即启动）**：GitHub 仓库；Vercel / Railway / Cloudflare / MapTiler；Clerk / Sentry / PostHog；**Apple Developer + Google Play Console（审核周期长，不得等到 M4）**；iOS Bundle ID / Android Package Name；域名与 DNS 控制权；Google OAuth 凭据与 Redirect URL；App 名称、图标占位、隐私联系邮箱；账单与 API 配额启用。**法律文案（privacy/terms）为人工交付物，最晚 M3 开工前提供可上线版本。**
 - [x] **M0-T1 Monorepo**：create-turbo + pnpm workspace + packages/config；目录如上。
-- [ ] **M0-T2 环境与配置**：三环境定义落地；.env.example + Zod env 校验；Docker Compose（PostGIS + Redis）；migration release command 流程写入 CI。
+- [x] **M0-T2 环境与配置**：三环境定义落地；.env.example + Zod env 校验；Docker Compose（PostGIS + Redis）；migration release command 流程写入 CI。
 - [ ] **M0-T3 Web 骨架**：create-payload-app 迁入 apps/web；删演示内容；next-intl（en）；接入 Clerk Web Provider/Middleware——仅 staging admin 登录 + role 校验，为 M2 的 Admin API 与 /ops 提供鉴权基础（面向用户的 OAuth/回跳/账户页留 M3）；部署 Vercel（staging 域名）。
 - [ ] **M0-T4 API + Worker 骨架**：nest new + Fastify；`main.ts`/`worker.ts` 双入口；Railway 两个 Service（api/worker）+ Redis provision；BullMQ 消费 `system:ping` 测试任务成功；`/health/live`（无外部依赖）与 `/health/ready`（检查 PG+Redis）；G-4 envelope 拦截器 + 全局 Zod pipe + 错误码枚举。
 - [ ] **M0-T5 移动兼容 Spike（本项目最重要的技术验证）**：Obytes Starter 迁入；验收清单——版本矩阵（Expo/RN/Obytes/MapLibre RN）写入 ADR；New Architecture 确认启用；expo-doctor 通过；iOS+Android dev build 通过；至少一个 Preview 配置可构建；从 mobile 成功导入 packages/schemas、geo、i18n（Metro + pnpm workspace + EAS monorepo workingDirectory 配置生效）；地图渲染点、Polygon、聚合点（不只是底图）；Clerk Expo 登录页接通。

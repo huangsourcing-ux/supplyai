@@ -6,5 +6,5 @@
     "emitDeclarationOnly": true,
     "outDir": "dist"
   },
-  "include": ["eslint/**/*.js", "tailwind/**/*.js"]
+  "include": ["env/**/*.js", "eslint/**/*.js", "tailwind/**/*.js"]
 }

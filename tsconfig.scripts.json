@@ -1,0 +1,9 @@
+{
+  "extends": "@chinasupply/config/typescript/base",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true
+  },
+  "include": ["scripts/**/*.mjs"]
+}

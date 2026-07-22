@@ -56,6 +56,10 @@ test("shared configuration exports loadable presets", async () => {
   );
 
   assert.deepEqual(Object.keys(configPackage.exports).sort(), [
+    "./env/api",
+    "./env/common",
+    "./env/mobile",
+    "./env/web",
     "./eslint/base",
     "./tailwind/preset",
     "./typescript/base",

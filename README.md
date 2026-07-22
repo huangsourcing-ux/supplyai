@@ -25,3 +25,14 @@ pnpm build
 ```
 
 Application scaffolds are intentionally not included in M0-T1. They are introduced by their dedicated M0 task packages.
+
+## Local infrastructure
+
+```bash
+cp .env.example .env
+pnpm infra:up
+pnpm infra:check
+pnpm infra:down
+```
+
+The Compose stack exposes PostGIS and Redis on loopback only and preserves data when stopped. See `docs/operations/environments.md` for the three-environment contract and `docs/operations/migrations.md` for release-command boundaries.

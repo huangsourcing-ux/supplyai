@@ -1,0 +1,54 @@
+name: Reusable migration release command
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        description: Migration schema owner (core or cms)
+        required: true
+        type: string
+      deployment_environment:
+        description: GitHub Environment and APP_ENV value
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    name: Migrate ${{ inputs.target }} (${{ inputs.deployment_environment }})
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.deployment_environment }}
+    concurrency:
+      group: migrations-${{ inputs.deployment_environment }}-${{ inputs.target }}
+      cancel-in-progress: false
+    env:
+      APP_ENV: ${{ inputs.deployment_environment }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run migration release command
+        shell: bash
+        run: |
+          case "${{ inputs.target }}" in
+            core) pnpm release:migrate:core ;;
+            cms) pnpm release:migrate:cms ;;
+            *) echo "target must be core or cms" >&2; exit 64 ;;
+          esac
