@@ -42,7 +42,9 @@ M0-T3 uses one staging-only Vercel project with these settings:
 - Production Branch: `main`
 - Application environment: `APP_ENV=staging` and `NEXT_PUBLIC_APP_ENV=staging`
 - Domain: `https://staging.chinasupply.ai`
-- Source repository: `huangsourcing-ux/supplyai`; automatic Git-triggered deployments remain disabled until M0-T6, so the M0-T3 acceptance deployment is a controlled CLI deployment.
+- Source repository: `huangsourcing-ux/supplyai`; pull requests may build as Vercel Preview deployments for validation, while automatic `main`/production delivery remains deferred to M0-T6. The M0-T3 acceptance deployment remains a controlled CLI deployment.
+
+Because this is a staging-only Vercel project, both Vercel `Production` (the controlled staging deployment from `main`) and `Preview` (pull-request validation) scopes must contain the same real staging values. Vercel target names do not change `APP_ENV`: it remains `staging` in both scopes. Secrets must be copied through Vercel's encrypted environment-variable store and never through repository files or build logs.
 
 All fields from `apps/web/.env.example` must have real staging values before deployment. The database is the Railway staging PostgreSQL database, Clerk uses a Development instance, and R2 uses the `staging` prefix. The production Web project is intentionally deferred to M5-T9.
 
