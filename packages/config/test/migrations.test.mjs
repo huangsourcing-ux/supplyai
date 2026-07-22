@@ -20,16 +20,21 @@ test("migration targets remain separated by schema owner", () => {
   assert.throws(() => getMigrationCommand("all"), /core, cms/);
 });
 
-test("dry-run prints the mapped command without requiring a database", () => {
-  const result = spawnSync(
-    process.execPath,
-    [migrationRunner, "core", "--dry-run"],
-    { cwd: workspaceRoot, encoding: "utf8" },
-  );
+test("dry-run prints mapped commands without requiring a database", () => {
+  for (const [target, expectedCommand] of [
+    ["core", /@chinasupply\/api db:migrate/],
+    ["cms", /@chinasupply\/web cms:migrate/],
+  ]) {
+    const result = spawnSync(
+      process.execPath,
+      [migrationRunner, target, "--dry-run"],
+      { cwd: workspaceRoot, encoding: "utf8" },
+    );
 
-  assert.equal(result.status, 0);
-  assert.match(result.stdout, /@chinasupply\/api db:migrate/);
-  assert.equal(result.stderr, "");
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, expectedCommand);
+    assert.equal(result.stderr, "");
+  }
 });
 
 test("invalid migration targets fail before execution", () => {

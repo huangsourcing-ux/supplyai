@@ -9,3 +9,7 @@ node_modules/
 coverage/
 build/
 dist/
+
+# Payload-generated artifacts are kept in generator-native form.
+apps/web/src/app/(payload)/admin/importMap.js
+apps/web/src/payload-types.ts

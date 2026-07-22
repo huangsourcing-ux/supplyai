@@ -19,6 +19,8 @@ test("migration workflow is reusable only and never deploys applications", async
   assert.ok(workflow.jobs.migrate.environment);
   assert.match(source, /release:migrate:core/);
   assert.match(source, /release:migrate:cms/);
+  assert.match(source, /PAYLOAD_SECRET:.*secrets\.PAYLOAD_SECRET/);
+  assert.match(source, /NEXT_PUBLIC_SITE_URL:.*vars\.NEXT_PUBLIC_SITE_URL/);
   assert.doesNotMatch(source, /\bdeploy\b/i);
   assert.doesNotMatch(source, /workflow_dispatch|\bpush:/);
 });
