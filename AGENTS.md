@@ -1,0 +1,184 @@
+# ChinaSupply.AI 代理协作规范
+
+本文件适用于仓库根目录及其所有子目录。所有编码代理在分析、修改或验收项目前，必须先阅读本文件及任务涉及的已确认文档。
+
+## 1. 已确认文档与优先级
+
+项目当前有三份已冻结/批准执行的文档：
+
+1. `ChinaSupply.AI产品PRD.md`：V1 需求的唯一事实源（v1.1 Frozen / Approved for Implementation）。产品范围、数据模型、API 契约、验收标准以它为准。
+2. `ChinaSupply.AI技术栈-最终冻结版.md`：技术选型与关键架构约定的冻结来源。不得在任务中重新选型。
+3. `ChinaSupply.AI开发计划.md`：批准执行的任务顺序、任务包拆分、环境和 CI 策略。它决定“何时做”，实现细节仍以 PRD 为准。
+
+本文件是上述三份文档的派生摘要，不是独立事实源。本文件与源文档冲突时以源文档为准；任何修订已确认文档的任务，必须在同一任务内同步更新本文件的对应条目。
+
+出现冲突或歧义时：
+
+- 需求和实现细节遵循 PRD；技术选型遵循冻结技术栈；排期与拆分遵循开发计划。
+- 范围以 PRD 为最高优先：技术栈文档中「用途」指向 P1/P2 功能的组件（Vercel AI SDK、AI Chatbot 模板、Resend 询盘邮件等），V1 一律不接入、不安装、不预埋代码。限流按 PRD G-11 属 P0（M1-T6 实现 Throttler + Redis store），不适用技术栈「后期规划」中的延后条款。
+- 不自行猜测、扩展或静默折中。先明确指出对应的 G/F/A/MAP/ADM/N/T 编号和冲突，再由人工确认并先修订已确认文档，之后才改代码。
+- 不以代码现状反向覆盖冻结文档，也不把 P1/P2 功能提前塞入 V1。
+
+## 2. 产品范围
+
+ChinaSupply.AI 面向海外 B 端买家，V1 核心路径是：搜索产品 → 定位中国产业带 → 浏览工厂 → 收藏 → 单个工厂导航。首发用户界面为英语，同时保留扩展语言的结构。
+
+V1 明确不做：站内询盘/聊天、AI 采购助手、工厂对比、多工厂考察路线规划、第三方服务市场、支付/会员、展会模块、用户生成内容。P1/P2 只保留路线图，不得因“顺手”而实现。
+
+当前执行起点是 `M0-T0 → M0-T1`。M0 只建设工程基座并完成技术验证，不写业务功能。外部账号、法律文案、真机测试、数据录入和人工验收属于人工前置或人工门禁；代理不得伪造其完成状态。
+
+## 3. 工作方式
+
+- 一次只执行一个开发计划中的 T 编号任务包。任务应保持 0.5–2 个工程日、单一验收目标、可独立回滚，并尽量不要同时修改 Web、API 和 Mobile。
+- 开始任务前，读取：任务包描述、PRD 第 2 节全局约定、任务涉及的 PRD 章节，以及相关 schema/生成文件。
+- 先检查现有工作树并保留用户的无关改动。不要覆盖、回滚或删除不属于当前任务的内容。
+- 只修改完成当前验收目标所需的文件。发现相邻问题可以报告，但未经批准不要扩大范围。
+- 代码、测试、配置和文档必须在同一任务内保持一致。完成后给出实际运行的验证命令、结果和任何无法自动验证的人工项。
+- 只有实际满足任务包验收和阶段出口条件，才可勾选开发计划中的复选框；部分完成不得标记完成。
+
+## 4. 目标仓库结构
+
+M0-T1 建立 pnpm + Turborepo 单仓：
+
+```text
+apps/
+  web/          Next.js + React + TypeScript + Payload + Tailwind
+  mobile/       React Native + Expo Development Build + Expo Router + NativeWind
+  api/          NestJS + Fastify；main.ts 为 HTTP，worker.ts 为 BullMQ Worker
+packages/
+  schemas/      共享 Zod schema；API 输入/响应契约的唯一来源
+  api-client/   从 OpenAPI 经 Orval 生成，禁止手工修改
+  geo/          坐标转换与导航 URL 构建
+  i18n/         跨端文案资源
+  analytics/    PostHog 统一封装；未同意时完全 no-op
+  config/       ESLint、TypeScript、Tailwind 等共享配置
+```
+
+模板落地后先删除无关演示代码，再实现业务；不要在演示逻辑上叠加产品代码。
+
+## 5. 冻结技术栈
+
+- Web：Next.js、React、TypeScript、Tailwind CSS、next-intl、MapLibre GL JS。
+- Mobile：React Native、Obytes Starter、Expo Development Build、Expo Router、NativeWind、React Query、Zustand、i18next、MapLibre React Native v11。
+- API/Worker：NestJS + Fastify、Drizzle ORM、Redis + BullMQ。
+- 数据：PostgreSQL + PostGIS；首版搜索使用 PostgreSQL FTS + `pg_trgm`。
+- CMS：Payload，仅管理内容；与主业务共用 PostgreSQL，但迁移边界严格隔离。
+- 基础设施：MapTiler Cloud Flex、Cloudflare R2/CDN、Clerk、Resend、Sentry、PostHog；Web/Payload 部署到 Vercel，API/Worker 部署到 Railway 美区。
+- CI/CD：GitHub Actions + EAS Build。
+
+未经已确认文档修订，不得替换框架、ORM、数据库、认证、地图、CMS、存储、部署平台或引入“后期规划”组件。Expo/React Native/Obytes/MapLibre 的兼容组合必须在 M0-T5 验证后锁定；V1 期间只允许安全修复与阻塞性 bugfix，不做框架大版本升级。
+
+## 6. 不可破坏的全局约定
+
+### 6.1 地理与坐标
+
+- 数据库和公开 API 统一使用 WGS-84；GeoJSON 坐标顺序固定为 `[lng, lat]`，geometry SRID 固定为 4326。
+- 高德/腾讯来源坐标入库前从 GCJ-02 转为 WGS-84。禁止 WGS-84 与 GCJ-02 混存到同一业务坐标列。
+- 空间查询通过 Drizzle `sql` 模板执行原生 PostGIS SQL。
+- 导航目标所需坐标系不得凭经验写死。F-6 的实现被 M0-T9 真机验证门阻塞；验证完成后只在 `packages/geo/navigation` 的纯函数和测试夹具中固化结论。
+- 导航发布前必须由人工在真机验证落点误差小于 50m；代理不能用模拟器或单测替代该结论。
+- Web 和 App 使用同一份自行维护的 MapLibre style JSON，只引用 MapTiler 瓦片源；不要直接依赖可能漂移的托管样式。MapTiler key 分别按 Web 域名、iOS Bundle ID 和 Android Package 限制。
+
+### 6.2 数据与 Schema 所有权
+
+- Drizzle/NestJS 是 `regions`、`categories`、`clusters`、`factories`、`users`、`favorites`、`webhook_events` 等核心业务表的唯一 Schema Owner。
+- Payload 只拥有 `articles`、`media`、`cms_users` 等内容表。Payload migration 禁止创建、修改或删除核心业务表。
+- Drizzle migration 与 Payload migration 必须分开生成、审查和执行。
+- 表名使用 snake_case 复数；内部业务实体 ID 使用 21 位 nanoid。例外仅有两处：`users.id = Clerk user id`、`webhook_events.id = Clerk 事件 id（svix id）`。禁止把自增整数暴露到 API。
+- 数据库时间使用 UTC `timestamptz`，展示时才本地化。
+- 可翻译数据库字段使用 PRD 规定的 JSONB 结构。所有面向用户的静态字符串必须走 i18n key；不得把英文文案直接散落在组件中。
+- `factoryCount` 实时计算，不写入 `clusters.stats`。
+- `search_text_en`/`search_text_zh` 必须通过同一共享函数在写入、更新、导入三条路径生成；类目名称或 aliases 变化时触发 `regenerate:search-text` 更新关联实体。
+
+### 6.3 API 契约
+
+- 所有业务 API 位于 `/api/v1`，并使用统一 envelope：成功为 `{ data, error: null, meta }`，失败为 `{ data: null, error: { code, message, details }, meta: null }`。HTTP 状态码必须具有正确语义。
+- V1 错误码限定为：`VALIDATION_ERROR`、`NOT_FOUND`、`UNAUTHORIZED`、`FORBIDDEN`、`RATE_LIMITED`、`INTERNAL`。
+- 所有 API 输入使用 `packages/schemas` 中的 Zod schema 校验。Zod schema 与路由元数据派生 OpenAPI，再由 Orval 派生 API client、TanStack Query hooks 和 MSW mock。
+- 禁止手改 `packages/api-client` 或其他生成产物。修改源 schema/路由元数据后重新生成，并确保 CI 的生成漂移检查通过。
+- 列表使用不透明 Base64URL cursor，默认 limit 20、最大 100。公开 clusters/factories 按 `published_at DESC, id DESC`，favorites 按 `created_at DESC, id DESC`，Admin 按 `updated_at DESC, id DESC`。categories、search、MAP-* 不使用 cursor。
+- MAP-* 也必须包在 envelope 内，不能返回裸 FeatureCollection；地图属性严格保持 PRD 规定的轻量字段。MAP-3 最多 5000 点，截断时返回 `meta.truncated: true`。
+- MAP-* 公开读响应经 Cloudflare CDN 缓存 1 小时；publish/unpublish 后按相关 URL 主动 purge。
+- 公开 API 绝不返回 draft 数据。收藏 POST/DELETE、Clerk webhook 和导入重跑必须遵守 PRD 中的幂等语义。
+
+### 6.4 鉴权、安全与隐私
+
+- 公开读接口无需登录；用户写接口验证 Clerk JWT；ADM-* 和 `/ops/**` 还必须验证 Clerk `publicMetadata` 中的 `admin` role。
+- Clerk webhook 必须使用 raw body 做 Svix 验签，并通过 `webhook_events` 去重。用户删除后软删 users、硬删 favorites，已删除用户再次访问返回 401。
+- 匿名搜索和地图接口按真实客户端 IP 限流并缓存；写接口按用户限流。多实例限流使用 Redis store，429 返回 `RATE_LIMITED`。
+- R2 数据库字段只存 `objectKey`，完整 CDN URL 由 API 拼接。上传使用服务端生成路径的短时预签名 URL，仅允许 JPEG/PNG/WebP 且声明不超过 10MB；上传后 HEAD 复验类型/大小，实体引用时再验证对象存在且属于当前环境。
+- 不得硬删除产业带或工厂；使用 draft/published 状态，避免收藏、文章引用和溯源失效。
+- PostHog 必须经过 `packages/analytics`。Web 用户未同意时不加载且完全 no-op；搜索埋点先去除邮箱/电话模式并把 query 截断至 100 字符；`map_moved` 每 10 秒最多记录一次。
+- 地图必须始终显示 MapTiler 和 © OpenStreetMap contributors attribution。
+
+## 7. 环境、迁移与数据隔离
+
+- Local：Docker PostGIS + Redis、Clerk Dev、R2 dev prefix、localhost。
+- Staging：Railway staging DB、Clerk Dev instance、R2 staging prefix、`staging.*`。
+- Production：独立生产 DB、Clerk Production instance、production bucket、正式域名。
+- 所有应用提供完整 `.env.example`，启动时用 Zod 校验环境变量；密钥不得提交到仓库、日志、fixture 或客户端 bundle。
+- Drizzle migration 作为部署前独立 release command，不得在应用启动时隐式执行；失败时不得启动新版本。生产环境不得自动 seed 或写入测试/合成数据。
+- 种子和合成数据只能进入 staging。production 数据默认 draft，只迁移 `verified` 且 `curated` 的 canonical 数据，并按开发计划 M5-T8a 使用 manifest、校验和和人工抽查后发布。
+- 导入必须经 R2 中转、Zod 逐行校验、坐标转换、按 slug upsert、搜索列生成，并把逐行失败报告写回 R2。不要依赖 CLI 与 Worker 的共享文件系统。
+- 每日备份使用与生产 PostgreSQL 主版本一致且锁定的 `pg_dump`，加密后写入 R2，保留 30 天；只有人工记录的恢复演练成功才算验收。
+
+## 8. 实现质量与验证
+
+每个任务必须包含与风险相称的测试。默认完成门槛为：
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test:unit
+pnpm build
+```
+
+`pnpm build` 覆盖 Web/Payload/API/Worker，不代表原生 iOS/Android 构建。涉及 Mobile 时另运行：
+
+```bash
+pnpm mobile:check
+```
+
+它应覆盖 expo-doctor、TypeScript、Expo 配置校验和 export bundle 检查。原生编译只由 EAS Preview/Production 承担。
+
+按任务类型追加验证：
+
+- API：testcontainers PostgreSQL + PostGIS + Redis e2e；校验 envelope、Zod details、鉴权、draft 隔离、cursor 无重复/遗漏、幂等和 429。
+- Geo：公开已知坐标对的转换误差断言；导航 URL 使用 M0-T9 人工确认的夹具。
+- Web：Playwright；PR 中使用固定 MSW 与 style/tile fixture，staging 再做真实 MapTiler smoke test。
+- Mobile：单测 + Maestro 核心路径；真机地图、导航和商店行为仍需人工验收。
+- 性能：MAP-1 gzip 小于 500KB；MAP-3 5000 点 p95 小于 500ms；其他 API p95 小于 300ms；Web 地图主页美国网络 LCP 小于 2.5s。
+- SEO/可访问性：clusters、factories、guides 使用 SSR/ISR；自动 sitemap、预留 hreflang；交互元素键盘可达，图片有 alt；目标页 Lighthouse SEO ≥ 90。
+
+若仓库尚未完成 M0-T1、相关脚本或应用不存在，应如实说明“尚未建立”，不能伪造命令通过。
+
+## 9. 阶段门禁与人工事项
+
+- M0-T5 未产出并验证移动版本矩阵前，不宣称 Expo/MapLibre 兼容性完成。
+- M0-T9 未完成五城市、双平台真机验证前，不实现或确认 F-6 导航坐标模板，M4 导航任务不得开工。
+- 法律文案、外部服务账号、域名、商店账号、Bundle ID/Package Name 和生产凭据缺失时，记录为人工前置，不自行生成虚假值。
+- 发布、production migration、production 数据迁移、EAS Submit、Cloudflare purge 等会影响外部或生产状态的操作，只有任务明确授权时才执行，并保留 smoke test 与回滚记录。
+- Go/No-Go 必须逐条核对开发计划清单；首发门槛为至少 30 个产业带和 200 家工厂，全部经 `/ops` 人工 verify 后 publish。
+
+## 10. 完成报告与开发日志
+
+完成任务时，简洁报告：
+
+1. 完成的 T 编号及对应 PRD 条目。
+2. 修改的主要文件和外部行为变化。
+3. 实际运行的检查与结果。
+4. 尚需人工完成的真机、账号、数据或上线验证。
+5. 未满足的验收项、阻塞或文档歧义；不要把它们隐藏为“后续优化”。
+
+同时必须在仓库根目录 `开发日志.md` 末尾追加一条记录（文件不存在时先创建）。日志与代码在同一 PR/提交中一起交付，缺少日志条目的任务不算完成。只追加、不修改或删除历史条目。每条格式：
+
+```markdown
+## YYYY-MM-DD ｜ M?-T?（任务名）
+
+- 内容：本次实现/修改了什么，对应的 PRD 条目（G/F/A/MAP/ADM/N 编号）
+- 主要文件：新增或修改的关键文件与外部行为变化
+- 验证：实际运行的命令与结果（未运行或失败的如实写明）
+- 遗留/人工项：未满足的验收项、阻塞、待人工完成的事项（无则写「无」）
+```
+
+日期使用当天真实日期；不得为未执行的任务补写日志，也不得用日志掩盖未完成的验收项。

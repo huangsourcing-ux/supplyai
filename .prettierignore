@@ -1,0 +1,11 @@
+AGENTS.md
+ChinaSupply.AI产品PRD.md
+ChinaSupply.AI技术栈-最终冻结版.md
+ChinaSupply.AI开发计划.md
+开发日志.md
+
+node_modules/
+.turbo/
+coverage/
+build/
+dist/

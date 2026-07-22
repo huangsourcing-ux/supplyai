@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Test and build output
+coverage/
+.turbo/
+.next/
+out/
+build/
+dist/
+
+# Local tooling
+.vercel/
+.expo/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Operating system
+.DS_Store
+*.pem

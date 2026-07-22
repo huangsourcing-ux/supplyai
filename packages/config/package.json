@@ -1,0 +1,28 @@
+{
+  "name": "@chinasupply/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./tailwind/preset": "./tailwind/preset.js",
+    "./typescript/base": "./typescript/base.json"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint .",
+    "test:unit": "node --test test/*.test.mjs",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-turbo": "^2.7.1",
+    "typescript-eslint": "^8.50.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "typescript": "5.9.2"
+  }
+}

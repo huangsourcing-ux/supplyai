@@ -1,0 +1,10 @@
+{
+  "extends": "./typescript/base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist"
+  },
+  "include": ["eslint/**/*.js", "tailwind/**/*.js"]
+}
