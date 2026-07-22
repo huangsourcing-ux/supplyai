@@ -13,6 +13,14 @@ import {
 
 const secretSchema = z.string().min(8);
 
+const apiRuntimeShape = {
+  APP_ENV: deploymentEnvironmentSchema,
+  PORT: portSchema,
+  DATABASE_URL: networkUrlSchema,
+  REDIS_URL: networkUrlSchema,
+  WEB_ORIGIN: networkUrlSchema,
+};
+
 /** @type {readonly ["DATABASE_URL", "REDIS_URL"]} */
 const remoteConnectionFields = ["DATABASE_URL", "REDIS_URL"];
 
@@ -32,13 +40,25 @@ const remoteSecretFields = [
   "SENTRY_DSN",
 ];
 
+export const apiRuntimeEnvSchema = z
+  .object(apiRuntimeShape)
+  .superRefine((environment, context) => {
+    if (environment.APP_ENV === "local") {
+      return;
+    }
+
+    for (const field of remoteConnectionFields) {
+      requireRemoteUrl(environment[field], field, context);
+    }
+
+    requireRemoteUrl(environment.WEB_ORIGIN, "WEB_ORIGIN", context, {
+      httpsOnly: true,
+    });
+  });
+
 export const apiEnvSchema = z
   .object({
-    APP_ENV: deploymentEnvironmentSchema,
-    PORT: portSchema,
-    DATABASE_URL: networkUrlSchema,
-    REDIS_URL: networkUrlSchema,
-    WEB_ORIGIN: networkUrlSchema,
+    ...apiRuntimeShape,
     CLERK_SECRET_KEY: z.string().min(10),
     CLERK_WEBHOOK_SECRET: z.string().startsWith("whsec_").min(10),
     R2_ACCOUNT_ID: secretSchema,
@@ -85,4 +105,15 @@ export const apiEnvSchema = z
  */
 export function parseApiEnv(source) {
   return parseEnvironment(apiEnvSchema, source, "API");
+}
+
+/**
+ * Validates only the dependencies used by the M0 API/Worker runtime. Provider
+ * modules validate their own environment slice when they are introduced.
+ *
+ * @param {unknown} source
+ * @returns {z.infer<typeof apiRuntimeEnvSchema>}
+ */
+export function parseApiRuntimeEnv(source) {
+  return parseEnvironment(apiRuntimeEnvSchema, source, "API runtime");
 }

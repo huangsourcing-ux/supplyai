@@ -29,7 +29,7 @@ The locked `postgis/postgis:17-3.5` image currently publishes an amd64 manifest.
 - `@chinasupply/config/env/web` validates Payload/Next.js server values and explicitly public Web values.
 - `@chinasupply/config/env/mobile` accepts only the documented `EXPO_PUBLIC_*` application values and rejects known server secrets.
 
-The Web bootstrap calls `parseWebEnv` from `next.config.ts`, so `next dev`, `next build`, and `next start` fail before startup when the Web contract is invalid. M0-T4 and M0-T5 must add the equivalent API and Mobile bootstrap calls. Validation failures report field names only; values must never be logged.
+The Web bootstrap calls `parseWebEnv` from `next.config.ts`, so `next dev`, `next build`, and `next start` fail before startup when the Web contract is invalid. The API and Worker call `parseApiRuntimeEnv` before their Nest modules finish booting; it validates the M0 runtime dependencies while later provider modules retain their own complete configuration contract. M0-T5 must add the equivalent Mobile bootstrap call. Validation failures report field names only; values must never be logged.
 
 Real secrets live in the deployment platform or GitHub Environment. `.env.example` files contain local defaults and explicit placeholders only. No `.env`, `.env.local`, staging credential, or production credential may be committed.
 
@@ -51,3 +51,26 @@ All fields from `apps/web/.env.example` must have real staging values before dep
 The Clerk Development instance must be put in Restricted mode with public sign-up disabled. Configure the session token claim as `{"metadata":"{{user.public_metadata}}"}`, give invited administrators `{"role":"admin"}` in Public Metadata, and allow only the staging origin and redirect URL. `/admin` does not use Clerk; it has an independent Payload `cms_users` account.
 
 Do not mark M0-T3 complete until the CMS release migration has run against Railway staging, the Vercel deployment is healthy over HTTPS, and anonymous, non-admin, and admin `/ops` access have all been smoke-tested.
+
+## API and Worker staging contract
+
+M0-T4 uses the staging-only Railway project `chinasupply-staging`. Railway's
+default internal environment label remains `production`, but both application
+services explicitly run with `APP_ENV=staging`; this project and its resources
+must not be treated as the real production environment.
+
+- `api`, `worker`, PostGIS, and Redis run as separate SFO services.
+- `DATABASE_URL` and `REDIS_URL` are Railway reference variables; values are not
+  copied into source or logs.
+- The API and Worker share the root Railpack build, while `SERVICE_ROLE` selects
+  `start:api` or `start:worker` at runtime.
+- API deployment health is gated by `/health/ready`. Its temporary validation
+  domain is `https://api-production-05a7.up.railway.app`; M0-T10 owns the final
+  Cloudflare-proxied staging API hostname.
+- Worker has no public domain. Queue acceptance is performed by running
+  `system:ping` inside the deployed API container and confirming completion in
+  the separate Worker logs.
+
+The controlled CLI deployment does not connect either service to GitHub.
+Automatic staging deployment remains M0-T6, and production resources remain
+M5-T9.

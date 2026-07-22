@@ -5,7 +5,7 @@ import test from "node:test";
 import { parseEnv } from "node:util";
 import { fileURLToPath } from "node:url";
 
-import { parseApiEnv } from "../env/api.js";
+import { parseApiEnv, parseApiRuntimeEnv } from "../env/api.js";
 import { parseMobileEnv } from "../env/mobile.js";
 import { parseWebEnv } from "../env/web.js";
 
@@ -88,6 +88,23 @@ test("staging rejects provider placeholder values", async () => {
       assert.match(error.message, /SENTRY_DSN/);
       return true;
     },
+  );
+});
+
+test("API runtime validation requires current dependencies without future providers", async () => {
+  const api = await readExample("apps/api/.env.example");
+  const runtimeOnly = {
+    APP_ENV: "staging",
+    PORT: api.PORT,
+    DATABASE_URL: "postgresql://user:pass@db.staging.invalid/chinasupply",
+    REDIS_URL: "redis://redis.staging.invalid:6379",
+    WEB_ORIGIN: "https://staging.invalid",
+  };
+
+  assert.equal(parseApiRuntimeEnv(runtimeOnly).APP_ENV, "staging");
+  assert.throws(
+    () => parseApiRuntimeEnv({ ...runtimeOnly, REDIS_URL: api.REDIS_URL }),
+    /API runtime environment validation failed: REDIS_URL/,
   );
 });
 
