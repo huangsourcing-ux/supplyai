@@ -1,0 +1,26 @@
+{
+  "Metadata": {
+    "title": "ChinaSupply.AI",
+    "description": "Find Chinese industrial clusters and verified factories."
+  },
+  "Home": {
+    "eyebrow": "Engineering foundation",
+    "title": "ChinaSupply.AI Web is ready for product development.",
+    "description": "The Next.js, Payload, internationalization, and operations authentication foundations are connected.",
+    "payloadAdmin": "Open Payload Admin",
+    "operations": "Open operations access"
+  },
+  "Operations": {
+    "signInEyebrow": "Restricted staging access",
+    "signInTitle": "Operations sign in",
+    "signInDescription": "Sign in with an invited Clerk account. Access also requires the admin role.",
+    "forbiddenEyebrow": "Access denied",
+    "forbiddenTitle": "Administrator role required",
+    "forbiddenDescription": "Your Clerk account is signed in but does not have the required administrator role.",
+    "backHome": "Return home",
+    "readyEyebrow": "Authentication probe",
+    "readyTitle": "Operations access is ready",
+    "readyDescription": "This placeholder verifies Clerk authentication and the administrator role. Operational data tools arrive in M2-T7.",
+    "signedInAs": "Authenticated Clerk user"
+  }
+}

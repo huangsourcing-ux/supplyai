@@ -1,6 +1,14 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
-  "globalEnv": ["APP_ENV", "DATABASE_URL"],
+  "globalEnv": [
+    "APP_ENV",
+    "CLERK_SECRET_KEY",
+    "DATABASE_URL",
+    "NEXT_PUBLIC_*",
+    "PAYLOAD_SECRET",
+    "R2_*",
+    "SENTRY_AUTH_TOKEN"
+  ],
   "ui": "stream",
   "tasks": {
     "build": {

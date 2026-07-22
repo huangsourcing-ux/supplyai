@@ -65,11 +65,13 @@ test("shared configuration exports loadable presets", async () => {
     "./typescript/base",
   ]);
 
-  const [{ baseConfig }, { default: tailwindPreset }] = await Promise.all([
-    import("../eslint/base.js"),
-    import("../tailwind/preset.js"),
-  ]);
+  const [{ baseConfig, workspaceConfig }, { default: tailwindPreset }] =
+    await Promise.all([
+      import("../eslint/base.js"),
+      import("../tailwind/preset.js"),
+    ]);
 
   assert.ok(Array.isArray(baseConfig));
+  assert.ok(Array.isArray(workspaceConfig));
   assert.deepEqual(tailwindPreset.plugins, []);
 });

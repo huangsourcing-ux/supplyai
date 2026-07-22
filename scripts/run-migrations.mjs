@@ -1,4 +1,7 @@
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { loadEnvFile } from "node:process";
+import path from "node:path";
 
 import { deploymentEnvironmentSchema } from "@chinasupply/config/env/common";
 
@@ -8,6 +11,13 @@ const argumentsList = process.argv.slice(2);
 const target = argumentsList.find((argument) => !argument.startsWith("--"));
 const dryRun = argumentsList.includes("--dry-run");
 const migration = getMigrationCommand(target);
+
+if (target === "cms") {
+  const webEnvironmentFile = path.resolve("apps/web/.env.local");
+  if (existsSync(webEnvironmentFile)) {
+    loadEnvFile(webEnvironmentFile);
+  }
+}
 
 if (dryRun) {
   console.log(`${migration.command} ${migration.args.join(" ")}`);
