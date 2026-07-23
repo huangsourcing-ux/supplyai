@@ -11,10 +11,18 @@ the shorter names below:
 | `staging`               | `staging`          |
 | `production`            | `prod`             |
 
-The Sentry organization is `huangsourcing`. The least-privilege token created
-during M0-T0 has only `org:ci` and cannot enumerate or create projects. Project
-slugs and DSNs must therefore be confirmed in the Sentry UI before the external
-acceptance run; they must never be guessed from this document.
+The Sentry organization is `huangsourcing`. M0-T7 created and verified these
+projects:
+
+| Runtime | Sentry project |
+| ------- | -------------- |
+| Web browser / Next.js server / edge | `chinasupply-web` |
+| NestJS API / BullMQ Worker | `chinasupply-api` |
+| Expo native application | `chinasupply-mobile` |
+
+The release-upload token has only `org:ci`; project administration used a
+separate short-lived internal integration. DSNs remain in deployment-platform
+configuration and must never be copied into this document.
 
 ## Release names
 
@@ -75,6 +83,12 @@ acceptance build, then return it to `false`. Production must keep it `false`.
 The Expo config plugin uploads native symbols and JavaScript source maps during
 EAS Build. The Metro configuration uses Sentry's Expo serializer so every
 exported bundle receives a debug ID.
+
+EAS does not expose Secret variables while the CLI resolves Expo config before
+submission. The config therefore validates `SENTRY_ORG` and `SENTRY_PROJECT`
+during submission, then requires a correctly prefixed `SENTRY_AUTH_TOKEN` when
+the remote builder sets `EAS_BUILD=true`. A missing upload token still fails the
+cloud build before an artifact can be accepted.
 
 Expo SDK 54 recommends Sentry React Native `~7.2.0`, but that version's custom
 serializer fails against the locked Metro 0.83 export path. M0-T7 therefore
