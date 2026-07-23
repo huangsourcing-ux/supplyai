@@ -1,0 +1,252 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CI: "true"
+
+jobs:
+  changes:
+    name: Detect mobile changes
+    runs-on: ubuntu-latest
+    outputs:
+      mobile: ${{ steps.mobile.outputs.changed }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect mobile-affecting paths
+        id: mobile
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        shell: bash
+        run: |
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]] || ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- \
+            apps/mobile \
+            packages/config \
+            packages/geo \
+            packages/i18n \
+            packages/schemas \
+            package.json \
+            pnpm-lock.yaml \
+            pnpm-workspace.yaml \
+            turbo.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  quality:
+    name: Lint, typecheck, and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test:unit
+
+  build:
+    name: Build Web and API
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: local
+      CLERK_SECRET_KEY: sk_test_ci_only_secret
+      DATABASE_URL: postgresql://chinasupply:chinasupply_ci_only@127.0.0.1:5432/chinasupply
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:3001/api/v1
+      NEXT_PUBLIC_APP_ENV: local
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ci_only_publishable
+      NEXT_PUBLIC_MAPTILER_KEY: ci_maptiler_key
+      NEXT_PUBLIC_POSTHOG_HOST: https://us.i.posthog.com
+      NEXT_PUBLIC_POSTHOG_KEY: phc_ci_only
+      NEXT_PUBLIC_SENTRY_DSN: https://public@localhost/1
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      PAYLOAD_SECRET: ci_only_payload_secret_at_least_32_chars
+      R2_ACCESS_KEY_ID: ci_access_key
+      R2_ACCOUNT_ID: ci_account
+      R2_BUCKET: chinasupply-ci
+      R2_CDN_BASE_URL: http://localhost:9000
+      R2_PREFIX: dev
+      R2_SECRET_ACCESS_KEY: ci_secret_key
+      SENTRY_AUTH_TOKEN: ci_sentry_token
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Web
+        run: pnpm --filter @chinasupply/web build
+
+      - name: Build API and Worker
+        run: pnpm --filter @chinasupply/api build
+
+  api_e2e:
+    name: API e2e
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run API e2e with Testcontainers
+        run: pnpm test:e2e
+
+  mobile:
+    name: Mobile PR checks
+    needs:
+      - changes
+    if: needs.changes.outputs.mobile == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Expo Doctor
+        # `run` is required: `doctor` is also a built-in pnpm command, so
+        # omitting it invokes pnpm's own doctor instead of the package script.
+        run: pnpm --filter @chinasupply/mobile run doctor
+
+      - name: Validate Expo public config
+        env:
+          EXPO_PUBLIC_API_BASE_URL: http://localhost:3001/api/v1
+          EXPO_PUBLIC_APP_ENV: local
+          EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ci_only_publishable
+        run: pnpm --filter @chinasupply/mobile config:check
+
+      - name: Mobile unit tests
+        run: pnpm --filter @chinasupply/mobile test:unit
+
+  ci_gate:
+    name: CI Gate
+    needs:
+      - changes
+      - quality
+      - build
+      - api_e2e
+      - mobile
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all applicable checks
+        env:
+          API_E2E_RESULT: ${{ needs.api_e2e.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          MOBILE_RESULT: ${{ needs.mobile.result }}
+          QUALITY_RESULT: ${{ needs.quality.result }}
+        shell: bash
+        run: |
+          [[ "$CHANGES_RESULT" == "success" ]]
+          [[ "$QUALITY_RESULT" == "success" ]]
+          [[ "$BUILD_RESULT" == "success" ]]
+          [[ "$API_E2E_RESULT" == "success" ]]
+          [[ "$MOBILE_RESULT" == "success" || "$MOBILE_RESULT" == "skipped" ]]
+
+  migrate_cms:
+    name: Staging CMS migration
+    needs:
+      - ci_gate
+    if: github.event_name == 'push' && needs.ci_gate.result == 'success'
+    uses: ./.github/workflows/release-migrations.yml
+    with:
+      target: cms
+      deployment_environment: staging
+    secrets: inherit
+
+  staging_release_gate:
+    name: Staging Release Gate
+    needs:
+      - ci_gate
+      - migrate_cms
+    if: github.event_name == 'push' && always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require CI and migration success
+        env:
+          CI_GATE_RESULT: ${{ needs.ci_gate.result }}
+          MIGRATION_RESULT: ${{ needs.migrate_cms.result }}
+        shell: bash
+        run: |
+          [[ "$CI_GATE_RESULT" == "success" ]]
+          [[ "$MIGRATION_RESULT" == "success" ]]

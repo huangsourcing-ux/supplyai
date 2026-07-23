@@ -40,3 +40,16 @@ The mobile runtime imports TypeScript source directly from
 `@chinasupply/schemas`, `@chinasupply/geo`, and `@chinasupply/i18n` using
 `workspace:*`. The startup compatibility module executes all three imports so a
 local Metro/export or EAS resolution failure cannot be hidden by type erasure.
+
+## EAS release triggers
+
+- `apps/mobile/.eas/workflows/preview-build.yml` accepts only `rc-*` tags or an
+  explicit EAS workflow dispatch and creates the existing Android Preview APK.
+- `apps/mobile/.eas/workflows/production-release.yml` accepts only `v*` tags,
+  pauses for EAS approval, then builds and submits iOS and Android separately.
+- Pull requests, ordinary branches, and `main` never trigger EAS Build.
+
+Production is intentionally dormant until Apple Developer and Google Play
+accounts, confirmed store identifiers, production EAS environment values,
+submission credentials, and the final reviewed icon exist. M0-T6 validates the
+workflow contract only; M5-T10 owns the real Production Build and Submit.

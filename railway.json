@@ -2,7 +2,16 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "RAILPACK",
-    "buildCommand": "pnpm --filter @chinasupply/api build"
+    "buildCommand": "pnpm --filter @chinasupply/api build",
+    "watchPatterns": [
+      "apps/api/**",
+      "packages/config/**",
+      "package.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "railway.json",
+      "turbo.json"
+    ]
   },
   "deploy": {
     "drainingSeconds": 30,

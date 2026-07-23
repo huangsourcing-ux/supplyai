@@ -118,6 +118,7 @@ packages/
 - Production：独立生产 DB、Clerk Production instance、production bucket、正式域名。
 - 所有应用提供完整 `.env.example`，启动时用 Zod 校验环境变量；密钥不得提交到仓库、日志、fixture 或客户端 bundle。
 - Drizzle migration 作为部署前独立 release command，不得在应用启动时隐式执行；失败时不得启动新版本。生产环境不得自动 seed 或写入测试/合成数据。
+- M0-T6 在 M1-T1 尚未建立真实 Drizzle `db:migrate` 前，只能执行已存在的 Payload `cms` migration，并以其成功门控当前 staging 发布；M1-T1 必须补接 `core` migration，之后 Railway API/Worker 只有 core migration 成功才可发布。禁止用 no-op 伪造 core migration。
 - 种子和合成数据只能进入 staging。production 数据默认 draft，只迁移 `verified` 且 `curated` 的 canonical 数据，并按开发计划 M5-T8a 使用 manifest、校验和和人工抽查后发布。
 - 导入必须经 R2 中转、Zod 逐行校验、坐标转换、按 slug upsert、搜索列生成，并把逐行失败报告写回 R2。不要依赖 CLI 与 Worker 的共享文件系统。
 - 每日备份使用与生产 PostgreSQL 主版本一致且锁定的 `pg_dump`，加密后写入 R2，保留 30 天；只有人工记录的恢复演练成功才算验收。

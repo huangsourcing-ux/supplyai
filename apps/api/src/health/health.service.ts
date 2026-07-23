@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   Logger,
   ServiceUnavailableException,
@@ -20,8 +21,8 @@ export class HealthService {
   private readonly logger = new Logger(HealthService.name);
 
   constructor(
-    private readonly database: DatabaseService,
-    private readonly redis: RedisHealthService,
+    @Inject(DatabaseService) private readonly database: DatabaseService,
+    @Inject(RedisHealthService) private readonly redis: RedisHealthService,
   ) {}
 
   live(): { status: "ok" } {

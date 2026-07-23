@@ -21,6 +21,7 @@ pnpm install
 pnpm lint
 pnpm typecheck
 pnpm test:unit
+pnpm test:e2e
 pnpm build
 ```
 
@@ -64,4 +65,4 @@ pnpm infra:check
 pnpm infra:down
 ```
 
-The Compose stack exposes PostGIS and Redis on loopback only and preserves data when stopped. See `docs/operations/environments.md` for the three-environment contract and `docs/operations/migrations.md` for release-command boundaries.
+The Compose stack exposes PostGIS and Redis on loopback only and preserves data when stopped. See `docs/operations/environments.md` for the three-environment contract, `docs/operations/migrations.md` for release-command boundaries, and `docs/operations/ci-cd.md` for CI/CD trigger and deployment gates.

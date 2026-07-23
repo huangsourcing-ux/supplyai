@@ -42,7 +42,7 @@ M0-T3 uses one staging-only Vercel project with these settings:
 - Production Branch: `main`
 - Application environment: `APP_ENV=staging` and `NEXT_PUBLIC_APP_ENV=staging`
 - Domain: `https://staging.chinasupply.ai`
-- Source repository: `huangsourcing-ux/supplyai`; pull requests may build as Vercel Preview deployments for validation, while automatic `main`/production delivery remains deferred to M0-T6. The M0-T3 acceptance deployment remains a controlled CLI deployment.
+- Source repository: `huangsourcing-ux/supplyai`; pull requests may build as Vercel Preview deployments for validation. M0-T6 owns automatic `main` delivery and requires the GitHub `Staging Release Gate` deployment check before the staging domain is moved to a new deployment.
 
 Because this is a staging-only Vercel project, both Vercel `Production` (the controlled staging deployment from `main`) and `Preview` (pull-request validation) scopes must contain the same real staging values. Vercel target names do not change `APP_ENV`: it remains `staging` in both scopes. Secrets must be copied through Vercel's encrypted environment-variable store and never through repository files or build logs.
 
@@ -101,6 +101,9 @@ must not be treated as the real production environment.
   `system:ping` inside the deployed API container and confirming completion in
   the separate Worker logs.
 
-The controlled CLI deployment does not connect either service to GitHub.
-Automatic staging deployment remains M0-T6, and production resources remain
-M5-T9.
+M0-T6 connects both application services to `huangsourcing-ux/supplyai:main`
+with Railway Wait for CI enabled. Railway must skip a deployment whenever the
+GitHub CI or staging migration gate fails. Production resources remain M5-T9.
+
+See `docs/operations/ci-cd.md` for trigger boundaries, secret ownership,
+deployment ordering, and rollback checks.

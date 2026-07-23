@@ -1,0 +1,16 @@
+name: Android Preview Build
+
+on:
+  push:
+    tags:
+      - rc-*
+  workflow_dispatch: {}
+
+jobs:
+  build_android:
+    name: Build Android Preview
+    type: build
+    environment: preview
+    params:
+      platform: android
+      profile: preview

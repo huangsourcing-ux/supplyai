@@ -21,3 +21,14 @@ Railway uses the shared root `railway.json` for the API-only build. Its start
 command dispatches to the distinct `start:api` or `start:worker` script from
 the service's non-secret `SERVICE_ROLE`; only `api` receives a public domain
 and `/health/ready` deployment check.
+
+Run the API test suites from the repository root:
+
+```bash
+pnpm --filter @chinasupply/api test:unit
+pnpm --filter @chinasupply/api test:e2e
+```
+
+The e2e suite requires a working Docker-compatible container runtime. It starts
+the locked PostGIS and Redis images with Testcontainers and never uses staging
+or production credentials.
