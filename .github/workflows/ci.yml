@@ -183,7 +183,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Expo Doctor
-        run: pnpm --filter @chinasupply/mobile doctor
+        # `run` is required: `doctor` is also a built-in pnpm command, so
+        # omitting it invokes pnpm's own doctor instead of the package script.
+        run: pnpm --filter @chinasupply/mobile run doctor
 
       - name: Validate Expo public config
         env:
