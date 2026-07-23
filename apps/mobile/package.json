@@ -19,6 +19,7 @@
   "dependencies": {
     "@chinasupply/config": "workspace:*",
     "@expo/metro-runtime": "~6.1.2",
+    "@maplibre/maplibre-react-native": "11.3.6",
     "@tanstack/react-query": "^5.90.19",
     "expo": "54.0.36",
     "expo-constants": "~18.0.13",
@@ -49,6 +50,7 @@
     "@expo/config": "~12.0.13",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.14",
+    "@types/geojson": "7946.0.16",
     "@types/node": "^22.19.1",
     "@types/react": "~19.1.17",
     "@types/react-dom": "19.1.11",

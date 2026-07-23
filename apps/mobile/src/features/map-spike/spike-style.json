@@ -1,0 +1,14 @@
+{
+  "version": 8,
+  "name": "ChinaSupply.AI offline MapLibre compatibility spike",
+  "sources": {},
+  "layers": [
+    {
+      "id": "offline-background",
+      "type": "background",
+      "paint": {
+        "background-color": "#E2E8F0"
+      }
+    }
+  ]
+}

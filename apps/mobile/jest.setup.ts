@@ -26,3 +26,5 @@ jest.mock("react-native-mmkv", () => ({
     set: jest.fn(),
   })),
 }));
+
+jest.mock("@maplibre/maplibre-react-native");
