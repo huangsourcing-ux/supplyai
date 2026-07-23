@@ -49,6 +49,13 @@ jest.mock("@clerk/expo", () => {
   };
 });
 
+jest.mock("@sentry/react-native", () => ({
+  captureException: jest.fn(() => "0123456789abcdef0123456789abcdef"),
+  flush: jest.fn(async () => true),
+  init: jest.fn(),
+  wrap: jest.fn((component) => component),
+}));
+
 jest.mock("react-native-mmkv", () => ({
   createMMKV: jest.fn(() => ({
     clearAll: jest.fn(),

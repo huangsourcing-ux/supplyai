@@ -110,6 +110,8 @@ jobs:
       R2_PREFIX: dev
       R2_SECRET_ACCESS_KEY: ci_secret_key
       SENTRY_AUTH_TOKEN: ci_sentry_token
+      SENTRY_ORG: replace_me
+      SENTRY_PROJECT: chinasupply-web
     steps:
       - name: Check out source
         uses: actions/checkout@v4

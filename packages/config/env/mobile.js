@@ -27,6 +27,9 @@ export const mobileEnvSchema = z
     EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(10),
     EXPO_PUBLIC_MAPTILER_KEY: z.string().min(8).optional(),
     EXPO_PUBLIC_SENTRY_DSN: networkUrlSchema.optional(),
+    EXPO_PUBLIC_SENTRY_SMOKE_ENABLED: z
+      .enum(["true", "false"])
+      .default("false"),
     EXPO_PUBLIC_POSTHOG_KEY: z.string().min(8).optional(),
     EXPO_PUBLIC_POSTHOG_HOST: networkUrlSchema.optional(),
   })
@@ -75,6 +78,12 @@ export const mobileEnvSchema = z
         "EXPO_PUBLIC_SENTRY_DSN",
         context,
       );
+    } else {
+      context.addIssue({
+        code: "custom",
+        path: ["EXPO_PUBLIC_SENTRY_DSN"],
+        message: "is required outside local development",
+      });
     }
 
     const hasPostHogKey = environment.EXPO_PUBLIC_POSTHOG_KEY !== undefined;

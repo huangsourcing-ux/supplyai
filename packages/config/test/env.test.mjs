@@ -7,6 +7,11 @@ import { fileURLToPath } from "node:url";
 
 import { parseApiEnv, parseApiRuntimeEnv } from "../env/api.js";
 import { parseMobileEnv } from "../env/mobile.js";
+import {
+  createSentryRelease,
+  isSentryDsnConfigured,
+  toSentryEnvironment,
+} from "../env/sentry.js";
 import { parseWebEnv } from "../env/web.js";
 
 const testDirectory = dirname(fileURLToPath(import.meta.url));
@@ -98,6 +103,8 @@ test("API runtime validation requires current dependencies without future provid
     PORT: api.PORT,
     DATABASE_URL: "postgresql://user:pass@db.staging.invalid/chinasupply",
     REDIS_URL: "redis://redis.staging.invalid:6379",
+    SENTRY_DSN: "https://public@o1.ingest.sentry.io/1",
+    SENTRY_RELEASE: "chinasupply-api@0.0.0+test",
     WEB_ORIGIN: "https://staging.invalid",
   };
 
@@ -105,6 +112,37 @@ test("API runtime validation requires current dependencies without future provid
   assert.throws(
     () => parseApiRuntimeEnv({ ...runtimeOnly, REDIS_URL: api.REDIS_URL }),
     /API runtime environment validation failed: REDIS_URL/,
+  );
+});
+
+test("Sentry environment and release values are stable across applications", () => {
+  assert.equal(toSentryEnvironment("local"), "dev");
+  assert.equal(toSentryEnvironment("staging"), "staging");
+  assert.equal(toSentryEnvironment("production"), "prod");
+  assert.equal(
+    createSentryRelease({
+      component: "web",
+      revision: "abcdef123456",
+      version: "0.0.0",
+    }),
+    "chinasupply-web@0.0.0+abcdef123456",
+  );
+  assert.equal(
+    createSentryRelease({
+      component: "api",
+      explicitRelease: "chinasupply-api@1.2.3+release",
+      revision: "ignored",
+      version: "0.0.0",
+    }),
+    "chinasupply-api@1.2.3+release",
+  );
+  assert.equal(
+    isSentryDsnConfigured("https://public@o1.ingest.sentry.io/1"),
+    true,
+  );
+  assert.equal(
+    isSentryDsnConfigured("https://public@example.ingest.sentry.io/1"),
+    false,
   );
 });
 

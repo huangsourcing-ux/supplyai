@@ -21,7 +21,7 @@ const remoteHttpsFields = [
   "R2_CDN_BASE_URL",
 ];
 
-/** @type {readonly ["PAYLOAD_SECRET", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY", "NEXT_PUBLIC_MAPTILER_KEY", "NEXT_PUBLIC_SENTRY_DSN", "SENTRY_AUTH_TOKEN", "NEXT_PUBLIC_POSTHOG_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"]} */
+/** @type {readonly ["PAYLOAD_SECRET", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY", "NEXT_PUBLIC_MAPTILER_KEY", "NEXT_PUBLIC_SENTRY_DSN", "SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT", "NEXT_PUBLIC_POSTHOG_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"]} */
 const remoteSecretFields = [
   "PAYLOAD_SECRET",
   "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
@@ -29,6 +29,8 @@ const remoteSecretFields = [
   "NEXT_PUBLIC_MAPTILER_KEY",
   "NEXT_PUBLIC_SENTRY_DSN",
   "SENTRY_AUTH_TOKEN",
+  "SENTRY_ORG",
+  "SENTRY_PROJECT",
   "NEXT_PUBLIC_POSTHOG_KEY",
   "R2_ACCOUNT_ID",
   "R2_ACCESS_KEY_ID",
@@ -49,6 +51,8 @@ export const webEnvSchema = z
     NEXT_PUBLIC_MAPTILER_KEY: secretSchema,
     NEXT_PUBLIC_SENTRY_DSN: networkUrlSchema,
     SENTRY_AUTH_TOKEN: secretSchema,
+    SENTRY_ORG: z.string().min(1).optional(),
+    SENTRY_PROJECT: z.string().min(1).optional(),
     NEXT_PUBLIC_POSTHOG_KEY: secretSchema,
     NEXT_PUBLIC_POSTHOG_HOST: networkUrlSchema,
     R2_ACCOUNT_ID: secretSchema,
@@ -94,7 +98,24 @@ export const webEnvSchema = z
     }
 
     for (const field of remoteSecretFields) {
-      rejectPlaceholder(environment[field], field, context);
+      const value = environment[field];
+      if (value === undefined) {
+        context.addIssue({
+          code: "custom",
+          path: [field],
+          message: "is required outside local development",
+        });
+      } else {
+        rejectPlaceholder(value, field, context);
+      }
+    }
+
+    if (!environment.SENTRY_AUTH_TOKEN.startsWith("sntrys_")) {
+      context.addIssue({
+        code: "custom",
+        path: ["SENTRY_AUTH_TOKEN"],
+        message: "must use a Sentry organization token",
+      });
     }
   });
 

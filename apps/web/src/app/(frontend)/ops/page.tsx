@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 
 import { requireOpsAdmin } from "@/auth/require-ops-admin";
 
+import { SentrySmoke } from "./sentry-smoke";
+
 export default async function OperationsPage() {
   const [{ userId }, translate] = await Promise.all([
     requireOpsAdmin(),
@@ -17,6 +19,14 @@ export default async function OperationsPage() {
         <p className="identifier">
           {translate("signedInAs")}: {userId}
         </p>
+        <SentrySmoke
+          buttonLabel={translate("sentry.button")}
+          environmentLabel={translate("sentry.environment")}
+          eventLabel={translate("sentry.event")}
+          flushFailedLabel={translate("sentry.flushFailed")}
+          releaseLabel={translate("sentry.release")}
+          sentLabel={translate("sentry.sent")}
+        />
       </section>
     </main>
   );

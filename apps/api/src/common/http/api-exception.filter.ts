@@ -7,6 +7,7 @@ import {
   Logger,
 } from "@nestjs/common";
 import { HttpAdapterHost } from "@nestjs/core";
+import { SentryExceptionCaptured } from "@sentry/nestjs";
 import { ZodValidationException } from "nestjs-zod";
 import { ZodError } from "zod";
 
@@ -86,6 +87,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
   constructor(private readonly adapterHost: HttpAdapterHost) {}
 
+  @SentryExceptionCaptured()
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.adapterHost;
     const context = host.switchToHttp();

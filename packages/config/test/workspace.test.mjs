@@ -59,6 +59,7 @@ test("shared configuration exports loadable presets", async () => {
     "./env/api",
     "./env/common",
     "./env/mobile",
+    "./env/sentry",
     "./env/web",
     "./eslint/base",
     "./tailwind/preset",
