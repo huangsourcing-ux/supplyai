@@ -1,7 +1,9 @@
 import "react-native-gesture-handler";
 import "../global.css";
 import "../lib/i18n";
+import "../lib/workspace-compatibility";
 
+import { ClerkProvider } from "@clerk/expo";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,6 +13,8 @@ import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { createQueryClient } from "../lib/query-client";
+import { clerkTokenCache } from "../lib/clerk-token-cache";
+import { mobileEnvironment } from "../env";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -24,9 +28,14 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={styles.root} onLayout={onLayout}>
-      <QueryClientProvider client={queryClient}>
-        <Stack screenOptions={{ headerShown: false }} />
-      </QueryClientProvider>
+      <ClerkProvider
+        publishableKey={mobileEnvironment.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        tokenCache={clerkTokenCache}
+      >
+        <QueryClientProvider client={queryClient}>
+          <Stack screenOptions={{ headerShown: false }} />
+        </QueryClientProvider>
+      </ClerkProvider>
     </GestureHandlerRootView>
   );
 }

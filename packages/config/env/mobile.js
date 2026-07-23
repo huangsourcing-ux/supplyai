@@ -20,30 +20,15 @@ const forbiddenMobileVariables = [
   "SENTRY_AUTH_TOKEN",
 ];
 
-/** @type {readonly ["EXPO_PUBLIC_API_BASE_URL", "EXPO_PUBLIC_SENTRY_DSN", "EXPO_PUBLIC_POSTHOG_HOST"]} */
-const remoteHttpsFields = [
-  "EXPO_PUBLIC_API_BASE_URL",
-  "EXPO_PUBLIC_SENTRY_DSN",
-  "EXPO_PUBLIC_POSTHOG_HOST",
-];
-
-/** @type {readonly ["EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY", "EXPO_PUBLIC_MAPTILER_KEY", "EXPO_PUBLIC_SENTRY_DSN", "EXPO_PUBLIC_POSTHOG_KEY"]} */
-const remotePublicKeyFields = [
-  "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY",
-  "EXPO_PUBLIC_MAPTILER_KEY",
-  "EXPO_PUBLIC_SENTRY_DSN",
-  "EXPO_PUBLIC_POSTHOG_KEY",
-];
-
 export const mobileEnvSchema = z
   .object({
     EXPO_PUBLIC_APP_ENV: deploymentEnvironmentSchema,
     EXPO_PUBLIC_API_BASE_URL: networkUrlSchema,
     EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(10),
-    EXPO_PUBLIC_MAPTILER_KEY: z.string().min(8),
-    EXPO_PUBLIC_SENTRY_DSN: networkUrlSchema,
-    EXPO_PUBLIC_POSTHOG_KEY: z.string().min(8),
-    EXPO_PUBLIC_POSTHOG_HOST: networkUrlSchema,
+    EXPO_PUBLIC_MAPTILER_KEY: z.string().min(8).optional(),
+    EXPO_PUBLIC_SENTRY_DSN: networkUrlSchema.optional(),
+    EXPO_PUBLIC_POSTHOG_KEY: z.string().min(8).optional(),
+    EXPO_PUBLIC_POSTHOG_HOST: networkUrlSchema.optional(),
   })
   .superRefine((environment, context) => {
     if (environment.EXPO_PUBLIC_APP_ENV === "local") {
@@ -58,12 +43,70 @@ export const mobileEnvSchema = z
       context,
     );
 
-    for (const field of remoteHttpsFields) {
-      requireRemoteUrl(environment[field], field, context, { httpsOnly: true });
+    requireRemoteUrl(
+      environment.EXPO_PUBLIC_API_BASE_URL,
+      "EXPO_PUBLIC_API_BASE_URL",
+      context,
+      { httpsOnly: true },
+    );
+    rejectPlaceholder(
+      environment.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
+      "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY",
+      context,
+    );
+
+    if (environment.EXPO_PUBLIC_MAPTILER_KEY !== undefined) {
+      rejectPlaceholder(
+        environment.EXPO_PUBLIC_MAPTILER_KEY,
+        "EXPO_PUBLIC_MAPTILER_KEY",
+        context,
+      );
     }
 
-    for (const field of remotePublicKeyFields) {
-      rejectPlaceholder(environment[field], field, context);
+    if (environment.EXPO_PUBLIC_SENTRY_DSN !== undefined) {
+      requireRemoteUrl(
+        environment.EXPO_PUBLIC_SENTRY_DSN,
+        "EXPO_PUBLIC_SENTRY_DSN",
+        context,
+        { httpsOnly: true },
+      );
+      rejectPlaceholder(
+        environment.EXPO_PUBLIC_SENTRY_DSN,
+        "EXPO_PUBLIC_SENTRY_DSN",
+        context,
+      );
+    }
+
+    const hasPostHogKey = environment.EXPO_PUBLIC_POSTHOG_KEY !== undefined;
+    const hasPostHogHost = environment.EXPO_PUBLIC_POSTHOG_HOST !== undefined;
+
+    if (hasPostHogKey !== hasPostHogHost) {
+      context.addIssue({
+        code: "custom",
+        path: [
+          hasPostHogKey
+            ? "EXPO_PUBLIC_POSTHOG_HOST"
+            : "EXPO_PUBLIC_POSTHOG_KEY",
+        ],
+        message: "must be provided together with the other PostHog field",
+      });
+    }
+
+    if (environment.EXPO_PUBLIC_POSTHOG_KEY !== undefined) {
+      rejectPlaceholder(
+        environment.EXPO_PUBLIC_POSTHOG_KEY,
+        "EXPO_PUBLIC_POSTHOG_KEY",
+        context,
+      );
+    }
+
+    if (environment.EXPO_PUBLIC_POSTHOG_HOST !== undefined) {
+      requireRemoteUrl(
+        environment.EXPO_PUBLIC_POSTHOG_HOST,
+        "EXPO_PUBLIC_POSTHOG_HOST",
+        context,
+        { httpsOnly: true },
+      );
     }
   });
 

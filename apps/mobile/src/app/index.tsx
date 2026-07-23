@@ -1,1 +1,1 @@
-export { default } from "../features/map-spike/map-spike-screen";
+export { default } from "../features/auth/auth-gate";
