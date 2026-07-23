@@ -8,12 +8,14 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "navigation:validation": "tsx scripts/generate-navigation-validation.ts",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@chinasupply/config": "workspace:*",
     "eslint": "^9.39.1",
+    "tsx": "^4.21.0",
     "typescript": "5.9.2",
     "vitest": "4.0.18"
   }
