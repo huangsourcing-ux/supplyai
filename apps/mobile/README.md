@@ -41,6 +41,13 @@ The mobile runtime imports TypeScript source directly from
 `workspace:*`. The startup compatibility module executes all three imports so a
 local Metro/export or EAS resolution failure cannot be hidden by type erasure.
 
+M0-T7 initializes Sentry before the Expo Router root layout and wraps the root
+component for render failures. Its Expo plugin and Metro configuration upload
+native artifacts and JavaScript source maps during EAS Build. A controlled
+smoke control is visible only when
+`EXPO_PUBLIC_SENTRY_SMOKE_ENABLED=true`; see
+`docs/operations/sentry.md` for variables and acceptance evidence.
+
 ## EAS release triggers
 
 - `apps/mobile/.eas/workflows/preview-build.yml` accepts only `rc-*` tags or an

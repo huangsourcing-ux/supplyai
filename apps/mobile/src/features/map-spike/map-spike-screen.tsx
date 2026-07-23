@@ -11,6 +11,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
+import { mobileEnvironment } from "../../env";
+import { MobileSentrySmoke } from "../monitoring/sentry-smoke";
 import {
   clusteredPoints,
   referencePoint,
@@ -106,6 +108,9 @@ export default function MapSpikeScreen() {
         </View>
       </View>
 
+      {mobileEnvironment.EXPO_PUBLIC_SENTRY_SMOKE_ENABLED === "true" ? (
+        <MobileSentrySmoke />
+      ) : null}
       <Text style={styles.attribution}>{t("mapSpike.attribution")}</Text>
     </SafeAreaView>
   );

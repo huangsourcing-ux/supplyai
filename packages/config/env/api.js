@@ -19,6 +19,12 @@ const apiRuntimeShape = {
   DATABASE_URL: networkUrlSchema,
   REDIS_URL: networkUrlSchema,
   WEB_ORIGIN: networkUrlSchema,
+  RAILWAY_GIT_COMMIT_SHA: z
+    .string()
+    .regex(/^[a-f0-9]{40}$/i)
+    .optional(),
+  SENTRY_DSN: networkUrlSchema.optional(),
+  SENTRY_RELEASE: z.string().startsWith("chinasupply-api@").min(22).optional(),
 };
 
 /** @type {readonly ["DATABASE_URL", "REDIS_URL"]} */
@@ -54,6 +60,31 @@ export const apiRuntimeEnvSchema = z
     requireRemoteUrl(environment.WEB_ORIGIN, "WEB_ORIGIN", context, {
       httpsOnly: true,
     });
+
+    if (environment.SENTRY_DSN === undefined) {
+      context.addIssue({
+        code: "custom",
+        path: ["SENTRY_DSN"],
+        message: "is required outside local development",
+      });
+    } else {
+      requireRemoteUrl(environment.SENTRY_DSN, "SENTRY_DSN", context, {
+        httpsOnly: true,
+      });
+      rejectPlaceholder(environment.SENTRY_DSN, "SENTRY_DSN", context);
+    }
+
+    if (
+      environment.SENTRY_RELEASE === undefined &&
+      environment.RAILWAY_GIT_COMMIT_SHA === undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["SENTRY_RELEASE"],
+        message:
+          "or RAILWAY_GIT_COMMIT_SHA is required outside local development",
+      });
+    }
   });
 
 export const apiEnvSchema = z
@@ -69,7 +100,6 @@ export const apiEnvSchema = z
     R2_CDN_BASE_URL: networkUrlSchema,
     CLOUDFLARE_ZONE_ID: secretSchema,
     CLOUDFLARE_API_TOKEN: secretSchema,
-    SENTRY_DSN: networkUrlSchema,
   })
   .superRefine((environment, context) => {
     requireR2Prefix(environment.R2_PREFIX, environment.APP_ENV, context);
@@ -91,11 +121,17 @@ export const apiEnvSchema = z
     }
 
     for (const field of remoteHttpsFields) {
-      requireRemoteUrl(environment[field], field, context, { httpsOnly: true });
+      const value = environment[field];
+      if (value !== undefined) {
+        requireRemoteUrl(value, field, context, { httpsOnly: true });
+      }
     }
 
     for (const field of remoteSecretFields) {
-      rejectPlaceholder(environment[field], field, context);
+      const value = environment[field];
+      if (value !== undefined) {
+        rejectPlaceholder(value, field, context);
+      }
     }
   });
 

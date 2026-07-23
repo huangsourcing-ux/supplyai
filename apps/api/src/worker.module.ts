@@ -1,5 +1,6 @@
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
+import { SentryModule } from "@sentry/nestjs/setup";
 
 import { createRedisOptions } from "./common/redis/redis-options.js";
 import {
@@ -12,6 +13,7 @@ import { SystemProcessor } from "./queue/system.processor.js";
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     RuntimeConfigModule,
     BullModule.forRootAsync({
       inject: [RUNTIME_CONFIG],

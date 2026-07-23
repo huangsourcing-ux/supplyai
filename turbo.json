@@ -10,7 +10,12 @@
     "NEXT_PUBLIC_*",
     "PAYLOAD_SECRET",
     "R2_*",
-    "SENTRY_AUTH_TOKEN"
+    "SENTRY_*",
+    "GITHUB_SHA",
+    "GIT_COMMIT_SHA",
+    "NEXT_RUNTIME",
+    "RAILWAY_GIT_COMMIT_SHA",
+    "VERCEL_GIT_COMMIT_SHA"
   ],
   "ui": "stream",
   "tasks": {

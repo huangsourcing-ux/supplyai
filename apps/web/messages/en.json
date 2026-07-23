@@ -21,6 +21,14 @@
     "readyEyebrow": "Authentication probe",
     "readyTitle": "Operations access is ready",
     "readyDescription": "This placeholder verifies Clerk authentication and the administrator role. Operational data tools arrive in M2-T7.",
-    "signedInAs": "Authenticated Clerk user"
+    "signedInAs": "Authenticated Clerk user",
+    "sentry": {
+      "button": "Send Web Sentry test exception",
+      "environment": "Sentry environment",
+      "event": "Event ID",
+      "flushFailed": "The event queue did not flush before the timeout.",
+      "release": "Release",
+      "sent": "Test exception sent."
+    }
   }
 }

@@ -1,9 +1,11 @@
 import "react-native-gesture-handler";
 import "../global.css";
 import "../lib/i18n";
+import "../lib/sentry";
 import "../lib/workspace-compatibility";
 
 import { ClerkProvider } from "@clerk/expo";
+import * as Sentry from "@sentry/react-native";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,7 +22,7 @@ export { ErrorBoundary } from "expo-router";
 
 void SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayout() {
   const [queryClient] = useState(createQueryClient);
   const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(() => {
     void SplashScreen.hideAsync();
@@ -39,6 +41,8 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+export default Sentry.wrap(RootLayout);
 
 const styles = StyleSheet.create({
   root: {

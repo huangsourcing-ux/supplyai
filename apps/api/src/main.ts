@@ -1,5 +1,7 @@
+import "./instrument.js";
 import "reflect-metadata";
 
+import * as Sentry from "@sentry/nestjs";
 import { NestFactory } from "@nestjs/core";
 import {
   FastifyAdapter,
@@ -24,4 +26,8 @@ async function bootstrap(): Promise<void> {
   await app.listen(config.PORT, "0.0.0.0");
 }
 
-void bootstrap();
+void bootstrap().catch(async (error: unknown) => {
+  Sentry.captureException(error);
+  await Sentry.flush(2_000);
+  process.exitCode = 1;
+});

@@ -11,16 +11,25 @@ describe("mobile environment", () => {
     ).toThrow(/DATABASE_URL/);
   });
 
-  it("allows deferred integrations to be absent in staging", () => {
-    const environment = buildMobileEnvironment({
+  it("requires Sentry while other deferred integrations remain optional", () => {
+    const staging = {
       EXPO_PUBLIC_APP_ENV: "staging",
       EXPO_PUBLIC_API_BASE_URL: "https://api.staging.example.com/api/v1",
       EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
         "pk_test_c3RhZ2luZy5jbGVyay5hY2NvdW50cy5kZXYk",
+    };
+
+    expect(() => buildMobileEnvironment(staging)).toThrow(
+      /EXPO_PUBLIC_SENTRY_DSN/,
+    );
+
+    const environment = buildMobileEnvironment({
+      ...staging,
+      EXPO_PUBLIC_SENTRY_DSN: "https://public@o1.ingest.sentry.io/123456789",
     });
 
     expect(environment.EXPO_PUBLIC_MAPTILER_KEY).toBeUndefined();
-    expect(environment.EXPO_PUBLIC_SENTRY_DSN).toBeUndefined();
+    expect(environment.EXPO_PUBLIC_SENTRY_DSN).toContain("ingest.sentry.io");
     expect(environment.EXPO_PUBLIC_POSTHOG_KEY).toBeUndefined();
   });
 
@@ -30,6 +39,7 @@ describe("mobile environment", () => {
       EXPO_PUBLIC_API_BASE_URL: "https://api.staging.example.com/api/v1",
       EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
         "pk_test_c3RhZ2luZy5jbGVyay5hY2NvdW50cy5kZXYk",
+      EXPO_PUBLIC_SENTRY_DSN: "https://public@o1.ingest.sentry.io/123456789",
     };
 
     expect(() =>

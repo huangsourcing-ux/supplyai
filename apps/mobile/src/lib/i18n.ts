@@ -49,6 +49,14 @@ export const resources = {
         },
         title: "Yiwu offline map fixture",
       },
+      sentrySmoke: {
+        button: "Send Mobile Sentry test exception",
+        flushFailed:
+          "Sentry {{environment}} event {{eventId}} did not flush before the timeout.",
+        ready: "Sentry {{environment}} smoke test is ready.",
+        sending: "Sending Sentry test exception…",
+        sent: "Sentry {{environment}} event sent: {{eventId}}",
+      },
     },
   },
 } as const;

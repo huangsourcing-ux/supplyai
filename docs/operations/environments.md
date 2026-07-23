@@ -48,6 +48,11 @@ Because this is a staging-only Vercel project, both Vercel `Production` (the con
 
 All fields from `apps/web/.env.example` must have real staging values before deployment. The database is the Railway staging PostgreSQL database, Clerk uses a Development instance, and R2 uses the `staging` prefix. The production Web project is intentionally deferred to M5-T9.
 
+M0-T7 additionally requires the Web Sentry DSN, organization/project slugs, and
+build-only auth token in both Vercel scopes. Vercel's commit SHA is embedded in
+the Sentry release and the build uploads source maps as described in
+`docs/operations/sentry.md`.
+
 The Clerk Development instance must be put in Restricted mode with public sign-up disabled. Configure the session token claim as `{"metadata":"{{user.public_metadata}}"}`, give invited administrators `{"role":"admin"}` in Public Metadata, and allow only the staging origin and redirect URL. `/admin` does not use Clerk; it has an independent Payload `cms_users` account.
 
 Do not mark M0-T3 complete until the CMS release migration has run against Railway staging, the Vercel deployment is healthy over HTTPS, and anonymous, non-admin, and admin `/ops` access have all been smoke-tested.
@@ -68,11 +73,14 @@ The EAS Preview environment must contain:
 - `EXPO_PUBLIC_APP_ENV=staging`
 - the real HTTPS staging `EXPO_PUBLIC_API_BASE_URL`
 - a Clerk Development `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- the Mobile Sentry DSN, organization and project identifiers, plus the
+  build-only Sentry auth token described in `docs/operations/sentry.md`
 
-MapTiler, Sentry, and PostHog public values remain optional until their owning
-tasks connect those integrations. If supplied, they are still validated as
-real values: placeholders are rejected, production MapTiler keys cannot enter
-staging, and PostHog key/host must be provided together.
+MapTiler and PostHog public values remain optional until their owning tasks
+connect those integrations. If supplied, they are still validated as real
+values: placeholders are rejected, production MapTiler keys cannot enter
+staging, and PostHog key/host must be provided together. Sentry is required by
+M0-T7 for every non-local Mobile build.
 
 The retained Development smoke user password is stored only in macOS Keychain
 under service `ai.chinasupply.clerk.mobile-smoke`. Neither the password nor
@@ -100,6 +108,8 @@ must not be treated as the real production environment.
 - Worker has no public domain. Queue acceptance is performed by running
   `system:ping` inside the deployed API container and confirming completion in
   the separate Worker logs.
+- Both services require the matching `SENTRY_DSN`; Railway's commit SHA forms
+  their shared Sentry release.
 
 M0-T6 connects both application services to `huangsourcing-ux/supplyai:main`
 with Railway Wait for CI enabled. Railway must skip a deployment whenever the
@@ -107,3 +117,5 @@ GitHub CI or staging migration gate fails. Production resources remain M5-T9.
 
 See `docs/operations/ci-cd.md` for trigger boundaries, secret ownership,
 deployment ordering, and rollback checks.
+See `docs/operations/sentry.md` for the three-platform Sentry variables,
+release names, source map upload path, and external acceptance checklist.

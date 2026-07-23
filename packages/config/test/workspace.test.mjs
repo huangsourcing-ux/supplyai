@@ -50,6 +50,14 @@ test("root exposes every required quality command", async () => {
   }
 });
 
+test("mobile pins the Sentry CLI required by the Gradle upload task", async () => {
+  const mobilePackage = JSON.parse(
+    await readFile(resolve(workspaceRoot, "apps/mobile/package.json"), "utf8"),
+  );
+
+  assert.equal(mobilePackage.devDependencies["@sentry/cli"], "2.58.0");
+});
+
 test("shared configuration exports loadable presets", async () => {
   const configPackage = JSON.parse(
     await readFile(resolve(testDirectory, "../package.json"), "utf8"),
@@ -59,6 +67,7 @@ test("shared configuration exports loadable presets", async () => {
     "./env/api",
     "./env/common",
     "./env/mobile",
+    "./env/sentry",
     "./env/web",
     "./eslint/base",
     "./tailwind/preset",

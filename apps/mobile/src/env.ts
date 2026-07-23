@@ -6,6 +6,7 @@ const localDefaults = {
   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_replace_me",
   EXPO_PUBLIC_MAPTILER_KEY: "replace_me",
   EXPO_PUBLIC_SENTRY_DSN: "https://public@example.ingest.sentry.io/1",
+  EXPO_PUBLIC_SENTRY_SMOKE_ENABLED: "false",
   EXPO_PUBLIC_POSTHOG_KEY: "phc_replace_me",
   EXPO_PUBLIC_POSTHOG_HOST: "https://us.i.posthog.com",
 } as const;
@@ -19,6 +20,7 @@ const requiredVariableNames = [
 const optionalVariableNames = [
   "EXPO_PUBLIC_MAPTILER_KEY",
   "EXPO_PUBLIC_SENTRY_DSN",
+  "EXPO_PUBLIC_SENTRY_SMOKE_ENABLED",
   "EXPO_PUBLIC_POSTHOG_KEY",
   "EXPO_PUBLIC_POSTHOG_HOST",
 ] as const;
@@ -60,6 +62,8 @@ export const mobileEnvironment = buildMobileEnvironment({
     process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
   EXPO_PUBLIC_MAPTILER_KEY: process.env.EXPO_PUBLIC_MAPTILER_KEY,
   EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  EXPO_PUBLIC_SENTRY_SMOKE_ENABLED:
+    process.env.EXPO_PUBLIC_SENTRY_SMOKE_ENABLED,
   EXPO_PUBLIC_POSTHOG_KEY: process.env.EXPO_PUBLIC_POSTHOG_KEY,
   EXPO_PUBLIC_POSTHOG_HOST: process.env.EXPO_PUBLIC_POSTHOG_HOST,
 });
