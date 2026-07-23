@@ -1,22 +1,14 @@
-export type Wgs84Position = [longitude: number, latitude: number];
-
-export const WGS84_COORDINATE_ORDER = ["longitude", "latitude"] as const;
-
-export function isWgs84Position(value: unknown): value is Wgs84Position {
-  if (!Array.isArray(value) || value.length !== 2) {
-    return false;
-  }
-
-  const [longitude, latitude] = value;
-
-  return (
-    typeof longitude === "number" &&
-    Number.isFinite(longitude) &&
-    longitude >= -180 &&
-    longitude <= 180 &&
-    typeof latitude === "number" &&
-    Number.isFinite(latitude) &&
-    latitude >= -90 &&
-    latitude <= 90
-  );
-}
+export {
+  bd09ToGcj02,
+  bd09ToWgs84,
+  gcj02ToBd09,
+  gcj02ToWgs84,
+  wgs84ToBd09,
+  wgs84ToGcj02,
+} from "./conversions.js";
+export { isWgs84Position, WGS84_COORDINATE_ORDER } from "./coordinates.js";
+export type {
+  Bd09Position,
+  Gcj02Position,
+  Wgs84Position,
+} from "./coordinates.js";
