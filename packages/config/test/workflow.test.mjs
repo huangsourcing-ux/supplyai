@@ -58,6 +58,11 @@ test("CI runs the frozen PR checks and gates staging on the CMS migration", asyn
     "./.github/workflows/release-migrations.yml",
   );
   assert.deepEqual(workflow.jobs.migrate_cms.needs, ["ci_gate"]);
+  assert.match(workflow.jobs.migrate_cms.if, /always\(\)/);
+  assert.match(
+    workflow.jobs.migrate_cms.if,
+    /needs\.ci_gate\.result == 'success'/,
+  );
   assert.equal(workflow.jobs.migrate_cms.with.target, "cms");
   assert.equal(
     workflow.jobs.migrate_cms.with.deployment_environment,
