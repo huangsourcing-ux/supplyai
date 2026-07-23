@@ -18,12 +18,15 @@ export function resolveMobileSentryBuildConfig(
   const organization = source.SENTRY_ORG;
   const project = source.SENTRY_PROJECT;
   const authToken = source.SENTRY_AUTH_TOKEN;
+  const isEasBuild = source.EAS_BUILD === "true";
 
   if (environment !== "local") {
     const missing = [
       organization ? undefined : "SENTRY_ORG",
       project ? undefined : "SENTRY_PROJECT",
-      authToken?.startsWith("sntrys_") ? undefined : "SENTRY_AUTH_TOKEN",
+      isEasBuild && !authToken?.startsWith("sntrys_")
+        ? "SENTRY_AUTH_TOKEN"
+        : undefined,
     ].filter((field): field is string => field !== undefined);
 
     if (missing.length > 0) {

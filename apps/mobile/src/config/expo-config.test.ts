@@ -30,14 +30,13 @@ describe("Expo application config", () => {
     ]);
   });
 
-  it("requires upload credentials and writes only public project identifiers", () => {
+  it("writes only public Sentry project identifiers before submission", () => {
     expect(() => resolveMobileSentryBuildConfig({}, "staging")).toThrow(
-      /SENTRY_AUTH_TOKEN, SENTRY_ORG|SENTRY_ORG/,
+      /SENTRY_ORG/,
     );
 
     const sentry = resolveMobileSentryBuildConfig(
       {
-        SENTRY_AUTH_TOKEN: "sntrys_actual_token",
         SENTRY_ORG: "chinasupply",
         SENTRY_PROJECT: "chinasupply-mobile",
       },
@@ -53,7 +52,31 @@ describe("Expo application config", () => {
         url: "https://sentry.io/",
       },
     ]);
-    expect(JSON.stringify(config)).not.toContain("sntrys_actual_token");
+  });
+
+  it("requires the source map upload token inside EAS Build", () => {
+    expect(() =>
+      resolveMobileSentryBuildConfig(
+        {
+          EAS_BUILD: "true",
+          SENTRY_ORG: "chinasupply",
+          SENTRY_PROJECT: "chinasupply-mobile",
+        },
+        "staging",
+      ),
+    ).toThrow(/SENTRY_AUTH_TOKEN/);
+
+    const sentry = resolveMobileSentryBuildConfig(
+      {
+        EAS_BUILD: "true",
+        SENTRY_AUTH_TOKEN: "sntrys_actual_token",
+        SENTRY_ORG: "chinasupply",
+        SENTRY_PROJECT: "chinasupply-mobile",
+      },
+      "staging",
+    );
+
+    expect(JSON.stringify(sentry)).not.toContain("sntrys_actual_token");
   });
 
   it("keeps the staging Preview APK focused on arm64 devices", () => {
