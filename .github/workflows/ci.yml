@@ -227,7 +227,9 @@ jobs:
     name: Staging CMS migration
     needs:
       - ci_gate
-    if: github.event_name == 'push' && needs.ci_gate.result == 'success'
+    # `always()` prevents an allowed skipped Mobile job from propagating
+    # through CI Gate and skipping this reusable workflow on main.
+    if: always() && github.event_name == 'push' && needs.ci_gate.result == 'success'
     uses: ./.github/workflows/release-migrations.yml
     with:
       target: cms
