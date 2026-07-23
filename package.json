@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint scripts && turbo run lint",
+    "mobile:check": "pnpm --filter @chinasupply/mobile check",
     "release:migrate:cms": "node --env-file-if-exists=.env scripts/run-migrations.mjs cms",
     "release:migrate:core": "node --env-file-if-exists=.env scripts/run-migrations.mjs core",
     "test:unit": "turbo run test:unit",
