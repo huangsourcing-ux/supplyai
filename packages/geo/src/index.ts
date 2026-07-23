@@ -12,3 +12,16 @@ export type {
   Gcj02Position,
   Wgs84Position,
 } from "./coordinates.js";
+export {
+  buildNavUrl,
+  NAVIGATION_VALIDATION_FIXTURES,
+} from "./navigation/index.js";
+export type {
+  NavigationCoordinateMode,
+  NavigationLink,
+  NavigationPlatform,
+  NavigationProvider,
+  NavigationTarget,
+  NavigationUrls,
+  NavigationValidationFixture,
+} from "./navigation/index.js";

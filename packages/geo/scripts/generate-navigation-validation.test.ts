@@ -51,7 +51,10 @@ describe("M0-T9 navigation candidate generator", () => {
   });
 
   it("uses provider-specific coordinate order and offset flags", () => {
-    const candidates = buildNavigationCandidates(confirmedPoint.wgs84);
+    const candidates = buildNavigationCandidates(
+      confirmedPoint.wgs84,
+      confirmedPoint.nameZh,
+    );
     const appleWgs84 = candidates.find(
       (candidate) =>
         candidate.provider === "apple" && candidate.coordinateMode === "wgs84",
@@ -70,10 +73,58 @@ describe("M0-T9 navigation candidate generator", () => {
     );
 
     expect(appleWgs84?.primaryUrl).toContain("daddr=39.998471%2C116.383839");
-    expect(amapWgs84?.primaryUrl).toContain("lat=39.998471");
-    expect(amapWgs84?.primaryUrl).toContain("lon=116.383839");
+    expect(amapWgs84?.primaryUrl).toContain("iosamap://path");
+    expect(amapWgs84?.primaryUrl).toContain("dlat=39.998471");
+    expect(amapWgs84?.primaryUrl).toContain("dlon=116.383839");
+    expect(amapWgs84?.primaryUrl).toContain(
+      "dname=%E5%9B%BD%E5%AE%B6%E4%BC%9A%E8%AE%AE%E4%B8%AD%E5%BF%83",
+    );
     expect(amapWgs84?.primaryUrl).toContain("dev=1");
     expect(amapGcj02?.primaryUrl).toContain("dev=0");
+  });
+
+  it("opens route planning instead of forcing live navigation", () => {
+    const candidates = buildNavigationCandidates(confirmedPoint.wgs84);
+
+    expect(
+      candidates.find((candidate) => candidate.provider === "google")
+        ?.primaryUrl,
+    ).not.toContain("dir_action=navigate");
+    expect(
+      candidates.find(
+        (candidate) =>
+          candidate.provider === "baidu" &&
+          candidate.platform === "ios" &&
+          candidate.coordinateMode === "wgs84",
+      )?.primaryUrl,
+    ).toContain("baidumap://map/direction");
+    expect(
+      candidates.find(
+        (candidate) =>
+          candidate.provider === "amap" &&
+          candidate.platform === "android" &&
+          candidate.coordinateMode === "wgs84",
+      )?.primaryUrl,
+    ).toContain("amapuri://route/plan/");
+  });
+
+  it("uses the verified Baidu marker page as the web fallback", () => {
+    const candidate = buildNavigationCandidates(
+      confirmedPoint.wgs84,
+      confirmedPoint.nameZh,
+    ).find(
+      ({ platform, provider, coordinateMode }) =>
+        platform === "android" &&
+        provider === "baidu" &&
+        coordinateMode === "wgs84",
+    );
+
+    expect(candidate?.fallbackUrl).toContain("http://api.map.baidu.com/marker");
+    expect(candidate?.fallbackUrl).toContain("location=39.998471%2C116.383839");
+    expect(candidate?.fallbackUrl).toContain(
+      "title=%E5%9B%BD%E5%AE%B6%E4%BC%9A%E8%AE%AE%E4%B8%AD%E5%BF%83",
+    );
+    expect(candidate?.fallbackUrl).not.toContain("origin=");
   });
 
   it("refuses to produce a formal page from an unconfirmed entrance", () => {
