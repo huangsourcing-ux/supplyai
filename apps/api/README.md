@@ -22,7 +22,7 @@ command dispatches to the distinct `start:api` or `start:worker` script from
 the service's non-secret `SERVICE_ROLE`; only `api` receives a public domain
 and `/health/ready` deployment check. Both services track `main` through
 Railway's GitHub autodeploy integration with **Wait for CI** enabled, so a
-commit is not built or released until its GitHub check suite succeeds.
+commit is not built or released until all required GitHub checks succeed.
 
 Run the API test suites from the repository root:
 
