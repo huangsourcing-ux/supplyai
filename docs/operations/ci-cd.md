@@ -36,15 +36,28 @@ The GitHub `staging` Environment owns:
 
 Vercel and Railway runtime values remain in their platform stores. No Vercel
 token or Railway token is stored in GitHub because both platforms use their
-native Git integration. The repository is private, so GitHub Pro (or a higher
-plan) is required before adding Environment secrets or enforcing branch
-protection. Do not fall back to repository-level deployment secrets.
+native Git integration. The repository is currently public, so GitHub Free
+supports the required Environment secrets and branch protection. If the
+repository becomes private again, GitHub Pro (or a higher plan) is required to
+retain those controls. Do not fall back to repository-level deployment secrets.
 
 The current M0 migration gate runs only Payload CMS migrations. M1-T1 owns the
 real Drizzle `db:migrate` command and must add a `core` migration gate before
 Railway API/Worker release. A no-op core command is not acceptable.
 
 ## Platform settings
+
+External status on 2026-07-23:
+
+- GitHub `staging` Environment, `CI Gate` branch protection, CMS migration, and
+  `Staging Release Gate` are active and have passed on `main`.
+- Vercel is connected to `main` and serves the verified commit, but the
+  `Staging Release Gate` still needs to be selected as a required Deployment
+  Check in the Vercel project settings.
+- Railway API and Worker are connected to `main`, use `/railway.json`, and
+  successfully run the verified commit. Railway Autodeploy + Wait for CI cannot
+  be enabled until a project member connects a contributor GitHub account and
+  grants the Railway GitHub App access to `huangsourcing-ux/supplyai`.
 
 ### Vercel staging
 
@@ -82,7 +95,7 @@ own platform.
 
 ## Branch governance
 
-After GitHub Pro is active, protect `main` with these settings:
+Protect `main` with these settings:
 
 - require a pull request before merging, with zero mandatory approving reviews
   for the current single-maintainer repository;
