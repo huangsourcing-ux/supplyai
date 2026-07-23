@@ -37,6 +37,7 @@ export function createMobileExpoConfig(
     plugins: [
       "expo-localization",
       "expo-router",
+      "@maplibre/maplibre-react-native",
       [
         "expo-splash-screen",
         {

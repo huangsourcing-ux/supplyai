@@ -13,3 +13,9 @@ dist/
 # Payload-generated artifacts are kept in generator-native form.
 apps/web/src/app/(payload)/admin/importMap.js
 apps/web/src/payload-types.ts
+
+# Expo prebuild and export artifacts are intentionally untracked.
+apps/mobile/android/
+apps/mobile/ios/
+apps/mobile/.expo/
+apps/mobile/expo-env.d.ts

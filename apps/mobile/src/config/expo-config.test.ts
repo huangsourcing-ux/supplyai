@@ -8,5 +8,6 @@ describe("Expo application config", () => {
     expect(config.ios?.bundleIdentifier).toBe("ai.chinasupply.app.local");
     expect(config.android?.package).toBe("ai.chinasupply.app.local");
     expect(config.extra).not.toHaveProperty("eas.projectId");
+    expect(config.plugins).toContain("@maplibre/maplibre-react-native");
   });
 });

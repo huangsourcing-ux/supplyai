@@ -4,10 +4,21 @@ import { initReactI18next } from "react-i18next";
 export const resources = {
   en: {
     translation: {
-      shell: {
-        eyebrow: "Mobile compatibility spike",
-        status: "Expo application shell is ready",
-        title: "ChinaSupply.AI",
+      mapSpike: {
+        attribution: "© MapTiler · © OpenStreetMap contributors",
+        eyebrow: "MapLibre compatibility spike",
+        legend: {
+          cluster: "Cluster",
+          point: "Point",
+          polygon: "Polygon",
+          title: "Fixture layers",
+        },
+        status: {
+          error: "Map failed to load",
+          loading: "Loading offline map…",
+          ready: "Offline map ready",
+        },
+        title: "Yiwu offline map fixture",
       },
     },
   },

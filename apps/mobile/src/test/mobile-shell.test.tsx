@@ -1,15 +1,29 @@
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import "../lib/i18n";
-import MobileShellScreen from "../app/index";
+import MapSpikeScreen from "../app/index";
 
-describe("mobile shell", () => {
-  it("renders the English i18n shell without template demo content", () => {
-    render(<MobileShellScreen />);
+describe("MapLibre compatibility spike screen", () => {
+  it("renders the offline fixture, legend, attribution, and loading state", () => {
+    render(<MapSpikeScreen />);
 
-    expect(screen.getByText("ChinaSupply.AI")).toBeOnTheScreen();
+    expect(screen.getByText("Yiwu offline map fixture")).toBeOnTheScreen();
+    expect(screen.getByText("Loading offline map…")).toBeOnTheScreen();
+    expect(screen.getByText("Point")).toBeOnTheScreen();
+    expect(screen.getByText("Polygon")).toBeOnTheScreen();
+    expect(screen.getByText("Cluster")).toBeOnTheScreen();
     expect(
-      screen.getByText("Expo application shell is ready"),
+      screen.getByText("© MapTiler · © OpenStreetMap contributors"),
     ).toBeOnTheScreen();
+  });
+
+  it("shows ready and explicit failure states from native map callbacks", () => {
+    render(<MapSpikeScreen />);
+
+    fireEvent.press(screen.getByTestId("maplibre-finish-rendering"));
+    expect(screen.getByText("Offline map ready")).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByTestId("maplibre-fail-loading"));
+    expect(screen.getByText("Map failed to load")).toBeOnTheScreen();
   });
 });
