@@ -7,11 +7,11 @@
       "name": "China National Convention Center",
       "nameZh": "国家会议中心",
       "wgs84": [116.3838387, 39.9984707],
-      "coordinateSource": "OpenStreetMap candidate venue centroid; replace with the confirmed main vehicle entrance",
-      "entranceDescription": null,
-      "confirmed": false,
-      "confirmedBy": null,
-      "confirmedAt": null
+      "coordinateSource": "OpenStreetMap WGS-84 candidate verified by the product owner on physical-device navigation",
+      "entranceDescription": "人工确认的驾车导航落点",
+      "confirmed": true,
+      "confirmedBy": "Product owner",
+      "confirmedAt": "2026-07-23"
     },
     {
       "id": "shanghai-national-exhibition-convention-center",
@@ -20,11 +20,11 @@
       "name": "National Exhibition and Convention Center (Shanghai)",
       "nameZh": "国家会展中心（上海）",
       "wgs84": [121.2971952, 31.1920509],
-      "coordinateSource": "OpenStreetMap candidate venue centroid; replace with the confirmed main vehicle entrance",
-      "entranceDescription": null,
-      "confirmed": false,
-      "confirmedBy": null,
-      "confirmedAt": null
+      "coordinateSource": "OpenStreetMap WGS-84 candidate verified by the product owner on physical-device navigation",
+      "entranceDescription": "人工确认的驾车导航落点",
+      "confirmed": true,
+      "confirmedBy": "Product owner",
+      "confirmedAt": "2026-07-23"
     },
     {
       "id": "yiwu-international-trade-city-district-1",
@@ -33,11 +33,11 @@
       "name": "Yiwu International Trade City District 1",
       "nameZh": "义乌国际商贸城一区",
       "wgs84": [120.0981625, 29.3306899],
-      "coordinateSource": "OpenStreetMap candidate venue centroid; replace with the confirmed main vehicle entrance",
-      "entranceDescription": null,
-      "confirmed": false,
-      "confirmedBy": null,
-      "confirmedAt": null
+      "coordinateSource": "OpenStreetMap WGS-84 candidate verified by the product owner on physical-device navigation",
+      "entranceDescription": "人工确认的驾车导航落点",
+      "confirmed": true,
+      "confirmedBy": "Product owner",
+      "confirmedAt": "2026-07-23"
     },
     {
       "id": "shenzhen-convention-exhibition-center",
@@ -46,11 +46,11 @@
       "name": "Shenzhen Convention and Exhibition Center",
       "nameZh": "深圳会展中心",
       "wgs84": [114.0547472, 22.5335041],
-      "coordinateSource": "OpenStreetMap candidate venue centroid; replace with the confirmed main vehicle entrance",
-      "entranceDescription": null,
-      "confirmed": false,
-      "confirmedBy": null,
-      "confirmedAt": null
+      "coordinateSource": "OpenStreetMap WGS-84 candidate verified by the product owner on physical-device navigation",
+      "entranceDescription": "人工确认的驾车导航落点",
+      "confirmed": true,
+      "confirmedBy": "Product owner",
+      "confirmedAt": "2026-07-23"
     },
     {
       "id": "dongguan-guangdong-modern-international-exhibition-center",
@@ -59,11 +59,11 @@
       "name": "Guangdong Modern International Exhibition Center",
       "nameZh": "广东现代国际展览中心",
       "wgs84": [113.6522266, 22.9030947],
-      "coordinateSource": "OpenStreetMap candidate venue centroid; replace with the confirmed main vehicle entrance",
-      "entranceDescription": null,
-      "confirmed": false,
-      "confirmedBy": null,
-      "confirmedAt": null
+      "coordinateSource": "OpenStreetMap WGS-84 candidate verified by the product owner on physical-device navigation",
+      "entranceDescription": "人工确认的驾车导航落点",
+      "confirmed": true,
+      "confirmedBy": "Product owner",
+      "confirmedAt": "2026-07-23"
     }
   ]
 }

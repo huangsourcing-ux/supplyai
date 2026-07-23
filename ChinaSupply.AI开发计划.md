@@ -70,7 +70,7 @@ chinasupply/
 - [x] **M0-T6 CI/CD**：按上表分级触发；EAS 仅 `rc-*` / `v*` tag 或 Preview 手动触发。`main` 的 staging 发布先调用 M0 已真实可执行的 Payload `cms` migration，成功后才放行 Vercel/Railway；M1-T1 创建 Drizzle schema 与 `db:migrate` 后，再将 Railway 发布门增加为 `core` migration 成功。
 - [x] **M0-T7 Sentry 验证**：三端测试异常上报成功；release 版本正确；Web/Mobile source map 上传；环境区分 dev/staging/prod。
 - [x] **M0-T8 packages/geo**：WGS-84↔GCJ-02↔BD-09 纯函数 + 公开已知坐标对单测（误差阈值断言）。
-- [ ] **M0-T9 导航验证门（F-6.1，人工+真机）**：5 城市定点；iPhone 测 Apple/Google/高德/百度、Android 测 Google/高德/百度；产出《导航验证结论》；固化 `packages/geo/navigation` 的 `buildNavUrl` + 夹具单测。**不完成则 M4 导航不得开工。**
+- [x] **M0-T9 导航验证门（F-6.1，人工+真机）**：5 城市定点；iPhone 测 Apple/Google/高德/百度、Android 测 Google/高德/百度；产出《导航验证结论》；固化 `packages/geo/navigation` 的 `buildNavUrl` + 夹具单测。**不完成则 M4 导航不得开工。**
 - [ ] **M0-T10 Cloudflare 与 MapTiler**：域名托管 + API 域名代理 Railway（配置可信代理与真实客户端 IP 透传）；R2 bucket + CORS + custom domain + 环境隔离（CORS 不承担类型/大小校验，上传校验链见 M5-T1）；Purge token 最小权限；MapTiler key 按 Web 域名 / iOS Bundle ID / Android Package 分别限制。
 
 **版本策略**：M0 完成兼容矩阵并锁版本；V1 期间只允许安全修复与阻塞性 bugfix，不做框架大版本升级。

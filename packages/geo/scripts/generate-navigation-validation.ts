@@ -107,7 +107,6 @@ function buildGoogleCandidate(
     ["api", "1"],
     ["destination", coordinateValue(position)],
     ["travelmode", "driving"],
-    ["dir_action", "navigate"],
   ]);
 
   return {
@@ -123,22 +122,28 @@ function buildAmapCandidate(
   platform: Platform,
   position: Wgs84Position | Gcj02Position,
   coordinateMode: "gcj02" | "wgs84",
+  destinationName: string,
 ): NavigationCandidate {
   const [longitude, latitude] = position;
   const primaryUrl = buildUrl(
-    platform === "ios" ? "iosamap://navi" : "androidamap://navi",
+    platform === "ios" ? "iosamap://path" : "amapuri://route/plan/",
     [
       ["sourceApplication", sourceApplication],
-      ["poiname", genericDestinationName],
-      ["lat", formatCoordinate(latitude)],
-      ["lon", formatCoordinate(longitude)],
+      ["sid", ""],
+      ["slat", ""],
+      ["slon", ""],
+      ["sname", ""],
+      ["did", ""],
+      ["dlat", formatCoordinate(latitude)],
+      ["dlon", formatCoordinate(longitude)],
+      ["dname", destinationName],
       ["dev", coordinateMode === "wgs84" ? "1" : "0"],
-      ["style", "0"],
+      ["t", "0"],
     ],
   );
   const fallbackUrl = buildUrl("https://uri.amap.com/navigation", [
     ["from", ""],
-    ["to", `${longitudeLatitudeValue(position)},${genericDestinationName}`],
+    ["to", `${longitudeLatitudeValue(position)},${destinationName}`],
     ["mode", "car"],
     ["policy", "0"],
     ["src", "chinasupply.ai"],
@@ -158,22 +163,24 @@ function buildBaiduCandidate(
   platform: Platform,
   position: Wgs84Position | Gcj02Position | Bd09Position,
   coordinateMode: CoordinateMode,
+  destinationName: string,
 ): NavigationCandidate {
   const source =
     platform === "ios" ? "ios.chinasupply.ai" : "andr.chinasupply.ai";
-  const primaryUrl = buildUrl("baidumap://map/navi", [
-    ["location", coordinateValue(position)],
-    ["coord_type", coordinateMode],
-    ["query", genericDestinationName],
-    ["src", source],
-  ]);
-  const fallbackUrl = buildUrl("https://api.map.baidu.com/direction", [
+  const primaryUrl = buildUrl("baidumap://map/direction", [
     ["origin", "我的位置"],
     [
       "destination",
-      `latlng:${coordinateValue(position)}|name:${genericDestinationName}`,
+      `latlng:${coordinateValue(position)}|name:${destinationName}`,
     ],
     ["mode", "driving"],
+    ["coord_type", coordinateMode],
+    ["src", source],
+  ]);
+  const fallbackUrl = buildUrl("http://api.map.baidu.com/marker", [
+    ["location", coordinateValue(position)],
+    ["title", destinationName],
+    ["content", destinationName],
     ["coord_type", coordinateMode],
     ["output", "html"],
     ["src", "webapp.chinasupply.ai"],
@@ -190,6 +197,7 @@ function buildBaiduCandidate(
 
 export function buildNavigationCandidates(
   wgs84: Wgs84Position,
+  destinationName = genericDestinationName,
 ): NavigationCandidate[] {
   const gcj02 = wgs84ToGcj02(wgs84);
   const bd09 = wgs84ToBd09(wgs84);
@@ -202,11 +210,11 @@ export function buildNavigationCandidates(
     candidates.push(
       buildGoogleCandidate(platform, wgs84, "wgs84"),
       buildGoogleCandidate(platform, gcj02, "gcj02"),
-      buildAmapCandidate(platform, wgs84, "wgs84"),
-      buildAmapCandidate(platform, gcj02, "gcj02"),
-      buildBaiduCandidate(platform, wgs84, "wgs84"),
-      buildBaiduCandidate(platform, gcj02, "gcj02"),
-      buildBaiduCandidate(platform, bd09, "bd09ll"),
+      buildAmapCandidate(platform, wgs84, "wgs84", destinationName),
+      buildAmapCandidate(platform, gcj02, "gcj02", destinationName),
+      buildBaiduCandidate(platform, wgs84, "wgs84", destinationName),
+      buildBaiduCandidate(platform, gcj02, "gcj02", destinationName),
+      buildBaiduCandidate(platform, bd09, "bd09ll", destinationName),
     );
   }
 
@@ -289,7 +297,7 @@ export function buildNavigationValidationHtml(
 
   const pointSections = points
     .map((point) => {
-      const candidates = buildNavigationCandidates(point.wgs84);
+      const candidates = buildNavigationCandidates(point.wgs84, point.nameZh);
       const rows = candidates
         .map(
           (candidate) => `
