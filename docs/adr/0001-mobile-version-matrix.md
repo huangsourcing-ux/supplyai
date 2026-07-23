@@ -1,6 +1,6 @@
 # ADR-0001: Mobile compatibility version matrix
 
-- Status: Accepted; simulator matrix validated in M0-T5b
+- Status: Accepted; M0-T5 compatibility matrix validated in M0-T5c
 - Date: 2026-07-22
 - Owners: Mobile / Platform
 
@@ -30,9 +30,13 @@ NativeWind. Do not track the Obytes `master` branch.
 | Expo Router             | `6.0.24`                                              | Obytes v9 declares `~6.0.22`; locked to the SDK 54 patch required by Expo Doctor on 2026-07-22  |
 | NativeWind              | `4.2.6`                                               | Replaces Uniwind; verified by T5a static/export checks                                          |
 | Tailwind CSS            | `3.4.19`                                              | Locked for NativeWind v4                                                                        |
+| Clerk Expo              | `4.0.1`                                               | Email/password and device-trust flow validated by the Android Preview artifact                  |
+| Expo SecureStore        | `15.0.8`                                              | Persists only the MMKV encryption key                                                           |
+| Expo Crypto             | `15.0.9`                                              | Generates the random 16-byte MMKV encryption key                                                |
 | MapLibre React Native   | `11.3.6`                                              | Installed and validated on iOS/Android simulators in M0-T5b                                     |
 | MapLibre Native iOS     | `6.26.0`                                              | Resolved by Swift Package Manager during the iOS M0-T5b build                                   |
 | MapLibre Native Android | `13.2.0`                                              | Declared by MapLibre RN 11.3.6 and resolved by the Android M0-T5b build                         |
+| EAS CLI                 | `21.1.0`                                              | Used for project linking, config evaluation, and the M0-T5c Preview build                       |
 
 `newArchEnabled` is explicitly `true`. MapLibre React Native v11 only supports
 New Architecture, so disabling it is not an available fallback.
@@ -48,7 +52,10 @@ The application uses these provisional identities:
 The identifiers are not reserved in Apple Developer or Google Play Console.
 They may be used for local and Preview validation, but availability must be
 rechecked before device signing or store registration. No EAS project ID is
-committed in M0-T5a.
+committed in M0-T5a. M0-T5c linked the staging candidate to EAS project
+`@huangsourcing/chinasupply-ai` with project ID
+`cac33d97-75d7-4975-899f-00d661bf979d`; this does not reserve either store
+identifier.
 
 ## Styling divergence (accepted)
 
@@ -109,12 +116,61 @@ real network basemap test. Physical iOS and Android validation remains an
 explicit human gate; the MapTiler-backed product style remains M0-T10 scope.
 
 M0-T5c owns Clerk Expo, imports from `packages/schemas`, `packages/geo`, and
-`packages/i18n`, EAS monorepo working-directory configuration, and at least one
-successful Preview build.
+`packages/i18n`, EAS monorepo resolution, and at least one successful Preview
+build.
+
+## M0-T5c Preview and authentication evidence
+
+The mobile app consumes the three shared packages through `workspace:*` under
+pnpm's isolated linker. Each package exports TypeScript source directly. The
+startup compatibility module executes `localizedTextSchema.parse`, the WGS-84
+range check, and a shared English resource lookup, so Metro and EAS cannot hide
+a broken workspace link behind type-only imports. Expo SDK 54 discovers the
+monorepo root from `apps/mobile`; no unsupported EAS `workingDirectory`, custom
+Metro `watchFolders`, or hoisted linker is used.
+
+The Expo project was built from `apps/mobile` with the `preview` profile,
+internal distribution, the EAS `preview` environment, Node `22.23.1`, and an
+arm64-v8a Android APK. The environment contained only the staging app selector,
+the real HTTPS staging API URL, and the Clerk Development publishable key.
+Passwords, session tokens, and future integration placeholders were not
+uploaded.
+
+| Evidence             | Result                                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------- |
+| EAS build            | `cf218fc6-750c-4d7c-804b-5082d52e650d`, `FINISHED` on 2026-07-23 UTC; build duration 621.151 seconds          |
+| Build URL            | `https://expo.dev/accounts/huangsourcing/projects/chinasupply-ai/builds/cf218fc6-750c-4d7c-804b-5082d52e650d` |
+| APK                  | 65,288,599 bytes; SHA-256 `4dc18155226bd520d29324c9f254228cb58e02515ac5b52965844d959ce332c3`                  |
+| Login screen         | SHA-256 `a22e1d7a1fe6ed23c450bbb3adc60942654a7edbbb09ad0e73c5d4dc77eeb051`                                    |
+| Device-trust screen  | SHA-256 `0ff5521c9c8056b9e3d7eecf3c9e95af8c739ec0d8808ca62a6bf625144ff0ee`                                    |
+| Authenticated map    | SHA-256 `eedda875542f09895f11f478b8caac75f843f8311e381e310a44837f5c551663`                                    |
+| Cold-session restore | SHA-256 `defd099458c16ff940a5ba0efbf9338df68861a4ca7709da53225ceb0a403a12`                                    |
+
+The APK installed on the `diaoyouji_api_36` API 36 arm64 emulator and launched
+without Metro. A real Clerk Development user completed email/password sign-in
+and the first-device email-code trust step. Clerk tokens use a dedicated AES
+encrypted MMKV instance; its random 16-byte encryption key is held by
+SecureStore with this-device-only accessibility. After `am force-stop` removed
+the process, a cold launch restored the signed-in session and rendered the
+offline MapLibre fixture. The post-restore logcat contained no native fatal,
+React Native, Clerk/session, or MapLibre style/source error.
+
+Isolated cloud resolution exposed three build/runtime integration defects that
+local linking alone did not prove: Babel needed an explicit JSX transform
+dependency, Android packaging needed the duplicate OSGi manifest excluded, and
+Expo public environment reads needed static property access for Metro inlining.
+Those fixes are locked with `@babel/plugin-transform-react-jsx@7.29.7` and
+`expo-build-properties@1.0.10`; the successful artifact above contains all
+three shared runtime imports.
+
+M0-T5 is complete at the approved compatibility-spike boundary. This evidence
+does not satisfy the M0 physical-device gate, app-store signing or identifier
+reservation, user OAuth/redirect/account pages, or the MapTiler-backed product
+map. Those remain human gates or later task scope.
 
 ## Upgrade policy
 
-M0-T5b validated the simulator matrix. V1 therefore permits only security
+M0-T5 validated the simulator and Preview matrix. V1 therefore permits only security
 updates and fixes for blocking defects. Expo, React Native, Obytes, MapLibre,
 and NativeWind major upgrades require a new compatibility spike and an ADR
 update.

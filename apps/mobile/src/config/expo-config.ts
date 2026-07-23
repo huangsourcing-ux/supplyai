@@ -3,6 +3,8 @@ import type { ExpoConfig } from "@expo/config";
 import { getMobileIdentity } from "./app-identity";
 import type { MobileEnvironment } from "./app-identity";
 
+const easProjectId = "cac33d97-75d7-4975-899f-00d661bf979d";
+
 export function createMobileExpoConfig(
   environment: MobileEnvironment,
   config: Partial<ExpoConfig> = {},
@@ -39,6 +41,17 @@ export function createMobileExpoConfig(
       "expo-router",
       "@maplibre/maplibre-react-native",
       [
+        "expo-build-properties",
+        {
+          android: {
+            ...(environment === "staging" ? { buildArchs: ["arm64-v8a"] } : {}),
+            packagingOptions: {
+              exclude: ["META-INF/versions/9/OSGI-INF/MANIFEST.MF"],
+            },
+          },
+        },
+      ],
+      [
         "expo-splash-screen",
         {
           backgroundColor: "#0F172A",
@@ -52,6 +65,9 @@ export function createMobileExpoConfig(
     },
     extra: {
       appEnvironment: environment,
+      eas: {
+        projectId: easProjectId,
+      },
     },
   };
 }

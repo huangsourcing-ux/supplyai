@@ -1,0 +1,7 @@
+{
+  "extends": "@chinasupply/config/typescript/base",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts"]
+}

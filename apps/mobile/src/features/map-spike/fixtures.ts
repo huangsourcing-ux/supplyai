@@ -1,6 +1,14 @@
+import { isWgs84Position } from "@chinasupply/geo";
+import type { Wgs84Position } from "@chinasupply/geo";
 import type { FeatureCollection, Point, Polygon } from "geojson";
 
-export const YIWU_CENTER: [number, number] = [120.075, 29.306];
+const yiwuCenter: Wgs84Position = [120.075, 29.306];
+
+if (!isWgs84Position(yiwuCenter)) {
+  throw new Error("Invalid WGS-84 map compatibility fixture");
+}
+
+export const YIWU_CENTER: Wgs84Position = yiwuCenter;
 
 type SpikeProperties = {
   id: string;

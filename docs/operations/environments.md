@@ -29,7 +29,7 @@ The locked `postgis/postgis:17-3.5` image currently publishes an amd64 manifest.
 - `@chinasupply/config/env/web` validates Payload/Next.js server values and explicitly public Web values.
 - `@chinasupply/config/env/mobile` accepts only the documented `EXPO_PUBLIC_*` application values and rejects known server secrets.
 
-The Web bootstrap calls `parseWebEnv` from `next.config.ts`, so `next dev`, `next build`, and `next start` fail before startup when the Web contract is invalid. The API and Worker call `parseApiRuntimeEnv` before their Nest modules finish booting; it validates the M0 runtime dependencies while later provider modules retain their own complete configuration contract. M0-T5 must add the equivalent Mobile bootstrap call. Validation failures report field names only; values must never be logged.
+The Web bootstrap calls `parseWebEnv` from `next.config.ts`, so `next dev`, `next build`, and `next start` fail before startup when the Web contract is invalid. The API and Worker call `parseApiRuntimeEnv` before their Nest modules finish booting; it validates the M0 runtime dependencies while later provider modules retain their own complete configuration contract. Mobile evaluates `parseMobileEnv` from its Expo config before bundling and only exposes `EXPO_PUBLIC_*` values. Validation failures report field names only; values must never be logged.
 
 Real secrets live in the deployment platform or GitHub Environment. `.env.example` files contain local defaults and explicit placeholders only. No `.env`, `.env.local`, staging credential, or production credential may be committed.
 
@@ -51,6 +51,36 @@ All fields from `apps/web/.env.example` must have real staging values before dep
 The Clerk Development instance must be put in Restricted mode with public sign-up disabled. Configure the session token claim as `{"metadata":"{{user.public_metadata}}"}`, give invited administrators `{"role":"admin"}` in Public Metadata, and allow only the staging origin and redirect URL. `/admin` does not use Clerk; it has an independent Payload `cms_users` account.
 
 Do not mark M0-T3 complete until the CMS release migration has run against Railway staging, the Vercel deployment is healthy over HTTPS, and anonymous, non-admin, and admin `/ops` access have all been smoke-tested.
+
+## Mobile Preview contract
+
+The Expo project is `@huangsourcing/chinasupply-ai`. Its `preview` profile is
+an internal Android APK build using the EAS `preview` environment and Node
+`22.23.1`. The M0-T5c staging compatibility artifact is limited to arm64-v8a to
+keep the MapLibre cloud build bounded; this is not the production ABI policy.
+Commands are launched from `apps/mobile` through the root
+`mobile:eas:preview` wrapper. Expo SDK 54 discovers the pnpm monorepo
+automatically; do not add an unsupported EAS `workingDirectory` field, switch
+pnpm to a hoisted linker, or hand-maintain Metro `watchFolders`.
+
+The EAS Preview environment must contain:
+
+- `EXPO_PUBLIC_APP_ENV=staging`
+- the real HTTPS staging `EXPO_PUBLIC_API_BASE_URL`
+- a Clerk Development `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+
+MapTiler, Sentry, and PostHog public values remain optional until their owning
+tasks connect those integrations. If supplied, they are still validated as
+real values: placeholders are rejected, production MapTiler keys cannot enter
+staging, and PostHog key/host must be provided together.
+
+The retained Development smoke user password is stored only in macOS Keychain
+under service `ai.chinasupply.clerk.mobile-smoke`. Neither the password nor
+Clerk session tokens belong in source, EAS variables, logs, fixtures, or task
+transcripts. Clerk tokens in the app use encrypted MMKV with the encryption key
+held by the device SecureStore. If a smoke credential is displayed by test
+automation, rotate it immediately in Clerk and overwrite the same Keychain
+item; do not preserve the exposed value in screenshots or build evidence.
 
 ## API and Worker staging contract
 

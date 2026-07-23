@@ -66,7 +66,7 @@ chinasupply/
 - [x] **M0-T2 环境与配置**：三环境定义落地；.env.example + Zod env 校验；Docker Compose（PostGIS + Redis）；migration release command 流程写入 CI。
 - [x] **M0-T3 Web 骨架**：create-payload-app 迁入 apps/web；删演示内容；next-intl（en）；接入 Clerk Web Provider/Middleware——仅 staging admin 登录 + role 校验，为 M2 的 Admin API 与 /ops 提供鉴权基础（面向用户的 OAuth/回跳/账户页留 M3）；部署 Vercel（staging 域名）。
 - [x] **M0-T4 API + Worker 骨架**：nest new + Fastify；`main.ts`/`worker.ts` 双入口；Railway 两个 Service（api/worker）+ Redis provision；BullMQ 消费 `system:ping` 测试任务成功；`/health/live`（无外部依赖）与 `/health/ready`（检查 PG+Redis）；G-4 envelope 拦截器 + 全局 Zod pipe + 错误码枚举。
-- [ ] **M0-T5 移动兼容 Spike（本项目最重要的技术验证）**：Obytes Starter 迁入；验收清单——版本矩阵（Expo/RN/Obytes/MapLibre RN）写入 ADR；New Architecture 确认启用；expo-doctor 通过；iOS+Android dev build 通过；至少一个 Preview 配置可构建；从 mobile 成功导入 packages/schemas、geo、i18n（Metro + pnpm workspace + EAS monorepo workingDirectory 配置生效）；地图渲染点、Polygon、聚合点（不只是底图）；Clerk Expo 登录页接通。
+- [x] **M0-T5 移动兼容 Spike（本项目最重要的技术验证）**：Obytes Starter 迁入；验收清单——版本矩阵（Expo/RN/Obytes/MapLibre RN）写入 ADR；New Architecture 确认启用；expo-doctor 通过；iOS+Android dev build 通过；至少一个 Preview 配置可构建；从 mobile 成功导入 packages/schemas、geo、i18n（Metro + pnpm workspace + EAS monorepo workingDirectory 配置生效）；地图渲染点、Polygon、聚合点（不只是底图）；Clerk Expo 登录页接通。
 - [ ] **M0-T6 CI/CD**：按上表分级触发；EAS 仅 tag/手动。
 - [ ] **M0-T7 Sentry 验证**：三端测试异常上报成功；release 版本正确；Web/Mobile source map 上传；环境区分 dev/staging/prod。
 - [ ] **M0-T8 packages/geo**：WGS-84↔GCJ-02↔BD-09 纯函数 + 公开已知坐标对单测（误差阈值断言）。
