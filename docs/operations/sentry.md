@@ -14,11 +14,11 @@ the shorter names below:
 The Sentry organization is `huangsourcing`. M0-T7 created and verified these
 projects:
 
-| Runtime | Sentry project |
-| ------- | -------------- |
-| Web browser / Next.js server / edge | `chinasupply-web` |
-| NestJS API / BullMQ Worker | `chinasupply-api` |
-| Expo native application | `chinasupply-mobile` |
+| Runtime                             | Sentry project       |
+| ----------------------------------- | -------------------- |
+| Web browser / Next.js server / edge | `chinasupply-web`    |
+| NestJS API / BullMQ Worker          | `chinasupply-api`    |
+| Expo native application             | `chinasupply-mobile` |
 
 The release-upload token has only `org:ci`; project administration used a
 separate short-lived internal integration. DSNs remain in deployment-platform
@@ -94,7 +94,11 @@ Expo SDK 54 recommends Sentry React Native `~7.2.0`, but that version's custom
 serializer fails against the locked Metro 0.83 export path. M0-T7 therefore
 locks the blocking bugfix release `7.6.0` and records an Expo Doctor install
 check exception. The application uses `getSentryExpoConfig`; do not replace it
-with a nested custom serializer.
+with a nested custom serializer. Mobile also pins the SDK-matching
+`@sentry/cli` `2.58.0` as a direct development dependency. The Android Gradle
+upload task executes `apps/mobile/node_modules/@sentry/cli/bin/sentry-cli`;
+leaving the CLI only as a pnpm transitive dependency makes that path unavailable
+on EAS Linux and fails the build after generating the source map.
 
 ## Acceptance run
 
