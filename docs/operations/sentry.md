@@ -134,3 +134,32 @@ deployments built from the same reviewed commit.
 Unit tests and local exports prove configuration and artifact generation only;
 they do not substitute for the three received events or Sentry-side source map
 symbolication.
+
+## Verified staging evidence (2026-07-23)
+
+M0-T7 was accepted against the `codex/m0-t7-sentry` review branch. The Mobile
+build needed two packaging-only follow-up commits after the Web/API smoke commit;
+those changes did not modify the already verified Web or API Sentry runtime
+configuration.
+
+| Runtime | Received event                     | Environment | Release                                                          |
+| ------- | ---------------------------------- | ----------- | ---------------------------------------------------------------- |
+| Web     | `3eac560cac1a4c38aabe14c8bb47ad67` | `staging`   | `chinasupply-web@0.0.0+89f79d90236ea384a4e696db356cbe49e9a41fc4` |
+| API     | `248eb56016844c19be28eca95d65d5db` | `staging`   | `chinasupply-api@0.0.0+89f79d90236ea384a4e696db356cbe49e9a41fc4` |
+| Mobile  | `8d01e0919bb0430f86034a4df6693d84` | `staging`   | `ai.chinasupply.app.staging@0.0.1+1`                             |
+
+The successful Android EAS Preview build is
+`2686dd8c-97fa-427b-a1b4-679309731768` at commit
+`ecf8ecd80e09b1bb13dd0a9a3c0c4a1f1a04aca8`. Its build log confirms the
+JavaScript bundle and source map upload with debug ID
+`6950b9ec-52f1-43bc-91d1-0e12ddfa38e7`; the installed APK then produced the
+Mobile event above from a controlled ADB crash. Vercel Preview build logs
+confirm successful Sentry artifact upload and Next.js production source-map
+upload for the Web release above.
+
+Vercel Preview/Production, Railway API/Worker, and EAS Preview/Production were
+inspected with `staging` application configuration and their respective Sentry
+projects. Production application configuration keeps the deliberate smoke
+switch disabled and maps `production` to Sentry `prod`; no deliberate
+production exception was sent. Local configuration tests cover the remaining
+`local` to `dev` mapping.
