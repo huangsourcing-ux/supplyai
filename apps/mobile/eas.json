@@ -11,6 +11,13 @@
       "distribution": "internal",
       "environment": "preview",
       "node": "22.23.1"
+    },
+    "production": {
+      "environment": "production",
+      "node": "22.23.1"
     }
+  },
+  "submit": {
+    "production": {}
   }
 }

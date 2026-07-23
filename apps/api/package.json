@@ -12,6 +12,7 @@
     "start:api": "node --env-file-if-exists=.env.local --enable-source-maps dist/main.js",
     "start:worker": "node --env-file-if-exists=.env.local --enable-source-maps dist/worker.js",
     "system:ping": "node --env-file-if-exists=.env.local --enable-source-maps dist/system-ping.js",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "test:unit": "vitest run",
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
@@ -36,6 +37,7 @@
     "@types/node": "^22.19.1",
     "@types/pg": "8.20.0",
     "eslint": "^9.39.1",
+    "testcontainers": "11.10.0",
     "typescript": "5.9.2",
     "vitest": "4.0.18"
   }

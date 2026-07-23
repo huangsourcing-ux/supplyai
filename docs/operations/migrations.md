@@ -7,7 +7,7 @@ Core and CMS schemas have separate owners and separate release commands:
 | `core` | Drizzle/NestJS | `pnpm release:migrate:core` | `pnpm --filter @chinasupply/api db:migrate`  |
 | `cms`  | Payload        | `pnpm release:migrate:cms`  | `pnpm --filter @chinasupply/web cms:migrate` |
 
-M0-T3 implements the Payload command and commits the initial CMS migration. The core command remains a contract-only placeholder until M0-T4. Inspect either target without executing it:
+M0-T3 implements the Payload command and commits the initial CMS migration. The core command remains a contract-only placeholder until M1-T1 creates the Drizzle schema and a real `db:migrate` command. Inspect either target without executing it:
 
 ```bash
 pnpm release:migrate:core -- --dry-run
@@ -25,3 +25,10 @@ pnpm --filter @chinasupply/web cms:migrate:create migration_name
 The initial migration owns only `cms_users` and Payload internal tables. It must never create, alter, or drop Drizzle-owned core tables. `push: false` is fixed in Payload configuration, and neither build nor application startup runs migrations.
 
 `.github/workflows/release-migrations.yml` is a reusable `workflow_call` workflow only. A deployment workflow must select one target, attach the matching GitHub Environment, and depend on a successful migration job before deploying that application. The CMS target obtains `DATABASE_URL` and `PAYLOAD_SECRET` from GitHub Environment secrets and `NEXT_PUBLIC_SITE_URL` from an Environment variable. It has no push, tag, manual, production, seed, or deploy trigger.
+
+M0-T6 calls this workflow with `target=cms` after `CI Gate` on `main` and
+publishes `Staging Release Gate` only after the migration succeeds. That gate
+currently protects all staging releases because CMS is the only real schema
+migration available in M0. M1-T1 must add a second `target=core` call and make
+Railway API/Worker releases depend on it; do not replace the missing command
+with a no-op.

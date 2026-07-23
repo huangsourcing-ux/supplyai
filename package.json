@@ -17,6 +17,7 @@
     "mobile:eas:preview": "pnpm --filter @chinasupply/mobile eas:preview",
     "release:migrate:cms": "node --env-file-if-exists=.env scripts/run-migrations.mjs cms",
     "release:migrate:core": "node --env-file-if-exists=.env scripts/run-migrations.mjs core",
+    "test:e2e": "pnpm --filter @chinasupply/api test:e2e",
     "test:unit": "turbo run test:unit",
     "typecheck": "tsc --project tsconfig.scripts.json --noEmit && turbo run typecheck"
   },
