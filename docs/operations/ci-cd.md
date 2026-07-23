@@ -51,13 +51,13 @@ External status on 2026-07-23:
 
 - GitHub `staging` Environment, `CI Gate` branch protection, CMS migration, and
   `Staging Release Gate` are active and have passed on `main`.
-- Vercel is connected to `main` and serves the verified commit, but the
-  `Staging Release Gate` still needs to be selected as a required Deployment
-  Check in the Vercel project settings.
+- Vercel is connected to `main`; required Deployment Check
+  `Staging Release Gate` blocks production alias assignment and has passed on a
+  real `main` deployment.
 - Railway API and Worker are connected to `main`, use `/railway.json`, and
-  successfully run the verified commit. Railway Autodeploy + Wait for CI cannot
-  be enabled until a project member connects a contributor GitHub account and
-  grants the Railway GitHub App access to `huangsourcing-ux/supplyai`.
+  have Autodeploy + Wait for CI enabled. Both services remained `WAITING` until
+  the GitHub check suite passed, then successfully released the verified
+  commit.
 
 ### Vercel staging
 
@@ -84,6 +84,14 @@ remain allowed and use the staging project Preview environment values.
 Both services use the same watch paths. `SERVICE_ROLE` continues to select the
 HTTP or Worker start command. The API retains `/health/ready` as its deployment
 health check; the Worker has no public domain.
+
+The 2026-07-23 acceptance run used commit
+`5a5f7fad9ae07ecb7e376eb458f7c5d002bf1f8f`. GitHub Actions run
+`29989416236` completed CMS migration before `Staging Release Gate`; Vercel
+check run `ckr_3fe47e76-31b3-48ab-a14f-74b77d83c605` then released the staging
+aliases. Railway deployment `33485e90-8d1d-4eac-82c9-85d98e145d84` (API) and
+`a6e4fcd5-fc66-43d9-bbbf-3a10a170ee0a` (Worker) both moved from `WAITING` to
+`SUCCESS` for that SHA.
 
 ### EAS
 
