@@ -10,6 +10,7 @@ import {
   getClusters,
   getFactories,
   getFactory,
+  search,
 } from "@chinasupply/api-client";
 import {
   getCategoriesResponseSchema,
@@ -18,6 +19,7 @@ import {
   getClustersResponseSchema,
   getFactoriesResponseSchema,
   getFactoryResponseSchema,
+  searchResponseSchema,
 } from "@chinasupply/schemas";
 import { NestFactory } from "@nestjs/core";
 import {
@@ -60,6 +62,8 @@ const ids = {
   clusterTop: "zzzzzzzzzzzzzzzzzzzzz",
   factoryDetail: "777777777777777777777",
   factoryDraftCluster: "666666666666666666666",
+  furniture: "fffffffffffffffffffff",
+  hosiery: "hhhhhhhhhhhhhhhhhhhhh",
   led: "eeeeeeeeeeeeeeeeeeeee",
   lighting: "lllllllllllllllllllll",
 } as const;
@@ -109,28 +113,37 @@ async function insertRegion(
 async function insertCategory(
   client: PoolClient,
   input: {
+    aliases?: { en?: string[]; zh?: string[] };
     color: string | null;
     id: string;
     name: string;
     parentId?: string;
+    searchTextEn?: string;
+    searchTextZh?: string;
     slug: string;
     sortOrder: number;
+    zhName?: string;
   },
 ): Promise<void> {
   await client.query(
     `insert into categories
-       (id, parent_id, name, slug, icon, color, sort_order, search_text_en, search_text_zh)
-     values ($1, $2, $3::jsonb, $4, $5, $6, $7, $8, $9)`,
+       (id, parent_id, name, slug, icon, color, aliases, sort_order,
+        search_text_en, search_text_zh)
+     values ($1, $2, $3::jsonb, $4, $5, $6, $7::jsonb, $8, $9, $10)`,
     [
       input.id,
       input.parentId ?? null,
-      JSON.stringify({ en: input.name, zh: `${input.name} 中文` }),
+      JSON.stringify({
+        en: input.name,
+        zh: input.zhName ?? `${input.name} 中文`,
+      }),
       input.slug,
       input.parentId === undefined ? `${input.slug}-icon` : null,
       input.color,
+      JSON.stringify(input.aliases ?? {}),
       input.sortOrder,
-      input.name.toLowerCase(),
-      `${input.name} 中文`,
+      input.searchTextEn ?? input.name.toLowerCase(),
+      input.searchTextZh ?? `${input.name} 中文`,
     ],
   );
 }
@@ -144,6 +157,8 @@ async function insertCluster(
     primaryCategoryId: string;
     publishedAt: string | null;
     regionId: string;
+    searchTextEn?: string;
+    searchTextZh?: string;
     slug: string;
     status: "draft" | "published";
     withBoundary?: boolean;
@@ -209,8 +224,8 @@ async function insertCluster(
         }),
         input.status,
         input.publishedAt,
-        `${input.slug} lighting`,
-        `${input.slug} 照明`,
+        input.searchTextEn ?? `${input.slug} lighting`,
+        input.searchTextZh ?? `${input.slug} 照明`,
       ],
     );
 
@@ -241,6 +256,8 @@ async function insertFactory(
     id: string;
     name?: { en: string; zh: string };
     publishedAt: string | null;
+    searchTextEn?: string;
+    searchTextZh?: string;
     slug?: string;
     status: "draft" | "published";
     verified?: boolean;
@@ -315,8 +332,8 @@ async function insertFactory(
         input.verified ? "clerk_admin_test" : null,
         input.status,
         input.publishedAt,
-        `${slug} led`,
-        `${slug} 工厂`,
+        input.searchTextEn ?? `${slug} led`,
+        input.searchTextZh ?? `${slug} 工厂`,
       ],
     );
 
@@ -417,8 +434,34 @@ describe.sequential("public catalog API", () => {
         id: ids.led,
         name: "LED Lighting",
         parentId: ids.lighting,
+        searchTextEn: "LED lighting",
+        searchTextZh: "LED灯 LED 灯饰",
         slug: "led-lighting",
         sortOrder: 2,
+      });
+      await insertCategory(client, {
+        aliases: { en: ["sofa"], zh: ["沙发"] },
+        color: null,
+        id: ids.furniture,
+        name: "Furniture",
+        parentId: ids.apparel,
+        searchTextEn: "Furniture sofa",
+        searchTextZh: "家具 沙发",
+        slug: "furniture",
+        sortOrder: 1,
+        zhName: "家具",
+      });
+      await insertCategory(client, {
+        aliases: { en: ["socks"], zh: ["袜子"] },
+        color: null,
+        id: ids.hosiery,
+        name: "Hosiery",
+        parentId: ids.apparel,
+        searchTextEn: "Hosiery socks",
+        searchTextZh: "袜子 针织",
+        slug: "hosiery",
+        sortOrder: 2,
+        zhName: "袜类",
       });
 
       await insertCluster(client, {
@@ -428,16 +471,20 @@ describe.sequential("public catalog API", () => {
         primaryCategoryId: ids.lighting,
         publishedAt: "2026-07-24T12:00:00.000Z",
         regionId: ids.cityA,
+        searchTextEn: "top lighting LED lamps",
+        searchTextZh: "top 灯饰 LED灯",
         slug: "top-lighting",
         status: "published",
         withBoundary: true,
       });
       await insertCluster(client, {
-        categoryIds: [ids.lighting],
+        categoryIds: [ids.lighting, ids.apparel, ids.furniture, ids.hosiery],
         id: ids.clusterSecond,
         primaryCategoryId: ids.lighting,
         publishedAt: "2026-07-24T12:00:00.000Z",
         regionId: ids.cityA,
+        searchTextEn: "second lighting furniture sofa hosiery socks",
+        searchTextZh: "家具产业带 沙发 袜子",
         slug: "second-lighting",
         status: "published",
       });
@@ -471,6 +518,8 @@ describe.sequential("public catalog API", () => {
           },
         ],
         publishedAt: "2026-07-24T12:00:00.000Z",
+        searchTextEn: "factory LED lighting",
+        searchTextZh: "LED灯 工厂 灯饰",
         status: "published",
         verified: true,
       });
@@ -479,6 +528,7 @@ describe.sequential("public catalog API", () => {
         clusterId: ids.clusterTop,
         id: "222222222222222222222",
         publishedAt: "2026-07-24T12:00:00.000Z",
+        searchTextEn: "bulbs sokcs",
         status: "published",
       });
       await insertFactory(client, {
@@ -494,10 +544,12 @@ describe.sequential("public catalog API", () => {
         status: "published",
       });
       await insertFactory(client, {
-        categoryIds: [ids.apparel],
+        categoryIds: [ids.apparel, ids.hosiery],
         clusterId: ids.clusterSecond,
         id: "555555555555555555555",
         publishedAt: "2026-07-24T10:00:00.000Z",
+        searchTextEn: "hosiery socks factory",
+        searchTextZh: "袜子 工厂 家具",
         status: "published",
       });
       await insertFactory(client, {
@@ -576,7 +628,10 @@ describe.sequential("public catalog API", () => {
       "apparel",
       "lighting",
     ]);
-    expect(body.data[0]?.children).toEqual([]);
+    expect(body.data[0]?.children.map((category) => category.slug)).toEqual([
+      "furniture",
+      "hosiery",
+    ]);
     expect(body.data[1]?.children.map((category) => category.slug)).toEqual([
       "led-lighting",
       "bulbs",
@@ -854,6 +909,112 @@ describe.sequential("public catalog API", () => {
     expect(body.data.relatedFactories).toEqual([]);
   });
 
+  it("searches English, aliases, Chinese, and mixed-language terms", async () => {
+    const ledResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/search?q=led",
+    });
+    const led = searchResponseSchema.parse(ledResponse.json());
+
+    expect(ledResponse.statusCode).toBe(200);
+    expect(led.meta).toEqual({});
+    expect(led.data.categories.map(({ slug }) => slug)).toContain(
+      "led-lighting",
+    );
+    expect(led.data.clusters[0]).toMatchObject({
+      centroid: { coordinates: [120.2, 30.3], type: "Point" },
+      factoryCount: 2,
+      name: "top-lighting name",
+      slug: "top-lighting",
+      type: "cluster",
+    });
+    expect(led.data.factories).toHaveLength(5);
+    expect(led.data.factories.map(({ id }) => id)).toEqual([
+      "111111111111111111111",
+      ids.factoryDraftCluster,
+      ids.factoryDetail,
+      "related00000000000001",
+      "related00000000000002",
+    ]);
+    expect(led.data.factories[0]).toMatchObject({
+      location: { coordinates: [120.3, 30.4], type: "Point" },
+      type: "factory",
+    });
+    expect(
+      led.data.factories.some(({ id }) =>
+        ["333333333333333333333", "444444444444444444444"].includes(id),
+      ),
+    ).toBe(false);
+
+    const socksResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/search?q=socks",
+    });
+    const socks = searchResponseSchema.parse(socksResponse.json());
+
+    expect(socks.data.categories[0]?.slug).toBe("hosiery");
+    expect(socks.data.clusters[0]?.slug).toBe("second-lighting");
+    const socksFactoryIds = socks.data.factories.map(({ id }) => id);
+    expect(socksFactoryIds[0]).toBe("555555555555555555555");
+    expect(socksFactoryIds).toContain("222222222222222222222");
+    expect(socksFactoryIds.indexOf("555555555555555555555")).toBeLessThan(
+      socksFactoryIds.indexOf("222222222222222222222"),
+    );
+
+    const sofaResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/search?q=sofa",
+    });
+    const sofa = searchResponseSchema.parse(sofaResponse.json());
+
+    expect(sofa.data.categories[0]?.slug).toBe("furniture");
+    expect(sofa.data.clusters.map(({ slug }) => slug)).toEqual([
+      "second-lighting",
+    ]);
+
+    const chineseResponse = await app.inject({
+      method: "GET",
+      url: `/api/v1/search?q=${encodeURIComponent("家具")}`,
+    });
+    const chinese = searchResponseSchema.parse(chineseResponse.json());
+
+    expect(chinese.data.categories.map(({ slug }) => slug)).toEqual([
+      "furniture",
+    ]);
+    expect(chinese.data.clusters.map(({ slug }) => slug)).toEqual([
+      "second-lighting",
+    ]);
+    expect(chinese.data.factories.map(({ id }) => id)).toEqual([
+      "555555555555555555555",
+    ]);
+
+    const mixedResponse = await app.inject({
+      method: "GET",
+      url: `/api/v1/search?q=${encodeURIComponent("LED灯")}`,
+    });
+    const mixed = searchResponseSchema.parse(mixedResponse.json());
+
+    expect(mixed.data.categories.map(({ slug }) => slug)).toContain(
+      "led-lighting",
+    );
+    expect(mixed.data.clusters.map(({ slug }) => slug)).toContain(
+      "top-lighting",
+    );
+    expect(mixed.data.factories.map(({ id }) => id)).toContain(
+      "111111111111111111111",
+    );
+
+    const draftResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/search?q=draft-lighting",
+    });
+    const draft = searchResponseSchema.parse(draftResponse.json());
+
+    expect(draft.data.clusters.some(({ id }) => id === ids.clusterDraft)).toBe(
+      false,
+    );
+  });
+
   it("returns frozen validation and not-found envelopes", async () => {
     for (const url of [
       "/api/v1/categories?unexpected=true",
@@ -867,6 +1028,9 @@ describe.sequential("public catalog API", () => {
       "/api/v1/factories?verified=1",
       "/api/v1/factories?cluster=INVALID_SLUG",
       "/api/v1/factories/INVALID_SLUG",
+      "/api/v1/search",
+      "/api/v1/search?q=x",
+      `/api/v1/search?q=${"x".repeat(101)}`,
     ]) {
       const response = await app.inject({ method: "GET", url });
       const body = response.json();
@@ -915,7 +1079,7 @@ describe.sequential("public catalog API", () => {
     }
   });
 
-  it("serves all six endpoints through the generated API client", async () => {
+  it("serves all seven endpoints through the generated API client", async () => {
     configureApiClient({ baseUrl: `${await app.getUrl()}/api/v1` });
 
     const categoriesResponse = await getCategories();
@@ -929,6 +1093,7 @@ describe.sequential("public catalog API", () => {
       limit: 2,
     });
     const factoryResponse = await getFactory("verified-lighting-factory");
+    const searchResponse = await search({ q: "sofa" });
 
     expect(
       getCategoriesResponseSchema.parse(categoriesResponse).data,
@@ -948,5 +1113,8 @@ describe.sequential("public catalog API", () => {
     expect(getFactoryResponseSchema.parse(factoryResponse).data.slug).toBe(
       "verified-lighting-factory",
     );
+    expect(
+      searchResponseSchema.parse(searchResponse).data.categories[0]?.slug,
+    ).toBe("furniture");
   });
 });
