@@ -117,6 +117,39 @@ function defineRouteContract(
   };
 }
 
+export const getClustersRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getClusters",
+  path: "/api/v1/clusters",
+  request: { query: getClustersQuerySchema },
+  response: getClustersResponseSchema,
+  summary: "List published industrial clusters",
+  tag: "clusters",
+});
+
+export const getClusterRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getCluster",
+  path: "/api/v1/clusters/{slug}",
+  request: { params: getClusterParamsSchema },
+  response: getClusterResponseSchema,
+  summary: "Get a published industrial cluster",
+  tag: "clusters",
+});
+
+export const getCategoriesRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getCategories",
+  path: "/api/v1/categories",
+  request: { query: getCategoriesQuerySchema },
+  response: getCategoriesResponseSchema,
+  summary: "Get the public category tree",
+  tag: "categories",
+});
+
 export const apiRouteContracts = [
   defineRouteContract({
     access: "health",
@@ -127,26 +160,8 @@ export const apiRouteContracts = [
     summary: "Liveness probe",
     tag: "health",
   }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getClusters",
-    path: "/api/v1/clusters",
-    request: { query: getClustersQuerySchema },
-    response: getClustersResponseSchema,
-    summary: "List published industrial clusters",
-    tag: "clusters",
-  }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getCluster",
-    path: "/api/v1/clusters/{slug}",
-    request: { params: getClusterParamsSchema },
-    response: getClusterResponseSchema,
-    summary: "Get a published industrial cluster",
-    tag: "clusters",
-  }),
+  getClustersRouteContract,
+  getClusterRouteContract,
   defineRouteContract({
     access: "public",
     method: "get",
@@ -190,16 +205,7 @@ export const apiRouteContracts = [
     summary: "Search categories, clusters, and factories",
     tag: "search",
   }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getCategories",
-    path: "/api/v1/categories",
-    request: { query: getCategoriesQuerySchema },
-    response: getCategoriesResponseSchema,
-    summary: "Get the public category tree",
-    tag: "categories",
-  }),
+  getCategoriesRouteContract,
   defineRouteContract({
     access: "user",
     method: "get",

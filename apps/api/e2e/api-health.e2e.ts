@@ -68,6 +68,7 @@ describe.sequential("API health e2e", () => {
       DATABASE_URL: databaseUrl,
       PORT: "3001",
       REDIS_URL: redisUrl,
+      R2_CDN_BASE_URL: "https://media.example.test",
       WEB_ORIGIN: "http://localhost:3000",
     });
 
