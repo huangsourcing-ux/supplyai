@@ -24,6 +24,13 @@ describe("Web internationalization contract", () => {
 
     expect(messages.Metadata).toBeTypeOf("object");
     expect(messages.Home).toBeTypeOf("object");
+    expect(messages.Map).toMatchObject({
+      dataError: "Industrial cluster data could not be loaded.",
+      loading: "Loading industrial clusters…",
+      mapError: "The map could not be loaded.",
+      mapTilerLogoAlt: "MapTiler logo",
+      retry: "Retry",
+    });
     expect(messages.Operations).toBeTypeOf("object");
   });
 });

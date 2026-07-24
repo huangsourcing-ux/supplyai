@@ -10,6 +10,7 @@
     "./env/sentry": "./env/sentry.js",
     "./env/web": "./env/web.js",
     "./eslint/base": "./eslint/base.js",
+    "./map/style": "./map/style.js",
     "./tailwind/preset": "./tailwind/preset.js",
     "./typescript/base": "./typescript/base.json"
   },
