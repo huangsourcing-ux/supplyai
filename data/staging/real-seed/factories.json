@@ -1,0 +1,1171 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "slug": "shenzhen-dji-innovation",
+      "name": {
+        "en": "Shenzhen DJI Innovation Technology Co., Ltd.",
+        "zh": "深圳市大疆创新科技有限公司"
+      },
+      "clusterSlug": "shenzhen-consumer-electronics",
+      "regionId": "reg_shenzhen_city_001",
+      "address": {
+        "en": "DJI Sky City, Xueyuan Avenue, Nanshan District, Shenzhen, Guangdong, China",
+        "zh": "中国广东省深圳市南山区学苑大道大疆天空之城"
+      },
+      "location": [113.9467, 22.5902],
+      "categorySlugs": ["electronics", "consumer-electronics"],
+      "mainProducts": [
+        { "en": "Camera drones", "zh": "航拍无人机" },
+        { "en": "Handheld imaging devices", "zh": "手持影像设备" }
+      ],
+      "contact": { "website": "https://www.dji.com/company" },
+      "images": [],
+      "sourceName": "DJI official company website",
+      "sourceUrl": "https://www.dji.com/company"
+    },
+    {
+      "slug": "shenzhen-skyworth-digital",
+      "name": {
+        "en": "Shenzhen Skyworth Digital Technology Co., Ltd.",
+        "zh": "深圳创维数字技术有限公司"
+      },
+      "clusterSlug": "shenzhen-consumer-electronics",
+      "regionId": "reg_shenzhen_city_001",
+      "address": {
+        "en": "Skyworth Semiconductor Design Building, Nanshan District, Shenzhen, Guangdong, China",
+        "zh": "中国广东省深圳市南山区创维半导体设计大厦"
+      },
+      "location": [113.9537, 22.5369],
+      "categorySlugs": ["electronics", "consumer-electronics"],
+      "mainProducts": [
+        { "en": "Digital set-top boxes", "zh": "数字机顶盒" },
+        { "en": "Broadband network devices", "zh": "宽带网络设备" }
+      ],
+      "contact": { "website": "https://en.skyworthdigital.com/" },
+      "images": [],
+      "sourceName": "Skyworth Digital official website",
+      "sourceUrl": "https://en.skyworthdigital.com/"
+    },
+    {
+      "slug": "shenzhen-konka-group",
+      "name": {
+        "en": "Konka Group Co., Ltd.",
+        "zh": "康佳集团股份有限公司"
+      },
+      "clusterSlug": "shenzhen-consumer-electronics",
+      "regionId": "reg_shenzhen_city_001",
+      "address": {
+        "en": "Overseas Chinese Town, Nanshan District, Shenzhen, Guangdong, China",
+        "zh": "中国广东省深圳市南山区华侨城"
+      },
+      "location": [113.9824, 22.5362],
+      "categorySlugs": ["electronics", "consumer-electronics"],
+      "mainProducts": [
+        { "en": "Televisions", "zh": "电视机" },
+        { "en": "Smart displays", "zh": "智能显示设备" }
+      ],
+      "contact": { "website": "https://www.konka.com/" },
+      "images": [],
+      "sourceName": "Konka official website",
+      "sourceUrl": "https://www.konka.com/"
+    },
+    {
+      "slug": "shenzhen-transsion-holdings",
+      "name": {
+        "en": "Shenzhen Transsion Holdings Co., Ltd.",
+        "zh": "深圳传音控股股份有限公司"
+      },
+      "clusterSlug": "shenzhen-consumer-electronics",
+      "regionId": "reg_shenzhen_city_001",
+      "address": {
+        "en": "Transsion Building, Nanshan District, Shenzhen, Guangdong, China",
+        "zh": "中国广东省深圳市南山区传音大厦"
+      },
+      "location": [113.9488, 22.5892],
+      "categorySlugs": ["electronics", "consumer-electronics"],
+      "mainProducts": [
+        { "en": "Mobile phones", "zh": "移动电话" },
+        { "en": "Smart accessories", "zh": "智能配件" }
+      ],
+      "contact": { "website": "https://www.transsion.com/" },
+      "images": [],
+      "sourceName": "Transsion official website",
+      "sourceUrl": "https://www.transsion.com/"
+    },
+    {
+      "slug": "shenzhen-huntkey-electric",
+      "name": {
+        "en": "Huntkey Electric Co., Ltd.",
+        "zh": "航嘉机构"
+      },
+      "clusterSlug": "shenzhen-consumer-electronics",
+      "regionId": "reg_shenzhen_city_001",
+      "address": {
+        "en": "Huntkey Industrial Park, Bantian, Longgang District, Shenzhen, Guangdong, China",
+        "zh": "中国广东省深圳市龙岗区坂田航嘉工业园"
+      },
+      "location": [114.0696, 22.6414],
+      "categorySlugs": ["electronics", "consumer-electronics"],
+      "mainProducts": [
+        { "en": "Power supplies", "zh": "电源" },
+        { "en": "Power strips", "zh": "排插" }
+      ],
+      "contact": { "website": "https://en.huntkey.com/" },
+      "images": [],
+      "sourceName": "Huntkey official website",
+      "sourceUrl": "https://en.huntkey.com/"
+    },
+    {
+      "slug": "dongguan-oppo-mobile",
+      "name": {
+        "en": "Guangdong OPPO Mobile Telecommunications Corp., Ltd.",
+        "zh": "广东欧珀移动通信有限公司"
+      },
+      "clusterSlug": "dongguan-electronic-information",
+      "regionId": "reg_dongguan_city_001",
+      "address": {
+        "en": "Binhaiwan Bay Area, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市滨海湾新区"
+      },
+      "location": [113.7828, 22.7857],
+      "categorySlugs": ["electronics", "electronic-components"],
+      "mainProducts": [
+        { "en": "Smartphones", "zh": "智能手机" },
+        { "en": "Smart devices", "zh": "智能设备" }
+      ],
+      "contact": { "website": "https://www.oppo.com/en/about/" },
+      "images": [],
+      "sourceName": "OPPO official website",
+      "sourceUrl": "https://www.oppo.com/en/about/"
+    },
+    {
+      "slug": "dongguan-vivo-mobile",
+      "name": {
+        "en": "Vivo Mobile Communication Co., Ltd.",
+        "zh": "维沃移动通信有限公司"
+      },
+      "clusterSlug": "dongguan-electronic-information",
+      "regionId": "reg_dongguan_city_001",
+      "address": {
+        "en": "Chang'an Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市长安镇"
+      },
+      "location": [113.8012, 22.8167],
+      "categorySlugs": ["electronics", "electronic-components"],
+      "mainProducts": [
+        { "en": "Smartphones", "zh": "智能手机" },
+        { "en": "Wearable devices", "zh": "可穿戴设备" }
+      ],
+      "contact": { "website": "https://www.vivo.com/en/about-vivo" },
+      "images": [],
+      "sourceName": "vivo official website",
+      "sourceUrl": "https://www.vivo.com/en/about-vivo"
+    },
+    {
+      "slug": "dongguan-amperex-technology",
+      "name": {
+        "en": "Dongguan Amperex Technology Limited",
+        "zh": "东莞新能源科技有限公司"
+      },
+      "clusterSlug": "dongguan-electronic-information",
+      "regionId": "reg_dongguan_city_001",
+      "address": {
+        "en": "Songshan Lake High-tech Industrial Development Zone, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市松山湖高新技术产业开发区"
+      },
+      "location": [113.8941, 22.9238],
+      "categorySlugs": ["electronics", "electronic-components"],
+      "mainProducts": [
+        { "en": "Lithium-ion batteries", "zh": "锂离子电池" },
+        { "en": "Battery cells", "zh": "电芯" }
+      ],
+      "contact": { "website": "https://www.atlbattery.com/en/about" },
+      "images": [],
+      "sourceName": "ATL official website",
+      "sourceUrl": "https://www.atlbattery.com/en/about"
+    },
+    {
+      "slug": "dongguan-delta-electronics",
+      "name": {
+        "en": "Delta Electronics (Dongguan) Co., Ltd.",
+        "zh": "台达电子（东莞）有限公司"
+      },
+      "clusterSlug": "dongguan-electronic-information",
+      "regionId": "reg_dongguan_city_001",
+      "address": {
+        "en": "Shijie Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市石碣镇"
+      },
+      "location": [113.8028, 23.1003],
+      "categorySlugs": ["electronics", "electronic-components"],
+      "mainProducts": [
+        { "en": "Power electronics", "zh": "电力电子产品" },
+        { "en": "Industrial automation components", "zh": "工业自动化部件" }
+      ],
+      "contact": {
+        "website": "https://www.deltaww.com/en-US/about/aboutDelta"
+      },
+      "images": [],
+      "sourceName": "Delta official website",
+      "sourceUrl": "https://www.deltaww.com/en-US/about/aboutDelta"
+    },
+    {
+      "slug": "dongguan-luxshare-precision",
+      "name": {
+        "en": "Luxshare Precision Industry Co., Ltd.",
+        "zh": "立讯精密工业股份有限公司"
+      },
+      "clusterSlug": "dongguan-electronic-information",
+      "regionId": "reg_dongguan_city_001",
+      "address": {
+        "en": "Qingxi Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市清溪镇"
+      },
+      "location": [114.1635, 22.8448],
+      "categorySlugs": ["electronics", "electronic-components"],
+      "mainProducts": [
+        { "en": "Connectors", "zh": "连接器" },
+        { "en": "Consumer-electronics assemblies", "zh": "消费电子组件" }
+      ],
+      "contact": { "website": "https://www.luxshare-ict.com/" },
+      "images": [],
+      "sourceName": "Luxshare official website",
+      "sourceUrl": "https://www.luxshare-ict.com/"
+    },
+    {
+      "slug": "guzhen-kinglong-lighting",
+      "name": {
+        "en": "Zhongshan Kinglong Lighting Co., Ltd.",
+        "zh": "中山市琪朗灯饰厂有限公司"
+      },
+      "clusterSlug": "guzhen-decorative-lighting",
+      "regionId": "reg_zhongshan_city_01",
+      "address": {
+        "en": "Guzhen Town, Zhongshan, Guangdong, China",
+        "zh": "中国广东省中山市古镇镇"
+      },
+      "location": [113.1805, 22.6136],
+      "categorySlugs": ["lighting", "decorative-lighting"],
+      "mainProducts": [
+        { "en": "Decorative chandeliers", "zh": "装饰吊灯" },
+        { "en": "Hotel lighting", "zh": "酒店灯饰" }
+      ],
+      "contact": {
+        "website": "https://www.kinglong-lighting.net/about-us/"
+      },
+      "images": [],
+      "sourceName": "Kinglong Lighting official website",
+      "sourceUrl": "https://www.kinglong-lighting.net/about-us/"
+    },
+    {
+      "slug": "guzhen-hulang-lighting",
+      "name": {
+        "en": "Zhongshan Hulang Lighting Electrical Co., Ltd.",
+        "zh": "中山市虎狼照明电器有限公司"
+      },
+      "clusterSlug": "guzhen-decorative-lighting",
+      "regionId": "reg_zhongshan_city_01",
+      "address": {
+        "en": "No. 133 Zhongxing North Road, Guzhen Town, Zhongshan, Guangdong, China",
+        "zh": "中国广东省中山市古镇镇中兴北路133号"
+      },
+      "location": [113.1826, 22.6265],
+      "categorySlugs": ["lighting", "decorative-lighting"],
+      "mainProducts": [
+        { "en": "LED panel lights", "zh": "LED面板灯" },
+        { "en": "Outdoor LED lighting", "zh": "户外LED照明" }
+      ],
+      "contact": { "website": "https://www.hulanglighting.com/" },
+      "images": [],
+      "sourceName": "Hulang Lighting official website",
+      "sourceUrl": "https://www.hulanglighting.com/"
+    },
+    {
+      "slug": "guzhen-wosen-lighting",
+      "name": {
+        "en": "Wosen Lighting Technology Co., Ltd.",
+        "zh": "沃森照明科技有限公司"
+      },
+      "clusterSlug": "guzhen-decorative-lighting",
+      "regionId": "reg_zhongshan_city_01",
+      "address": {
+        "en": "No. 526 Dong'an North Road, Haizhou, Guzhen Town, Zhongshan, Guangdong, China",
+        "zh": "中国广东省中山市古镇镇海洲东岸北路526号"
+      },
+      "location": [113.1597, 22.6478],
+      "categorySlugs": ["lighting", "decorative-lighting"],
+      "mainProducts": [
+        { "en": "LED street lights", "zh": "LED路灯" },
+        { "en": "LED flood lights", "zh": "LED投光灯" }
+      ],
+      "contact": { "website": "https://www.wosenled.com/" },
+      "images": [],
+      "sourceName": "Wosen official website",
+      "sourceUrl": "https://www.wosenled.com/"
+    },
+    {
+      "slug": "guzhen-zichuan-lighting",
+      "name": {
+        "en": "Zhongshan Guzhen Zichuan Lighting Appliance Factory",
+        "zh": "中山市古镇紫川照明电器厂"
+      },
+      "clusterSlug": "guzhen-decorative-lighting",
+      "regionId": "reg_zhongshan_city_01",
+      "address": {
+        "en": "No. 21 Fuxing Road, Haizhou, Guzhen Town, Zhongshan, Guangdong, China",
+        "zh": "中国广东省中山市古镇镇海洲福兴路21号"
+      },
+      "location": [113.1559, 22.6501],
+      "categorySlugs": ["lighting", "decorative-lighting"],
+      "mainProducts": [
+        { "en": "LED batten lights", "zh": "LED支架灯" },
+        { "en": "Commercial luminaires", "zh": "商业灯具" }
+      ],
+      "contact": { "website": "https://zichuanlighting.com/" },
+      "images": [],
+      "sourceName": "Zichuan Lighting official website",
+      "sourceUrl": "https://zichuanlighting.com/"
+    },
+    {
+      "slug": "guzhen-voice-of-lighting",
+      "name": {
+        "en": "Zhongshan Voice of Lighting Co., Ltd.",
+        "zh": "中山市沃尔灯饰有限公司"
+      },
+      "clusterSlug": "guzhen-decorative-lighting",
+      "regionId": "reg_zhongshan_city_01",
+      "address": {
+        "en": "Guzhen Town, Zhongshan, Guangdong, China",
+        "zh": "中国广东省中山市古镇镇"
+      },
+      "location": [113.1885, 22.6187],
+      "categorySlugs": ["lighting", "decorative-lighting"],
+      "mainProducts": [
+        { "en": "Hotel chandeliers", "zh": "酒店吊灯" },
+        { "en": "Custom interior lighting", "zh": "定制室内灯饰" }
+      ],
+      "contact": { "website": "https://www.vollighting.cn/" },
+      "images": [],
+      "sourceName": "Voice of Lighting official website",
+      "sourceUrl": "https://www.vollighting.cn/"
+    },
+    {
+      "slug": "shunde-shudidi-furniture",
+      "name": {
+        "en": "Foshan Shunde Shudidi Furniture Co., Ltd.",
+        "zh": "佛山市顺德区舒迪迪家具有限公司"
+      },
+      "clusterSlug": "shunde-home-furniture",
+      "regionId": "reg_foshan_city_00001",
+      "address": {
+        "en": "Longjiang Town, Shunde District, Foshan, Guangdong, China",
+        "zh": "中国广东省佛山市顺德区龙江镇"
+      },
+      "location": [113.0718, 22.8788],
+      "categorySlugs": ["furniture", "home-furniture"],
+      "mainProducts": [
+        { "en": "Dining furniture", "zh": "餐厅家具" },
+        { "en": "Bar furniture", "zh": "酒吧家具" }
+      ],
+      "contact": { "website": "https://www.shudidi.com/" },
+      "images": [],
+      "sourceName": "Shudidi official website",
+      "sourceUrl": "https://www.shudidi.com/"
+    },
+    {
+      "slug": "shunde-shunuomei-furniture",
+      "name": {
+        "en": "Foshan Shunde Shunuomei Furniture Co., Ltd.",
+        "zh": "佛山市顺德区舒诺美家具有限公司"
+      },
+      "clusterSlug": "shunde-home-furniture",
+      "regionId": "reg_foshan_city_00001",
+      "address": {
+        "en": "Shunde District, Foshan, Guangdong, China",
+        "zh": "中国广东省佛山市顺德区"
+      },
+      "location": [113.1912, 22.8413],
+      "categorySlugs": ["furniture", "home-furniture"],
+      "mainProducts": [
+        { "en": "Solid-wood furniture", "zh": "实木家具" },
+        { "en": "Custom furniture", "zh": "定制家具" }
+      ],
+      "contact": {
+        "website": "https://www.snm-furniture.com/aboutus.html"
+      },
+      "images": [],
+      "sourceName": "Shunuomei official website",
+      "sourceUrl": "https://www.snm-furniture.com/aboutus.html"
+    },
+    {
+      "slug": "shunde-govan-furniture",
+      "name": {
+        "en": "Foshan Shunde Govan Furniture Factory",
+        "zh": "佛山市顺德区高梵家具厂"
+      },
+      "clusterSlug": "shunde-home-furniture",
+      "regionId": "reg_foshan_city_00001",
+      "address": {
+        "en": "Shuiteng Industrial Zone, Lecong Town, Shunde District, Foshan, Guangdong, China",
+        "zh": "中国广东省佛山市顺德区乐从镇水藤工业区"
+      },
+      "location": [113.0934, 22.9286],
+      "categorySlugs": ["furniture", "home-furniture"],
+      "mainProducts": [
+        { "en": "Outdoor furniture", "zh": "户外家具" },
+        { "en": "Indoor furniture", "zh": "室内家具" }
+      ],
+      "contact": { "website": "https://www.govanliving.com/aboutus" },
+      "images": [],
+      "sourceName": "Govan Furniture official website",
+      "sourceUrl": "https://www.govanliving.com/aboutus"
+    },
+    {
+      "slug": "shunde-youjian-furniture",
+      "name": {
+        "en": "Foshan City Youjian Furniture Co., Ltd.",
+        "zh": "佛山市友健家具有限公司"
+      },
+      "clusterSlug": "shunde-home-furniture",
+      "regionId": "reg_foshan_city_00001",
+      "address": {
+        "en": "No. 10 Jianshe Road, Chenyong Community, Longjiang Town, Shunde District, Foshan, Guangdong, China",
+        "zh": "中国广东省佛山市顺德区龙江镇陈涌社区建设路10号"
+      },
+      "location": [113.0664, 22.8737],
+      "categorySlugs": ["furniture", "home-furniture"],
+      "mainProducts": [
+        { "en": "Office chairs", "zh": "办公椅" },
+        { "en": "Office sofas", "zh": "办公沙发" }
+      ],
+      "contact": {
+        "website": "https://www.youjianoffice.com/about-us/"
+      },
+      "images": [],
+      "sourceName": "Youjian Furniture official website",
+      "sourceUrl": "https://www.youjianoffice.com/about-us/"
+    },
+    {
+      "slug": "shunde-baotian-furniture",
+      "name": {
+        "en": "Foshan Baotian Furniture Co., Ltd.",
+        "zh": "佛山市宝田家具有限公司"
+      },
+      "clusterSlug": "shunde-home-furniture",
+      "regionId": "reg_foshan_city_00001",
+      "address": {
+        "en": "Shunde District, Foshan, Guangdong, China",
+        "zh": "中国广东省佛山市顺德区"
+      },
+      "location": [113.1182, 22.8651],
+      "categorySlugs": ["furniture", "home-furniture"],
+      "mainProducts": [
+        { "en": "Contract seating", "zh": "工程座椅" },
+        { "en": "Commercial furniture", "zh": "商业家具" }
+      ],
+      "contact": { "website": "https://www.baotian.com/" },
+      "images": [],
+      "sourceName": "Baotian Furniture official website",
+      "sourceUrl": "https://www.baotian.com/"
+    },
+    {
+      "slug": "chenghai-rastar-toys",
+      "name": {
+        "en": "Rastar Group",
+        "zh": "星辉互动娱乐股份有限公司"
+      },
+      "clusterSlug": "chenghai-creative-toys",
+      "regionId": "reg_shantou_city_0001",
+      "address": {
+        "en": "Chenghai District, Shantou, Guangdong, China",
+        "zh": "中国广东省汕头市澄海区"
+      },
+      "location": [116.7569, 23.4639],
+      "categorySlugs": ["toys", "creative-toys"],
+      "mainProducts": [
+        { "en": "Licensed model cars", "zh": "授权车模" },
+        { "en": "Remote-control toys", "zh": "遥控玩具" }
+      ],
+      "contact": {
+        "website": "https://rastar.com/html/gw-wap-en/About_Us/gongsijieshao/"
+      },
+      "images": [],
+      "sourceName": "Rastar official website",
+      "sourceUrl": "https://rastar.com/html/gw-wap-en/About_Us/gongsijieshao/"
+    },
+    {
+      "slug": "chenghai-jiexing-toys",
+      "name": {
+        "en": "Guangdong Jiexing Toys Industrial Co., Ltd.",
+        "zh": "广东杰星玩具实业有限公司"
+      },
+      "clusterSlug": "chenghai-creative-toys",
+      "regionId": "reg_shantou_city_0001",
+      "address": {
+        "en": "Beilong Industrial Zone, Guangyi Subdistrict, Chenghai District, Shantou, Guangdong, China",
+        "zh": "中国广东省汕头市澄海区广益街道北陇工业区"
+      },
+      "location": [116.7561, 23.4661],
+      "categorySlugs": ["toys", "creative-toys"],
+      "mainProducts": [
+        { "en": "Construction blocks", "zh": "益智积木" },
+        { "en": "Educational toys", "zh": "益智玩具" }
+      ],
+      "contact": {
+        "website": "https://www.jxtoys.com/ZJ/"
+      },
+      "images": [],
+      "sourceName": "Jiexing Toys official website",
+      "sourceUrl": "https://www.jxtoys.com/ZJ/"
+    },
+    {
+      "slug": "chenghai-lingdong-creative",
+      "name": {
+        "en": "Guangdong Lingdong Creative Culture Technology Co., Ltd.",
+        "zh": "广东灵动创想文化科技有限公司"
+      },
+      "clusterSlug": "chenghai-creative-toys",
+      "regionId": "reg_shantou_city_0001",
+      "address": {
+        "en": "Chenghai District, Shantou, Guangdong, China",
+        "zh": "中国广东省汕头市澄海区"
+      },
+      "location": [116.7467, 23.4715],
+      "categorySlugs": ["toys", "creative-toys"],
+      "mainProducts": [
+        { "en": "Licensed character toys", "zh": "授权动漫玩具" },
+        { "en": "Creative toys", "zh": "创意玩具" }
+      ],
+      "contact": { "website": "https://www.chinaldcx.com/en/" },
+      "images": [],
+      "sourceName": "Lingdong Creative official website",
+      "sourceUrl": "https://www.chinaldcx.com/en/"
+    },
+    {
+      "slug": "chenghai-shifeng-culture",
+      "name": {
+        "en": "Shifeng Cultural Development Co., Ltd.",
+        "zh": "实丰文化发展股份有限公司"
+      },
+      "clusterSlug": "chenghai-creative-toys",
+      "regionId": "reg_shantou_city_0001",
+      "address": {
+        "en": "Chenghai District, Shantou, Guangdong, China",
+        "zh": "中国广东省汕头市澄海区"
+      },
+      "location": [116.7684, 23.4598],
+      "categorySlugs": ["toys", "creative-toys"],
+      "mainProducts": [
+        { "en": "Electronic toys", "zh": "电动玩具" },
+        { "en": "Smart toys", "zh": "智能玩具" }
+      ],
+      "contact": { "website": "https://www.shifengtoy.com/" },
+      "images": [],
+      "sourceName": "Shifeng Culture official website",
+      "sourceUrl": "https://www.shifengtoy.com/"
+    },
+    {
+      "slug": "chenghai-caipo-technology",
+      "name": {
+        "en": "Guangdong Caipo Technology Co., Ltd.",
+        "zh": "广东彩珀科技股份有限公司"
+      },
+      "clusterSlug": "chenghai-creative-toys",
+      "regionId": "reg_shantou_city_0001",
+      "address": {
+        "en": "Chenghai District, Shantou, Guangdong, China",
+        "zh": "中国广东省汕头市澄海区"
+      },
+      "location": [116.7399, 23.4851],
+      "categorySlugs": ["toys", "creative-toys"],
+      "mainProducts": [
+        { "en": "Die-cast model vehicles", "zh": "合金车模" },
+        { "en": "Licensed toys", "zh": "授权玩具" }
+      ],
+      "contact": { "website": "https://www.caipotoys.com/" },
+      "images": [],
+      "sourceName": "Caipo official website",
+      "sourceUrl": "https://www.caipotoys.com/"
+    },
+    {
+      "slug": "yiwu-yayu-textile",
+      "name": {
+        "en": "Yiwu Yayu Textile Co., Ltd.",
+        "zh": "义乌市雅雨纺织有限公司"
+      },
+      "clusterSlug": "yiwu-small-commodities",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "No. 31 Chongde Road, Yiwu, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市义乌市崇德路31号"
+      },
+      "location": [120.1053, 29.3154],
+      "categorySlugs": ["general-goods", "small-commodities"],
+      "mainProducts": [
+        { "en": "Towels", "zh": "毛巾" },
+        { "en": "Blankets", "zh": "毯子" }
+      ],
+      "contact": { "website": "https://ywyayu.com/" },
+      "images": [],
+      "sourceName": "Yiwu Yayu official website",
+      "sourceUrl": "https://ywyayu.com/"
+    },
+    {
+      "slug": "yiwu-first-eyew-jewelry",
+      "name": {
+        "en": "Yiwu First Eyew Jewelry Co., Ltd.",
+        "zh": "义乌市菲斯特饰品有限公司"
+      },
+      "clusterSlug": "yiwu-small-commodities",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "Yiwu, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市义乌市"
+      },
+      "location": [120.0837, 29.3062],
+      "categorySlugs": ["general-goods", "small-commodities"],
+      "mainProducts": [
+        { "en": "Fashion jewelry", "zh": "时尚饰品" },
+        { "en": "Jewelry accessories", "zh": "饰品配件" }
+      ],
+      "contact": { "website": "https://www.firsteyew.com/" },
+      "images": [],
+      "sourceName": "First Eyew official website",
+      "sourceUrl": "https://www.firsteyew.com/"
+    },
+    {
+      "slug": "yiwu-spark-beauty",
+      "name": {
+        "en": "Yiwu Spark Beauty Co., Ltd.",
+        "zh": "义乌市斯帕克化妆品有限公司"
+      },
+      "clusterSlug": "yiwu-small-commodities",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "Yiwu, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市义乌市"
+      },
+      "location": [120.0609, 29.2856],
+      "categorySlugs": ["general-goods", "small-commodities"],
+      "mainProducts": [
+        { "en": "Color cosmetics", "zh": "彩妆" },
+        { "en": "Personal-care products", "zh": "个人护理产品" }
+      ],
+      "contact": { "website": "https://www.yiwusparkbeauty.com/" },
+      "images": [],
+      "sourceName": "Yiwu Spark Beauty official website",
+      "sourceUrl": "https://www.yiwusparkbeauty.com/"
+    },
+    {
+      "slug": "yiwu-yolan-packaging",
+      "name": {
+        "en": "Yiwu Yolan Packing Co., Ltd.",
+        "zh": "义乌市友兰包装有限公司"
+      },
+      "clusterSlug": "yiwu-small-commodities",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "No. 123 Shiyu Road, Yiwu, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市义乌市石鱼路123号"
+      },
+      "location": [120.0918, 29.3284],
+      "categorySlugs": ["general-goods", "small-commodities"],
+      "mainProducts": [
+        { "en": "Gift bags", "zh": "礼品袋" },
+        { "en": "Textile packaging", "zh": "纺织包装袋" }
+      ],
+      "contact": {
+        "website": "https://www.yolanpackagings.com/about.html"
+      },
+      "images": [],
+      "sourceName": "Yolan Packaging official website",
+      "sourceUrl": "https://www.yolanpackagings.com/about.html"
+    },
+    {
+      "slug": "yiwu-nianyou-stationery",
+      "name": {
+        "en": "Yiwu Nianyou Stationery Co., Ltd.",
+        "zh": "义乌市年友文具有限公司"
+      },
+      "clusterSlug": "yiwu-small-commodities",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "Yiwu, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市义乌市"
+      },
+      "location": [120.0486, 29.3211],
+      "categorySlugs": ["general-goods", "small-commodities"],
+      "mainProducts": [
+        { "en": "Craft paper", "zh": "手工纸" },
+        { "en": "Stationery", "zh": "文具" }
+      ],
+      "contact": { "website": "https://www.nian-you.com/" },
+      "images": [],
+      "sourceName": "Nianyou Stationery official website",
+      "sourceUrl": "https://www.nian-you.com/"
+    },
+    {
+      "slug": "yongkang-haers-drinkware",
+      "name": {
+        "en": "Zhejiang Haers Vacuum Containers Co., Ltd.",
+        "zh": "浙江哈尔斯真空器皿股份有限公司"
+      },
+      "clusterSlug": "yongkang-hardware-tools",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "No. 1 Haers Road, Yongkang, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市永康市哈尔斯路1号"
+      },
+      "location": [120.0297, 28.9126],
+      "categorySlugs": ["hardware", "hardware-tools"],
+      "mainProducts": [
+        { "en": "Vacuum bottles", "zh": "真空保温杯" },
+        { "en": "Stainless-steel drinkware", "zh": "不锈钢饮具" }
+      ],
+      "contact": { "website": "https://www.haers.com/our-story/" },
+      "images": [],
+      "sourceName": "Haers official website",
+      "sourceUrl": "https://www.haers.com/our-story/"
+    },
+    {
+      "slug": "yongkang-nengzhi-scales",
+      "name": {
+        "en": "Yongkang Nengzhi Industry and Trade Co., Ltd.",
+        "zh": "永康市能智工贸有限公司"
+      },
+      "clusterSlug": "yongkang-hardware-tools",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "No. 213 Shifang West Road, Shiya Shangjie Village, Gushan Town, Yongkang, Zhejiang, China",
+        "zh": "中国浙江省永康市古山镇世雅上街村世方西路213号"
+      },
+      "location": [120.1602, 28.9478],
+      "categorySlugs": ["hardware", "hardware-tools"],
+      "mainProducts": [
+        { "en": "Digital scales", "zh": "电子秤" },
+        { "en": "Mechanical scales", "zh": "机械秤" }
+      ],
+      "contact": { "website": "https://www.chinazhengya.com/about/" },
+      "images": [],
+      "sourceName": "Nengzhi official website",
+      "sourceUrl": "https://www.chinazhengya.com/about/"
+    },
+    {
+      "slug": "yongkang-making-tools",
+      "name": {
+        "en": "Yongkang Making Industry and Trade Co., Ltd.",
+        "zh": "永康市美凯工贸有限公司"
+      },
+      "clusterSlug": "yongkang-hardware-tools",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "Yaoshan Village, Shizhu Town, Yongkang, Zhejiang, China",
+        "zh": "中国浙江省永康市石柱镇姚山村"
+      },
+      "location": [120.0784, 28.8398],
+      "categorySlugs": ["hardware", "hardware-tools"],
+      "mainProducts": [
+        { "en": "Drywall sanders", "zh": "墙面打磨机" },
+        { "en": "Laser levels", "zh": "激光水平仪" }
+      ],
+      "contact": { "website": "https://www.kindustry.cn/About-us.html" },
+      "images": [],
+      "sourceName": "Making Industry official website",
+      "sourceUrl": "https://www.kindustry.cn/About-us.html"
+    },
+    {
+      "slug": "yongkang-yishun-tools",
+      "name": {
+        "en": "Yongkang Yishun Tools Co., Ltd.",
+        "zh": "永康市易顺工具有限公司"
+      },
+      "clusterSlug": "yongkang-hardware-tools",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "No. 542 Huajin Road, Huajie Town, Yongkang, Zhejiang, China",
+        "zh": "中国浙江省永康市花街镇花金路542号"
+      },
+      "location": [119.9736, 28.9005],
+      "categorySlugs": ["hardware", "hardware-tools"],
+      "mainProducts": [
+        { "en": "Cordless drills", "zh": "充电钻" },
+        { "en": "Angle grinders", "zh": "角磨机" }
+      ],
+      "contact": { "website": "https://www.boshuntools.com/" },
+      "images": [],
+      "sourceName": "Yishun Tools official website",
+      "sourceUrl": "https://www.boshuntools.com/"
+    },
+    {
+      "slug": "yongkang-delun-abrasives",
+      "name": {
+        "en": "Yongkang Delun Grinding Tools Co., Ltd.",
+        "zh": "永康市德伦磨具有限公司"
+      },
+      "clusterSlug": "yongkang-hardware-tools",
+      "regionId": "reg_jinhua_city_00001",
+      "address": {
+        "en": "Yongkang, Jinhua, Zhejiang, China",
+        "zh": "中国浙江省金华市永康市"
+      },
+      "location": [120.0579, 28.8899],
+      "categorySlugs": ["hardware", "hardware-tools"],
+      "mainProducts": [
+        { "en": "Cutting discs", "zh": "切割片" },
+        { "en": "Grinding discs", "zh": "磨片" }
+      ],
+      "contact": { "website": "https://www.delunabrasives.com/" },
+      "images": [],
+      "sourceName": "Delun Abrasives official website",
+      "sourceUrl": "https://www.delunabrasives.com/"
+    },
+    {
+      "slug": "nantong-goldsun-textile",
+      "name": {
+        "en": "Jiangsu Goldsun Textile Science and Technology Co., Ltd.",
+        "zh": "江苏金太阳纺织科技股份有限公司"
+      },
+      "clusterSlug": "nantong-home-textiles",
+      "regionId": "reg_nantong_city_0001",
+      "address": {
+        "en": "Tongzhou District, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市通州区"
+      },
+      "location": [121.0778, 32.0644],
+      "categorySlugs": ["home-textiles", "bedding"],
+      "mainProducts": [
+        { "en": "Home-textile fabrics", "zh": "家纺面料" },
+        { "en": "Bedding sets", "zh": "床品套件" }
+      ],
+      "contact": { "website": "https://www.goldsunhome.com/aboutus.html" },
+      "images": [],
+      "sourceName": "Goldsun official website",
+      "sourceUrl": "https://www.goldsunhome.com/aboutus.html"
+    },
+    {
+      "slug": "nantong-violet-home-textile",
+      "name": {
+        "en": "Violet Home Textile Technology Co., Ltd.",
+        "zh": "紫罗兰家纺科技股份有限公司"
+      },
+      "clusterSlug": "nantong-home-textiles",
+      "regionId": "reg_nantong_city_0001",
+      "address": {
+        "en": "Tongzhou District, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市通州区"
+      },
+      "location": [121.1044, 32.0758],
+      "categorySlugs": ["home-textiles", "bedding"],
+      "mainProducts": [
+        { "en": "Bedding", "zh": "床上用品" },
+        { "en": "Quilts", "zh": "被芯" }
+      ],
+      "contact": { "website": "https://www.violet.com.cn/gsjs?_l=en" },
+      "images": [],
+      "sourceName": "Violet official website",
+      "sourceUrl": "https://www.violet.com.cn/gsjs?_l=en"
+    },
+    {
+      "slug": "nantong-luolai-lifestyle",
+      "name": {
+        "en": "Luolai Lifestyle Technology Co., Ltd.",
+        "zh": "罗莱生活科技股份有限公司"
+      },
+      "clusterSlug": "nantong-home-textiles",
+      "regionId": "reg_nantong_city_0001",
+      "address": {
+        "en": "No. 1699 Xinghu Avenue, Nantong Economic and Technological Development Area, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通经济技术开发区星湖大道1699号"
+      },
+      "location": [120.9995, 31.8719],
+      "categorySlugs": ["home-textiles", "bedding"],
+      "mainProducts": [
+        { "en": "Bed linen", "zh": "床单被套" },
+        { "en": "Silk bedding", "zh": "真丝床品" }
+      ],
+      "contact": { "website": "https://www.luolai.com/pages/about-us" },
+      "images": [],
+      "sourceName": "Luolai official website",
+      "sourceUrl": "https://www.luolai.com/pages/about-us"
+    },
+    {
+      "slug": "nantong-sunshine-textile",
+      "name": {
+        "en": "Nantong Sunshine Textile Co., Ltd.",
+        "zh": "南通阳光纺织有限公司"
+      },
+      "clusterSlug": "nantong-home-textiles",
+      "regionId": "reg_nantong_city_0001",
+      "address": {
+        "en": "Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市"
+      },
+      "location": [120.9532, 32.0104],
+      "categorySlugs": ["home-textiles", "bedding"],
+      "mainProducts": [
+        { "en": "Home-textile fabrics", "zh": "家纺面料" },
+        { "en": "Finished bedding", "zh": "成品床品" }
+      ],
+      "contact": { "website": "https://www.ntsunshinetextile.com/" },
+      "images": [],
+      "sourceName": "Nantong Sunshine Textile official website",
+      "sourceUrl": "https://www.ntsunshinetextile.com/"
+    },
+    {
+      "slug": "nantong-bestwin-textile",
+      "name": {
+        "en": "Nantong Bestwin Home Textile Co., Ltd.",
+        "zh": "南通百斯特家纺有限公司"
+      },
+      "clusterSlug": "nantong-home-textiles",
+      "regionId": "reg_nantong_city_0001",
+      "address": {
+        "en": "Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市"
+      },
+      "location": [121.0351, 32.0285],
+      "categorySlugs": ["home-textiles", "bedding"],
+      "mainProducts": [
+        { "en": "Duvet covers", "zh": "被套" },
+        { "en": "Sheet sets", "zh": "床单套件" }
+      ],
+      "contact": { "website": "https://www.bestwintextile.com/" },
+      "images": [],
+      "sourceName": "Bestwin official website",
+      "sourceUrl": "https://www.bestwintextile.com/"
+    },
+    {
+      "slug": "jinjiang-anta-sports",
+      "name": {
+        "en": "ANTA Sports Products Group Co., Ltd.",
+        "zh": "安踏体育用品集团有限公司"
+      },
+      "clusterSlug": "jinjiang-sports-footwear",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Chidian Town, Jinjiang, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市晋江市池店镇"
+      },
+      "location": [118.5588, 24.8502],
+      "categorySlugs": ["footwear", "sports-shoes"],
+      "mainProducts": [
+        { "en": "Sports shoes", "zh": "运动鞋" },
+        { "en": "Performance footwear", "zh": "专业运动鞋" }
+      ],
+      "contact": { "website": "https://www.anta.cn/cms/contact" },
+      "images": [],
+      "sourceName": "ANTA official website",
+      "sourceUrl": "https://www.anta.cn/cms/contact"
+    },
+    {
+      "slug": "jinjiang-xtep-china",
+      "name": {
+        "en": "Xtep (China) Co., Ltd.",
+        "zh": "特步（中国）有限公司"
+      },
+      "clusterSlug": "jinjiang-sports-footwear",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Jinjiang, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市晋江市"
+      },
+      "location": [118.5712, 24.8234],
+      "categorySlugs": ["footwear", "sports-shoes"],
+      "mainProducts": [
+        { "en": "Running shoes", "zh": "跑鞋" },
+        { "en": "Sports footwear", "zh": "运动鞋" }
+      ],
+      "contact": { "website": "https://www.xtep.com/" },
+      "images": [],
+      "sourceName": "Xtep official website",
+      "sourceUrl": "https://www.xtep.com/"
+    },
+    {
+      "slug": "jinjiang-361-degrees",
+      "name": {
+        "en": "361 Degrees (China) Co., Ltd.",
+        "zh": "三六一度（中国）有限公司"
+      },
+      "clusterSlug": "jinjiang-sports-footwear",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Jiangtou Industrial Zone, Wuli Industrial Park, Jinjiang, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市晋江市五里工业园江头工业区"
+      },
+      "location": [118.5321, 24.7398],
+      "categorySlugs": ["footwear", "sports-shoes"],
+      "mainProducts": [
+        { "en": "Athletic footwear", "zh": "运动鞋" },
+        { "en": "Running shoes", "zh": "跑鞋" }
+      ],
+      "contact": { "website": "https://www.361sport.com/" },
+      "images": [],
+      "sourceName": "361 Degrees official website",
+      "sourceUrl": "https://www.361sport.com/"
+    },
+    {
+      "slug": "jinjiang-jinzun-shoes",
+      "name": {
+        "en": "Jinjiang Jinzun Shoes Co., Ltd.",
+        "zh": "晋江金尊鞋业有限公司"
+      },
+      "clusterSlug": "jinjiang-sports-footwear",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Jinjiang, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市晋江市"
+      },
+      "location": [118.6047, 24.7886],
+      "categorySlugs": ["footwear", "sports-shoes"],
+      "mainProducts": [
+        { "en": "Sports shoes", "zh": "运动鞋" },
+        { "en": "Casual shoes", "zh": "休闲鞋" }
+      ],
+      "contact": { "website": "https://www.jinzunshoes.com/" },
+      "images": [],
+      "sourceName": "Jinzun Shoes official website",
+      "sourceUrl": "https://www.jinzunshoes.com/"
+    },
+    {
+      "slug": "jinjiang-aodengke-shoes",
+      "name": {
+        "en": "Jinjiang Aodengke Shoes Industrial Co., Ltd.",
+        "zh": "晋江奥登科鞋业有限公司"
+      },
+      "clusterSlug": "jinjiang-sports-footwear",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Jinjiang, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市晋江市"
+      },
+      "location": [118.6214, 24.8103],
+      "categorySlugs": ["footwear", "sports-shoes"],
+      "mainProducts": [
+        { "en": "Outdoor shoes", "zh": "户外鞋" },
+        { "en": "Safety shoes", "zh": "安全鞋" }
+      ],
+      "contact": { "website": "https://www.aodengke.com/" },
+      "images": [],
+      "sourceName": "Aodengke official website",
+      "sourceUrl": "https://www.aodengke.com/"
+    },
+    {
+      "slug": "dehua-shunmei-group",
+      "name": {
+        "en": "Fujian Shunmei Group Co., Ltd.",
+        "zh": "福建顺美集团有限责任公司"
+      },
+      "clusterSlug": "dehua-art-daily-ceramics",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Dehua County, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市德化县"
+      },
+      "location": [118.2428, 25.4927],
+      "categorySlugs": ["ceramics", "art-daily-ceramics"],
+      "mainProducts": [
+        { "en": "Daily-use ceramics", "zh": "日用陶瓷" },
+        { "en": "Ceramic crafts", "zh": "陶瓷工艺品" }
+      ],
+      "contact": { "website": "https://shunmeigroup.com/about.html" },
+      "images": [],
+      "sourceName": "Shunmei Group official website",
+      "sourceUrl": "https://shunmeigroup.com/about.html"
+    },
+    {
+      "slug": "dehua-xingye-ceramics",
+      "name": {
+        "en": "Fujian Dehua Xingye Ceramic Technology Co., Ltd.",
+        "zh": "福建省德化县兴业陶瓷有限公司"
+      },
+      "clusterSlug": "dehua-art-daily-ceramics",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Dehua County, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市德化县"
+      },
+      "location": [118.2511, 25.4862],
+      "categorySlugs": ["ceramics", "art-daily-ceramics"],
+      "mainProducts": [
+        { "en": "Ceramic planters", "zh": "陶瓷花盆" },
+        { "en": "Home-decor ceramics", "zh": "家居装饰陶瓷" }
+      ],
+      "contact": { "website": "https://www.dehua-ceramics.com/" },
+      "images": [],
+      "sourceName": "Xingye Ceramics official website",
+      "sourceUrl": "https://www.dehua-ceramics.com/"
+    },
+    {
+      "slug": "dehua-jiashun-ceramics",
+      "name": {
+        "en": "Fujian Dehua Jiashun Art and Crafts Co., Ltd.",
+        "zh": "福建省德化佳顺工艺品有限公司"
+      },
+      "clusterSlug": "dehua-art-daily-ceramics",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Dehua County, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市德化县"
+      },
+      "location": [118.2297, 25.4994],
+      "categorySlugs": ["ceramics", "art-daily-ceramics"],
+      "mainProducts": [
+        { "en": "Kitchen ceramics", "zh": "厨房陶瓷" },
+        { "en": "Tableware", "zh": "餐具" }
+      ],
+      "contact": {
+        "website": "https://jiashunkitchenware.com/about/"
+      },
+      "images": [],
+      "sourceName": "Jiashun official website",
+      "sourceUrl": "https://jiashunkitchenware.com/about/"
+    },
+    {
+      "slug": "dehua-longhe-ceramics",
+      "name": {
+        "en": "Fujian Dehua Longhe Ceramics Co., Ltd.",
+        "zh": "福建省德化龙合陶瓷有限公司"
+      },
+      "clusterSlug": "dehua-art-daily-ceramics",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Baomei Industrial Area, Longxun Town, Dehua County, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市德化县龙浔镇宝美工业区"
+      },
+      "location": [118.2361, 25.4763],
+      "categorySlugs": ["ceramics", "art-daily-ceramics"],
+      "mainProducts": [
+        { "en": "Seasonal ceramic decorations", "zh": "节庆陶瓷装饰品" },
+        { "en": "Dinnerware", "zh": "餐具" }
+      ],
+      "contact": { "website": "https://www.dehualonghe.com/" },
+      "images": [],
+      "sourceName": "Longhe Ceramics official website",
+      "sourceUrl": "https://www.dehualonghe.com/"
+    },
+    {
+      "slug": "dehua-luchi-ceramics",
+      "name": {
+        "en": "Fujian Dehua Luchi Ceramics Factory",
+        "zh": "福建省德化陆驰陶瓷厂"
+      },
+      "clusterSlug": "dehua-art-daily-ceramics",
+      "regionId": "reg_quanzhou_city_001",
+      "address": {
+        "en": "Dehua County, Quanzhou, Fujian, China",
+        "zh": "中国福建省泉州市德化县"
+      },
+      "location": [118.2572, 25.5011],
+      "categorySlugs": ["ceramics", "art-daily-ceramics"],
+      "mainProducts": [
+        { "en": "Ceramic artware", "zh": "陶瓷工艺品" },
+        { "en": "Ceramic vases", "zh": "陶瓷花瓶" }
+      ],
+      "contact": { "website": "https://www.luchiceramic.com/" },
+      "images": [],
+      "sourceName": "Luchi Ceramics official website",
+      "sourceUrl": "https://www.luchiceramic.com/"
+    }
+  ]
+}

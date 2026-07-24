@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "slug": "shenzhen-consumer-electronics",
+      "name": {
+        "en": "Shenzhen Consumer Electronics Cluster",
+        "zh": "深圳消费电子产业带"
+      },
+      "regionId": "reg_shenzhen_city_001",
+      "primaryCategorySlug": "electronics",
+      "categorySlugs": ["electronics", "consumer-electronics"],
+      "centroid": [114.0545429, 22.5445741],
+      "boundary": null,
+      "summary": {
+        "en": "Consumer electronics and smart-device manufacturers across Shenzhen.",
+        "zh": "深圳消费电子、智能终端及配套制造企业集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Smart devices", "zh": "智能终端" },
+        { "en": "Consumer electronics", "zh": "消费电子产品" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "dongguan-electronic-information",
+      "name": {
+        "en": "Dongguan Electronic Information Cluster",
+        "zh": "东莞电子信息产业带"
+      },
+      "regionId": "reg_dongguan_city_001",
+      "primaryCategorySlug": "electronics",
+      "categorySlugs": ["electronics", "electronic-components"],
+      "centroid": [113.7452332, 23.0183568],
+      "boundary": null,
+      "summary": {
+        "en": "Electronic components, mobile devices, batteries, and precision assembly in Dongguan.",
+        "zh": "东莞电子元器件、移动终端、电池及精密组装产业集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Electronic components", "zh": "电子元器件" },
+        { "en": "Mobile devices", "zh": "移动终端" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "guzhen-decorative-lighting",
+      "name": {
+        "en": "Guzhen Decorative Lighting Cluster",
+        "zh": "中山古镇灯饰产业带"
+      },
+      "regionId": "reg_zhongshan_city_01",
+      "primaryCategorySlug": "lighting",
+      "categorySlugs": ["lighting", "decorative-lighting"],
+      "centroid": [113.1825517, 22.619289],
+      "boundary": null,
+      "summary": {
+        "en": "Decorative, architectural, and commercial lighting manufacturers centered on Guzhen.",
+        "zh": "以古镇镇为中心的装饰、工程及商业照明制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Decorative lighting", "zh": "装饰灯具" },
+        { "en": "Commercial lighting", "zh": "商业照明" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "shunde-home-furniture",
+      "name": {
+        "en": "Shunde Home Furniture Cluster",
+        "zh": "佛山顺德家具产业带"
+      },
+      "regionId": "reg_foshan_city_00001",
+      "primaryCategorySlug": "furniture",
+      "categorySlugs": ["furniture", "home-furniture"],
+      "centroid": [113.2894243, 22.8054891],
+      "boundary": null,
+      "summary": {
+        "en": "Home, dining, office, and contract furniture manufacturers in Shunde.",
+        "zh": "顺德民用、餐厅、办公及工程家具制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Home furniture", "zh": "民用家具" },
+        { "en": "Contract furniture", "zh": "工程家具" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "chenghai-creative-toys",
+      "name": {
+        "en": "Chenghai Creative Toys Cluster",
+        "zh": "汕头澄海创意玩具产业带"
+      },
+      "regionId": "reg_shantou_city_0001",
+      "primaryCategorySlug": "toys",
+      "categorySlugs": ["toys", "creative-toys"],
+      "centroid": [116.7515585, 23.4694075],
+      "boundary": null,
+      "summary": {
+        "en": "Creative, electronic, model, and licensed-toy manufacturers in Chenghai.",
+        "zh": "澄海创意、电动、模型及授权玩具制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Creative toys", "zh": "创意玩具" },
+        { "en": "Model toys", "zh": "模型玩具" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "yiwu-small-commodities",
+      "name": {
+        "en": "Yiwu Small Commodities Cluster",
+        "zh": "义乌小商品产业带"
+      },
+      "regionId": "reg_jinhua_city_00001",
+      "primaryCategorySlug": "general-goods",
+      "categorySlugs": ["general-goods", "small-commodities"],
+      "centroid": [120.0703805, 29.3093002],
+      "boundary": null,
+      "summary": {
+        "en": "Small-commodity manufacturers spanning textiles, jewelry, cosmetics, packaging, and stationery.",
+        "zh": "覆盖纺织、饰品、化妆品、包装及文具的义乌小商品制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Small commodities", "zh": "小商品" },
+        { "en": "Daily consumer goods", "zh": "日用消费品" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "yongkang-hardware-tools",
+      "name": {
+        "en": "Yongkang Hardware Tools Cluster",
+        "zh": "永康五金工具产业带"
+      },
+      "regionId": "reg_jinhua_city_00001",
+      "primaryCategorySlug": "hardware",
+      "categorySlugs": ["hardware", "hardware-tools"],
+      "centroid": [120.0427838, 28.8918967],
+      "boundary": null,
+      "summary": {
+        "en": "Hardware, power tools, abrasives, scales, and metal consumer products made in Yongkang.",
+        "zh": "永康五金、电动工具、磨具、衡器及金属消费品制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Hardware tools", "zh": "五金工具" },
+        { "en": "Metal products", "zh": "金属制品" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "nantong-home-textiles",
+      "name": {
+        "en": "Nantong Home Textiles Cluster",
+        "zh": "南通家纺产业带"
+      },
+      "regionId": "reg_nantong_city_0001",
+      "primaryCategorySlug": "home-textiles",
+      "categorySlugs": ["home-textiles", "bedding"],
+      "centroid": [120.8904588, 31.9827896],
+      "boundary": null,
+      "summary": {
+        "en": "Bedding, home-textile fabrics, quilts, and related manufacturers in Nantong.",
+        "zh": "南通床品、家纺面料、被芯及相关产品制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Bedding", "zh": "床上用品" },
+        { "en": "Home textile fabrics", "zh": "家纺面料" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "jinjiang-sports-footwear",
+      "name": {
+        "en": "Jinjiang Sports Footwear Cluster",
+        "zh": "晋江运动鞋产业带"
+      },
+      "regionId": "reg_quanzhou_city_001",
+      "primaryCategorySlug": "footwear",
+      "categorySlugs": ["footwear", "sports-shoes"],
+      "centroid": [118.5477505, 24.784435],
+      "boundary": null,
+      "summary": {
+        "en": "Sports, casual, outdoor, and performance-footwear manufacturers in Jinjiang.",
+        "zh": "晋江运动、休闲、户外及专业鞋类制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Sports shoes", "zh": "运动鞋" },
+        { "en": "Casual footwear", "zh": "休闲鞋" }
+      ],
+      "coverImage": null,
+      "stats": null
+    },
+    {
+      "slug": "dehua-art-daily-ceramics",
+      "name": {
+        "en": "Dehua Art and Daily Ceramics Cluster",
+        "zh": "德化工艺与日用陶瓷产业带"
+      },
+      "regionId": "reg_quanzhou_city_001",
+      "primaryCategorySlug": "ceramics",
+      "categorySlugs": ["ceramics", "art-daily-ceramics"],
+      "centroid": [118.2362336, 25.4945484],
+      "boundary": null,
+      "summary": {
+        "en": "Porcelain, tableware, planters, and ceramic home-decor manufacturers in Dehua.",
+        "zh": "德化白瓷、餐具、花器及陶瓷家居用品制造集群。"
+      },
+      "description": null,
+      "mainProducts": [
+        { "en": "Art ceramics", "zh": "工艺陶瓷" },
+        { "en": "Daily-use porcelain", "zh": "日用瓷" }
+      ],
+      "coverImage": null,
+      "stats": null
+    }
+  ]
+}

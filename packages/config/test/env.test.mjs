@@ -11,6 +11,7 @@ import {
   parseApiRuntimeEnv,
   parseImportCliEnv,
   parsePrivateObjectStorageEnv,
+  parseSeedCliEnv,
 } from "../env/api.js";
 import { parseMobileEnv } from "../env/mobile.js";
 import {
@@ -102,6 +103,7 @@ test("private R2 endpoint overrides are local-only", async () => {
     "http://127.0.0.1:9000",
   );
   assert.equal(parseImportCliEnv(api).REDIS_URL, api.REDIS_URL);
+  assert.equal(parseSeedCliEnv(api).DATABASE_URL, api.DATABASE_URL);
   assert.throws(
     () =>
       parsePrivateObjectStorageEnv({

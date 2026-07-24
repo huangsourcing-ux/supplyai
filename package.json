@@ -15,11 +15,13 @@
     "infra:up": "docker compose up -d --wait",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "generate:load-data": "pnpm --filter @chinasupply/api generate:load-data",
     "lint": "eslint scripts && turbo run lint",
     "mobile:check": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/mobile check",
     "mobile:eas:preview": "pnpm --filter @chinasupply/mobile eas:preview",
     "release:migrate:cms": "node --env-file-if-exists=.env scripts/run-migrations.mjs cms",
     "release:migrate:core": "node --env-file-if-exists=.env scripts/run-migrations.mjs core",
+    "seed:real": "pnpm --filter @chinasupply/api seed:real",
     "test:e2e": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/geo build && pnpm --filter @chinasupply/api test:e2e",
     "test:unit": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/geo build && turbo run test:unit",
     "typecheck": "pnpm --filter @chinasupply/schemas build && tsc --project tsconfig.scripts.json --noEmit && turbo run typecheck"
