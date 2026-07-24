@@ -109,7 +109,7 @@ packages/
 
 - 公开读接口无需登录；用户写接口验证 Clerk JWT；ADM-* 和 `/ops/**` 还必须验证 Clerk `publicMetadata` 中的 `admin` role。
 - Clerk webhook 必须使用 raw body 做 Svix 验签，并通过 `webhook_events` 去重。用户删除后软删 users、硬删 favorites，已删除用户再次访问返回 401。
-- 匿名搜索和地图接口按真实客户端 IP 限流并缓存；写接口按用户限流。多实例限流使用 Redis store，429 返回 `RATE_LIMITED`。
+- 匿名搜索和地图接口分别按真实客户端 IP 限制为 60 req/min/IP；只有 MAP-* 使用 Cloudflare 1 小时响应缓存，搜索不缓存。写接口按用户限流。多实例限流使用 Redis store，429 返回 `RATE_LIMITED`。
 - R2 数据库字段只存 `objectKey`，完整 CDN URL 由 API 拼接。每个环境使用公开媒体 bucket 和私有操作 bucket（导入、报告、备份）；只有媒体 bucket 可绑定 CDN 自定义域名。上传使用服务端生成路径的短时预签名 URL，仅允许 JPEG/PNG/WebP 且声明不超过 10MB；上传后 HEAD 复验类型/大小，实体引用时再验证对象存在且属于当前环境。
 - 不得硬删除产业带或工厂；使用 draft/published 状态，避免收藏、文章引用和溯源失效。
 - PostHog 必须经过 `packages/analytics`。Web 用户未同意时不加载且完全 no-op；搜索埋点先去除邮箱/电话模式并把 query 截断至 100 字符；`map_moved` 每 10 秒最多记录一次。

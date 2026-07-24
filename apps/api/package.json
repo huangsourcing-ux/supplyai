@@ -28,6 +28,7 @@
     "@nestjs/common": "11.1.28",
     "@nestjs/core": "11.1.28",
     "@nestjs/platform-fastify": "11.1.28",
+    "@nestjs/throttler": "6.5.0",
     "@sentry/nestjs": "10.67.0",
     "bullmq": "5.80.10",
     "drizzle-orm": "0.45.2",

@@ -3,7 +3,14 @@ import {
   getMapClusterPointsQuerySchema,
   getMapFactoriesQuerySchema,
 } from "@chinasupply/schemas";
-import { Controller, Get, Inject, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Inject,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
 import { ZodValidationPipe } from "nestjs-zod";
 import type { z } from "zod";
 
@@ -12,6 +19,8 @@ import {
   getMapClusterPointsRouteContract,
   getMapFactoriesRouteContract,
 } from "../openapi/route-contracts.js";
+import { ClientIpThrottlerGuard } from "../rate-limit/client-ip-throttler.guard.js";
+import { MapCacheControlInterceptor } from "../cache/map-cache-control.interceptor.js";
 import { MapService } from "./map.service.js";
 
 const GetMapClusterPointsQueryDto =
@@ -29,6 +38,8 @@ if (
 }
 
 @Controller("map")
+@UseGuards(ClientIpThrottlerGuard)
+@UseInterceptors(MapCacheControlInterceptor)
 export class MapController {
   constructor(@Inject(MapService) private readonly map: MapService) {}
 

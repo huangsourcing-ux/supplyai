@@ -92,6 +92,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
     const { httpAdapter } = this.adapterHost;
     const context = host.switchToHttp();
     const mapped = mapExceptionToEnvelope(exception);
+    httpAdapter.setHeader(context.getResponse(), "Cache-Control", "no-store");
 
     if (!(exception instanceof HttpException)) {
       this.logger.error(

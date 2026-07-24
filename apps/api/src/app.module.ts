@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { SentryModule } from "@sentry/nestjs/setup";
 
+import { CacheModule } from "./cache/cache.module.js";
 import { CategoriesModule } from "./categories/categories.module.js";
 import { ClustersModule } from "./clusters/clusters.module.js";
 import { RuntimeConfigModule } from "./config/runtime-config.module.js";
@@ -14,6 +15,7 @@ import { SearchModule } from "./search/search.module.js";
   imports: [
     SentryModule.forRoot(),
     RuntimeConfigModule,
+    CacheModule,
     CategoriesModule,
     ClustersModule,
     FactoriesModule,

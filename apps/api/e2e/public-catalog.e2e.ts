@@ -946,6 +946,7 @@ describe.sequential("public catalog API", () => {
     });
     const led = searchResponseSchema.parse(ledResponse.json());
 
+    expect(ledResponse.headers["cache-control"]).toBeUndefined();
     expect(ledResponse.statusCode).toBe(200);
     expect(led.meta).toEqual({});
     expect(led.data.categories.map(({ slug }) => slug)).toContain(
@@ -1053,6 +1054,9 @@ describe.sequential("public catalog API", () => {
     const body = getMapClusterPointsResponseSchema.parse(response.json());
 
     expect(response.statusCode).toBe(200);
+    expect(response.headers["cache-control"]).toBe(
+      "public, max-age=0, s-maxage=3600",
+    );
     expect(body.meta).toEqual({});
     expect(body.data.features.map(({ properties }) => properties.id)).toEqual([
       ids.clusterOld,
@@ -1238,6 +1242,7 @@ describe.sequential("public catalog API", () => {
       const response = await app.inject({ method: "GET", url });
       const body = response.json();
       expect(response.statusCode, url).toBe(400);
+      expect(response.headers["cache-control"], url).toBe("no-store");
       expect(body.error.code, url).toBe("VALIDATION_ERROR");
       expect(body.error.details.length, url).toBeGreaterThan(0);
     }

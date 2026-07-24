@@ -1,6 +1,6 @@
 # ChinaSupply.AI 产品需求文档（PRD）
 
-> 版本：**v1.3 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-24
+> 版本：**v1.4 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-24
 > 用途：供 AI 编码代理（Codex 等）直接执行开发。需求以可验收的结构化条目编写。
 > 技术栈：见《ChinaSupply.AI技术栈-最终冻结版.md》，本文档不重复选型讨论。
 > 优先级定义：P0 = V1 必须；P1 = V1 后第一批迭代；P2 = 路线图。
@@ -11,6 +11,8 @@
 > v1.2 变更摘要：冻结 M1-T2 的全量 API wire contract；明确公开筛选标识、英语公开字段与 A-5 双语地址例外、GeoJSON 形状、媒体 URL、写操作回执、Admin 可写字段、Clerk webhook 最小输入以及 R2 预签名请求/响应。未增加 V1 功能范围。
 >
 > v1.3 变更摘要：冻结 MAP-2 的 PostGIS 边界简化容差——zoom `<10` 使用 `0.01°`，zoom `10–11` 使用 `0.002°`，zoom `≥12` 返回原始精度。未增加 V1 功能范围。
+>
+> v1.4 变更摘要：澄清 G-11 的 V1 缓存范围——搜索与 MAP-* 均按真实客户端 IP 限流，只有 MAP-* 按 4.4 使用 Cloudflare 1 小时响应缓存；搜索不缓存。未增加 V1 功能范围。
 
 ---
 
@@ -41,7 +43,7 @@
 | G-8  | 时间：数据库存 UTC `timestamptz`，前端本地化展示                                                                                                                                                                                                             |
 | G-9  | Schema 归属：**Drizzle/NestJS 是核心业务表唯一 Schema Owner**（regions、categories、clusters、factories、users、favorites、webhook_events）。Payload 只拥有并迁移自己的表（articles、media、cms_users）。Payload 的 migration 禁止触碰核心业务表             |
 | G-10 | 图片：R2 存储，数据库只存 `objectKey`（如 `factories/abc123/1.jpg`），完整 URL 由 API 层拼 CDN 域名生成。每个环境将公开媒体与导入报告/备份等私有操作对象放入不同 bucket；只有媒体 bucket 绑定 CDN 自定义域名。上传一律走预签名 URL（ADM-6） |
-| G-11 | 限流（P0）：匿名可访问的搜索与地图接口设宽松限流（如 60 req/min/IP）+ 响应缓存；写接口按用户限流。返回 429 + `RATE_LIMITED` 错误码                                                                                                                           |
+| G-11 | 限流（P0）：匿名可访问的搜索与地图接口分别按真实客户端 IP 限制为 60 req/min/IP；只有 MAP-* 按 4.4 使用 Cloudflare 1 小时响应缓存，搜索不缓存。写接口按用户限流。返回 429 + `RATE_LIMITED` 错误码                                                            |
 
 ---
 

@@ -85,6 +85,44 @@ Rotation:
 The edge secret uses the same create → dual-write → deploy/smoke → revoke
 sequence, with the dual write limited to the Transform Rule and Railway API.
 
+## M1-T6 MAP cache rule
+
+The staging zone has one idempotently managed Cache Rule named
+`ChinaSupply staging MAP API cache`. Its expression is:
+
+```text
+(http.host eq "api-staging.chinasupply.ai" and starts_with(http.request.uri.path, "/api/v1/map/"))
+```
+
+The expression deliberately does not match on request method. The rule marks
+matching requests eligible for cache and uses the edge TTL mode
+`bypass_by_default`, so only origin responses carrying an explicit cache header
+are stored. The API sends
+`Cache-Control: public, max-age=0, s-maxage=3600` only after a successful MAP
+handler result; validation, throttling, and server errors are `no-store`.
+Cloudflare's default cache key retains the complete query string.
+
+The internal API client reserves prefix purge with
+`https://api-staging.chinasupply.ai/api/v1/map/`, which invalidates all bbox,
+zoom, category, cluster, and verified query variants without changing the cache
+key. M1-T6 does not invoke that client or expose an HTTP purge route; M5-T3
+connects it to publish/unpublish.
+
+Acceptance:
+
+1. Use Cloudflare Trace to confirm the rule matches MAP and does not match
+   `/api/v1/search`.
+2. After a new API deployment, confirm a valid MAP request is `MISS` then
+   `HIT`, returns the exact origin cache header, and distinct valid query
+   strings do not share a cache entry.
+3. Confirm search remains `DYNAMIC`/`BYPASS` and 400/429 responses are not
+   cached.
+4. Do not issue a purge during M1-T6.
+
+Rollback disables only `ChinaSupply staging MAP API cache`. The origin cache
+header is harmless without an eligibility rule, and the prefix-purge client
+remains dormant until M5-T3.
+
 ## MapTiler request identity
 
 Web sends its key through the existing public Web configuration and relies on
