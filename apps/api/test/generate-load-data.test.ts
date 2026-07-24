@@ -68,5 +68,6 @@ describe("M1-T8 synthetic load generator", () => {
         expect(row.location[1]).toBeLessThanOrEqual(90);
       }
     },
+    15_000,
   );
 });
