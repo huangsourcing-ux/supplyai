@@ -2,11 +2,11 @@
 
 ChinaSupply.AI uses three isolated environments. Values must never fall back from one environment to another.
 
-| Environment | Database and Redis             | Clerk                              | R2                                    | Public URLs              |
-| ----------- | ------------------------------ | ---------------------------------- | ------------------------------------- | ------------------------ |
-| Local       | Docker Compose on loopback     | Development keys                   | `dev` prefix                          | `localhost`              |
-| Staging     | Railway staging resources      | Development instance and test keys | `staging` prefix                      | HTTPS `staging.*`        |
-| Production  | Dedicated production resources | Production instance and live keys  | Dedicated bucket with an empty prefix | HTTPS production domains |
+| Environment | Database and Redis             | Clerk                              | R2                                                                                                 | Public URLs              |
+| ----------- | ------------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------ |
+| Local       | Docker Compose on loopback     | Development keys                   | Separate media/private buckets with `dev` prefix                                                   | `localhost`              |
+| Staging     | Railway staging resources      | Development instance and test keys | `chinasupply-staging-media` (public) + `chinasupply-staging` (private), both with `staging` prefix | HTTPS `staging.*`        |
+| Production  | Dedicated production resources | Production instance and live keys  | Two dedicated buckets with empty prefixes (created in M5-T9)                                       | HTTPS production domains |
 
 ## Local setup
 
@@ -29,7 +29,7 @@ The locked `postgis/postgis:17-3.5` image currently publishes an amd64 manifest.
 - `@chinasupply/config/env/web` validates Payload/Next.js server values and explicitly public Web values.
 - `@chinasupply/config/env/mobile` accepts only the documented `EXPO_PUBLIC_*` application values and rejects known server secrets.
 
-The Web bootstrap calls `parseWebEnv` from `next.config.ts`, so `next dev`, `next build`, and `next start` fail before startup when the Web contract is invalid. The API and Worker call `parseApiRuntimeEnv` before their Nest modules finish booting; it validates the M0 runtime dependencies while later provider modules retain their own complete configuration contract. Mobile evaluates `parseMobileEnv` from its Expo config before bundling and only exposes `EXPO_PUBLIC_*` values. Validation failures report field names only; values must never be logged.
+The Web bootstrap calls `parseWebEnv` from `next.config.ts`, so `next dev`, `next build`, and `next start` fail before startup when the Web contract is invalid. The API HTTP entrypoint calls `parseApiHttpEnv`, which additionally requires `EDGE_PROXY_SECRET` outside local development; the Worker calls `parseApiRuntimeEnv` and does not receive that edge-only secret. Later provider modules retain their own complete configuration contract. Mobile evaluates `parseMobileEnv` from its Expo config before bundling and only exposes `EXPO_PUBLIC_*` values. Validation failures report field names only; values must never be logged.
 
 Real secrets live in the deployment platform or GitHub Environment. `.env.example` files contain local defaults and explicit placeholders only. No `.env`, `.env.local`, staging credential, or production credential may be committed.
 
@@ -46,7 +46,7 @@ M0-T3 uses one staging-only Vercel project with these settings:
 
 Because this is a staging-only Vercel project, both Vercel `Production` (the controlled staging deployment from `main`) and `Preview` (pull-request validation) scopes must contain the same real staging values. Vercel target names do not change `APP_ENV`: it remains `staging` in both scopes. Secrets must be copied through Vercel's encrypted environment-variable store and never through repository files or build logs.
 
-All fields from `apps/web/.env.example` must have real staging values before deployment. The database is the Railway staging PostgreSQL database, Clerk uses a Development instance, and R2 uses the `staging` prefix. The production Web project is intentionally deferred to M5-T9.
+All fields from `apps/web/.env.example` must have real staging values before deployment. The database is the Railway staging PostgreSQL database, Clerk uses a Development instance, and the Web/Payload R2 credentials are limited to Object Read/Write on `chinasupply-staging-media`; `R2_MEDIA_BUCKET`, `R2_PREFIX=staging`, and `R2_CDN_BASE_URL=https://cdn-staging.chinasupply.ai` identify that media boundary. The production Web project is intentionally deferred to M5-T9.
 
 M0-T7 additionally requires the Web Sentry DSN, organization/project slugs, and
 build-only auth token in both Vercel scopes. Vercel's commit SHA is embedded in
@@ -73,14 +73,16 @@ The EAS Preview environment must contain:
 - `EXPO_PUBLIC_APP_ENV=staging`
 - the real HTTPS staging `EXPO_PUBLIC_API_BASE_URL`
 - a Clerk Development `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- separate `EXPO_PUBLIC_MAPTILER_IOS_KEY` and
+  `EXPO_PUBLIC_MAPTILER_ANDROID_KEY` values
 - the Mobile Sentry DSN, organization and project identifiers, plus the
   build-only Sentry auth token described in `docs/operations/sentry.md`
 
-MapTiler and PostHog public values remain optional until their owning tasks
-connect those integrations. If supplied, they are still validated as real
-values: placeholders are rejected, production MapTiler keys cannot enter
-staging, and PostHog key/host must be provided together. Sentry is required by
-M0-T7 for every non-local Mobile build.
+Both MapTiler platform keys are required outside local development and may not
+be reused across platforms. MapLibre adds the matching restricted User-Agent
+only to `https://api.maptiler.com/` requests. PostHog remains optional until its
+owning task; key/host must be provided together. Sentry is required by M0-T7
+for every non-local Mobile build.
 
 The retained Development smoke user password is stored only in macOS Keychain
 under service `ai.chinasupply.clerk.mobile-smoke`. Neither the password nor
@@ -102,9 +104,17 @@ must not be treated as the real production environment.
   copied into source or logs.
 - The API and Worker share the root Railpack build, while `SERVICE_ROLE` selects
   `start:api` or `start:worker` at runtime.
-- API deployment health is gated by `/health/ready`. Its temporary validation
-  domain is `https://api-production-05a7.up.railway.app`; M0-T10 owns the final
-  Cloudflare-proxied staging API hostname.
+- API deployment health is gated by `/health/ready`. Its Railway origin remains
+  `https://api-production-05a7.up.railway.app`; the public hostname is
+  `https://api-staging.chinasupply.ai`.
+- `/health/live` and `/health/ready` stay available to direct Railway probes.
+  Every other remote request must carry the Cloudflare-only edge secret.
+  `/health/edge` is a no-store diagnostic that returns the validated single
+  `CF-Connecting-IP`; direct origin access returns the standard 403 envelope.
+- API/Worker R2 credentials are limited to Object Read/Write on the staging
+  media and private buckets. `CLOUDFLARE_PURGE_TOKEN` is a separate Railway
+  secret limited to Cache Purge on the `chinasupply.ai` zone; M0-T10 verifies
+  it but does not perform a purge.
 - Worker has no public domain. Queue acceptance is performed by running
   `system:ping` inside the deployed API container and confirming completion in
   the separate Worker logs.
@@ -119,3 +129,5 @@ See `docs/operations/ci-cd.md` for trigger boundaries, secret ownership,
 deployment ordering, and rollback checks.
 See `docs/operations/sentry.md` for the three-platform Sentry variables,
 release names, source map upload path, and external acceptance checklist.
+See `docs/operations/cloudflare-maptiler.md` for the M0-T10 resource contract,
+smoke tests, rotation, and rollback.

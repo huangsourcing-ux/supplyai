@@ -17,10 +17,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { createQueryClient } from "../lib/query-client";
 import { clerkTokenCache } from "../lib/clerk-token-cache";
 import { mobileEnvironment } from "../env";
+import { configureMapTilerRequests } from "../lib/maptiler-requests";
 
 export { ErrorBoundary } from "expo-router";
 
 void SplashScreen.preventAutoHideAsync();
+configureMapTilerRequests();
 
 function RootLayout() {
   const [queryClient] = useState(createQueryClient);

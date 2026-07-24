@@ -3,7 +3,9 @@
   "globalEnv": [
     "APP_ENV",
     "CLERK_SECRET_KEY",
+    "CLOUDFLARE_PURGE_TOKEN",
     "DATABASE_URL",
+    "EDGE_PROXY_SECRET",
     "PORT",
     "REDIS_URL",
     "WEB_ORIGIN",

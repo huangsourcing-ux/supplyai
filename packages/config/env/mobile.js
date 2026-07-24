@@ -11,7 +11,7 @@ import {
 
 const forbiddenMobileVariables = [
   "CLERK_SECRET_KEY",
-  "CLOUDFLARE_API_TOKEN",
+  "CLOUDFLARE_PURGE_TOKEN",
   "DATABASE_URL",
   "PAYLOAD_SECRET",
   "R2_ACCESS_KEY_ID",
@@ -20,12 +20,19 @@ const forbiddenMobileVariables = [
   "SENTRY_AUTH_TOKEN",
 ];
 
+/** @type {readonly ["EXPO_PUBLIC_MAPTILER_IOS_KEY", "EXPO_PUBLIC_MAPTILER_ANDROID_KEY"]} */
+const mapTilerKeyFields = [
+  "EXPO_PUBLIC_MAPTILER_IOS_KEY",
+  "EXPO_PUBLIC_MAPTILER_ANDROID_KEY",
+];
+
 export const mobileEnvSchema = z
   .object({
     EXPO_PUBLIC_APP_ENV: deploymentEnvironmentSchema,
     EXPO_PUBLIC_API_BASE_URL: networkUrlSchema,
     EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(10),
-    EXPO_PUBLIC_MAPTILER_KEY: z.string().min(8).optional(),
+    EXPO_PUBLIC_MAPTILER_IOS_KEY: z.string().min(8).optional(),
+    EXPO_PUBLIC_MAPTILER_ANDROID_KEY: z.string().min(8).optional(),
     EXPO_PUBLIC_SENTRY_DSN: networkUrlSchema.optional(),
     EXPO_PUBLIC_SENTRY_SMOKE_ENABLED: z
       .enum(["true", "false"])
@@ -58,12 +65,18 @@ export const mobileEnvSchema = z
       context,
     );
 
-    if (environment.EXPO_PUBLIC_MAPTILER_KEY !== undefined) {
-      rejectPlaceholder(
-        environment.EXPO_PUBLIC_MAPTILER_KEY,
-        "EXPO_PUBLIC_MAPTILER_KEY",
-        context,
-      );
+    for (const field of mapTilerKeyFields) {
+      const value = environment[field];
+      if (value === undefined) {
+        context.addIssue({
+          code: "custom",
+          path: [field],
+          message: "is required outside local development",
+        });
+        continue;
+      }
+
+      rejectPlaceholder(value, field, context);
     }
 
     if (environment.EXPO_PUBLIC_SENTRY_DSN !== undefined) {

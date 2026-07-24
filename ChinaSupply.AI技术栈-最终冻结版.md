@@ -19,7 +19,7 @@
 | 内容管理        | Payload CMS（与主库共用 Postgres）                           | 产业文章、城市介绍、SEO 内容                                                           |
 | 缓存与任务      | Redis + BullMQ                                               | 数据导入、地理编码、AI 任务、缓存、备份                                                |
 | 搜索            | PostgreSQL FTS + pg_trgm                                     | 首版产业带和工厂搜索                                                                   |
-| 文件存储        | Cloudflare R2                                                | 图片、视频、证书、报告                                                                 |
+| 文件存储        | Cloudflare R2                                                | 每环境公开媒体 bucket（自定义 CDN 域名）与私有操作 bucket（导入、报告、备份）严格分离 |
 | 身份认证        | Clerk                                                        | Web 和 App 统一登录                                                                    |
 | 国际化 i18n     | Web：next-intl；RN：i18next                                  | 多语言（首发英语，预留西/阿/俄）                                                       |
 | 交易邮件        | Resend                                                       | 询盘通知、工厂回复提醒等业务邮件                                                       |
@@ -51,7 +51,7 @@
 ## 三、关键约定（开发前必读）
 
 1. **坐标系**：数据库统一存 WGS-84。来自高德/腾讯的数据入库前必须 GCJ-02 → WGS-84 转换；跳转国内导航 App 时再反向转换。禁止两套坐标混存。
-2. **底图样式**：自行维护一份 style JSON，仅引用 MapTiler 瓦片源，避免样式漂移；MapTiler 后台按域名/包名限制 API key。
+2. **底图样式**：自行维护一份 style JSON，仅引用 MapTiler 瓦片源，避免样式漂移；MapTiler 后台分别创建 Web、iOS、Android key，Web 按域名限制，移动端按由 Bundle ID/Package 派生的大小写敏感 User-Agent 子串限制，禁止跨平台复用 key。
 3. **用户数据自持**：接 Clerk webhook（user.created / user.updated）同步用户基础信息到自己的 Postgres 用户表，业务数据只关联自己的表。
 4. **数据边界**：产业带、工厂等核心结构化地理数据放 NestJS + PostGIS 自有 schema；Payload 只管文章类内容，不存业务地理数据。
 5. **Expo 版本**：锁定 Obytes Starter 的 Expo SDK 与 MapLibre RN 的版本组合，升级前先在 dev build 验证。

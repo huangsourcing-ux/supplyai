@@ -105,7 +105,7 @@ jobs:
       PAYLOAD_SECRET: ci_only_payload_secret_at_least_32_chars
       R2_ACCESS_KEY_ID: ci_access_key
       R2_ACCOUNT_ID: ci_account
-      R2_BUCKET: chinasupply-ci
+      R2_MEDIA_BUCKET: chinasupply-ci-media
       R2_CDN_BASE_URL: http://localhost:9000
       R2_PREFIX: dev
       R2_SECRET_ACCESS_KEY: ci_secret_key
