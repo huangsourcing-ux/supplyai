@@ -84,7 +84,7 @@ chinasupply/
 > 目标：模型落库、公开/地图 API 可调、API Client 生成链路打通、数据人员可以开始持续录入。
 
 - [x] **M1-T1 Drizzle schema 与迁移**：PRD 第 3 节全部表 + 索引（3.9）+ PostGIS extension；search_text 生成函数共享 lib（3.8）；落地真实 `db:migrate` 后，把 M0-T6 的 Railway staging 发布门从仅 CMS 扩展为 `core` migration 成功后才发布 API/Worker。
-- [ ] **M1-T2 packages/schemas**：全部 API 请求/响应 Zod schema；envelope 与 cursor 编解码（4.1/4.2）。
+- [x] **M1-T2 packages/schemas**：全部 API 请求/响应 Zod schema；envelope 与 cursor 编解码（4.1/4.2）。
 - [ ] **M1-T3 OpenAPI + API Client**：NestJS 输出 `/api/openapi.json`（Zod 为唯一来源，经 nestjs-zod/zod-openapi 桥接）；Orval 生成 packages/api-client（fetch client + TanStack Query hooks）；Web 与 App 各完成一次真实调用；CI 校验重新生成后 `git diff` 为空；同链路生成 MSW mock 供 M2 先行。
 - [ ] **M1-T4a 公开 API：categories + clusters**：A-7、A-1、A-2（实时 factoryCount）。
 - [ ] **M1-T4b 公开 API：factories**：A-3、A-4、A-5（relatedFactories 内嵌）。

@@ -100,6 +100,8 @@ packages/
 - MAP-* 也必须包在 envelope 内，不能返回裸 FeatureCollection；地图属性严格保持 PRD 规定的轻量字段。MAP-3 最多 5000 点，截断时返回 `meta.truncated: true`。
 - MAP-* 公开读响应经 Cloudflare CDN 缓存 1 小时；publish/unpublish 后按相关 URL 主动 purge。
 - 公开 API 绝不返回 draft 数据。收藏 POST/DELETE、Clerk webhook 和导入重跑必须遵守 PRD 中的幂等语义。
+- M1-T2 wire contract：业务 JSON 默认 camelCase；公开 category/cluster 筛选用 slug、region 用 ID，Admin 关联与收藏目标用 ID；Point/MultiPolygon 使用 WGS-84 GeoJSON。公开可翻译字段返回英语标量，A-5 `address` 例外返回 `{en,zh}`；Admin 保留完整双语对象。公开媒体只返回 CDN URL，Admin 返回 objectKey + 预览 URL。
+- 普通写操作返回更新后的资源，幂等删除返回 desired-state 回执。通用 Admin PATCH 不得写 status/published/verified 系列服务端字段；ADM-6 只接受 JPEG/PNG/WebP、声明不超过 10MB，并返回短时 PUT URL，上传后仍须 HEAD 复验。
 
 ### 6.4 鉴权、安全与隐私
 

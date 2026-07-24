@@ -1,28 +1,10 @@
-import type { ApiErrorCode } from "./api-error-code.js";
+export type {
+  ApiErrorDetail,
+  ApiErrorEnvelope,
+  ApiSuccessEnvelope,
+} from "@chinasupply/schemas";
 
 const RESPONSE_WITH_META = Symbol("RESPONSE_WITH_META");
-
-export interface ApiSuccessEnvelope<Data, Meta = Record<string, never>> {
-  data: Data;
-  error: null;
-  meta: Meta;
-}
-
-export interface ApiErrorDetail {
-  code: string;
-  message: string;
-  path: Array<number | string>;
-}
-
-export interface ApiErrorEnvelope {
-  data: null;
-  error: {
-    code: ApiErrorCode;
-    details: ApiErrorDetail[];
-    message: string;
-  };
-  meta: null;
-}
 
 export interface ResponseWithMeta<Data, Meta> {
   readonly [RESPONSE_WITH_META]: true;

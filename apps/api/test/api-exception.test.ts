@@ -1,3 +1,4 @@
+import { apiErrorEnvelopeSchema } from "@chinasupply/schemas";
 import {
   BadRequestException,
   ForbiddenException,
@@ -36,6 +37,7 @@ describe("API exception mapping", () => {
         error: { code, details: [] },
         meta: null,
       });
+      expect(apiErrorEnvelopeSchema.parse(mapped.body)).toEqual(mapped.body);
       expect(JSON.stringify(mapped.body)).not.toContain("limited");
     },
   );
@@ -57,6 +59,7 @@ describe("API exception mapping", () => {
         meta: null,
       },
     });
+    expect(apiErrorEnvelopeSchema.parse(mapped.body)).toEqual(mapped.body);
   });
 
   it("returns structured Zod issues for invalid input", () => {
