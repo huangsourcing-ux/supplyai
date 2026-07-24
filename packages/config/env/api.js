@@ -31,6 +31,16 @@ const apiRuntimeShape = {
   SENTRY_RELEASE: z.string().startsWith("chinasupply-api@").min(22).optional(),
 };
 
+const privateObjectStorageShape = {
+  APP_ENV: deploymentEnvironmentSchema,
+  R2_ACCOUNT_ID: secretSchema,
+  R2_ACCESS_KEY_ID: secretSchema,
+  R2_SECRET_ACCESS_KEY: secretSchema,
+  R2_PRIVATE_BUCKET: z.string().min(3),
+  R2_PREFIX: z.string(),
+  R2_ENDPOINT: networkUrlSchema.optional(),
+};
+
 /** @type {readonly ["DATABASE_URL", "REDIS_URL"]} */
 const remoteConnectionFields = ["DATABASE_URL", "REDIS_URL"];
 
@@ -56,6 +66,14 @@ const remoteSecretFields = [
 const remoteHttpProviderFields = [
   "CLOUDFLARE_ZONE_ID",
   "CLOUDFLARE_PURGE_TOKEN",
+];
+
+/** @type {readonly ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_PRIVATE_BUCKET"]} */
+const privateObjectStorageSecretFields = [
+  "R2_ACCOUNT_ID",
+  "R2_ACCESS_KEY_ID",
+  "R2_SECRET_ACCESS_KEY",
+  "R2_PRIVATE_BUCKET",
 ];
 
 export const apiRuntimeEnvSchema = z
@@ -147,6 +165,7 @@ export const apiEnvSchema = z
     R2_MEDIA_BUCKET: z.string().min(3),
     R2_PRIVATE_BUCKET: z.string().min(3),
     R2_PREFIX: z.string(),
+    R2_ENDPOINT: networkUrlSchema.optional(),
     CLOUDFLARE_ZONE_ID: secretSchema,
     CLOUDFLARE_PURGE_TOKEN: secretSchema,
   })
@@ -192,12 +211,61 @@ export const apiEnvSchema = z
     }
   });
 
+export const privateObjectStorageEnvSchema = z
+  .object(privateObjectStorageShape)
+  .superRefine((environment, context) => {
+    requireR2Prefix(environment.R2_PREFIX, environment.APP_ENV, context);
+
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.R2_ENDPOINT !== undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["R2_ENDPOINT"],
+        message: "may only override the Cloudflare endpoint locally",
+      });
+    }
+
+    if (environment.APP_ENV !== "local") {
+      for (const field of privateObjectStorageSecretFields) {
+        rejectPlaceholder(environment[field], field, context);
+      }
+    }
+  });
+
+export const importCliEnvSchema = privateObjectStorageEnvSchema.and(
+  z.object({
+    REDIS_URL: networkUrlSchema,
+  }),
+);
+
 /**
  * @param {unknown} source
  * @returns {z.infer<typeof apiEnvSchema>}
  */
 export function parseApiEnv(source) {
   return parseEnvironment(apiEnvSchema, source, "API");
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof privateObjectStorageEnvSchema>}
+ */
+export function parsePrivateObjectStorageEnv(source) {
+  return parseEnvironment(
+    privateObjectStorageEnvSchema,
+    source,
+    "Private object storage",
+  );
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof importCliEnvSchema>}
+ */
+export function parseImportCliEnv(source) {
+  return parseEnvironment(importCliEnvSchema, source, "Import CLI");
 }
 
 /**

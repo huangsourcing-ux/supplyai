@@ -8,6 +8,7 @@ import {
   RuntimeConfigModule,
   type RuntimeConfig,
 } from "./config/runtime-config.module.js";
+import { ImportModule } from "./imports/import.module.js";
 import { SYSTEM_QUEUE } from "./queue/system.constants.js";
 import { SystemProcessor } from "./queue/system.processor.js";
 
@@ -21,6 +22,7 @@ import { SystemProcessor } from "./queue/system.processor.js";
         connection: createRedisOptions(config.REDIS_URL, null),
       }),
     }),
+    ImportModule,
     BullModule.registerQueue({ name: SYSTEM_QUEUE }),
   ],
   providers: [SystemProcessor],

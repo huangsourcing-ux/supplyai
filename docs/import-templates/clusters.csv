@@ -1,0 +1,2 @@
+slug,nameEn,nameZh,regionId,primaryCategorySlug,categorySlugs,centroidLng,centroidLat,boundary,summaryEn,summaryZh,descriptionEn,descriptionZh,mainProducts,coverImage,stats
+shenzhen-lighting,Shenzhen Lighting Cluster,深圳照明产业带,region000000000000000,lighting,"[""lighting"",""led-lighting""]",114.0579,22.5431,,Lighting manufacturers in Shenzhen,深圳照明制造商集群,,,"[{""en"":""LED lighting"",""zh"":""LED 照明""}]",,

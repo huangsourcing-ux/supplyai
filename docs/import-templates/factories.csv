@@ -1,0 +1,2 @@
+slug,nameEn,nameZh,clusterSlug,regionId,addressEn,addressZh,locationLng,locationLat,categorySlugs,mainProducts,certifications,moq,establishedYear,employeeRange,contact,images,sourceName,sourceUrl
+shenzhen-bright-lighting,Shenzhen Bright Lighting,深圳光明照明,shenzhen-lighting,region000000000000000,"Shenzhen, Guangdong, China",中国广东省深圳市,114.0579,22.5431,"[""lighting"",""led-lighting""]","[{""en"":""LED lighting"",""zh"":""LED 照明""}]","[""ISO9001""]",100 pieces,2012,100-500,"{""website"":""https://example.com""}",[],Example source,https://example.com/source

@@ -4,10 +4,19 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./navigation": "./src/navigation/index.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "react-native": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./navigation": {
+      "types": "./src/navigation/index.ts",
+      "react-native": "./src/navigation/index.ts",
+      "default": "./dist/navigation/index.js"
+    }
   },
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
     "lint": "eslint .",
     "navigation:validation": "tsx scripts/generate-navigation-validation.ts",
     "test:unit": "vitest run",
