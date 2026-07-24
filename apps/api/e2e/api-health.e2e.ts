@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import { configureApiClient, getHealthLive } from "@chinasupply/api-client";
 import { NestFactory } from "@nestjs/core";
 import {
   FastifyAdapter,
@@ -88,6 +89,7 @@ describe.sequential("API health e2e", () => {
     configureHttpApplication(app);
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
+    await app.listen(0, "127.0.0.1");
   });
 
   afterAll(async () => {
@@ -107,6 +109,37 @@ describe.sequential("API health e2e", () => {
       error: null,
       meta: {},
     });
+  });
+
+  it("executes the generated health client against the real Nest listener", async () => {
+    configureApiClient({ baseUrl: `${await app.getUrl()}/api/v1` });
+
+    await expect(getHealthLive()).resolves.toEqual({
+      data: { status: "ok" },
+      error: null,
+      meta: {},
+    });
+  });
+
+  it("serves the raw OpenAPI 3.1 contract outside the business envelope", async () => {
+    const response = await app.inject({
+      headers: {
+        "cf-connecting-ip": "203.0.113.10",
+        [EDGE_PROXY_HEADER]: edgeSecret,
+      },
+      method: "GET",
+      url: "/api/openapi.json",
+    });
+    const document = response.json();
+    const operations = Object.values(
+      document.paths as Record<string, Record<string, unknown>>,
+    ).flatMap((pathItem) => Object.values(pathItem));
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["cache-control"]).toBe("no-store");
+    expect(document.openapi).toBe("3.1.0");
+    expect(document.data).toBeUndefined();
+    expect(operations).toHaveLength(31);
   });
 
   it("reports PostGIS and Redis readiness through the success envelope", async () => {

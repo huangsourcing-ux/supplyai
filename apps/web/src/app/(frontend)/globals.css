@@ -118,6 +118,30 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.api-health {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.api-health__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #f59e0b;
+}
+
+.api-health--ready .api-health__dot {
+  background: #22c55e;
+}
+
+.api-health--error .api-health__dot {
+  background: #ef4444;
+}
+
 .clerk-shell {
   display: grid;
   gap: 2rem;

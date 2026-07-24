@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "api:generate": "pnpm --filter @chinasupply/api generate:openapi && pnpm --filter @chinasupply/api-client generate && prettier --write --log-level warn apps/api/openapi.json packages/api-client/src/generated",
+    "api:generate:check": "node scripts/check-api-generation.mjs",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "infra:check": "node scripts/check-infra.mjs",
@@ -26,12 +28,12 @@
     "@types/node": "^22.19.1",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
-    "prettier": "^3.7.4",
+    "prettier": "3.9.6",
     "turbo": "^2.10.5",
     "typescript": "5.9.2"
   },
   "engines": {
-    "node": ">=22",
+    "node": ">=22.18.0",
     "pnpm": ">=10"
   },
   "packageManager": "pnpm@10.33.2",

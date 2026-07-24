@@ -1,5 +1,13 @@
 import type { ReactNode } from "react";
 
+jest.mock("@chinasupply/api-client", () => ({
+  configureApiClient: jest.fn(),
+  useGetHealthLive: jest.fn(() => ({
+    isError: false,
+    isPending: true,
+  })),
+}));
+
 jest.mock("react-native-worklets", () => ({
   __esModule: true,
   default: {},

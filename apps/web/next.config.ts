@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_SENTRY_RELEASE: sentryRelease,
   },
   reactStrictMode: true,
-  transpilePackages: ["@chinasupply/config"],
+  transpilePackages: ["@chinasupply/api-client", "@chinasupply/config"],
   turbopack: {
     root: path.resolve(currentDirectory, "../.."),
   },

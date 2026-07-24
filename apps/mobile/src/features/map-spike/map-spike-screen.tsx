@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
 import { mobileEnvironment } from "../../env";
+import { ApiHealthStatus } from "../api-health/api-health-status";
 import { MobileSentrySmoke } from "../monitoring/sentry-smoke";
 import {
   clusteredPoints,
@@ -43,6 +44,7 @@ export default function MapSpikeScreen() {
       <View style={styles.header}>
         <Text style={styles.eyebrow}>{t("mapSpike.eyebrow")}</Text>
         <Text style={styles.title}>{t("mapSpike.title")}</Text>
+        <ApiHealthStatus />
       </View>
 
       <View style={styles.mapFrame}>

@@ -1,5 +1,33 @@
 {
   "name": "@chinasupply/api-client",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./mocks": "./src/mocks.ts"
+  },
+  "scripts": {
+    "generate": "orval --config orval.config.ts",
+    "lint": "eslint .",
+    "test:unit": "vitest run",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": ">=5.90.19 <6"
+  },
+  "dependencies": {
+    "@faker-js/faker": "10.5.0",
+    "msw": "2.15.0"
+  },
+  "devDependencies": {
+    "@chinasupply/config": "workspace:*",
+    "@tanstack/react-query": "5.90.19",
+    "@types/node": "^22.19.1",
+    "eslint": "^9.39.1",
+    "orval": "8.22.0",
+    "prettier": "3.9.6",
+    "typescript": "5.9.2",
+    "vitest": "4.0.18"
+  }
 }
