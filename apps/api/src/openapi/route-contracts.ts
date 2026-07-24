@@ -186,6 +186,17 @@ export const getFactoryRouteContract = defineRouteContract({
   tag: "factories",
 });
 
+export const searchRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "search",
+  path: "/api/v1/search",
+  request: { query: searchQuerySchema },
+  response: searchResponseSchema,
+  summary: "Search categories, clusters, and factories",
+  tag: "search",
+});
+
 export const apiRouteContracts = [
   defineRouteContract({
     access: "health",
@@ -201,16 +212,7 @@ export const apiRouteContracts = [
   getClusterFactoriesRouteContract,
   getFactoriesRouteContract,
   getFactoryRouteContract,
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "search",
-    path: "/api/v1/search",
-    request: { query: searchQuerySchema },
-    response: searchResponseSchema,
-    summary: "Search categories, clusters, and factories",
-    tag: "search",
-  }),
+  searchRouteContract,
   getCategoriesRouteContract,
   defineRouteContract({
     access: "user",

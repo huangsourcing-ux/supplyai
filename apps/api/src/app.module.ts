@@ -7,6 +7,7 @@ import { RuntimeConfigModule } from "./config/runtime-config.module.js";
 import { FactoriesModule } from "./factories/factories.module.js";
 import { HealthModule } from "./health/health.module.js";
 import { OpenApiModule } from "./openapi/openapi.module.js";
+import { SearchModule } from "./search/search.module.js";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { OpenApiModule } from "./openapi/openapi.module.js";
     CategoriesModule,
     ClustersModule,
     FactoriesModule,
+    SearchModule,
     HealthModule,
     OpenApiModule,
   ],
