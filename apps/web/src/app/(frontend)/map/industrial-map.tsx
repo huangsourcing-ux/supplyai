@@ -3,21 +3,39 @@
 import type {
   GeoJSONSource,
   Map as MapLibreMap,
+  MapLayerMouseEvent,
   StyleSpecification,
 } from "maplibre-gl";
+import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 import {
+  type GetMapClusterBoundaries200Data,
   type GetMapClusterPoints200Data,
+  type GetMapFactories200Data,
+  getGetMapClusterBoundariesQueryKey,
+  getGetMapFactoriesQueryKey,
+  useGetMapClusterBoundaries,
   useGetMapClusterPoints,
+  useGetMapFactories,
 } from "@chinasupply/api-client";
 import { createChinaSupplyMapStyle } from "@chinasupply/config/map/style";
 
 import {
   CHINA_BOUNDS,
+  CLUSTER_BOUNDARIES_SOURCE_ID,
   CLUSTER_POINTS_SOURCE_ID,
+  EMPTY_CLUSTER_BOUNDARIES,
   clusterPointsLayer,
   EMPTY_CLUSTER_POINTS,
+  EMPTY_FACTORY_POINTS,
+  FACTORIES_SOURCE_ID,
+  FACTORY_CLUSTERS_LAYER_ID,
+  clusterBoundariesFillLayer,
+  factoryClusterCountLayer,
+  factoryClustersLayer,
+  factoryPointsLayer,
+  factorySourceOptions,
   MAPLIBRE_WORKER_URL,
 } from "./map-config";
 import { MapAttribution, type MapAttributionLabels } from "./map-attribution";
@@ -26,27 +44,80 @@ import {
   type MapStatusKind,
   type MapStatusLabels,
 } from "./map-status";
+import { MapTruncationNotice } from "./map-truncation-notice";
+import {
+  CLUSTER_BOUNDARY_MIN_ZOOM,
+  createDebouncedViewportUpdater,
+  FACTORY_POINT_MIN_ZOOM,
+  type MapViewport,
+  readMapViewport,
+} from "./map-viewport";
 
 export interface IndustrialMapLabels
   extends MapAttributionLabels, MapStatusLabels {
   ariaLabel: string;
+  truncated: string;
 }
 
 type MapLoadState = "error" | "loading" | "ready";
 
+const DISABLED_BOUNDARY_PARAMS = {
+  bbox: "0,0,1,1",
+  zoom: 0,
+};
+const DISABLED_FACTORY_PARAMS = {
+  bbox: "0,0,1,1",
+};
+
 export function IndustrialMap({
   labels,
 }: Readonly<{ labels: IndustrialMapLabels }>) {
+  const queryClient = useQueryClient();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const mapDataRef = useRef<GetMapClusterPoints200Data>(EMPTY_CLUSTER_POINTS);
+  const clusterPointsRef =
+    useRef<GetMapClusterPoints200Data>(EMPTY_CLUSTER_POINTS);
+  const clusterBoundariesRef = useRef<GetMapClusterBoundaries200Data>(
+    EMPTY_CLUSTER_BOUNDARIES,
+  );
+  const factoryPointsRef = useRef<GetMapFactories200Data>(EMPTY_FACTORY_POINTS);
   const [mapAttempt, setMapAttempt] = useState(0);
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
+  const [viewport, setViewport] = useState<MapViewport | null>(null);
+  const [viewportIsSettling, setViewportIsSettling] = useState(true);
+  const boundariesEnabled =
+    viewport !== null && viewport.zoom >= CLUSTER_BOUNDARY_MIN_ZOOM;
+  const factoriesEnabled =
+    viewport !== null && viewport.zoom >= FACTORY_POINT_MIN_ZOOM;
   const clusterPointsQuery = useGetMapClusterPoints();
+  const clusterBoundariesQuery = useGetMapClusterBoundaries(
+    viewport ?? DISABLED_BOUNDARY_PARAMS,
+    {
+      query: {
+        enabled: boundariesEnabled,
+        placeholderData: keepPreviousData,
+      },
+    },
+  );
+  const factoryPointsQuery = useGetMapFactories(
+    viewport === null ? DISABLED_FACTORY_PARAMS : { bbox: viewport.bbox },
+    {
+      query: {
+        enabled: factoriesEnabled,
+        placeholderData: keepPreviousData,
+      },
+    },
+  );
   const clusterPoints = clusterPointsQuery.data?.data ?? EMPTY_CLUSTER_POINTS;
+  const clusterBoundaries = boundariesEnabled
+    ? (clusterBoundariesQuery.data?.data ?? EMPTY_CLUSTER_BOUNDARIES)
+    : EMPTY_CLUSTER_BOUNDARIES;
+  const factoryPoints = factoriesEnabled
+    ? (factoryPointsQuery.data?.data ?? EMPTY_FACTORY_POINTS)
+    : EMPTY_FACTORY_POINTS;
 
   useEffect(() => {
-    mapDataRef.current = clusterPoints;
+    clusterPointsRef.current = clusterPoints;
     const source = mapRef.current?.getSource(
       CLUSTER_POINTS_SOURCE_ID,
     ) as GeoJSONSource | null;
@@ -54,13 +125,35 @@ export function IndustrialMap({
   }, [clusterPoints]);
 
   useEffect(() => {
+    clusterBoundariesRef.current = clusterBoundaries;
+    const source = mapRef.current?.getSource(
+      CLUSTER_BOUNDARIES_SOURCE_ID,
+    ) as GeoJSONSource | null;
+    source?.setData(clusterBoundaries);
+  }, [clusterBoundaries]);
+
+  useEffect(() => {
+    factoryPointsRef.current = factoryPoints;
+    const source = mapRef.current?.getSource(
+      FACTORIES_SOURCE_ID,
+    ) as GeoJSONSource | null;
+    source?.setData(factoryPoints);
+  }, [factoryPoints]);
+
+  useEffect(() => {
     const container = containerRef.current;
     if (container === null) return;
 
     let disposed = false;
     let activeMap: MapLibreMap | null = null;
+    const viewportUpdater = createDebouncedViewportUpdater((nextViewport) => {
+      setViewport(nextViewport);
+      setViewportIsSettling(false);
+    });
 
     setMapLoadState("loading");
+    setViewport(null);
+    setViewportIsSettling(true);
 
     void import("maplibre-gl")
       .then(({ Map, NavigationControl, setWorkerUrl }) => {
@@ -83,6 +176,68 @@ export function IndustrialMap({
 
         activeMap = map;
         mapRef.current = map;
+        const cancelViewportQueries = () => {
+          setViewportIsSettling(true);
+          viewportUpdater.cancel();
+          void Promise.all([
+            queryClient.cancelQueries({
+              queryKey: getGetMapClusterBoundariesQueryKey(),
+            }),
+            queryClient.cancelQueries({
+              queryKey: getGetMapFactoriesQueryKey(),
+            }),
+          ]);
+        };
+        const scheduleViewportUpdate = () => {
+          const nextViewport = readMapViewport(map);
+          if (nextViewport === null) {
+            viewportUpdater.cancel();
+            setViewport(null);
+            setViewportIsSettling(false);
+            return;
+          }
+
+          viewportUpdater.schedule(nextViewport);
+        };
+        const handleFactoryClusterClick = (event: MapLayerMouseEvent) => {
+          const feature = event.features?.[0];
+          const clusterId = feature?.properties?.cluster_id;
+          const coordinates =
+            feature?.geometry.type === "Point"
+              ? feature.geometry.coordinates
+              : null;
+
+          if (
+            typeof clusterId !== "number" ||
+            coordinates === null ||
+            typeof coordinates[0] !== "number" ||
+            typeof coordinates[1] !== "number"
+          ) {
+            return;
+          }
+
+          const source = map.getSource(FACTORIES_SOURCE_ID) as GeoJSONSource;
+          void source
+            .getClusterExpansionZoom(clusterId)
+            .then((zoom) => {
+              if (disposed) return;
+              map.easeTo({
+                center: [coordinates[0]!, coordinates[1]!],
+                duration: 500,
+                zoom,
+              });
+            })
+            .catch(() => undefined);
+        };
+        const showFactoryClusterCursor = () => {
+          map.getCanvas().style.cursor = "pointer";
+        };
+        const hideFactoryClusterCursor = () => {
+          map.getCanvas().style.cursor = "";
+        };
+
+        map.on("movestart", cancelViewportQueries);
+        map.on("moveend", scheduleViewportUpdate);
         map.addControl(
           new NavigationControl({
             showCompass: true,
@@ -103,11 +258,36 @@ export function IndustrialMap({
 
           initialLoadComplete = true;
           map.off("error", handleInitialError);
+          map.addSource(CLUSTER_BOUNDARIES_SOURCE_ID, {
+            data: clusterBoundariesRef.current,
+            type: "geojson",
+          });
+          map.addLayer(clusterBoundariesFillLayer);
           map.addSource(CLUSTER_POINTS_SOURCE_ID, {
-            data: mapDataRef.current,
+            data: clusterPointsRef.current,
             type: "geojson",
           });
           map.addLayer(clusterPointsLayer);
+          map.addSource(FACTORIES_SOURCE_ID, {
+            data: factoryPointsRef.current,
+            type: "geojson",
+            ...factorySourceOptions,
+          });
+          map.addLayer(factoryClustersLayer);
+          map.addLayer(factoryClusterCountLayer);
+          map.addLayer(factoryPointsLayer);
+          map.on("click", FACTORY_CLUSTERS_LAYER_ID, handleFactoryClusterClick);
+          map.on(
+            "mouseenter",
+            FACTORY_CLUSTERS_LAYER_ID,
+            showFactoryClusterCursor,
+          );
+          map.on(
+            "mouseleave",
+            FACTORY_CLUSTERS_LAYER_ID,
+            hideFactoryClusterCursor,
+          );
+          scheduleViewportUpdate();
           setMapLoadState("ready");
         };
 
@@ -120,22 +300,52 @@ export function IndustrialMap({
 
     return () => {
       disposed = true;
+      viewportUpdater.cancel();
+      void Promise.all([
+        queryClient.cancelQueries({
+          queryKey: getGetMapClusterBoundariesQueryKey(),
+        }),
+        queryClient.cancelQueries({
+          queryKey: getGetMapFactoriesQueryKey(),
+        }),
+      ]);
       if (mapRef.current === activeMap) mapRef.current = null;
       activeMap?.remove();
     };
-  }, [mapAttempt]);
+  }, [mapAttempt, queryClient]);
 
   const retry = () => {
+    if (mapLoadState === "error") {
+      void clusterPointsQuery.refetch();
+      setMapAttempt((attempt) => attempt + 1);
+      return;
+    }
+
     void clusterPointsQuery.refetch();
-    setMapAttempt((attempt) => attempt + 1);
+    if (boundariesEnabled) void clusterBoundariesQuery.refetch();
+    if (factoriesEnabled) void factoryPointsQuery.refetch();
   };
+
+  const hasDataError =
+    clusterPointsQuery.isError ||
+    (boundariesEnabled && clusterBoundariesQuery.isError) ||
+    (factoriesEnabled && factoryPointsQuery.isError);
+  const hasPendingData =
+    clusterPointsQuery.isPending ||
+    (boundariesEnabled && clusterBoundariesQuery.isPending) ||
+    (factoriesEnabled && factoryPointsQuery.isPending);
+  const showTruncatedNotice =
+    factoriesEnabled &&
+    !viewportIsSettling &&
+    !factoryPointsQuery.isPlaceholderData &&
+    factoryPointsQuery.data?.meta.truncated === true;
 
   let statusKind: MapStatusKind | null = null;
   if (mapLoadState === "error") {
     statusKind = "map-error";
-  } else if (clusterPointsQuery.isError) {
+  } else if (hasDataError) {
     statusKind = "data-error";
-  } else if (mapLoadState === "loading" || clusterPointsQuery.isPending) {
+  } else if (mapLoadState === "loading" || hasPendingData) {
     statusKind = "loading";
   }
 
@@ -145,6 +355,9 @@ export function IndustrialMap({
       {statusKind === null ? null : (
         <MapStatus kind={statusKind} labels={labels} onRetry={retry} />
       )}
+      {showTruncatedNotice ? (
+        <MapTruncationNotice message={labels.truncated} />
+      ) : null}
       <MapAttribution labels={labels} />
     </section>
   );
