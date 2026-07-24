@@ -17,6 +17,9 @@
     "generate:importmap": "node scripts/payload-cli.mjs generate:importmap",
     "generate:types": "node scripts/payload-cli.mjs generate:types",
     "lint": "eslint .",
+    "prebuild": "pnpm prepare:maplibre-worker",
+    "predev": "pnpm prepare:maplibre-worker",
+    "prepare:maplibre-worker": "node scripts/prepare-maplibre-worker.mjs",
     "start": "next start",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"

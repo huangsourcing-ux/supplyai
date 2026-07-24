@@ -42,6 +42,37 @@ test("shared map style stays checked in and MapTiler-only", () => {
   );
 });
 
+test("shared map style targets standard OpenMapTiles source layers", () => {
+  assert.equal(
+    chinaSupplyMapStyleTemplate.sources["maptiler-planet"].url,
+    `https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=${MAPTILER_KEY_TOKEN}`,
+  );
+  assert.doesNotMatch(
+    chinaSupplyMapStyleTemplate.sources["maptiler-planet"].url,
+    /\/tiles\/v4\//,
+  );
+
+  const sourceLayers = new Set(
+    chinaSupplyMapStyleTemplate.layers
+      .map((layer) => layer["source-layer"])
+      .filter(Boolean),
+  );
+
+  for (const sourceLayer of [
+    "boundary",
+    "landcover",
+    "landuse",
+    "place",
+    "transportation",
+    "water",
+  ]) {
+    assert.ok(
+      sourceLayers.has(sourceLayer),
+      `missing ${sourceLayer} source-layer`,
+    );
+  }
+});
+
 test("MapTiler key substitution preserves glyph tokens and isolates callers", () => {
   const firstStyle = createChinaSupplyMapStyle("public key/with symbols");
   const secondStyle = createChinaSupplyMapStyle("second_public_key");
