@@ -10,6 +10,9 @@ import {
   getClusters,
   getFactories,
   getFactory,
+  getMapClusterBoundaries,
+  getMapClusterPoints,
+  getMapFactories,
   search,
 } from "@chinasupply/api-client";
 import {
@@ -19,6 +22,9 @@ import {
   getClustersResponseSchema,
   getFactoriesResponseSchema,
   getFactoryResponseSchema,
+  getMapClusterBoundariesResponseSchema,
+  getMapClusterPointsResponseSchema,
+  getMapFactoriesResponseSchema,
   searchResponseSchema,
 } from "@chinasupply/schemas";
 import { NestFactory } from "@nestjs/core";
@@ -67,6 +73,23 @@ const ids = {
   led: "eeeeeeeeeeeeeeeeeeeee",
   lighting: "lllllllllllllllllllll",
 } as const;
+
+const denseBoundary = {
+  coordinates: [
+    [
+      [
+        [120, 30],
+        [121, 30],
+        ...Array.from({ length: 51 }, (_, index) => [
+          Number((121 - index * 0.02).toFixed(2)),
+          31 + (index % 2 === 0 ? 0 : 0.006),
+        ]),
+        [120, 30],
+      ],
+    ],
+  ],
+  type: "MultiPolygon",
+};
 
 function runMigration(databaseUrl: string): void {
   const result = spawnSync(
@@ -161,7 +184,7 @@ async function insertCluster(
     searchTextZh?: string;
     slug: string;
     status: "draft" | "published";
-    withBoundary?: boolean;
+    boundary?: typeof denseBoundary;
   },
 ): Promise<void> {
   await client.query("begin");
@@ -179,10 +202,8 @@ async function insertCluster(
          $5,
          ST_SetSRID(ST_MakePoint(120.2, 30.3), 4326),
          case
-           when $6::boolean then ST_SetSRID(
-             ST_GeomFromGeoJSON(
-               '{"type":"MultiPolygon","coordinates":[[[[120,30],[121,30],[121,31],[120,30]]]]}'
-             ),
+           when $6::text is not null then ST_SetSRID(
+             ST_GeomFromGeoJSON($6::text),
              4326
            )
            else null
@@ -206,7 +227,7 @@ async function insertCluster(
         }),
         input.regionId,
         input.primaryCategoryId,
-        input.withBoundary ?? false,
+        input.boundary === undefined ? null : JSON.stringify(input.boundary),
         JSON.stringify({
           en: `${input.slug} summary`,
           zh: `${input.slug} 简介`,
@@ -351,6 +372,15 @@ async function insertFactory(
   }
 }
 
+function countBoundaryPositions(coordinates: number[][][][]): number {
+  return coordinates.reduce(
+    (polygonTotal, polygon) =>
+      polygonTotal +
+      polygon.reduce((ringTotal, ring) => ringTotal + ring.length, 0),
+    0,
+  );
+}
+
 describe.sequential("public catalog API", () => {
   let app: NestFastifyApplication;
   let pool: Pool;
@@ -475,7 +505,7 @@ describe.sequential("public catalog API", () => {
         searchTextZh: "top 灯饰 LED灯",
         slug: "top-lighting",
         status: "published",
-        withBoundary: true,
+        boundary: denseBoundary,
       });
       await insertCluster(client, {
         categoryIds: [ids.lighting, ids.apparel, ids.furniture, ids.hosiery],
@@ -1015,6 +1045,172 @@ describe.sequential("public catalog API", () => {
     );
   });
 
+  it("returns published cluster points with exact properties and live counts", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/map/clusters/points",
+    });
+    const body = getMapClusterPointsResponseSchema.parse(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(body.meta).toEqual({});
+    expect(body.data.features.map(({ properties }) => properties.id)).toEqual([
+      ids.clusterOld,
+      ids.clusterSecond,
+      ids.clusterTop,
+    ]);
+    expect(
+      body.data.features.find(
+        ({ properties }) => properties.id === ids.clusterTop,
+      ),
+    ).toEqual({
+      geometry: { coordinates: [120.2, 30.3], type: "Point" },
+      properties: {
+        color: "#112233",
+        factoryCount: 2,
+        id: ids.clusterTop,
+        name_en: "top-lighting name",
+        primaryCategoryId: ids.lighting,
+        slug: "top-lighting",
+      },
+      type: "Feature",
+    });
+
+    const categoryResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/map/clusters/points?category=led-lighting",
+    });
+    expect(
+      getMapClusterPointsResponseSchema
+        .parse(categoryResponse.json())
+        .data.features.map(({ properties }) => properties.id),
+    ).toEqual([ids.clusterTop]);
+  });
+
+  it("filters cluster boundaries by bbox and applies all zoom tiers", async () => {
+    const responses = await Promise.all(
+      [9, 10, 12].map((zoom) =>
+        app.inject({
+          method: "GET",
+          url: `/api/v1/map/clusters/boundaries?bbox=119.5,29.5,121.5,31.5&zoom=${zoom}`,
+        }),
+      ),
+    );
+    const [coarse, medium, original] = responses.map((response) =>
+      getMapClusterBoundariesResponseSchema.parse(response.json()),
+    );
+    const coarseFeature = coarse?.data.features[0];
+    const mediumFeature = medium?.data.features[0];
+    const originalFeature = original?.data.features[0];
+
+    expect(responses.every(({ statusCode }) => statusCode === 200)).toBe(true);
+    expect(coarseFeature?.properties).toEqual({
+      color: "#112233",
+      factoryCount: 2,
+      id: ids.clusterTop,
+      name_en: "top-lighting name",
+      primaryCategoryId: ids.lighting,
+      slug: "top-lighting",
+    });
+    expect(coarseFeature?.geometry.type).toBe("MultiPolygon");
+    expect(mediumFeature?.geometry.type).toBe("MultiPolygon");
+    expect(originalFeature?.geometry.type).toBe("MultiPolygon");
+
+    const coarsePositions = countBoundaryPositions(
+      coarseFeature?.geometry.coordinates ?? [],
+    );
+    const mediumPositions = countBoundaryPositions(
+      mediumFeature?.geometry.coordinates ?? [],
+    );
+    const originalPositions = countBoundaryPositions(
+      originalFeature?.geometry.coordinates ?? [],
+    );
+    expect(coarsePositions).toBeLessThan(mediumPositions);
+    expect(mediumPositions).toBeLessThanOrEqual(originalPositions);
+    expect(originalFeature?.geometry).toEqual(denseBoundary);
+
+    const excludedResponses = await Promise.all([
+      app.inject({
+        method: "GET",
+        url: "/api/v1/map/clusters/boundaries?bbox=100,20,101,21&zoom=12",
+      }),
+      app.inject({
+        method: "GET",
+        url: "/api/v1/map/clusters/boundaries?bbox=119.5,29.5,121.5,31.5&category=apparel&zoom=12",
+      }),
+    ]);
+    for (const excluded of excludedResponses) {
+      expect(
+        getMapClusterBoundariesResponseSchema.parse(excluded.json()).data
+          .features,
+      ).toEqual([]);
+    }
+  });
+
+  it("filters factory points and masks draft cluster references", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/map/factories?bbox=119,29,121,31",
+    });
+    const body = getMapFactoriesResponseSchema.parse(response.json());
+    const draftClusterFactory = body.data.features.find(
+      ({ properties }) => properties.id === ids.factoryDraftCluster,
+    );
+
+    expect(response.statusCode).toBe(200);
+    expect(body.meta).toEqual({ truncated: false });
+    expect(draftClusterFactory?.properties).toEqual({
+      clusterId: null,
+      id: ids.factoryDraftCluster,
+      name_en: "draft-cluster-factory name",
+      slug: "draft-cluster-factory",
+      verified: false,
+    });
+    expect(
+      body.data.features.some(({ properties }) =>
+        ["333333333333333333333", "444444444444444444444"].includes(
+          properties.id,
+        ),
+      ),
+    ).toBe(false);
+    expect(Object.keys(body.data.features[0]?.properties ?? {}).sort()).toEqual(
+      ["clusterId", "id", "name_en", "slug", "verified"],
+    );
+
+    const filteredResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/map/factories?bbox=119,29,121,31&category=led-lighting&cluster=top-lighting&verified=true",
+    });
+    expect(
+      getMapFactoriesResponseSchema
+        .parse(filteredResponse.json())
+        .data.features.map(({ properties }) => properties.id),
+    ).toEqual(["111111111111111111111"]);
+
+    const childCategoryResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/map/factories?bbox=119,29,121,31&category=bulbs&verified=false",
+    });
+    expect(
+      getMapFactoriesResponseSchema
+        .parse(childCategoryResponse.json())
+        .data.features.map(({ properties }) => properties.id),
+    ).toEqual(["222222222222222222222"]);
+
+    for (const url of [
+      "/api/v1/map/factories?bbox=119,29,121,31&cluster=draft-lighting",
+      "/api/v1/map/factories?bbox=100,20,101,21",
+    ]) {
+      const emptyResponse = await app.inject({ method: "GET", url });
+      expect(
+        getMapFactoriesResponseSchema.parse(emptyResponse.json()),
+      ).toMatchObject({
+        data: { features: [] },
+        meta: { truncated: false },
+      });
+    }
+  });
+
   it("returns frozen validation and not-found envelopes", async () => {
     for (const url of [
       "/api/v1/categories?unexpected=true",
@@ -1031,6 +1227,13 @@ describe.sequential("public catalog API", () => {
       "/api/v1/search",
       "/api/v1/search?q=x",
       `/api/v1/search?q=${"x".repeat(101)}`,
+      "/api/v1/map/clusters/points?category=INVALID_SLUG",
+      "/api/v1/map/clusters/points?unexpected=true",
+      "/api/v1/map/clusters/boundaries?bbox=122,32,119,29&zoom=10",
+      "/api/v1/map/clusters/boundaries?bbox=119,29,122,32&zoom=25",
+      "/api/v1/map/clusters/boundaries?bbox=119,29,122,32&zoom=10&unexpected=true",
+      "/api/v1/map/factories?bbox=119,29,122,32&verified=1",
+      "/api/v1/map/factories?bbox=119,29,122,32&unexpected=true",
     ]) {
       const response = await app.inject({ method: "GET", url });
       const body = response.json();
@@ -1079,7 +1282,7 @@ describe.sequential("public catalog API", () => {
     }
   });
 
-  it("serves all seven endpoints through the generated API client", async () => {
+  it("serves all ten endpoints through the generated API client", async () => {
     configureApiClient({ baseUrl: `${await app.getUrl()}/api/v1` });
 
     const categoriesResponse = await getCategories();
@@ -1094,6 +1297,15 @@ describe.sequential("public catalog API", () => {
     });
     const factoryResponse = await getFactory("verified-lighting-factory");
     const searchResponse = await search({ q: "sofa" });
+    const mapClusterPointsResponse = await getMapClusterPoints();
+    const mapClusterBoundariesResponse = await getMapClusterBoundaries({
+      bbox: "119.5,29.5,121.5,31.5",
+      zoom: 12,
+    });
+    const mapFactoriesResponse = await getMapFactories({
+      bbox: "119,29,121,31",
+      cluster: "top-lighting",
+    });
 
     expect(
       getCategoriesResponseSchema.parse(categoriesResponse).data,
@@ -1116,5 +1328,55 @@ describe.sequential("public catalog API", () => {
     expect(
       searchResponseSchema.parse(searchResponse).data.categories[0]?.slug,
     ).toBe("furniture");
+    expect(
+      getMapClusterPointsResponseSchema.parse(mapClusterPointsResponse).data
+        .features,
+    ).toHaveLength(3);
+    expect(
+      getMapClusterBoundariesResponseSchema.parse(mapClusterBoundariesResponse)
+        .data.features,
+    ).toHaveLength(1);
+    expect(
+      getMapFactoriesResponseSchema.parse(mapFactoriesResponse).data.features,
+    ).toHaveLength(2);
+  });
+
+  it("caps factory maps at 5000 features and reports truncation", async () => {
+    await pool.query(
+      `insert into factories
+         (id, slug, name, cluster_id, region_id, address, location,
+          main_products, verified, status, published_at, search_text_en,
+          search_text_zh)
+       select
+         'maplimit' || lpad(value::text, 13, '0'),
+         'map-limit-' || value::text,
+         jsonb_build_object('en', 'Map limit factory ' || value::text, 'zh', '地图上限工厂'),
+         null,
+         $1,
+         '{"en":"Map Limit Road","zh":"地图上限路"}'::jsonb,
+         ST_SetSRID(ST_MakePoint(130, 40), 4326),
+         '[]'::jsonb,
+         false,
+         'published',
+         '2020-01-01T00:00:00.000Z'::timestamptz,
+         'map limit fixture',
+         '地图上限夹具'
+       from generate_series(1, 5001) as series(value)`,
+      [ids.cityA],
+    );
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/map/factories?bbox=129,39,131,41",
+    });
+    const body = getMapFactoriesResponseSchema.parse(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(body.data.features).toHaveLength(5000);
+    expect(body.meta.truncated).toBe(true);
+    expect(body.data.features[0]?.properties.id).toBe("maplimit0000000000001");
+    expect(body.data.features.at(-1)?.properties.id).toBe(
+      "maplimit0000000005000",
+    );
   });
 });

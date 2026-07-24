@@ -76,6 +76,7 @@ packages/
 - 数据库和公开 API 统一使用 WGS-84；GeoJSON 坐标顺序固定为 `[lng, lat]`，geometry SRID 固定为 4326。
 - 高德/腾讯来源坐标入库前从 GCJ-02 转为 WGS-84。禁止 WGS-84 与 GCJ-02 混存到同一业务坐标列。
 - 空间查询通过 Drizzle `sql` 模板执行原生 PostGIS SQL。
+- MAP-2 边界简化容差固定为：zoom `<10` 使用 `0.01°`，zoom `10–11` 使用 `0.002°`，zoom `≥12` 返回原始精度。
 - 导航目标所需坐标系不得凭经验写死。F-6 的实现被 M0-T9 真机验证门阻塞；验证完成后只在 `packages/geo/navigation` 的纯函数和测试夹具中固化结论。
 - 导航发布前必须由人工在真机验证落点误差小于 50m；代理不能用模拟器或单测替代该结论。
 - Web 和 App 使用同一份自行维护的 MapLibre style JSON，只引用 MapTiler 瓦片源；不要直接依赖可能漂移的托管样式。MapTiler key 分别按 Web 域名、iOS Bundle ID 和 Android Package 限制。
