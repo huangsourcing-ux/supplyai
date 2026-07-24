@@ -91,7 +91,7 @@ chinasupply/
 - [x] **M1-T4c 公开 API：search**：A-6（FTS + trgm + alias + 2 字符中文 ILIKE，按 F-3.2/3.3）。
 - [x] **M1-T5 地图 API**：MAP-1/2/3（envelope 包 FeatureCollection、zoom 分级简化：`<10` 为 `0.01°`、`10–11` 为 `0.002°`、`≥12` 原始精度；固定属性、5000 上限 + truncated）。
 - [x] **M1-T6 缓存与限流**：MAP-* Cache-Control + Cloudflare 缓存规则；G-11 限流（throttler + **Redis store**，多实例安全；真实 IP 取自 M0-T10 的代理配置）；Purge 接口预留。
-- [ ] **M1-T7 基础导入管道（从 M5 提前）**：`import:clusters` / `import:factories`——CSV/JSON、R2 中转、Zod 逐行校验、坐标按实体转换（F-9 流程）、按 slug upsert、失败报告、可重跑幂等。**M1 结束后数据人员按固定格式持续录入 staging。**
+- [x] **M1-T7 基础导入管道（从 M5 提前）**：`import:clusters` / `import:factories`——CSV/JSON、R2 中转、Zod 逐行校验、坐标按实体转换（F-9 流程）、按 slug upsert、失败报告、可重跑幂等。**M1 结束后数据人员按固定格式持续录入 staging。**
 - [ ] **M1-T8 种子与合成数据**：真实种子（≥10 产业带、≥50 工厂，**只进 staging**）；另生成 5,000/20,000 合成工厂点供负载测试；建立 `data-sources.md`（来源、许可、坐标系、更新时间）；测试联系方式不得进 production；产出《数据核验 SOP》——verified 至少代表：坐标落点正确、中英文地址可用、来源 URL 有效、主营产品合理、系工厂主体而非纯贸易商、联系方式经基本核对、last_verified_at 已记录（防止 verify 沦为形式化勾选）。
 - [ ] **M1-T9 e2e 与负载**：testcontainers（Postgres+PostGIS **+ Redis**，限流/BullMQ/缓存测试依赖）e2e——draft 不可见、公开列表 cursor 一致性（收藏排序留 M3、Admin 排序留 M5）、bbox、搜索命中、429；k6/autocannon——MAP-1 gzip 体积、MAP-3 p50/p95（5000 点）、搜索 p95，结果对照 N-1。
 

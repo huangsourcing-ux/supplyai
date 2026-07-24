@@ -9,6 +9,8 @@ import {
   parseApiEnv,
   parseApiHttpEnv,
   parseApiRuntimeEnv,
+  parseImportCliEnv,
+  parsePrivateObjectStorageEnv,
 } from "../env/api.js";
 import { parseMobileEnv } from "../env/mobile.js";
 import {
@@ -87,6 +89,32 @@ test("API environment keeps public media and private operations in separate buck
         R2_PRIVATE_BUCKET: api.R2_MEDIA_BUCKET,
       }),
     /R2_PRIVATE_BUCKET/,
+  );
+});
+
+test("private R2 endpoint overrides are local-only", async () => {
+  const api = await readExample("apps/api/.env.example");
+  assert.equal(
+    parsePrivateObjectStorageEnv({
+      ...api,
+      R2_ENDPOINT: "http://127.0.0.1:9000",
+    }).R2_ENDPOINT,
+    "http://127.0.0.1:9000",
+  );
+  assert.equal(parseImportCliEnv(api).REDIS_URL, api.REDIS_URL);
+  assert.throws(
+    () =>
+      parsePrivateObjectStorageEnv({
+        ...api,
+        APP_ENV: "staging",
+        R2_PREFIX: "staging",
+        R2_ACCOUNT_ID: "real-staging-account",
+        R2_ACCESS_KEY_ID: "real-staging-access",
+        R2_SECRET_ACCESS_KEY: "real-staging-secret",
+        R2_PRIVATE_BUCKET: "chinasupply-staging",
+        R2_ENDPOINT: "https://minio.example.test",
+      }),
+    /R2_ENDPOINT/,
   );
 });
 

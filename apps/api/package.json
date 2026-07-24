@@ -12,6 +12,8 @@
     "dev:api": "node --env-file-if-exists=.env.local ./node_modules/@nestjs/cli/bin/nest.js start --watch --entryFile main",
     "dev:worker": "node --env-file-if-exists=.env.local ./node_modules/@nestjs/cli/bin/nest.js start --watch --entryFile worker",
     "generate:openapi": "tsx scripts/generate-openapi.ts",
+    "import:clusters": "pnpm --filter @chinasupply/geo build && tsx scripts/import-clusters.ts",
+    "import:factories": "pnpm --filter @chinasupply/geo build && tsx scripts/import-factories.ts",
     "lint": "eslint .",
     "start:api": "node --env-file-if-exists=.env.local --enable-source-maps dist/main.js",
     "start:worker": "node --env-file-if-exists=.env.local --enable-source-maps dist/worker.js",
@@ -22,7 +24,9 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1094.0",
     "@chinasupply/config": "workspace:*",
+    "@chinasupply/geo": "workspace:*",
     "@chinasupply/schemas": "workspace:*",
     "@nestjs/bullmq": "11.0.4",
     "@nestjs/common": "11.1.28",
@@ -31,6 +35,7 @@
     "@nestjs/throttler": "6.5.0",
     "@sentry/nestjs": "10.67.0",
     "bullmq": "5.80.10",
+    "csv-parse": "7.0.1",
     "drizzle-orm": "0.45.2",
     "fastify": "5.10.0",
     "ioredis": "5.8.2",

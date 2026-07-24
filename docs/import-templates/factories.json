@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "slug": "shenzhen-bright-lighting",
+      "name": { "en": "Shenzhen Bright Lighting", "zh": "深圳光明照明" },
+      "clusterSlug": "shenzhen-lighting",
+      "regionId": "region000000000000000",
+      "address": {
+        "en": "Shenzhen, Guangdong, China",
+        "zh": "中国广东省深圳市"
+      },
+      "location": [114.0579, 22.5431],
+      "categorySlugs": ["lighting", "led-lighting"],
+      "mainProducts": [{ "en": "LED lighting", "zh": "LED 照明" }],
+      "certifications": ["ISO9001"],
+      "moq": "100 pieces",
+      "establishedYear": 2012,
+      "employeeRange": "100-500",
+      "contact": { "website": "https://example.com" },
+      "images": [],
+      "sourceName": "Example source",
+      "sourceUrl": "https://example.com/source"
+    }
+  ]
+}

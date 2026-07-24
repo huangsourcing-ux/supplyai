@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "slug": "shenzhen-lighting",
+      "name": { "en": "Shenzhen Lighting Cluster", "zh": "深圳照明产业带" },
+      "regionId": "region000000000000000",
+      "primaryCategorySlug": "lighting",
+      "categorySlugs": ["lighting", "led-lighting"],
+      "centroid": [114.0579, 22.5431],
+      "boundary": null,
+      "summary": {
+        "en": "Lighting manufacturers in Shenzhen",
+        "zh": "深圳照明制造商集群"
+      },
+      "description": null,
+      "mainProducts": [{ "en": "LED lighting", "zh": "LED 照明" }],
+      "coverImage": null,
+      "stats": null
+    }
+  ]
+}
