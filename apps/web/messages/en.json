@@ -4,11 +4,16 @@
     "description": "Find Chinese industrial clusters and verified factories."
   },
   "Home": {
-    "eyebrow": "Engineering foundation",
-    "title": "ChinaSupply.AI Web is ready for product development.",
-    "description": "The Next.js, Payload, internationalization, and operations authentication foundations are connected.",
-    "payloadAdmin": "Open Payload Admin",
-    "operations": "Open operations access"
+    "title": "China industrial clusters"
+  },
+  "Map": {
+    "ariaLabel": "Interactive map of industrial clusters in China",
+    "loading": "Loading industrial clusters…",
+    "mapError": "The map could not be loaded.",
+    "dataError": "Industrial cluster data could not be loaded.",
+    "retry": "Retry",
+    "attributionLabel": "Map data attribution",
+    "mapTilerLogoAlt": "MapTiler logo"
   },
   "Operations": {
     "signInEyebrow": "Restricted staging access",

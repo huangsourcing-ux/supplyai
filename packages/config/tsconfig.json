@@ -9,6 +9,7 @@
     "env/**/*.js",
     "eslint.config.js",
     "eslint/**/*.js",
+    "map/**/*.js",
     "tailwind/**/*.js"
   ]
 }

@@ -33,6 +33,15 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SENTRY_RELEASE: sentryRelease,
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "api.maptiler.com",
+        pathname: "/resources/logo.svg",
+        protocol: "https",
+      },
+    ],
+  },
   reactStrictMode: true,
   transpilePackages: ["@chinasupply/api-client", "@chinasupply/config"],
   turbopack: {

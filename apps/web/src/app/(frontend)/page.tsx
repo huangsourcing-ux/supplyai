@@ -1,24 +1,27 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
+import { IndustrialMap } from "./map/industrial-map";
+
 export default async function HomePage() {
-  const translate = await getTranslations("Home");
+  const [home, map] = await Promise.all([
+    getTranslations("Home"),
+    getTranslations("Map"),
+  ]);
 
   return (
-    <main className="page-shell">
-      <section className="foundation-card">
-        <p className="eyebrow">{translate("eyebrow")}</p>
-        <h1>{translate("title")}</h1>
-        <p className="description">{translate("description")}</p>
-        <div className="actions">
-          <Link className="button-link" href="/admin">
-            {translate("payloadAdmin")}
-          </Link>
-          <Link className="button-link" href="/ops">
-            {translate("operations")}
-          </Link>
-        </div>
-      </section>
+    <main className="map-page">
+      <h1 className="sr-only">{home("title")}</h1>
+      <IndustrialMap
+        labels={{
+          ariaLabel: map("ariaLabel"),
+          attributionLabel: map("attributionLabel"),
+          dataError: map("dataError"),
+          loading: map("loading"),
+          mapError: map("mapError"),
+          mapTilerLogoAlt: map("mapTilerLogoAlt"),
+          retry: map("retry"),
+        }}
+      />
     </main>
   );
 }

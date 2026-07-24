@@ -42,6 +42,210 @@ a {
   color: inherit;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.map-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #f4f5f1;
+}
+
+.industrial-map {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.industrial-map__canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.industrial-map .maplibregl-canvas {
+  outline: none;
+}
+
+.industrial-map .maplibregl-canvas:focus-visible {
+  outline: 3px solid #0f766e;
+  outline-offset: -3px;
+}
+
+.industrial-map .maplibregl-ctrl-top-right {
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+}
+
+.industrial-map .maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid rgba(71, 85, 79, 0.16);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(55, 65, 61, 0.14);
+}
+
+.map-status {
+  position: absolute;
+  z-index: 2;
+  top: max(0.75rem, env(safe-area-inset-top));
+  left: max(0.75rem, env(safe-area-inset-left));
+  display: flex;
+  min-height: 2.75rem;
+  max-width: min(30rem, calc(100% - 6.5rem));
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(71, 85, 79, 0.16);
+  border-radius: 0.85rem;
+  color: #33413b;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 0.75rem 2rem rgba(55, 65, 61, 0.16);
+  font-size: 0.875rem;
+  font-weight: 560;
+  backdrop-filter: blur(0.75rem);
+}
+
+.map-status--error {
+  color: #7f1d1d;
+  border-color: rgba(185, 28, 28, 0.2);
+}
+
+.map-status__indicator {
+  width: 0.6rem;
+  height: 0.6rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #0f766e;
+}
+
+.map-status--loading .map-status__indicator {
+  border: 2px solid rgba(15, 118, 110, 0.25);
+  border-top-color: #0f766e;
+  background: transparent;
+  animation: map-status-spin 0.8s linear infinite;
+}
+
+.map-status--error .map-status__indicator {
+  background: #b91c1c;
+}
+
+.map-status__retry {
+  min-height: 2rem;
+  margin-left: 0.25rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(127, 29, 29, 0.22);
+  border-radius: 999px;
+  color: #7f1d1d;
+  background: #fff7f7;
+  font: inherit;
+  cursor: pointer;
+}
+
+.map-status__retry:hover {
+  border-color: rgba(127, 29, 29, 0.44);
+  background: #feecec;
+}
+
+.map-status__retry:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.45);
+  outline-offset: 2px;
+}
+
+.map-attribution {
+  position: absolute;
+  z-index: 2;
+  right: max(0.5rem, env(safe-area-inset-right));
+  bottom: max(0.5rem, env(safe-area-inset-bottom));
+  display: flex;
+  max-width: calc(100% - 1rem);
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid rgba(71, 85, 79, 0.12);
+  border-radius: 0.55rem;
+  color: #3f4b46;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0.25rem 1rem rgba(55, 65, 61, 0.12);
+  font-size: 0.68rem;
+  line-height: 1.25;
+  backdrop-filter: blur(0.65rem);
+}
+
+.map-attribution a {
+  text-decoration: none;
+}
+
+.map-attribution a:hover,
+.map-attribution a:focus-visible {
+  text-decoration: underline;
+}
+
+.map-attribution__logo {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.map-attribution__logo img {
+  display: block;
+  width: auto;
+  height: 1rem;
+}
+
+.map-attribution__credits {
+  white-space: nowrap;
+}
+
+@keyframes map-status-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 40rem) {
+  .map-status {
+    top: max(0.5rem, env(safe-area-inset-top));
+    left: max(0.5rem, env(safe-area-inset-left));
+    max-width: calc(100% - 5.5rem);
+    min-height: 2.5rem;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .industrial-map .maplibregl-ctrl-top-right {
+    top: max(0.5rem, env(safe-area-inset-top));
+    right: max(0.5rem, env(safe-area-inset-right));
+  }
+
+  .map-attribution {
+    right: max(0.35rem, env(safe-area-inset-right));
+    bottom: max(0.35rem, env(safe-area-inset-bottom));
+    gap: 0.35rem;
+    font-size: 0.61rem;
+  }
+
+  .map-attribution__logo img {
+    height: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-status--loading .map-status__indicator {
+    animation: none;
+  }
+}
+
 .page-shell {
   display: grid;
   min-height: 100vh;

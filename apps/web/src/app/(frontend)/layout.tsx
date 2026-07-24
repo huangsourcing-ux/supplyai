@@ -8,6 +8,7 @@ import { OPS_HOME_PATH, OPS_SIGN_IN_PATH } from "@/auth/ops-routes";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 
 import { ApiQueryProvider } from "./api-query-provider";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
