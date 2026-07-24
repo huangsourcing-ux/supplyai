@@ -21,11 +21,14 @@ Cloudflare edge credential. The API ignores forwarded proxy chains and accepts
 only a single valid `CF-Connecting-IP` after that credential succeeds. Direct
 Railway access to protected routes returns the standard `FORBIDDEN` envelope.
 
-M0-T4 does not own Drizzle schema/migrations, business endpoints, OpenAPI,
-authentication, rate limiting, or Cloudflare configuration. M0-T7 adds Sentry
-to both entrypoints: bootstrap failures and global API exceptions are captured,
-and `pnpm --filter @chinasupply/api sentry:smoke` provides the controlled
-staging verification command.
+M1-T1 owns the Drizzle core schema and migrations. Run
+`pnpm release:migrate:core` before starting the API/Worker against a new
+database; builds and application startup never apply migrations implicitly.
+Business endpoints, OpenAPI, authentication, and rate limiting remain in their
+later task packages. M0-T7 adds Sentry to both entrypoints: bootstrap failures
+and global API exceptions are captured, and
+`pnpm --filter @chinasupply/api sentry:smoke` provides the controlled staging
+verification command.
 
 Railway uses the shared root `railway.json` for the API-only build. Its start
 command dispatches to the distinct `start:api` or `start:worker` script from

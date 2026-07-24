@@ -41,6 +41,7 @@ Run the API and worker locally in separate terminals after building them:
 ```bash
 cp apps/api/.env.example apps/api/.env.local
 pnpm infra:up
+pnpm release:migrate:core
 pnpm --filter @chinasupply/api build
 pnpm --filter @chinasupply/api start:api
 pnpm --filter @chinasupply/api start:worker
