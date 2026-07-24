@@ -100,6 +100,23 @@ test("CI runs the frozen PR checks and gates staging on serial CMS and core migr
   assert.doesNotMatch(source, /\beas\s+build\b|\beas\s+submit\b/);
 });
 
+test("API load baseline is manual, isolated, and preserves result artifacts", async () => {
+  const { source, workflow } = await readYaml(".github/workflows/api-load.yml");
+
+  assert.deepEqual(Object.keys(workflow.on), ["workflow_dispatch"]);
+  assert.equal(workflow.permissions.contents, "read");
+  assert.equal(workflow.jobs.load["runs-on"], "ubuntu-latest");
+  assert.match(
+    workflow.jobs.load.steps.map((step) => step.run ?? "").join("\n"),
+    /pnpm install --frozen-lockfile[\s\S]*pnpm test:load/,
+  );
+  const artifact = workflow.jobs.load.steps.at(-1);
+  assert.equal(artifact.if, "always()");
+  assert.equal(artifact.uses, "actions/upload-artifact@v4");
+  assert.equal(artifact.with.path, ".generated/load-results");
+  assert.doesNotMatch(source, /pull_request|\bpush:/);
+});
+
 test("EAS Preview is Android-only and can run only from rc tags or manual dispatch", async () => {
   const { workflow } = await readYaml(
     "apps/mobile/.eas/workflows/preview-build.yml",
