@@ -1,12 +1,14 @@
 # ChinaSupply.AI 产品需求文档（PRD）
 
-> 版本：**v1.1 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-22
+> 版本：**v1.2 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-23
 > 用途：供 AI 编码代理（Codex 等）直接执行开发。需求以可验收的结构化条目编写。
 > 技术栈：见《ChinaSupply.AI技术栈-最终冻结版.md》，本文档不重复选型讨论。
 > 优先级定义：P0 = V1 必须；P1 = V1 后第一批迭代；P2 = 路线图。
 > **冻结规则：本文档 V1 范围自此冻结。任何新需求只能进入第 10 节 P1/P2 路线图，不得修改 V1 范围。与实现冲突时先改文档再改代码，本文档是唯一事实源。**
 >
 > v1.1 变更摘要：明确 Drizzle 为唯一 Schema Owner（Payload 只管内容）；新增地图专用 API 与 Admin API；补齐数据模型字段与显式搜索列；固化 API envelope 与 cursor 契约；导航坐标系改为 M0 真机验证门；补用户删除生命周期、隐私合规、导入/备份细则；修正 V1 范围矛盾。
+>
+> v1.2 变更摘要：冻结 M1-T2 的全量 API wire contract；明确公开筛选标识、英语公开字段与 A-5 双语地址例外、GeoJSON 形状、媒体 URL、写操作回执、Admin 可写字段、Clerk webhook 最小输入以及 R2 预签名请求/响应。未增加 V1 功能范围。
 
 ---
 
@@ -241,6 +243,47 @@
 | ADM-4 | POST `/admin/factories/:id/publish` ｜ `/unpublish`       |                                                                              |
 | ADM-5 | POST `/admin/factories/:id/verify`                        | 写 verified/verified_at/last_verified_at/verified_by                         |
 | ADM-6 | POST `/admin/uploads/presign`                             | R2 预签名上传 URL，返回 objectKey                                            |
+
+### 4.6 Wire contract（M1-T2 冻结）
+
+`packages/schemas` 是以下 wire shape 的唯一来源；业务 JSON 默认 camelCase，GeoJSON 使用标准 `type` / `coordinates` / `geometry` / `properties`，MAP-* 的 `name_en` 保持本节既有命名。
+
+**通用输入与输出：**
+
+- 内部业务 ID 必须是 21 位 nanoid；slug 为英文 kebab-case；API 时间为 UTC ISO 8601（`Z`）。
+- 公开 `category` / `cluster` 筛选使用 slug，`region` 使用 ID；Admin 关联字段与收藏目标使用 ID。
+- `bbox` 固定为 `west,south,east,north`，且 west < east、south < north；zoom 为 0–24 整数；布尔 query 只接受 `true` / `false`。
+- Point 与 MultiPolygon 统一用 WGS-84 GeoJSON，坐标顺序 `[lng, lat]`；MultiPolygon ring 必须闭合。A-5 只公开 M0-T9 已确认可导航的 WGS-84 location，不公开 `location_gcj02`。
+- 公开可翻译字段以英语标量返回；A-5 `address` 是唯一例外，固定返回 `{en, zh}` 以满足 F-4.1。Admin 输入/详情继续使用 `{en, zh}`。
+- 公开图片返回 API 拼接的 HTTP(S) CDN URL，不返回 objectKey；Admin 图片返回 objectKey + 预览 URL。
+- 普通成功响应 `meta={}`；cursor 列表为 `{nextCursor}`；MAP-3 为 `{truncated}`。创建、更新、publish/unpublish、verify 返回更新后的资源；幂等删除和账户删除返回明确 desired-state 回执。
+
+**公开 DTO：**
+
+| DTO | 固定字段 |
+| --- | --- |
+| `CategorySummary` | `id,parentId,slug,name,icon,color,sortOrder`；A-7 根节点另含 `children` |
+| `RegionSummary` | `id,level,name` |
+| `ClusterSummary` | `id,slug,name,region,primaryCategory,centroid,summary,mainProducts,coverImageUrl,factoryCount,publishedAt` |
+| `ClusterDetail` | ClusterSummary + `categories,boundary,description,stats`；`factoryCount` 仍为顶层实时值 |
+| `FactorySummary` | `id,slug,name,cluster,region,location,mainProducts,verified,imageUrl,publishedAt` |
+| `FactoryDetail` | FactorySummary + `categories,address,certifications,moq,establishedYear,employeeRange,contact,images,sourceName,sourceUrl,verifiedAt,lastVerifiedAt,relatedFactories`；related 最多 10 |
+
+A-6 返回 `categories` / `clusters` / `factories` 三组、每组最多 5 项的轻量判别结果。A-8 收藏项内嵌对应 ClusterSummary/FactorySummary；目标不可公开时 `target=null`，不得借收藏接口泄露 draft。POST 收藏返回新建或既有记录；DELETE 返回 `{targetType,targetId,absent:true}`。A-9 返回更新后的 `{id,email,name,locale}`；A-10 返回 `{deletionRequested:true}`。
+
+**地图：**
+
+- MAP-1 Point 和 MAP-2 MultiPolygon properties 均固定为 `{id,slug,name_en,primaryCategoryId,color,factoryCount}`。
+- MAP-3 Point properties 固定为 `{id,slug,name_en,verified,clusterId}`，FeatureCollection 最多 5000 项。
+
+**Admin 写入：**
+
+- Cluster POST 必填 `slug,name,regionId,primaryCategoryId,categoryIds,centroid,summary,mainProducts`；可选/可空 `boundary,description,coverImageObjectKey,stats`。`categoryIds` 必须含 primaryCategoryId。
+- Factory POST 必填 `slug,name,regionId,categoryIds,address,location,mainProducts`；其余业务字段可选。PATCH 为相同字段的非空 partial。
+- 通用 PATCH 禁止客户端写 `status,publishedAt,verified,verifiedAt,lastVerifiedAt,verifiedBy`；这些只由 ADM-2/4/5 修改。
+- ADM-6 body 固定为 `{kind,entityId,fileName,contentType,contentLength}`；kind 为 `cluster-cover` / `factory-image`，类型仅 JPEG/PNG/WebP，声明大小为 1 byte–10MB。响应为 `{objectKey,uploadUrl,method:"PUT",headers:{"Content-Type"},expiresAt}`；URL 到期前按 bearer token 处理，上传后仍执行 G-10 的 HEAD 与引用复验。
+
+**Clerk webhook：**A-11 对 raw body 完成 Svix 验签后，用 `type` 判别 `user.created` / `user.updated` / `user.deleted`，只校验同步 users 所需的 id、姓名和主邮箱字段；允许 Clerk 附加字段。Svix headers 单独校验，响应 `{processed,duplicate}`。
 
 **验收（API 通用）**：所有接口 e2e 测试（testcontainers Postgres+PostGIS）；无效参数 400 + Zod details；draft 数据不出现在任何公开接口；写操作后相关缓存失效。
 

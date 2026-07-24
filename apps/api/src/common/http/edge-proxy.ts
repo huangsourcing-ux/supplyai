@@ -96,7 +96,7 @@ function secretsMatch(supplied: string, expected: string): boolean {
 }
 
 function errorEnvelope(
-  code: ApiErrorCode.Forbidden | ApiErrorCode.Internal,
+  code: Extract<ApiErrorCode, "FORBIDDEN" | "INTERNAL">,
   message: string,
 ): ApiErrorEnvelope {
   return {
