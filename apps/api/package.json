@@ -22,6 +22,7 @@
     "seed:real": "pnpm --filter @chinasupply/geo build && tsx scripts/seed-real.ts",
     "system:ping": "node --env-file-if-exists=.env.local --enable-source-maps dist/system-ping.js",
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:load": "tsx scripts/run-load-tests.ts",
     "test:unit": "vitest run",
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },

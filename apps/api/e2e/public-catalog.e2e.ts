@@ -860,6 +860,41 @@ describe.sequential("public catalog API", () => {
     });
   });
 
+  it("paginates the public factory list without duplicates or omissions", async () => {
+    const expectedResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories?limit=100",
+    });
+    const expected = getFactoriesResponseSchema.parse(expectedResponse.json());
+    const pages: (typeof expected.data)[number][] = [];
+    let cursor: string | null = null;
+
+    do {
+      const query = new URLSearchParams({ limit: "2" });
+      if (cursor !== null) {
+        query.set("cursor", cursor);
+      }
+      const response = await app.inject({
+        method: "GET",
+        url: `/api/v1/factories?${query.toString()}`,
+      });
+      const page = getFactoriesResponseSchema.parse(response.json());
+
+      expect(response.statusCode).toBe(200);
+      pages.push(...page.data);
+      cursor = page.meta.nextCursor;
+    } while (cursor !== null);
+
+    expect(pages.slice(0, 2).map(({ id }) => id)).toEqual([
+      "222222222222222222222",
+      "111111111111111111111",
+    ]);
+    expect(pages.map(({ id }) => id)).toEqual(
+      expected.data.map(({ id }) => id),
+    );
+    expect(new Set(pages.map(({ id }) => id)).size).toBe(pages.length);
+  });
+
   it("returns full factory detail with bounded published related factories", async () => {
     const response = await app.inject({
       method: "GET",
