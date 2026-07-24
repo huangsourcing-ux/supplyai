@@ -102,8 +102,10 @@ must not be treated as the real production environment.
 - `api`, `worker`, PostGIS, and Redis run as separate SFO services.
 - `DATABASE_URL` and `REDIS_URL` are Railway reference variables; values are not
   copied into source or logs.
-- The API and Worker share the root Railpack build, while `SERVICE_ROLE` selects
-  `start:api` or `start:worker` at runtime.
+- The API and Worker share the root Railpack build. Its filtered Turbo command
+  builds API workspace dependencies first, including the JavaScript
+  `@chinasupply/schemas` runtime package; `SERVICE_ROLE` then selects
+  `start:api` or `start:worker`.
 - API deployment health is gated by `/health/ready`. Its Railway origin remains
   `https://api-production-05a7.up.railway.app`; the public hostname is
   `https://api-staging.chinasupply.ai`.

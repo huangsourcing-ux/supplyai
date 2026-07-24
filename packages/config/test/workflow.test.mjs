@@ -48,12 +48,12 @@ test("CI runs the frozen PR checks and gates staging on serial CMS and core migr
   assert.match(workflow.jobs.quality.steps.at(-1).run, /test:unit/);
   assert.match(
     workflow.jobs.build.steps.map((step) => step.run ?? "").join("\n"),
-    /@chinasupply\/web build[\s\S]*@chinasupply\/api build/,
+    /pnpm build[\s\S]*api:runtime:check/,
   );
   assert.match(workflow.jobs.api_e2e.steps.at(-1).run, /pnpm test:e2e/);
   assert.match(
     workflow.jobs.mobile.steps.map((step) => step.run ?? "").join("\n"),
-    /doctor[\s\S]*config:check[\s\S]*test:unit/,
+    /mobile:check[\s\S]*test:unit/,
   );
   assert.equal(workflow.jobs.ci_gate.name, "CI Gate");
 
