@@ -134,11 +134,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Web
-        run: pnpm --filter @chinasupply/web build
+      - name: Build Web, API, and runtime workspace packages
+        run: pnpm build
 
-      - name: Build API and Worker
-        run: pnpm --filter @chinasupply/api build
+      - name: Start the compiled API under Node
+        run: pnpm api:runtime:check
 
   api_e2e:
     name: API e2e
@@ -188,17 +188,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Expo Doctor
-        # `run` is required: `doctor` is also a built-in pnpm command, so
-        # omitting it invokes pnpm's own doctor instead of the package script.
-        run: pnpm --filter @chinasupply/mobile run doctor
-
-      - name: Validate Expo public config
+      - name: Run Mobile compatibility checks
         env:
           EXPO_PUBLIC_API_BASE_URL: http://localhost:3001/api/v1
           EXPO_PUBLIC_APP_ENV: local
           EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ci_only_publishable
-        run: pnpm --filter @chinasupply/mobile config:check
+        run: pnpm mobile:check
 
       - name: Mobile unit tests
         run: pnpm --filter @chinasupply/mobile test:unit

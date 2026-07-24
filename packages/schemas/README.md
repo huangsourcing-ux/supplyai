@@ -17,5 +17,8 @@ Admin contracts.
 `clusterStatsSchema` deliberately excludes `factoryCount`; callers calculate
 that value from factories at read time.
 
-The package exports TypeScript source directly so Metro and EAS can consume it
-through the pnpm workspace without a package prebuild.
+The package compiles `src` to ESM JavaScript and declarations in `dist`.
+Runtime consumers resolve `dist/index.js`; TypeScript resolves
+`dist/index.d.ts`. Root API generation, test, and Mobile checks build this
+package first, while Turbo's `^build` dependency builds it before dependent
+API artifacts and Railway uses the same filtered Turbo build.

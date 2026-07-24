@@ -19,6 +19,7 @@ const apiRuntimeShape = {
   DATABASE_URL: networkUrlSchema,
   REDIS_URL: networkUrlSchema,
   WEB_ORIGIN: networkUrlSchema,
+  R2_CDN_BASE_URL: networkUrlSchema,
   EDGE_PROXY_SECRET: z.string().min(32).optional(),
   RAILWAY_GIT_COMMIT_SHA: z
     .string()
@@ -124,7 +125,6 @@ export const apiEnvSchema = z
     R2_MEDIA_BUCKET: z.string().min(3),
     R2_PRIVATE_BUCKET: z.string().min(3),
     R2_PREFIX: z.string(),
-    R2_CDN_BASE_URL: networkUrlSchema,
     CLOUDFLARE_ZONE_ID: secretSchema,
     CLOUDFLARE_PURGE_TOKEN: secretSchema,
   })

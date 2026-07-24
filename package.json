@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "api:generate": "pnpm --filter @chinasupply/api generate:openapi && pnpm --filter @chinasupply/api-client generate && prettier --write --log-level warn apps/api/openapi.json packages/api-client/src/generated",
+    "api:generate": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/api generate:openapi && pnpm --filter @chinasupply/api-client generate && prettier --write --log-level warn apps/api/openapi.json packages/api-client/src/generated",
     "api:generate:check": "node scripts/check-api-generation.mjs",
+    "api:runtime:check": "node scripts/check-api-runtime.mjs",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "infra:check": "node scripts/check-infra.mjs",
@@ -15,13 +16,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint scripts && turbo run lint",
-    "mobile:check": "pnpm --filter @chinasupply/mobile check",
+    "mobile:check": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/mobile check",
     "mobile:eas:preview": "pnpm --filter @chinasupply/mobile eas:preview",
     "release:migrate:cms": "node --env-file-if-exists=.env scripts/run-migrations.mjs cms",
     "release:migrate:core": "node --env-file-if-exists=.env scripts/run-migrations.mjs core",
-    "test:e2e": "pnpm --filter @chinasupply/api test:e2e",
-    "test:unit": "turbo run test:unit",
-    "typecheck": "tsc --project tsconfig.scripts.json --noEmit && turbo run typecheck"
+    "test:e2e": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/api test:e2e",
+    "test:unit": "pnpm --filter @chinasupply/schemas build && turbo run test:unit",
+    "typecheck": "pnpm --filter @chinasupply/schemas build && tsc --project tsconfig.scripts.json --noEmit && turbo run typecheck"
   },
   "devDependencies": {
     "@chinasupply/config": "workspace:*",

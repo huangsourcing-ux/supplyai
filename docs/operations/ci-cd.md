@@ -60,6 +60,11 @@ External status on 2026-07-23:
   have Autodeploy + Wait for CI enabled. Both services remained `WAITING` until
   the GitHub check suite passed, then successfully released the verified
   commit.
+- Railway runs the filtered Turbo API build, so `^build` compiles runtime
+  workspace dependencies such as `@chinasupply/schemas` to JavaScript before
+  `node dist/main.js` starts. CI launches that compiled entrypoint and probes
+  `/health/live` to prevent source-only workspace exports from reaching
+  staging.
 
 ### Vercel staging
 

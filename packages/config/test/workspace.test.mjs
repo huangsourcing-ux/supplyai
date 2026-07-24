@@ -48,6 +48,48 @@ test("root exposes every required quality command", async () => {
   for (const script of ["build", "lint", "test:unit", "typecheck"]) {
     assert.equal(typeof rootPackage.scripts[script], "string");
   }
+  assert.equal(typeof rootPackage.scripts["api:runtime:check"], "string");
+});
+
+test("schemas exposes compiled JavaScript and declaration runtime entries", async () => {
+  const schemasPackage = JSON.parse(
+    await readFile(
+      resolve(workspaceRoot, "packages/schemas/package.json"),
+      "utf8",
+    ),
+  );
+  const schemasBuildConfig = JSON.parse(
+    await readFile(
+      resolve(workspaceRoot, "packages/schemas/tsconfig.build.json"),
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    schemasPackage.scripts.build,
+    "tsc --project tsconfig.build.json",
+  );
+  assert.deepEqual(schemasPackage.exports["."], {
+    types: "./dist/index.d.ts",
+    default: "./dist/index.js",
+  });
+  assert.equal(schemasPackage.main, "./dist/index.js");
+  assert.equal(schemasPackage.types, "./dist/index.d.ts");
+  assert.equal(schemasBuildConfig.compilerOptions.outDir, "dist");
+  assert.equal(schemasBuildConfig.compilerOptions.noEmit, false);
+});
+
+test("Railway builds API runtime workspace dependencies through Turbo", async () => {
+  const railwayConfig = JSON.parse(
+    await readFile(resolve(workspaceRoot, "railway.json"), "utf8"),
+  );
+
+  assert.equal(
+    railwayConfig.build.buildCommand,
+    "pnpm exec turbo run build --filter=@chinasupply/api",
+  );
+  assert.ok(railwayConfig.build.watchPatterns.includes("packages/schemas/**"));
+  assert.match(railwayConfig.deploy.startCommand, /start:\$SERVICE_ROLE/);
 });
 
 test("mobile pins the Sentry CLI required by the Gradle upload task", async () => {
