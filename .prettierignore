@@ -5,6 +5,7 @@ ChinaSupply.AI开发计划.md
 开发日志.md
 
 node_modules/
+pnpm-lock.yaml
 .turbo/
 coverage/
 build/

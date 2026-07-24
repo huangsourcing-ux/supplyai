@@ -44,6 +44,7 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           elif git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- \
             apps/mobile \
+            packages/api-client \
             packages/config \
             packages/geo \
             packages/i18n \
@@ -72,11 +73,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.23.1
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Check generated API artifacts
+        run: pnpm api:generate:check
 
       - name: Lint
         run: pnpm lint
@@ -124,7 +128,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.23.1
           cache: pnpm
 
       - name: Install dependencies
@@ -151,7 +155,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.23.1
           cache: pnpm
 
       - name: Install dependencies
@@ -178,7 +182,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.23.1
           cache: pnpm
 
       - name: Install dependencies

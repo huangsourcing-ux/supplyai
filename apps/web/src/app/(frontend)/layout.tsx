@@ -7,6 +7,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { OPS_HOME_PATH, OPS_SIGN_IN_PATH } from "@/auth/ops-routes";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 
+import { ApiQueryProvider } from "./api-query-provider";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -32,7 +33,7 @@ export default async function FrontendLayout({
           signInUrl={OPS_SIGN_IN_PATH}
         >
           <NextIntlClientProvider messages={messages}>
-            {children}
+            <ApiQueryProvider>{children}</ApiQueryProvider>
           </NextIntlClientProvider>
         </ClerkProvider>
       </body>

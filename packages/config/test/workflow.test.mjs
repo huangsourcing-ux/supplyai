@@ -41,6 +41,10 @@ test("CI runs the frozen PR checks and gates staging on serial CMS and core migr
   );
   assert.doesNotMatch(source, /pull_request_target|workflow_dispatch/);
 
+  assert.match(
+    workflow.jobs.quality.steps.map((step) => step.run ?? "").join("\n"),
+    /api:generate:check[\s\S]*pnpm lint/,
+  );
   assert.match(workflow.jobs.quality.steps.at(-1).run, /test:unit/);
   assert.match(
     workflow.jobs.build.steps.map((step) => step.run ?? "").join("\n"),

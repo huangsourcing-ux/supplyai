@@ -1,5 +1,5 @@
 import { RequestMethod } from "@nestjs/common";
-import { HttpAdapterHost } from "@nestjs/core";
+import { HttpAdapterHost, Reflector } from "@nestjs/core";
 import type { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { ZodValidationPipe } from "nestjs-zod";
 
@@ -22,10 +22,11 @@ export function configureHttpApplication(app: NestFastifyApplication): void {
       { path: "health/live", method: RequestMethod.GET },
       { path: "health/ready", method: RequestMethod.GET },
       { path: "health/edge", method: RequestMethod.GET },
+      { path: "api/openapi.json", method: RequestMethod.GET },
     ],
   });
   app.useGlobalPipes(new ZodValidationPipe());
-  app.useGlobalInterceptors(new ApiEnvelopeInterceptor());
+  app.useGlobalInterceptors(new ApiEnvelopeInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new ApiExceptionFilter(app.get(HttpAdapterHost)));
   app.enableShutdownHooks();
 }

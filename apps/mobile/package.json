@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "main": "expo-router/entry",
+  "dependenciesMeta": {
+    "@chinasupply/api-client": {
+      "injected": true
+    }
+  },
   "scripts": {
     "android": "expo run:android",
     "check": "pnpm run doctor && pnpm run typecheck && pnpm run config:check && pnpm run export:check",
@@ -19,6 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.29.2",
+    "@chinasupply/api-client": "workspace:*",
     "@chinasupply/config": "workspace:*",
     "@chinasupply/geo": "workspace:*",
     "@chinasupply/i18n": "workspace:*",

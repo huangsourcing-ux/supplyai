@@ -22,6 +22,11 @@
     "readyTitle": "Operations access is ready",
     "readyDescription": "This placeholder verifies Clerk authentication and the administrator role. Operational data tools arrive in M2-T7.",
     "signedInAs": "Authenticated Clerk user",
+    "apiHealth": {
+      "error": "API liveness check failed",
+      "loading": "Checking API liveness…",
+      "ready": "API liveness check passed"
+    },
     "sentry": {
       "button": "Send Web Sentry test exception",
       "environment": "Sentry environment",

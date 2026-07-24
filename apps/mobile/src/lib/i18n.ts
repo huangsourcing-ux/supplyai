@@ -33,6 +33,11 @@ export const resources = {
         submitting: "Signing in…",
         title: "Sign in to ChinaSupply.AI",
       },
+      apiHealth: {
+        error: "API liveness check failed",
+        loading: "Checking API liveness…",
+        ready: "API liveness check passed",
+      },
       mapSpike: {
         attribution: "© MapTiler · © OpenStreetMap contributors",
         eyebrow: "MapLibre compatibility spike",

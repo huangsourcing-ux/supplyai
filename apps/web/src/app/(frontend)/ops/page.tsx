@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { requireOpsAdmin } from "@/auth/require-ops-admin";
 
+import { ApiHealthStatus } from "./api-health-status";
 import { SentrySmoke } from "./sentry-smoke";
 
 export default async function OperationsPage() {
@@ -19,6 +20,13 @@ export default async function OperationsPage() {
         <p className="identifier">
           {translate("signedInAs")}: {userId}
         </p>
+        <ApiHealthStatus
+          labels={{
+            error: translate("apiHealth.error"),
+            loading: translate("apiHealth.loading"),
+            ready: translate("apiHealth.ready"),
+          }}
+        />
         <SentrySmoke
           buttonLabel={translate("sentry.button")}
           environmentLabel={translate("sentry.environment")}
