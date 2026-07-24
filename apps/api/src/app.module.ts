@@ -4,6 +4,7 @@ import { SentryModule } from "@sentry/nestjs/setup";
 import { CategoriesModule } from "./categories/categories.module.js";
 import { ClustersModule } from "./clusters/clusters.module.js";
 import { RuntimeConfigModule } from "./config/runtime-config.module.js";
+import { FactoriesModule } from "./factories/factories.module.js";
 import { HealthModule } from "./health/health.module.js";
 import { OpenApiModule } from "./openapi/openapi.module.js";
 
@@ -13,6 +14,7 @@ import { OpenApiModule } from "./openapi/openapi.module.js";
     RuntimeConfigModule,
     CategoriesModule,
     ClustersModule,
+    FactoriesModule,
     HealthModule,
     OpenApiModule,
   ],
