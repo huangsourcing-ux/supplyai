@@ -19,6 +19,7 @@ const apiRuntimeShape = {
   DATABASE_URL: networkUrlSchema,
   REDIS_URL: networkUrlSchema,
   WEB_ORIGIN: networkUrlSchema,
+  EDGE_PROXY_SECRET: z.string().min(32).optional(),
   RAILWAY_GIT_COMMIT_SHA: z
     .string()
     .regex(/^[a-f0-9]{40}$/i)
@@ -33,16 +34,18 @@ const remoteConnectionFields = ["DATABASE_URL", "REDIS_URL"];
 /** @type {readonly ["WEB_ORIGIN", "R2_CDN_BASE_URL", "SENTRY_DSN"]} */
 const remoteHttpsFields = ["WEB_ORIGIN", "R2_CDN_BASE_URL", "SENTRY_DSN"];
 
-/** @type {readonly ["CLERK_SECRET_KEY", "CLERK_WEBHOOK_SECRET", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET", "CLOUDFLARE_ZONE_ID", "CLOUDFLARE_API_TOKEN", "SENTRY_DSN"]} */
+/** @type {readonly ["CLERK_SECRET_KEY", "CLERK_WEBHOOK_SECRET", "EDGE_PROXY_SECRET", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_MEDIA_BUCKET", "R2_PRIVATE_BUCKET", "CLOUDFLARE_ZONE_ID", "CLOUDFLARE_PURGE_TOKEN", "SENTRY_DSN"]} */
 const remoteSecretFields = [
   "CLERK_SECRET_KEY",
   "CLERK_WEBHOOK_SECRET",
+  "EDGE_PROXY_SECRET",
   "R2_ACCOUNT_ID",
   "R2_ACCESS_KEY_ID",
   "R2_SECRET_ACCESS_KEY",
-  "R2_BUCKET",
+  "R2_MEDIA_BUCKET",
+  "R2_PRIVATE_BUCKET",
   "CLOUDFLARE_ZONE_ID",
-  "CLOUDFLARE_API_TOKEN",
+  "CLOUDFLARE_PURGE_TOKEN",
   "SENTRY_DSN",
 ];
 
@@ -87,6 +90,29 @@ export const apiRuntimeEnvSchema = z
     }
   });
 
+export const apiHttpEnvSchema = apiRuntimeEnvSchema.superRefine(
+  (environment, context) => {
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.EDGE_PROXY_SECRET === undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["EDGE_PROXY_SECRET"],
+        message: "is required for remote HTTP deployments",
+      });
+    }
+
+    if (environment.EDGE_PROXY_SECRET !== undefined) {
+      rejectPlaceholder(
+        environment.EDGE_PROXY_SECRET,
+        "EDGE_PROXY_SECRET",
+        context,
+      );
+    }
+  },
+);
+
 export const apiEnvSchema = z
   .object({
     ...apiRuntimeShape,
@@ -95,14 +121,23 @@ export const apiEnvSchema = z
     R2_ACCOUNT_ID: secretSchema,
     R2_ACCESS_KEY_ID: secretSchema,
     R2_SECRET_ACCESS_KEY: secretSchema,
-    R2_BUCKET: z.string().min(3),
+    R2_MEDIA_BUCKET: z.string().min(3),
+    R2_PRIVATE_BUCKET: z.string().min(3),
     R2_PREFIX: z.string(),
     R2_CDN_BASE_URL: networkUrlSchema,
     CLOUDFLARE_ZONE_ID: secretSchema,
-    CLOUDFLARE_API_TOKEN: secretSchema,
+    CLOUDFLARE_PURGE_TOKEN: secretSchema,
   })
   .superRefine((environment, context) => {
     requireR2Prefix(environment.R2_PREFIX, environment.APP_ENV, context);
+
+    if (environment.R2_MEDIA_BUCKET === environment.R2_PRIVATE_BUCKET) {
+      context.addIssue({
+        code: "custom",
+        path: ["R2_PRIVATE_BUCKET"],
+        message: "must be different from R2_MEDIA_BUCKET",
+      });
+    }
 
     if (environment.APP_ENV === "local") {
       return;
@@ -152,4 +187,15 @@ export function parseApiEnv(source) {
  */
 export function parseApiRuntimeEnv(source) {
   return parseEnvironment(apiRuntimeEnvSchema, source, "API runtime");
+}
+
+/**
+ * Validates the API HTTP entrypoint, including the Cloudflare-to-origin trust
+ * boundary. The Worker deliberately continues to use parseApiRuntimeEnv.
+ *
+ * @param {unknown} source
+ * @returns {z.infer<typeof apiHttpEnvSchema>}
+ */
+export function parseApiHttpEnv(source) {
+  return parseEnvironment(apiHttpEnvSchema, source, "API HTTP");
 }

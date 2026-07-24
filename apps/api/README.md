@@ -13,6 +13,13 @@ Health endpoints remain outside the business prefix:
 
 - `GET /health/live` does not access external dependencies.
 - `GET /health/ready` checks PostgreSQL and Redis.
+- `GET /health/edge` is a no-store Cloudflare diagnostic and returns the
+  validated client IP.
+
+Outside local development, every route except live/ready requires the static
+Cloudflare edge credential. The API ignores forwarded proxy chains and accepts
+only a single valid `CF-Connecting-IP` after that credential succeeds. Direct
+Railway access to protected routes returns the standard `FORBIDDEN` envelope.
 
 M0-T4 does not own Drizzle schema/migrations, business endpoints, OpenAPI,
 authentication, rate limiting, or Cloudflare configuration. M0-T7 adds Sentry
@@ -39,4 +46,5 @@ the locked PostGIS and Redis images with Testcontainers and never uses staging
 or production credentials.
 
 Sentry environment, release, deployment variables, and smoke-test evidence are
-documented in `docs/operations/sentry.md`.
+documented in `docs/operations/sentry.md`. The trusted-edge and R2 boundaries
+are documented in `docs/operations/cloudflare-maptiler.md`.

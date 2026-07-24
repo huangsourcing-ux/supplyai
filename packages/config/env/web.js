@@ -21,7 +21,7 @@ const remoteHttpsFields = [
   "R2_CDN_BASE_URL",
 ];
 
-/** @type {readonly ["PAYLOAD_SECRET", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY", "NEXT_PUBLIC_MAPTILER_KEY", "NEXT_PUBLIC_SENTRY_DSN", "SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT", "NEXT_PUBLIC_POSTHOG_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"]} */
+/** @type {readonly ["PAYLOAD_SECRET", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY", "NEXT_PUBLIC_MAPTILER_KEY", "NEXT_PUBLIC_SENTRY_DSN", "SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT", "NEXT_PUBLIC_POSTHOG_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_MEDIA_BUCKET"]} */
 const remoteSecretFields = [
   "PAYLOAD_SECRET",
   "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
@@ -35,7 +35,7 @@ const remoteSecretFields = [
   "R2_ACCOUNT_ID",
   "R2_ACCESS_KEY_ID",
   "R2_SECRET_ACCESS_KEY",
-  "R2_BUCKET",
+  "R2_MEDIA_BUCKET",
 ];
 
 export const webEnvSchema = z
@@ -58,7 +58,7 @@ export const webEnvSchema = z
     R2_ACCOUNT_ID: secretSchema,
     R2_ACCESS_KEY_ID: secretSchema,
     R2_SECRET_ACCESS_KEY: secretSchema,
-    R2_BUCKET: z.string().min(3),
+    R2_MEDIA_BUCKET: z.string().min(3),
     R2_PREFIX: z.string(),
     R2_CDN_BASE_URL: networkUrlSchema,
   })

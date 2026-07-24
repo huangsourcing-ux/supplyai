@@ -4,7 +4,8 @@ const localDefaults = {
   EXPO_PUBLIC_APP_ENV: "local",
   EXPO_PUBLIC_API_BASE_URL: "http://localhost:3001/api/v1",
   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_replace_me",
-  EXPO_PUBLIC_MAPTILER_KEY: "replace_me",
+  EXPO_PUBLIC_MAPTILER_IOS_KEY: "replace_me_ios",
+  EXPO_PUBLIC_MAPTILER_ANDROID_KEY: "replace_me_android",
   EXPO_PUBLIC_SENTRY_DSN: "https://public@example.ingest.sentry.io/1",
   EXPO_PUBLIC_SENTRY_SMOKE_ENABLED: "false",
   EXPO_PUBLIC_POSTHOG_KEY: "phc_replace_me",
@@ -18,7 +19,8 @@ const requiredVariableNames = [
 ] as const;
 
 const optionalVariableNames = [
-  "EXPO_PUBLIC_MAPTILER_KEY",
+  "EXPO_PUBLIC_MAPTILER_IOS_KEY",
+  "EXPO_PUBLIC_MAPTILER_ANDROID_KEY",
   "EXPO_PUBLIC_SENTRY_DSN",
   "EXPO_PUBLIC_SENTRY_SMOKE_ENABLED",
   "EXPO_PUBLIC_POSTHOG_KEY",
@@ -60,7 +62,9 @@ export const mobileEnvironment = buildMobileEnvironment({
   EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
     process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
-  EXPO_PUBLIC_MAPTILER_KEY: process.env.EXPO_PUBLIC_MAPTILER_KEY,
+  EXPO_PUBLIC_MAPTILER_IOS_KEY: process.env.EXPO_PUBLIC_MAPTILER_IOS_KEY,
+  EXPO_PUBLIC_MAPTILER_ANDROID_KEY:
+    process.env.EXPO_PUBLIC_MAPTILER_ANDROID_KEY,
   EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
   EXPO_PUBLIC_SENTRY_SMOKE_ENABLED:
     process.env.EXPO_PUBLIC_SENTRY_SMOKE_ENABLED,

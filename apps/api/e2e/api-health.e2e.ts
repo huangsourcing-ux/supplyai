@@ -14,10 +14,15 @@ import {
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { AppModule } from "../src/app.module.js";
+import {
+  EDGE_PROXY_HEADER,
+  registerEdgeProxy,
+} from "../src/common/http/edge-proxy.js";
 import { configureHttpApplication } from "../src/http-application.js";
 
 const postgresPort = 5432;
 const redisPort = 6379;
+const edgeSecret = "e2e-edge-secret-with-at-least-32-bytes";
 const postgresCredentials = {
   database: "chinasupply_e2e",
   password: "chinasupply_e2e_only",
@@ -72,11 +77,14 @@ describe.sequential("API health e2e", () => {
     await pool.end();
     expect(postgisResult.rows[0]?.version).toMatch(/^3\.5/);
 
-    app = await NestFactory.create<NestFastifyApplication>(
-      AppModule,
-      new FastifyAdapter(),
-      { logger: ["error"] },
-    );
+    const adapter = new FastifyAdapter();
+    registerEdgeProxy(adapter.getInstance(), {
+      appEnvironment: "staging",
+      edgeProxySecret: edgeSecret,
+    });
+    app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
+      logger: ["error"],
+    });
     configureHttpApplication(app);
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
@@ -123,6 +131,10 @@ describe.sequential("API health e2e", () => {
 
   it("returns the frozen NOT_FOUND envelope for unknown routes", async () => {
     const response = await app.inject({
+      headers: {
+        "cf-connecting-ip": "203.0.113.10",
+        [EDGE_PROXY_HEADER]: edgeSecret,
+      },
       method: "GET",
       url: "/api/v1/not-a-route",
     });
@@ -134,6 +146,44 @@ describe.sequential("API health e2e", () => {
         code: "NOT_FOUND",
         details: [],
         message: "Resource not found",
+      },
+      meta: null,
+    });
+  });
+
+  it("reports the trusted Cloudflare client IP without caching", async () => {
+    const response = await app.inject({
+      headers: {
+        "cf-connecting-ip": "2001:db8::10",
+        [EDGE_PROXY_HEADER]: edgeSecret,
+      },
+      method: "GET",
+      url: "/health/edge",
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["cache-control"]).toBe("no-store");
+    expect(response.json()).toEqual({
+      data: { clientIp: "2001:db8::10" },
+      error: null,
+      meta: {},
+    });
+  });
+
+  it("rejects direct Railway access to protected routes", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/health/edge",
+    });
+
+    expect(response.statusCode).toBe(403);
+    expect(response.headers["cache-control"]).toBe("no-store");
+    expect(response.json()).toEqual({
+      data: null,
+      error: {
+        code: "FORBIDDEN",
+        details: [],
+        message: "Cloudflare edge proxy required",
       },
       meta: null,
     });

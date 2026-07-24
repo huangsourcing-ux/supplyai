@@ -36,7 +36,7 @@
 | G-7  | 鉴权：公开读接口无需登录；用户写接口需 Clerk JWT；Admin 接口（ADM-*）需 Clerk JWT 且用户具有 `admin` role（Clerk publicMetadata）                                                                                                                            |
 | G-8  | 时间：数据库存 UTC `timestamptz`，前端本地化展示                                                                                                                                                                                                             |
 | G-9  | Schema 归属：**Drizzle/NestJS 是核心业务表唯一 Schema Owner**（regions、categories、clusters、factories、users、favorites、webhook_events）。Payload 只拥有并迁移自己的表（articles、media、cms_users）。Payload 的 migration 禁止触碰核心业务表             |
-| G-10 | 图片：R2 存储，数据库只存 `objectKey`（如 `factories/abc123/1.jpg`），完整 URL 由 API 层拼 CDN 域名生成。上传一律走预签名 URL（ADM-6）                                                                                                                       |
+| G-10 | 图片：R2 存储，数据库只存 `objectKey`（如 `factories/abc123/1.jpg`），完整 URL 由 API 层拼 CDN 域名生成。每个环境将公开媒体与导入报告/备份等私有操作对象放入不同 bucket；只有媒体 bucket 绑定 CDN 自定义域名。上传一律走预签名 URL（ADM-6） |
 | G-11 | 限流（P0）：匿名可访问的搜索与地图接口设宽松限流（如 60 req/min/IP）+ 响应缓存；写接口按用户限流。返回 429 + `RATE_LIMITED` 错误码                                                                                                                           |
 
 ---

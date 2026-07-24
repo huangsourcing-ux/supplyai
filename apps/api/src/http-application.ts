@@ -21,6 +21,7 @@ export function configureHttpApplication(app: NestFastifyApplication): void {
     exclude: [
       { path: "health/live", method: RequestMethod.GET },
       { path: "health/ready", method: RequestMethod.GET },
+      { path: "health/edge", method: RequestMethod.GET },
     ],
   });
   app.useGlobalPipes(new ZodValidationPipe());

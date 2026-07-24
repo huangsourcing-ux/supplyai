@@ -36,11 +36,11 @@ chinasupply/
 
 **环境策略（M0 冻结）**：
 
-| 环境       | 数据库                            | Clerk               | R2                | 域名      |
-| ---------- | --------------------------------- | ------------------- | ----------------- | --------- |
-| Local      | Docker PostGIS + Redis（compose） | Dev                 | dev prefix        | localhost |
-| Staging    | Railway staging DB                | Dev instance        | staging prefix    | staging.* |
-| Production | 独立生产 DB                       | Production instance | production bucket | 正式域名  |
+| 环境       | 数据库                            | Clerk               | R2                                                                 | 域名      |
+| ---------- | --------------------------------- | ------------------- | ------------------------------------------------------------------ | --------- |
+| Local      | Docker PostGIS + Redis（compose） | Dev                 | 媒体/私有操作 bucket，均使用 `dev` prefix                           | localhost |
+| Staging    | Railway staging DB                | Dev instance        | `chinasupply-staging-media`（公开）+ `chinasupply-staging`（私有），均使用 `staging` prefix | staging.* |
+| Production | 独立生产 DB                       | Production instance | 两只独立 production bucket，空 prefix（M5-T9 创建）                 | 正式域名  |
 
 约定：`.env.example` 齐全 + Zod 环境变量启动校验；Drizzle migration 作为部署前独立 release command，失败则不启动新版本；Payload 与 Drizzle migration 分开执行；production 禁止自动 seed；种子/测试数据只进 staging；production 数据默认 draft，人工验证后 publish。
 
@@ -71,7 +71,7 @@ chinasupply/
 - [x] **M0-T7 Sentry 验证**：三端测试异常上报成功；release 版本正确；Web/Mobile source map 上传；环境区分 dev/staging/prod。
 - [x] **M0-T8 packages/geo**：WGS-84↔GCJ-02↔BD-09 纯函数 + 公开已知坐标对单测（误差阈值断言）。
 - [x] **M0-T9 导航验证门（F-6.1，人工+真机）**：5 城市定点；iPhone 测 Apple/Google/高德/百度、Android 测 Google/高德/百度；产出《导航验证结论》；固化 `packages/geo/navigation` 的 `buildNavUrl` + 夹具单测。**不完成则 M4 导航不得开工。**
-- [ ] **M0-T10 Cloudflare 与 MapTiler**：域名托管 + API 域名代理 Railway（配置可信代理与真实客户端 IP 透传）；R2 bucket + CORS + custom domain + 环境隔离（CORS 不承担类型/大小校验，上传校验链见 M5-T1）；Purge token 最小权限；MapTiler key 按 Web 域名 / iOS Bundle ID / Android Package 分别限制。
+- [x] **M0-T10 Cloudflare 与 MapTiler**：域名托管 + API 域名代理 Railway（配置可信代理与真实客户端 IP 透传）；R2 bucket + CORS + custom domain + 环境隔离（CORS 不承担类型/大小校验，上传校验链见 M5-T1）；Purge token 最小权限；MapTiler key 按 Web 域名 / iOS Bundle ID / Android Package 分别限制。
 
 **版本策略**：M0 完成兼容矩阵并锁版本；V1 期间只允许安全修复与阻塞性 bugfix，不做框架大版本升级。
 

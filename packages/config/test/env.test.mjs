@@ -5,7 +5,11 @@ import test from "node:test";
 import { parseEnv } from "node:util";
 import { fileURLToPath } from "node:url";
 
-import { parseApiEnv, parseApiRuntimeEnv } from "../env/api.js";
+import {
+  parseApiEnv,
+  parseApiHttpEnv,
+  parseApiRuntimeEnv,
+} from "../env/api.js";
 import { parseMobileEnv } from "../env/mobile.js";
 import {
   createSentryRelease,
@@ -73,6 +77,19 @@ test("remote API environments reject local URLs and cross-environment R2 prefixe
   );
 });
 
+test("API environment keeps public media and private operations in separate buckets", async () => {
+  const api = await readExample("apps/api/.env.example");
+
+  assert.throws(
+    () =>
+      parseApiEnv({
+        ...api,
+        R2_PRIVATE_BUCKET: api.R2_MEDIA_BUCKET,
+      }),
+    /R2_PRIVATE_BUCKET/,
+  );
+});
+
 test("staging rejects provider placeholder values", async () => {
   const api = await readExample("apps/api/.env.example");
 
@@ -112,6 +129,27 @@ test("API runtime validation requires current dependencies without future provid
   assert.throws(
     () => parseApiRuntimeEnv({ ...runtimeOnly, REDIS_URL: api.REDIS_URL }),
     /API runtime environment validation failed: REDIS_URL/,
+  );
+});
+
+test("remote API HTTP validation requires a non-placeholder edge secret", async () => {
+  const runtimeOnly = {
+    APP_ENV: "staging",
+    PORT: "3001",
+    DATABASE_URL: "postgresql://user:pass@db.staging.invalid/chinasupply",
+    REDIS_URL: "redis://redis.staging.invalid:6379",
+    SENTRY_DSN: "https://public@o1.ingest.sentry.io/1",
+    SENTRY_RELEASE: "chinasupply-api@0.0.0+test",
+    WEB_ORIGIN: "https://staging.invalid",
+  };
+
+  assert.throws(() => parseApiHttpEnv(runtimeOnly), /EDGE_PROXY_SECRET/);
+  assert.equal(
+    parseApiHttpEnv({
+      ...runtimeOnly,
+      EDGE_PROXY_SECRET: "0123456789abcdef0123456789abcdef",
+    }).APP_ENV,
+    "staging",
   );
 });
 
@@ -174,5 +212,38 @@ test("mobile example contains public variables only", async () => {
   assert.throws(
     () => parseMobileEnv({ ...mobile, DATABASE_URL: "postgresql://private" }),
     /DATABASE_URL/,
+  );
+});
+
+test("remote mobile environments require separate platform MapTiler keys", async () => {
+  const mobile = await readExample("apps/mobile/.env.example");
+  const staging = {
+    ...mobile,
+    EXPO_PUBLIC_APP_ENV: "staging",
+    EXPO_PUBLIC_API_BASE_URL: "https://api-staging.chinasupply.ai/api/v1",
+    EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
+      "pk_test_c3RhZ2luZy5jbGVyay5hY2NvdW50cy5kZXYk",
+    EXPO_PUBLIC_MAPTILER_IOS_KEY: "ios_staging_public_key",
+    EXPO_PUBLIC_MAPTILER_ANDROID_KEY: "android_staging_public_key",
+    EXPO_PUBLIC_SENTRY_DSN: "https://public@o1.ingest.sentry.io/123456789",
+    EXPO_PUBLIC_POSTHOG_KEY: "phc_staging_public_key",
+  };
+
+  assert.equal(parseMobileEnv(staging).EXPO_PUBLIC_APP_ENV, "staging");
+  assert.throws(
+    () =>
+      parseMobileEnv({
+        ...staging,
+        EXPO_PUBLIC_MAPTILER_IOS_KEY: undefined,
+      }),
+    /EXPO_PUBLIC_MAPTILER_IOS_KEY/,
+  );
+  assert.throws(
+    () =>
+      parseMobileEnv({
+        ...staging,
+        EXPO_PUBLIC_MAPTILER_ANDROID_KEY: undefined,
+      }),
+    /EXPO_PUBLIC_MAPTILER_ANDROID_KEY/,
   );
 });
