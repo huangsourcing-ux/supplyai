@@ -9,7 +9,7 @@
   "sources": {
     "maptiler-planet": {
       "type": "vector",
-      "url": "https://api.maptiler.com/tiles/v4/tiles.json?key=__MAPTILER_KEY__",
+      "url": "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=__MAPTILER_KEY__",
       "attribution": "<a href=\"https://www.maptiler.com/copyright/\" target=\"_blank\">© MapTiler</a> <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">© OpenStreetMap contributors</a>"
     }
   },
