@@ -6,12 +6,18 @@ import {
   configureApiClient,
   getCategories,
   getCluster,
+  getClusterFactories,
   getClusters,
+  getFactories,
+  getFactory,
 } from "@chinasupply/api-client";
 import {
   getCategoriesResponseSchema,
+  getClusterFactoriesResponseSchema,
   getClusterResponseSchema,
   getClustersResponseSchema,
+  getFactoriesResponseSchema,
+  getFactoryResponseSchema,
 } from "@chinasupply/schemas";
 import { NestFactory } from "@nestjs/core";
 import {
@@ -52,6 +58,8 @@ const ids = {
   clusterOld: "xxxxxxxxxxxxxxxxxxxxx",
   clusterSecond: "yyyyyyyyyyyyyyyyyyyyy",
   clusterTop: "zzzzzzzzzzzzzzzzzzzzz",
+  factoryDetail: "777777777777777777777",
+  factoryDraftCluster: "666666666666666666666",
   led: "eeeeeeeeeeeeeeeeeeeee",
   lighting: "lllllllllllllllllllll",
 } as const;
@@ -223,47 +231,110 @@ async function insertCluster(
 async function insertFactory(
   client: PoolClient,
   input: {
-    clusterId: string;
+    address?: { en: string; zh: string };
+    categoryIds?: string[];
+    clusterId: string | null;
+    images?: {
+      alt: { en: string; zh: string };
+      objectKey: string;
+    }[];
     id: string;
+    name?: { en: string; zh: string };
     publishedAt: string | null;
+    slug?: string;
     status: "draft" | "published";
+    verified?: boolean;
+    withDetail?: boolean;
   },
 ): Promise<void> {
-  await client.query(
-    `insert into factories
-       (id, slug, name, cluster_id, region_id, address, location,
-        main_products, status, published_at, search_text_en, search_text_zh)
-     values (
-       $1,
-       $2,
-       $3::jsonb,
-       $4,
-       $5,
-       $6::jsonb,
-       ST_SetSRID(ST_MakePoint(120.3, 30.4), 4326),
-       $7::jsonb,
-       $8,
-       $9::timestamptz,
-       $10,
-       $11
-     )`,
-    [
-      input.id,
-      `factory-${input.id.slice(0, 8)}`,
-      JSON.stringify({ en: "Factory", zh: "工厂" }),
-      input.clusterId,
-      ids.cityA,
-      JSON.stringify({ en: "Factory Road", zh: "工厂路" }),
-      JSON.stringify([{ en: "LED bulbs", zh: "LED 灯泡" }]),
-      input.status,
-      input.publishedAt,
-      "factory led",
-      "工厂 LED",
-    ],
-  );
+  const slug = input.slug ?? `factory-${input.id.slice(0, 8)}`;
+
+  await client.query("begin");
+  try {
+    await client.query(
+      `insert into factories
+         (id, slug, name, cluster_id, region_id, address, location,
+          location_gcj02, main_products, certifications, moq,
+          established_year, employee_range, contact, images, source_name,
+          source_url, verified, verified_at, last_verified_at, verified_by,
+          status, published_at, search_text_en, search_text_zh)
+       values (
+         $1,
+         $2,
+         $3::jsonb,
+         $4,
+         $5,
+         $6::jsonb,
+         ST_SetSRID(ST_MakePoint(120.3, 30.4), 4326),
+         $7::jsonb,
+         $8::jsonb,
+         $9::text[],
+         $10,
+         $11,
+         $12,
+         $13::jsonb,
+         $14::jsonb,
+         $15,
+         $16,
+         $17,
+         $18::timestamptz,
+         $19::timestamptz,
+         $20,
+         $21,
+         $22::timestamptz,
+         $23,
+         $24
+       )`,
+      [
+        input.id,
+        slug,
+        JSON.stringify(
+          input.name ?? { en: `${slug} name`, zh: `${slug} 名称` },
+        ),
+        input.clusterId,
+        ids.cityA,
+        JSON.stringify(input.address ?? { en: "Factory Road", zh: "工厂路" }),
+        JSON.stringify({ lng: 120.31, lat: 30.41 }),
+        JSON.stringify([{ en: "LED bulbs", zh: "LED 灯泡" }]),
+        input.withDetail ? ["ISO9001", "BSCI"] : [],
+        input.withDetail ? "100 pieces" : null,
+        input.withDetail ? 2008 : null,
+        input.withDetail ? "100-500" : null,
+        input.withDetail
+          ? JSON.stringify({
+              email: "sales@example.test",
+              website: "https://factory.example.test",
+            })
+          : null,
+        JSON.stringify(input.images ?? []),
+        input.withDetail ? "Industry directory" : null,
+        input.withDetail ? "https://source.example.test/factory" : null,
+        input.verified ?? false,
+        input.verified ? "2026-07-01T12:00:00.000Z" : null,
+        input.verified ? "2026-07-20T12:00:00.000Z" : null,
+        input.verified ? "clerk_admin_test" : null,
+        input.status,
+        input.publishedAt,
+        `${slug} led`,
+        `${slug} 工厂`,
+      ],
+    );
+
+    for (const categoryId of input.categoryIds ?? []) {
+      await client.query(
+        `insert into factory_categories (factory_id, category_id)
+         values ($1, $2)`,
+        [input.id, categoryId],
+      );
+    }
+    await client.query("commit");
+  } catch (error) {
+    await client.query("rollback");
+    throw error;
+  }
 }
 
-describe.sequential("public categories and clusters API", () => {
+describe.sequential("public catalog API", () => {
   let app: NestFastifyApplication;
   let pool: Pool;
   let postgres: StartedTestContainer;
@@ -390,15 +461,24 @@ describe.sequential("public categories and clusters API", () => {
       });
 
       await insertFactory(client, {
+        categoryIds: [ids.lighting, ids.led],
         clusterId: ids.clusterTop,
         id: "111111111111111111111",
+        images: [
+          {
+            alt: { en: "Factory exterior", zh: "工厂外观" },
+            objectKey: "staging/factories/top front.webp",
+          },
+        ],
         publishedAt: "2026-07-24T12:00:00.000Z",
         status: "published",
+        verified: true,
       });
       await insertFactory(client, {
+        categoryIds: [ids.bulbs],
         clusterId: ids.clusterTop,
         id: "222222222222222222222",
-        publishedAt: "2026-07-24T11:00:00.000Z",
+        publishedAt: "2026-07-24T12:00:00.000Z",
         status: "published",
       });
       await insertFactory(client, {
@@ -414,11 +494,55 @@ describe.sequential("public categories and clusters API", () => {
         status: "published",
       });
       await insertFactory(client, {
+        categoryIds: [ids.apparel],
         clusterId: ids.clusterSecond,
         id: "555555555555555555555",
         publishedAt: "2026-07-24T10:00:00.000Z",
         status: "published",
       });
+      await insertFactory(client, {
+        categoryIds: [ids.lighting],
+        clusterId: ids.clusterDraft,
+        id: ids.factoryDraftCluster,
+        publishedAt: "2026-07-24T09:00:00.000Z",
+        slug: "draft-cluster-factory",
+        status: "published",
+      });
+      await insertFactory(client, {
+        address: {
+          en: "1 Verified Factory Road",
+          zh: "认证工厂路1号",
+        },
+        categoryIds: [ids.lighting, ids.led],
+        clusterId: ids.clusterOld,
+        id: ids.factoryDetail,
+        images: [
+          {
+            alt: { en: "Factory exterior", zh: "工厂外观" },
+            objectKey: "staging/factories/detail front.webp",
+          },
+          {
+            alt: { en: "Production line", zh: "生产线" },
+            objectKey: "staging/factories/production.webp",
+          },
+        ],
+        name: { en: "Verified Lighting Factory", zh: "认证照明工厂" },
+        publishedAt: "2026-07-23T12:00:00.000Z",
+        slug: "verified-lighting-factory",
+        status: "published",
+        verified: true,
+        withDetail: true,
+      });
+
+      for (let index = 1; index <= 11; index += 1) {
+        await insertFactory(client, {
+          clusterId: ids.clusterOld,
+          id: `related${String(index).padStart(14, "0")}`,
+          publishedAt: `2026-07-22T${String(23 - index).padStart(2, "0")}:00:00.000Z`,
+          slug: `related-factory-${index}`,
+          status: "published",
+        });
+      }
     } finally {
       client.release();
     }
@@ -567,6 +691,169 @@ describe.sequential("public categories and clusters API", () => {
     expect(JSON.stringify(body)).not.toContain("名称");
   });
 
+  it("lists cluster factories with stable cursor pagination", async () => {
+    const firstResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/clusters/top-lighting/factories?limit=1",
+    });
+    const firstPage = getClusterFactoriesResponseSchema.parse(
+      firstResponse.json(),
+    );
+
+    expect(firstResponse.statusCode).toBe(200);
+    expect(firstPage.data.map((factory) => factory.id)).toEqual([
+      "222222222222222222222",
+    ]);
+    expect(firstPage.meta.nextCursor).not.toBeNull();
+
+    const secondResponse = await app.inject({
+      method: "GET",
+      url: `/api/v1/clusters/top-lighting/factories?limit=1&cursor=${encodeURIComponent(
+        firstPage.meta.nextCursor ?? "",
+      )}`,
+    });
+    const secondPage = getClusterFactoriesResponseSchema.parse(
+      secondResponse.json(),
+    );
+
+    expect(secondPage.data.map((factory) => factory.id)).toEqual([
+      "111111111111111111111",
+    ]);
+    expect(secondPage.meta.nextCursor).toBeNull();
+    expect(
+      new Set([...firstPage.data, ...secondPage.data].map(({ id }) => id)).size,
+    ).toBe(2);
+  });
+
+  it("filters published factories and hides draft cluster references", async () => {
+    const filteredResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories?category=led-lighting&cluster=top-lighting&verified=true",
+    });
+    const filtered = getFactoriesResponseSchema.parse(filteredResponse.json());
+
+    expect(filteredResponse.statusCode).toBe(200);
+    expect(filtered.data.map((factory) => factory.id)).toEqual([
+      "111111111111111111111",
+    ]);
+    expect(filtered.data[0]).toMatchObject({
+      cluster: { slug: "top-lighting" },
+      imageUrl:
+        "https://media.example.test/assets/staging/factories/top%20front.webp",
+      verified: true,
+    });
+
+    const childCategoryResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories?category=bulbs&verified=false",
+    });
+    expect(
+      getFactoriesResponseSchema
+        .parse(childCategoryResponse.json())
+        .data.map((factory) => factory.id),
+    ).toEqual(["222222222222222222222"]);
+
+    const draftClusterFilterResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories?cluster=draft-lighting",
+    });
+    expect(
+      getFactoriesResponseSchema.parse(draftClusterFilterResponse.json()).data,
+    ).toEqual([]);
+
+    const defaultResponse = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories?limit=100",
+    });
+    const draftClusterFactory = getFactoriesResponseSchema
+      .parse(defaultResponse.json())
+      .data.find((factory) => factory.id === ids.factoryDraftCluster);
+
+    expect(draftClusterFactory).toMatchObject({
+      cluster: null,
+      slug: "draft-cluster-factory",
+    });
+  });
+
+  it("returns full factory detail with bounded published related factories", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories/verified-lighting-factory",
+    });
+    const body = getFactoryResponseSchema.parse(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(body.data).toMatchObject({
+      address: {
+        en: "1 Verified Factory Road",
+        zh: "认证工厂路1号",
+      },
+      categories: [{ slug: "lighting" }, { slug: "led-lighting" }],
+      certifications: ["ISO9001", "BSCI"],
+      cluster: { slug: "old-lighting" },
+      contact: {
+        email: "sales@example.test",
+        website: "https://factory.example.test",
+      },
+      employeeRange: "100-500",
+      establishedYear: 2008,
+      imageUrl:
+        "https://media.example.test/assets/staging/factories/detail%20front.webp",
+      images: [
+        {
+          alt: "Factory exterior",
+          url: "https://media.example.test/assets/staging/factories/detail%20front.webp",
+        },
+        {
+          alt: "Production line",
+          url: "https://media.example.test/assets/staging/factories/production.webp",
+        },
+      ],
+      location: { coordinates: [120.3, 30.4], type: "Point" },
+      moq: "100 pieces",
+      sourceName: "Industry directory",
+      verified: true,
+      verifiedAt: "2026-07-01T12:00:00.000Z",
+    });
+    expect(body.data.relatedFactories).toHaveLength(10);
+    expect(body.data.relatedFactories.map((factory) => factory.slug)).toEqual([
+      "related-factory-1",
+      "related-factory-2",
+      "related-factory-3",
+      "related-factory-4",
+      "related-factory-5",
+      "related-factory-6",
+      "related-factory-7",
+      "related-factory-8",
+      "related-factory-9",
+      "related-factory-10",
+    ]);
+    expect(
+      body.data.relatedFactories.some(
+        (factory) => factory.id === ids.factoryDetail,
+      ),
+    ).toBe(false);
+
+    const serialized = JSON.stringify(body);
+    expect(serialized).not.toContain("objectKey");
+    expect(serialized).not.toContain("locationGcj02");
+    expect(serialized).not.toContain("verifiedBy");
+    expect(serialized).not.toContain("认证照明工厂");
+    expect(serialized).toContain("认证工厂路1号");
+  });
+
+  it("returns no related or draft cluster data for a public factory", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/factories/draft-cluster-factory",
+    });
+    const body = getFactoryResponseSchema.parse(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(body.data.cluster).toBeNull();
+    expect(body.data.relatedFactories).toEqual([]);
+  });
+
   it("returns frozen validation and not-found envelopes", async () => {
     for (const url of [
       "/api/v1/categories?unexpected=true",
@@ -574,6 +861,12 @@ describe.sequential("public categories and clusters API", () => {
       "/api/v1/clusters?region=short",
       "/api/v1/clusters?cursor=not-a-cursor",
       "/api/v1/clusters/INVALID_SLUG",
+      "/api/v1/clusters/top-lighting/factories?limit=101",
+      "/api/v1/factories?cursor=not-a-cursor",
+      "/api/v1/factories?unexpected=true",
+      "/api/v1/factories?verified=1",
+      "/api/v1/factories?cluster=INVALID_SLUG",
+      "/api/v1/factories/INVALID_SLUG",
     ]) {
       const response = await app.inject({ method: "GET", url });
       const body = response.json();
@@ -598,14 +891,44 @@ describe.sequential("public categories and clusters API", () => {
         meta: null,
       });
     }
+
+    for (const slug of ["draft-lighting", "missing-lighting"]) {
+      const response = await app.inject({
+        method: "GET",
+        url: `/api/v1/clusters/${slug}/factories`,
+      });
+      expect(response.statusCode).toBe(404);
+      expect(response.json().error.code).toBe("NOT_FOUND");
+    }
+
+    for (const slug of [
+      "factory-33333333",
+      "factory-44444444",
+      "missing-factory",
+    ]) {
+      const response = await app.inject({
+        method: "GET",
+        url: `/api/v1/factories/${slug}`,
+      });
+      expect(response.statusCode).toBe(404);
+      expect(response.json().error.code).toBe("NOT_FOUND");
+    }
   });
 
-  it("serves all three endpoints through the generated API client", async () => {
+  it("serves all six endpoints through the generated API client", async () => {
     configureApiClient({ baseUrl: `${await app.getUrl()}/api/v1` });
 
     const categoriesResponse = await getCategories();
     const clustersResponse = await getClusters({ limit: 2 });
     const clusterResponse = await getCluster("top-lighting");
+    const clusterFactoriesResponse = await getClusterFactories("top-lighting", {
+      limit: 1,
+    });
+    const factoriesResponse = await getFactories({
+      cluster: "top-lighting",
+      limit: 2,
+    });
+    const factoryResponse = await getFactory("verified-lighting-factory");
 
     expect(
       getCategoriesResponseSchema.parse(categoriesResponse).data,
@@ -615,6 +938,15 @@ describe.sequential("public categories and clusters API", () => {
     );
     expect(getClusterResponseSchema.parse(clusterResponse).data.slug).toBe(
       "top-lighting",
+    );
+    expect(
+      getClusterFactoriesResponseSchema.parse(clusterFactoriesResponse).data,
+    ).toHaveLength(1);
+    expect(
+      getFactoriesResponseSchema.parse(factoriesResponse).data,
+    ).toHaveLength(2);
+    expect(getFactoryResponseSchema.parse(factoryResponse).data.slug).toBe(
+      "verified-lighting-factory",
     );
   });
 });

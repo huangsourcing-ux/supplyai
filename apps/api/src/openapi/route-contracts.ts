@@ -150,6 +150,42 @@ export const getCategoriesRouteContract = defineRouteContract({
   tag: "categories",
 });
 
+export const getClusterFactoriesRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getClusterFactories",
+  path: "/api/v1/clusters/{slug}/factories",
+  request: {
+    params: getClusterFactoriesParamsSchema,
+    query: getClusterFactoriesQuerySchema,
+  },
+  response: getClusterFactoriesResponseSchema,
+  summary: "List published factories in a cluster",
+  tag: "clusters",
+});
+
+export const getFactoriesRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getFactories",
+  path: "/api/v1/factories",
+  request: { query: getFactoriesQuerySchema },
+  response: getFactoriesResponseSchema,
+  summary: "List published factories",
+  tag: "factories",
+});
+
+export const getFactoryRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getFactory",
+  path: "/api/v1/factories/{slug}",
+  request: { params: getFactoryParamsSchema },
+  response: getFactoryResponseSchema,
+  summary: "Get a published factory",
+  tag: "factories",
+});
+
 export const apiRouteContracts = [
   defineRouteContract({
     access: "health",
@@ -162,39 +198,9 @@ export const apiRouteContracts = [
   }),
   getClustersRouteContract,
   getClusterRouteContract,
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getClusterFactories",
-    path: "/api/v1/clusters/{slug}/factories",
-    request: {
-      params: getClusterFactoriesParamsSchema,
-      query: getClusterFactoriesQuerySchema,
-    },
-    response: getClusterFactoriesResponseSchema,
-    summary: "List published factories in a cluster",
-    tag: "clusters",
-  }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getFactories",
-    path: "/api/v1/factories",
-    request: { query: getFactoriesQuerySchema },
-    response: getFactoriesResponseSchema,
-    summary: "List published factories",
-    tag: "factories",
-  }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getFactory",
-    path: "/api/v1/factories/{slug}",
-    request: { params: getFactoryParamsSchema },
-    response: getFactoryResponseSchema,
-    summary: "Get a published factory",
-    tag: "factories",
-  }),
+  getClusterFactoriesRouteContract,
+  getFactoriesRouteContract,
+  getFactoryRouteContract,
   defineRouteContract({
     access: "public",
     method: "get",

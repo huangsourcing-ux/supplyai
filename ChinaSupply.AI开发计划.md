@@ -87,7 +87,7 @@ chinasupply/
 - [x] **M1-T2 packages/schemas**：全部 API 请求/响应 Zod schema；envelope 与 cursor 编解码（4.1/4.2）。
 - [x] **M1-T3 OpenAPI + API Client**：NestJS 输出 `/api/openapi.json`（Zod 为唯一来源，经 nestjs-zod/zod-openapi 桥接）；Orval 生成 packages/api-client（fetch client + TanStack Query hooks）；Web 与 App 各完成一次真实调用；CI 校验重新生成后 `git diff` 为空；同链路生成 MSW mock 供 M2 先行。
 - [x] **M1-T4a 公开 API：categories + clusters**：A-7、A-1、A-2（实时 factoryCount）。
-- [ ] **M1-T4b 公开 API：factories**：A-3、A-4、A-5（relatedFactories 内嵌）。
+- [x] **M1-T4b 公开 API：factories**：A-3、A-4、A-5（relatedFactories 内嵌）。
 - [ ] **M1-T4c 公开 API：search**：A-6（FTS + trgm + alias + 2 字符中文 ILIKE，按 F-3.2/3.3）。
 - [ ] **M1-T5 地图 API**：MAP-1/2/3（envelope 包 FeatureCollection、zoom 分级简化、固定属性、5000 上限 + truncated）。
 - [ ] **M1-T6 缓存与限流**：MAP-* Cache-Control + Cloudflare 缓存规则；G-11 限流（throttler + **Redis store**，多实例安全；真实 IP 取自 M0-T10 的代理配置）；Purge 接口预留。
