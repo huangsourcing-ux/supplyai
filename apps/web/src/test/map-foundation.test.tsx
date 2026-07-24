@@ -8,6 +8,7 @@ import {
   CHINA_BOUNDS,
   CLUSTER_POINTS_SOURCE_ID,
   clusterPointsLayer,
+  MAPLIBRE_WORKER_URL,
 } from "../app/(frontend)/map/map-config";
 import { MapAttribution } from "../app/(frontend)/map/map-attribution";
 import { MapStatus } from "../app/(frontend)/map/map-status";
@@ -22,6 +23,12 @@ const labels = {
 };
 
 describe("Web map foundation", () => {
+  it("uses the self-hosted MapLibre module worker", () => {
+    expect(MAPLIBRE_WORKER_URL).toBe(
+      "/vendor/maplibre-gl/maplibre-gl-worker.mjs",
+    );
+  });
+
   it("starts from the approved China bounds and colors MAP-1 points by property", () => {
     expect(CHINA_BOUNDS).toEqual([
       [73, 18],

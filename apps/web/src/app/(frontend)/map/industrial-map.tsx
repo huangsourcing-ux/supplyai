@@ -18,6 +18,7 @@ import {
   CLUSTER_POINTS_SOURCE_ID,
   clusterPointsLayer,
   EMPTY_CLUSTER_POINTS,
+  MAPLIBRE_WORKER_URL,
 } from "./map-config";
 import { MapAttribution, type MapAttributionLabels } from "./map-attribution";
 import {
@@ -62,9 +63,10 @@ export function IndustrialMap({
     setMapLoadState("loading");
 
     void import("maplibre-gl")
-      .then(({ Map, NavigationControl }) => {
+      .then(({ Map, NavigationControl, setWorkerUrl }) => {
         if (disposed) return;
 
+        setWorkerUrl(MAPLIBRE_WORKER_URL);
         const style = createChinaSupplyMapStyle(
           process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
         ) as unknown as StyleSpecification;

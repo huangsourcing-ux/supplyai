@@ -9,6 +9,7 @@ export const CHINA_BOUNDS: LngLatBoundsLike = [
 
 export const CLUSTER_POINTS_SOURCE_ID = "industrial-cluster-points";
 export const CLUSTER_POINTS_LAYER_ID = "industrial-cluster-points-circles";
+export const MAPLIBRE_WORKER_URL = "/vendor/maplibre-gl/maplibre-gl-worker.mjs";
 
 export const EMPTY_CLUSTER_POINTS: GetMapClusterPoints200Data = {
   features: [],

@@ -1083,12 +1083,20 @@ describe.sequential("public catalog API", () => {
 
   it("returns published cluster points with exact properties and live counts", async () => {
     const response = await app.inject({
+      headers: {
+        origin:
+          "https://chinasupply-web-staging-example-huangsourcing-2373s-projects.vercel.app",
+      },
       method: "GET",
       url: "/api/v1/map/clusters/points",
     });
     const body = getMapClusterPointsResponseSchema.parse(response.json());
 
     expect(response.statusCode).toBe(200);
+    expect(response.headers["access-control-allow-origin"]).toBe("*");
+    expect(
+      response.headers["access-control-allow-credentials"],
+    ).toBeUndefined();
     expect(response.headers["cache-control"]).toBe(
       "public, max-age=0, s-maxage=3600",
     );

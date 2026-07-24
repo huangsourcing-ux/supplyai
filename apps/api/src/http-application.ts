@@ -10,12 +10,33 @@ import {
   type RuntimeConfig,
 } from "./config/runtime-config.module.js";
 
+interface CorsRequest {
+  method: string;
+  url: string;
+}
+
+const publicMapCorsMethods = new Set(["GET", "HEAD", "OPTIONS"]);
+
+export function getCorsOptionsForRequest(
+  request: CorsRequest,
+  webOrigin: string,
+): { credentials: boolean; origin: string } {
+  const isPublicMapRead =
+    publicMapCorsMethods.has(request.method) &&
+    request.url.startsWith("/api/v1/map/");
+
+  return isPublicMapRead
+    ? { credentials: false, origin: "*" }
+    : { credentials: true, origin: webOrigin };
+}
+
 export function configureHttpApplication(app: NestFastifyApplication): void {
   const config = app.get<RuntimeConfig>(RUNTIME_CONFIG);
 
   app.enableCors({
-    credentials: true,
-    origin: config.WEB_ORIGIN,
+    delegator: (request, callback) => {
+      callback(null, getCorsOptionsForRequest(request, config.WEB_ORIGIN));
+    },
   });
   app.setGlobalPrefix("api/v1", {
     exclude: [
