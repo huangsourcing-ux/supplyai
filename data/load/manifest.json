@@ -1,0 +1,20 @@
+{
+  "generator": "m1-t8-deterministic-factory-load-data",
+  "algorithmVersion": 1,
+  "prng": "mulberry32",
+  "seedFormat": "m1-t8-v{algorithmVersion}-{count}",
+  "files": [
+    {
+      "path": ".generated/load/factories-5000.json",
+      "count": 5000,
+      "bytes": 4909911,
+      "sha256": "edb179078c2d4e78f2d487d3b663924922b443b25af81e0c95b7237cd30f4667"
+    },
+    {
+      "path": ".generated/load/factories-20000.json",
+      "count": 20000,
+      "bytes": 19659550,
+      "sha256": "ba9a3e42bf33828f820877d8a3046cb68fefe4db046da7c9719eb771c4ec3e8f"
+    }
+  ]
+}

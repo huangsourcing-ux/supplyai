@@ -6,6 +6,33 @@ bucket and enqueues only its object key. The Worker downloads that object,
 validates every row, writes valid rows to PostgreSQL, and writes a deterministic
 JSON report back to R2. CLI and Worker never share a filesystem.
 
+## M1-T8 staging real seed
+
+`seed:real` completely preflights `data/staging/real-seed/`, idempotently
+upserts regions/categories, then reuses the R2 → BullMQ → Worker pipeline below
+for clusters and factories in that order. A cluster report with any failure
+prevents the factory job from starting.
+
+```bash
+APP_ENV=staging pnpm seed:real -- --confirm-staging
+```
+
+The command allows only local, or staging with that exact confirmation
+argument. Production is rejected before environment parsing or any database,
+R2, or Redis operation. Output contains only counts, job IDs, and report object
+keys. Correct canonical files and rerun after a failure; no delete, publish, or
+verify operation exists.
+
+Synthetic load files are rebuilt locally and `.generated/load/` is ignored:
+
+```bash
+pnpm generate:load-data -- --count 5000 --output .generated/load/factories-5000.json
+pnpm generate:load-data -- --count 20000 --output .generated/load/factories-20000.json
+```
+
+Never import these files into public staging or production. Only
+`data/load/manifest.json` is tracked.
+
 ## Commands
 
 Run core migrations and ensure the API/Worker environment points at the

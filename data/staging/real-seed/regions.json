@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "id": "reg_shenzhen_city_001",
+      "level": "city",
+      "name": { "en": "Shenzhen", "zh": "深圳市" },
+      "centroid": [114.0579, 22.5431],
+      "boundary": null
+    },
+    {
+      "id": "reg_dongguan_city_001",
+      "level": "city",
+      "name": { "en": "Dongguan", "zh": "东莞市" },
+      "centroid": [113.7518, 23.0207],
+      "boundary": null
+    },
+    {
+      "id": "reg_zhongshan_city_01",
+      "level": "city",
+      "name": { "en": "Zhongshan", "zh": "中山市" },
+      "centroid": [113.3928, 22.5176],
+      "boundary": null
+    },
+    {
+      "id": "reg_foshan_city_00001",
+      "level": "city",
+      "name": { "en": "Foshan", "zh": "佛山市" },
+      "centroid": [113.1227, 23.0288],
+      "boundary": null
+    },
+    {
+      "id": "reg_shantou_city_0001",
+      "level": "city",
+      "name": { "en": "Shantou", "zh": "汕头市" },
+      "centroid": [116.6819, 23.3541],
+      "boundary": null
+    },
+    {
+      "id": "reg_jinhua_city_00001",
+      "level": "city",
+      "name": { "en": "Jinhua", "zh": "金华市" },
+      "centroid": [119.6474, 29.0792],
+      "boundary": null
+    },
+    {
+      "id": "reg_nantong_city_0001",
+      "level": "city",
+      "name": { "en": "Nantong", "zh": "南通市" },
+      "centroid": [120.8943, 31.9802],
+      "boundary": null
+    },
+    {
+      "id": "reg_quanzhou_city_001",
+      "level": "city",
+      "name": { "en": "Quanzhou", "zh": "泉州市" },
+      "centroid": [118.6757, 24.8741],
+      "boundary": null
+    }
+  ]
+}

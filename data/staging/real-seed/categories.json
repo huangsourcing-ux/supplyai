@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "id": "cat_electronics_00001",
+      "parentSlug": null,
+      "name": { "en": "Electronics", "zh": "电子产品" },
+      "slug": "electronics",
+      "icon": "cpu",
+      "color": "#2563EB",
+      "aliases": {
+        "en": ["electronic products", "electronics manufacturing"],
+        "zh": ["电子制造", "电子产品"]
+      },
+      "sortOrder": 10
+    },
+    {
+      "id": "cat_lighting_00000000",
+      "parentSlug": null,
+      "name": { "en": "Lighting", "zh": "照明灯饰" },
+      "slug": "lighting",
+      "icon": "lightbulb",
+      "color": "#F59E0B",
+      "aliases": {
+        "en": ["lights", "lamps", "luminaires"],
+        "zh": ["灯具", "灯饰", "照明"]
+      },
+      "sortOrder": 20
+    },
+    {
+      "id": "cat_furniture_0000000",
+      "parentSlug": null,
+      "name": { "en": "Furniture", "zh": "家具" },
+      "slug": "furniture",
+      "icon": "armchair",
+      "color": "#92400E",
+      "aliases": {
+        "en": ["home furniture", "contract furniture"],
+        "zh": ["家居", "家具制造"]
+      },
+      "sortOrder": 30
+    },
+    {
+      "id": "cat_toys_000000000000",
+      "parentSlug": null,
+      "name": { "en": "Toys", "zh": "玩具" },
+      "slug": "toys",
+      "icon": "blocks",
+      "color": "#EC4899",
+      "aliases": {
+        "en": ["toys and games", "children's toys"],
+        "zh": ["儿童玩具", "玩具礼品"]
+      },
+      "sortOrder": 40
+    },
+    {
+      "id": "cat_general_goods_001",
+      "parentSlug": null,
+      "name": { "en": "General Goods", "zh": "日用百货" },
+      "slug": "general-goods",
+      "icon": "package",
+      "color": "#8B5CF6",
+      "aliases": {
+        "en": ["small commodities", "consumer goods"],
+        "zh": ["小商品", "日用品", "百货"]
+      },
+      "sortOrder": 50
+    },
+    {
+      "id": "cat_hardware_00000000",
+      "parentSlug": null,
+      "name": { "en": "Hardware", "zh": "五金制品" },
+      "slug": "hardware",
+      "icon": "wrench",
+      "color": "#64748B",
+      "aliases": {
+        "en": ["hardware products", "tools"],
+        "zh": ["五金", "工具"]
+      },
+      "sortOrder": 60
+    },
+    {
+      "id": "cat_home_textiles_001",
+      "parentSlug": null,
+      "name": { "en": "Home Textiles", "zh": "家用纺织品" },
+      "slug": "home-textiles",
+      "icon": "bed",
+      "color": "#14B8A6",
+      "aliases": {
+        "en": ["bedding", "household textiles"],
+        "zh": ["家纺", "床上用品"]
+      },
+      "sortOrder": 70
+    },
+    {
+      "id": "cat_footwear_00000000",
+      "parentSlug": null,
+      "name": { "en": "Footwear", "zh": "鞋类" },
+      "slug": "footwear",
+      "icon": "footprints",
+      "color": "#EF4444",
+      "aliases": {
+        "en": ["shoes", "shoe manufacturing"],
+        "zh": ["鞋业", "鞋子"]
+      },
+      "sortOrder": 80
+    },
+    {
+      "id": "cat_ceramics_00000000",
+      "parentSlug": null,
+      "name": { "en": "Ceramics", "zh": "陶瓷" },
+      "slug": "ceramics",
+      "icon": "cup-saucer",
+      "color": "#0EA5E9",
+      "aliases": {
+        "en": ["porcelain", "ceramic products"],
+        "zh": ["瓷器", "陶瓷制品"]
+      },
+      "sortOrder": 90
+    },
+    {
+      "id": "cat_consumer_elec_001",
+      "parentSlug": "electronics",
+      "name": { "en": "Consumer Electronics", "zh": "消费电子" },
+      "slug": "consumer-electronics",
+      "icon": "smartphone",
+      "color": null,
+      "aliases": {
+        "en": ["smart devices", "consumer devices"],
+        "zh": ["智能终端", "消费电子产品"]
+      },
+      "sortOrder": 11
+    },
+    {
+      "id": "cat_elec_parts_000001",
+      "parentSlug": "electronics",
+      "name": { "en": "Electronic Components", "zh": "电子元器件" },
+      "slug": "electronic-components",
+      "icon": "circuit-board",
+      "color": null,
+      "aliases": {
+        "en": ["electronic parts", "components"],
+        "zh": ["电子零部件", "元器件"]
+      },
+      "sortOrder": 12
+    },
+    {
+      "id": "cat_decor_lights_0001",
+      "parentSlug": "lighting",
+      "name": { "en": "Decorative Lighting", "zh": "装饰灯具" },
+      "slug": "decorative-lighting",
+      "icon": "lamp-ceiling",
+      "color": null,
+      "aliases": {
+        "en": ["chandeliers", "decorative lamps"],
+        "zh": ["吊灯", "装饰灯"]
+      },
+      "sortOrder": 21
+    },
+    {
+      "id": "cat_home_furn_0000001",
+      "parentSlug": "furniture",
+      "name": { "en": "Home Furniture", "zh": "民用家具" },
+      "slug": "home-furniture",
+      "icon": "sofa",
+      "color": null,
+      "aliases": {
+        "en": ["sofas", "tables", "chairs"],
+        "zh": ["沙发", "桌椅", "家居家具"]
+      },
+      "sortOrder": 31
+    },
+    {
+      "id": "cat_creative_toys_001",
+      "parentSlug": "toys",
+      "name": { "en": "Creative Toys", "zh": "创意玩具" },
+      "slug": "creative-toys",
+      "icon": "toy-brick",
+      "color": null,
+      "aliases": {
+        "en": ["model toys", "electronic toys"],
+        "zh": ["模型玩具", "电动玩具"]
+      },
+      "sortOrder": 41
+    },
+    {
+      "id": "cat_small_goods_00001",
+      "parentSlug": "general-goods",
+      "name": { "en": "Small Commodities", "zh": "小商品" },
+      "slug": "small-commodities",
+      "icon": "boxes",
+      "color": null,
+      "aliases": {
+        "en": ["daily goods", "gift items", "accessories"],
+        "zh": ["日用小商品", "礼品", "饰品"]
+      },
+      "sortOrder": 51
+    },
+    {
+      "id": "cat_hardware_tools_01",
+      "parentSlug": "hardware",
+      "name": { "en": "Hardware Tools", "zh": "五金工具" },
+      "slug": "hardware-tools",
+      "icon": "hammer",
+      "color": null,
+      "aliases": {
+        "en": ["power tools", "hand tools", "metal products"],
+        "zh": ["电动工具", "手工具", "金属制品"]
+      },
+      "sortOrder": 61
+    },
+    {
+      "id": "cat_bedding_000000000",
+      "parentSlug": "home-textiles",
+      "name": { "en": "Bedding", "zh": "床上用品" },
+      "slug": "bedding",
+      "icon": "blanket",
+      "color": null,
+      "aliases": {
+        "en": ["bed linen", "quilts", "blankets"],
+        "zh": ["床品", "被子", "毯子"]
+      },
+      "sortOrder": 71
+    },
+    {
+      "id": "cat_sports_shoes_0001",
+      "parentSlug": "footwear",
+      "name": { "en": "Sports Shoes", "zh": "运动鞋" },
+      "slug": "sports-shoes",
+      "icon": "shoe",
+      "color": null,
+      "aliases": {
+        "en": ["athletic footwear", "running shoes"],
+        "zh": ["运动鞋", "跑鞋"]
+      },
+      "sortOrder": 81
+    },
+    {
+      "id": "cat_art_ceramics_0001",
+      "parentSlug": "ceramics",
+      "name": { "en": "Art and Daily Ceramics", "zh": "工艺与日用陶瓷" },
+      "slug": "art-daily-ceramics",
+      "icon": "vase",
+      "color": null,
+      "aliases": {
+        "en": ["ceramic crafts", "tableware", "home decor"],
+        "zh": ["工艺陶瓷", "日用瓷", "陶瓷家居"]
+      },
+      "sortOrder": 91
+    }
+  ]
+}

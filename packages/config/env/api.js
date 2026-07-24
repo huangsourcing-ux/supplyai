@@ -240,6 +240,12 @@ export const importCliEnvSchema = privateObjectStorageEnvSchema.and(
   }),
 );
 
+export const seedCliEnvSchema = importCliEnvSchema.and(
+  z.object({
+    DATABASE_URL: networkUrlSchema,
+  }),
+);
+
 /**
  * @param {unknown} source
  * @returns {z.infer<typeof apiEnvSchema>}
@@ -266,6 +272,14 @@ export function parsePrivateObjectStorageEnv(source) {
  */
 export function parseImportCliEnv(source) {
   return parseEnvironment(importCliEnvSchema, source, "Import CLI");
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof seedCliEnvSchema>}
+ */
+export function parseSeedCliEnv(source) {
+  return parseEnvironment(seedCliEnvSchema, source, "Seed CLI");
 }
 
 /**

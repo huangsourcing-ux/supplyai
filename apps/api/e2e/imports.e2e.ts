@@ -28,6 +28,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { runImportCli } from "../scripts/run-import-cli.js";
 import { createRedisOptions } from "../src/common/redis/redis-options.js";
 import { IMPORT_QUEUE } from "../src/imports/import.constants.js";
+import { loadRealSeedData } from "../src/seeds/real-seed-data.js";
+import { runRealSeed } from "../src/seeds/seed-real.js";
 import { WorkerModule } from "../src/worker.module.js";
 
 const workspaceRoot = resolve(
@@ -125,7 +127,7 @@ describe.sequential("M1-T7 import pipeline", () => {
   let queue: Queue;
   let events: QueueEvents;
   let worker: Awaited<ReturnType<typeof NestFactory.createApplicationContext>>;
-  let temporaryDirectory: string;
+  let temporaryDirectory: string | undefined;
   const environmentBackup = new Map<string, string | undefined>();
 
   beforeAll(async () => {
@@ -234,7 +236,9 @@ describe.sequential("M1-T7 import pipeline", () => {
       pool?.end(),
     ]);
     objectStorage?.destroy();
-    await rm(temporaryDirectory, { recursive: true, force: true });
+    if (temporaryDirectory !== undefined) {
+      await rm(temporaryDirectory, { recursive: true, force: true });
+    }
     await Promise.allSettled([minio?.stop(), redis?.stop(), postgres?.stop()]);
     for (const [key, value] of environmentBackup) {
       if (value === undefined) {
@@ -249,6 +253,9 @@ describe.sequential("M1-T7 import pipeline", () => {
     entity: "clusters" | "factories",
     rows: unknown[],
   ) {
+    if (temporaryDirectory === undefined) {
+      throw new Error("Temporary import directory is not initialized");
+    }
     const filePath = join(temporaryDirectory, `${entity}-${Date.now()}.json`);
     await writeFile(
       filePath,
@@ -426,5 +433,100 @@ describe.sequential("M1-T7 import pipeline", () => {
       verified: true,
       count: "90",
     });
+  }, 180_000);
+
+  it("seeds canonical data twice through R2 and the Worker without duplicates", async () => {
+    const seedDirectory = resolve(workspaceRoot, "data/staging/real-seed");
+    const seedData = await loadRealSeedData(seedDirectory);
+    const first = await runRealSeed({
+      environment: process.env,
+      argumentsList: [],
+      seedDirectory,
+    });
+    expect(first.clusters.totals).toEqual({
+      received: 10,
+      inserted: 10,
+      updated: 0,
+      failed: 0,
+    });
+    expect(first.factories.totals).toEqual({
+      received: 50,
+      inserted: 50,
+      updated: 0,
+      failed: 0,
+    });
+
+    const firstIds = await pool.query<{ id: string; slug: string }>(
+      `select id, slug from clusters where slug = any($1::text[])
+       union all
+       select id, slug from factories where slug = any($2::text[])
+       order by slug`,
+      [
+        seedData.clusters.map(({ slug }) => slug),
+        seedData.factories.map(({ slug }) => slug),
+      ],
+    );
+    expect(firstIds.rows).toHaveLength(60);
+
+    const second = await runRealSeed({
+      environment: process.env,
+      argumentsList: [],
+      seedDirectory,
+    });
+    expect(second.clusters.totals).toEqual({
+      received: 10,
+      inserted: 0,
+      updated: 10,
+      failed: 0,
+    });
+    expect(second.factories.totals).toEqual({
+      received: 50,
+      inserted: 0,
+      updated: 50,
+      failed: 0,
+    });
+
+    const state = await pool.query<{
+      cluster_count: string;
+      factory_count: string;
+      unsafe_clusters: string;
+      unsafe_factories: string;
+    }>(
+      `select
+         (select count(*)::text from clusters
+          where slug = any($1::text[])) as cluster_count,
+         (select count(*)::text from factories
+          where slug = any($2::text[])) as factory_count,
+         (select count(*)::text from clusters
+          where slug = any($1::text[])
+            and (status <> 'draft' or published_at is not null)) as unsafe_clusters,
+         (select count(*)::text from factories
+          where slug = any($2::text[])
+            and (status <> 'draft' or verified or published_at is not null
+              or verified_at is not null or last_verified_at is not null
+              or verified_by is not null)) as unsafe_factories`,
+      [
+        seedData.clusters.map(({ slug }) => slug),
+        seedData.factories.map(({ slug }) => slug),
+      ],
+    );
+    expect(state.rows[0]).toEqual({
+      cluster_count: "10",
+      factory_count: "50",
+      unsafe_clusters: "0",
+      unsafe_factories: "0",
+    });
+
+    const secondIds = await pool.query<{ id: string; slug: string }>(
+      `select id, slug from clusters where slug = any($1::text[])
+       union all
+       select id, slug from factories where slug = any($2::text[])
+       order by slug`,
+      [
+        seedData.clusters.map(({ slug }) => slug),
+        seedData.factories.map(({ slug }) => slug),
+      ],
+    );
+    expect(secondIds.rows).toEqual(firstIds.rows);
   }, 180_000);
 });
