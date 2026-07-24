@@ -145,10 +145,21 @@ test("remote API HTTP validation requires a non-placeholder edge secret", async 
     WEB_ORIGIN: "https://staging.invalid",
   };
 
-  assert.throws(() => parseApiHttpEnv(runtimeOnly), /EDGE_PROXY_SECRET/);
+  assert.throws(
+    () => parseApiHttpEnv(runtimeOnly),
+    (error) => {
+      assert.ok(error instanceof Error);
+      assert.match(error.message, /EDGE_PROXY_SECRET/);
+      assert.match(error.message, /CLOUDFLARE_ZONE_ID/);
+      assert.match(error.message, /CLOUDFLARE_PURGE_TOKEN/);
+      return true;
+    },
+  );
   assert.equal(
     parseApiHttpEnv({
       ...runtimeOnly,
+      CLOUDFLARE_PURGE_TOKEN: "cache-purge-test-token",
+      CLOUDFLARE_ZONE_ID: "0123456789abcdef0123456789abcdef",
       EDGE_PROXY_SECRET: "0123456789abcdef0123456789abcdef",
     }).APP_ENV,
     "staging",

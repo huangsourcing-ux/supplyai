@@ -1,9 +1,10 @@
 import { searchQuerySchema } from "@chinasupply/schemas";
-import { Controller, Get, Inject, Query } from "@nestjs/common";
+import { Controller, Get, Inject, Query, UseGuards } from "@nestjs/common";
 import { ZodValidationPipe } from "nestjs-zod";
 import type { z } from "zod";
 
 import { searchRouteContract } from "../openapi/route-contracts.js";
+import { ClientIpThrottlerGuard } from "../rate-limit/client-ip-throttler.guard.js";
 import { SearchService } from "./search.service.js";
 
 const SearchQueryDto = searchRouteContract.nestDtos.query;
@@ -13,6 +14,7 @@ if (SearchQueryDto === undefined) {
 }
 
 @Controller("search")
+@UseGuards(ClientIpThrottlerGuard)
 export class SearchController {
   constructor(@Inject(SearchService) private readonly search: SearchService) {}
 

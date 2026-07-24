@@ -48,6 +48,7 @@ export function registerEdgeProxy(
       suppliedSecret === undefined ||
       !secretsMatch(suppliedSecret, config.edgeProxySecret)
     ) {
+      reply.header("Cache-Control", "no-store");
       await reply
         .code(403)
         .send(
@@ -62,6 +63,7 @@ export function registerEdgeProxy(
     const connectingIp = singleHeaderValue(request.headers["cf-connecting-ip"]);
 
     if (connectingIp === undefined || isIP(connectingIp) === 0) {
+      reply.header("Cache-Control", "no-store");
       await reply
         .code(500)
         .send(

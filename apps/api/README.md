@@ -24,9 +24,13 @@ Railway access to protected routes returns the standard `FORBIDDEN` envelope.
 M1-T1 owns the Drizzle core schema and migrations. Run
 `pnpm release:migrate:core` before starting the API/Worker against a new
 database; builds and application startup never apply migrations implicitly.
-Business endpoints, OpenAPI, authentication, and rate limiting remain in their
-later task packages. M0-T7 adds Sentry to both entrypoints: bootstrap failures
-and global API exceptions are captured, and
+M1-T6 rate-limits each public search and MAP route independently at 60 requests
+per minute per validated client IP, using an atomic Redis rolling window shared
+by all API instances. Redis failures fail closed. Successful MAP responses use
+`Cache-Control: public, max-age=0, s-maxage=3600`; API errors are `no-store`.
+The internal Cloudflare purge client is reserved for M5-T3 and is never invoked
+automatically. Authentication remains in its later task package. M0-T7 adds
+Sentry to both entrypoints: bootstrap failures and global API exceptions are captured, and
 `pnpm --filter @chinasupply/api sentry:smoke` provides the controlled staging
 verification command.
 

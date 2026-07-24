@@ -21,6 +21,8 @@ const apiRuntimeShape = {
   WEB_ORIGIN: networkUrlSchema,
   R2_CDN_BASE_URL: networkUrlSchema,
   EDGE_PROXY_SECRET: z.string().min(32).optional(),
+  CLOUDFLARE_ZONE_ID: secretSchema.optional(),
+  CLOUDFLARE_PURGE_TOKEN: secretSchema.optional(),
   RAILWAY_GIT_COMMIT_SHA: z
     .string()
     .regex(/^[a-f0-9]{40}$/i)
@@ -48,6 +50,12 @@ const remoteSecretFields = [
   "CLOUDFLARE_ZONE_ID",
   "CLOUDFLARE_PURGE_TOKEN",
   "SENTRY_DSN",
+];
+
+/** @type {readonly ["CLOUDFLARE_ZONE_ID", "CLOUDFLARE_PURGE_TOKEN"]} */
+const remoteHttpProviderFields = [
+  "CLOUDFLARE_ZONE_ID",
+  "CLOUDFLARE_PURGE_TOKEN",
 ];
 
 export const apiRuntimeEnvSchema = z
@@ -110,6 +118,20 @@ export const apiHttpEnvSchema = apiRuntimeEnvSchema.superRefine(
         "EDGE_PROXY_SECRET",
         context,
       );
+    }
+
+    for (const field of remoteHttpProviderFields) {
+      if (environment.APP_ENV !== "local" && environment[field] === undefined) {
+        context.addIssue({
+          code: "custom",
+          path: [field],
+          message: "is required for remote HTTP deployments",
+        });
+      }
+
+      if (environment[field] !== undefined) {
+        rejectPlaceholder(environment[field], field, context);
+      }
     }
   },
 );

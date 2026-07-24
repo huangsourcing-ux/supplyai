@@ -116,7 +116,13 @@ must not be treated as the real production environment.
 - API/Worker R2 credentials are limited to Object Read/Write on the staging
   media and private buckets. `CLOUDFLARE_PURGE_TOKEN` is a separate Railway
   secret limited to Cache Purge on the `chinasupply.ai` zone; M0-T10 verifies
-  it but does not perform a purge.
+  it but does not perform a purge. Starting with M1-T6, the remote API validates
+  both `CLOUDFLARE_ZONE_ID` and `CLOUDFLARE_PURGE_TOKEN` at startup so the
+  internal prefix-purge client is ready for M5-T3.
+- Search and each MAP route have independent 60 requests/minute budgets keyed
+  by the trusted `CF-Connecting-IP` and stored in Redis. MAP success responses
+  are edge-cacheable for one hour; search is not cached and all API errors are
+  `no-store`.
 - Worker has no public domain. Queue acceptance is performed by running
   `system:ping` inside the deployed API container and confirming completion in
   the separate Worker logs.
