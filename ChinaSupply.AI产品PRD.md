@@ -1,6 +1,6 @@
 # ChinaSupply.AI 产品需求文档（PRD）
 
-> 版本：**v1.2 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-23
+> 版本：**v1.3 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-24
 > 用途：供 AI 编码代理（Codex 等）直接执行开发。需求以可验收的结构化条目编写。
 > 技术栈：见《ChinaSupply.AI技术栈-最终冻结版.md》，本文档不重复选型讨论。
 > 优先级定义：P0 = V1 必须；P1 = V1 后第一批迭代；P2 = 路线图。
@@ -9,6 +9,8 @@
 > v1.1 变更摘要：明确 Drizzle 为唯一 Schema Owner（Payload 只管内容）；新增地图专用 API 与 Admin API；补齐数据模型字段与显式搜索列；固化 API envelope 与 cursor 契约；导航坐标系改为 M0 真机验证门；补用户删除生命周期、隐私合规、导入/备份细则；修正 V1 范围矛盾。
 >
 > v1.2 变更摘要：冻结 M1-T2 的全量 API wire contract；明确公开筛选标识、英语公开字段与 A-5 双语地址例外、GeoJSON 形状、媒体 URL、写操作回执、Admin 可写字段、Clerk webhook 最小输入以及 R2 预签名请求/响应。未增加 V1 功能范围。
+>
+> v1.3 变更摘要：冻结 MAP-2 的 PostGIS 边界简化容差——zoom `<10` 使用 `0.01°`，zoom `10–11` 使用 `0.002°`，zoom `≥12` 返回原始精度。未增加 V1 功能范围。
 
 ---
 
@@ -228,7 +230,7 @@
 | #     | 方法与路径                                              | 说明                                                                                                                                                        |
 | ----- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | MAP-1 | GET `/map/clusters/points`                              | 全量 published 产业带 centroid 点 FeatureCollection，属性仅 `{id, slug, name_en, primaryCategoryId, color, factoryCount}`。`category` 可选过滤              |
-| MAP-2 | GET `/map/clusters/boundaries?bbox=&category=&zoom=`    | bbox 内产业带 boundary，按 zoom 用 `ST_SimplifyPreserveTopology` 分级简化（zoom<10 粗简化，≥12 原始精度）                                                   |
+| MAP-2 | GET `/map/clusters/boundaries?bbox=&category=&zoom=`    | bbox 内产业带 boundary，按 zoom 用 `ST_SimplifyPreserveTopology` 分级简化：zoom `<10` 容差 `0.01°`，zoom `10–11` 容差 `0.002°`，zoom `≥12` 原始精度           |
 | MAP-3 | GET `/map/factories?bbox=&category=&cluster=&verified=` | bbox 内工厂点 FeatureCollection，属性固定为 `{id, slug, name_en, verified, clusterId}`。**上限 5000 点**，超限返回 `meta.truncated: true`，前端提示继续放大 |
 
 验收：MAP-1 gzip 后 < 500KB；MAP-3 在 5000 点时 p95 < 500ms；truncated 场景有 UI 提示。

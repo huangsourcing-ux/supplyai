@@ -197,6 +197,39 @@ export const searchRouteContract = defineRouteContract({
   tag: "search",
 });
 
+export const getMapClusterPointsRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getMapClusterPoints",
+  path: "/api/v1/map/clusters/points",
+  request: { query: getMapClusterPointsQuerySchema },
+  response: getMapClusterPointsResponseSchema,
+  summary: "Get published cluster points",
+  tag: "map",
+});
+
+export const getMapClusterBoundariesRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getMapClusterBoundaries",
+  path: "/api/v1/map/clusters/boundaries",
+  request: { query: getMapClusterBoundariesQuerySchema },
+  response: getMapClusterBoundariesResponseSchema,
+  summary: "Get published cluster boundaries in a viewport",
+  tag: "map",
+});
+
+export const getMapFactoriesRouteContract = defineRouteContract({
+  access: "public",
+  method: "get",
+  operationId: "getMapFactories",
+  path: "/api/v1/map/factories",
+  request: { query: getMapFactoriesQuerySchema },
+  response: getMapFactoriesResponseSchema,
+  summary: "Get published factory points in a viewport",
+  tag: "map",
+});
+
 export const apiRouteContracts = [
   defineRouteContract({
     access: "health",
@@ -276,36 +309,9 @@ export const apiRouteContracts = [
     summary: "Process a signed Clerk user webhook",
     tag: "webhooks",
   }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getMapClusterPoints",
-    path: "/api/v1/map/clusters/points",
-    request: { query: getMapClusterPointsQuerySchema },
-    response: getMapClusterPointsResponseSchema,
-    summary: "Get published cluster points",
-    tag: "map",
-  }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getMapClusterBoundaries",
-    path: "/api/v1/map/clusters/boundaries",
-    request: { query: getMapClusterBoundariesQuerySchema },
-    response: getMapClusterBoundariesResponseSchema,
-    summary: "Get published cluster boundaries in a viewport",
-    tag: "map",
-  }),
-  defineRouteContract({
-    access: "public",
-    method: "get",
-    operationId: "getMapFactories",
-    path: "/api/v1/map/factories",
-    request: { query: getMapFactoriesQuerySchema },
-    response: getMapFactoriesResponseSchema,
-    summary: "Get published factory points in a viewport",
-    tag: "map",
-  }),
+  getMapClusterPointsRouteContract,
+  getMapClusterBoundariesRouteContract,
+  getMapFactoriesRouteContract,
   defineRouteContract({
     access: "admin",
     method: "get",

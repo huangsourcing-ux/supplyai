@@ -6,6 +6,7 @@ import { ClustersModule } from "./clusters/clusters.module.js";
 import { RuntimeConfigModule } from "./config/runtime-config.module.js";
 import { FactoriesModule } from "./factories/factories.module.js";
 import { HealthModule } from "./health/health.module.js";
+import { MapModule } from "./map/map.module.js";
 import { OpenApiModule } from "./openapi/openapi.module.js";
 import { SearchModule } from "./search/search.module.js";
 
@@ -17,6 +18,7 @@ import { SearchModule } from "./search/search.module.js";
     ClustersModule,
     FactoriesModule,
     SearchModule,
+    MapModule,
     HealthModule,
     OpenApiModule,
   ],
