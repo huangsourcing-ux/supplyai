@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -46,4 +47,25 @@ test("invalid migration targets fail before execution", () => {
 
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /core, cms/);
+});
+
+test("core target is a real Drizzle migration and remains inside its schema boundary", async () => {
+  const apiPackage = JSON.parse(
+    await readFile(resolve(workspaceRoot, "apps/api/package.json"), "utf8"),
+  );
+  const migrationSource = await readFile(
+    resolve(workspaceRoot, "apps/api/drizzle/0000_initial_core.sql"),
+    "utf8",
+  );
+
+  assert.match(
+    apiPackage.scripts["db:migrate"],
+    /drizzle-kit\/bin\.cjs migrate/,
+  );
+  assert.match(migrationSource, /CREATE TABLE "clusters"/);
+  assert.match(migrationSource, /CREATE EXTENSION IF NOT EXISTS postgis/);
+  assert.doesNotMatch(
+    migrationSource,
+    /(?:CREATE|ALTER|DROP)\s+TABLE\s+"?(?:cms_users|payload_\w+)"?/i,
+  );
 });

@@ -1,13 +1,18 @@
 import { Inject, Injectable, type OnModuleDestroy } from "@nestjs/common";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 import {
   RUNTIME_CONFIG,
   type RuntimeConfig,
 } from "../config/runtime-config.module.js";
+import * as coreSchema from "./schema.js";
+
+export type CoreDatabase = NodePgDatabase<typeof coreSchema>;
 
 @Injectable()
 export class DatabaseService implements OnModuleDestroy {
+  readonly db: CoreDatabase;
   private readonly pool: Pool;
 
   constructor(@Inject(RUNTIME_CONFIG) config: RuntimeConfig) {
@@ -18,6 +23,7 @@ export class DatabaseService implements OnModuleDestroy {
       idleTimeoutMillis: 10_000,
       max: 5,
     });
+    this.db = drizzle(this.pool, { schema: coreSchema });
   }
 
   async ping(): Promise<void> {

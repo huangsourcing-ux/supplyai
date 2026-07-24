@@ -6,14 +6,14 @@ artifacts. EAS Build is never called by the GitHub PR or `main` workflow.
 
 ## Trigger matrix
 
-| Trigger                       | Required work                                                                                                    |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Pull request to `main`        | lint, typecheck, all unit tests, Web build, API/Worker build, API Testcontainers e2e                             |
-| Mobile-affecting pull request | all PR checks plus Expo Doctor, public Expo config validation, and Mobile unit tests                             |
-| Push to `main`                | all applicable checks, CMS staging migration, `Staging Release Gate`, then native Vercel/Railway staging release |
-| `rc-*` tag                    | Android EAS Preview Build                                                                                        |
-| EAS workflow dispatch         | Android EAS Preview Build                                                                                        |
-| `v*` tag                      | EAS approval, iOS/Android Production Build, then per-platform Submit                                             |
+| Trigger                       | Required work                                                                                                                   |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Pull request to `main`        | lint, typecheck, all unit tests, Web build, API/Worker build, API Testcontainers e2e                                            |
+| Mobile-affecting pull request | all PR checks plus Expo Doctor, public Expo config validation, and Mobile unit tests                                            |
+| Push to `main`                | all applicable checks, serial CMS → core staging migrations, `Staging Release Gate`, then native Vercel/Railway staging release |
+| `rc-*` tag                    | Android EAS Preview Build                                                                                                       |
+| EAS workflow dispatch         | Android EAS Preview Build                                                                                                       |
+| `v*` tag                      | EAS approval, iOS/Android Production Build, then per-platform Submit                                                            |
 
 Mobile-affecting paths are `apps/mobile`, the mobile-consumed `config`, `geo`,
 `i18n`, and `schemas` packages, and root workspace/package-manager manifests.
@@ -25,6 +25,7 @@ no deployment secret and the workflow never uses `pull_request_target`.
 ```text
 CI Gate
   -> reusable release-migrations.yml (target=cms, environment=staging)
+  -> reusable release-migrations.yml (target=core, environment=staging)
   -> Staging Release Gate
   -> Vercel staging alias / Railway API and Worker release
 ```
@@ -41,16 +42,17 @@ supports the required Environment secrets and branch protection. If the
 repository becomes private again, GitHub Pro (or a higher plan) is required to
 retain those controls. Do not fall back to repository-level deployment secrets.
 
-The current M0 migration gate runs only Payload CMS migrations. M1-T1 owns the
-real Drizzle `db:migrate` command and must add a `core` migration gate before
-Railway API/Worker release. A no-op core command is not acceptable.
+M1-T1 extends the M0 gate with the real Drizzle `db:migrate` command. CMS and
+core migrations run serially against the shared database; the final gate
+checks both results before Railway API/Worker or Vercel can release.
 
 ## Platform settings
 
 External status on 2026-07-23:
 
 - GitHub `staging` Environment, `CI Gate` branch protection, CMS migration, and
-  `Staging Release Gate` are active and have passed on `main`.
+  `Staging Release Gate` passed the M0 acceptance run on `main`. The first
+  M1-T1 merge must additionally record the core migration result.
 - Vercel is connected to `main`; required Deployment Check
   `Staging Release Gate` blocks production alias assignment and has passed on a
   real `main` deployment.
@@ -118,9 +120,10 @@ green PR.
 
 For a normal PR, confirm `CI Gate` passes and no EAS workflow starts. For a
 Mobile PR, also confirm `Mobile PR checks` runs. After merging `main`, record
-the commit SHA and confirm CMS migration success precedes both platform
-releases, Vercel serves the same SHA, Railway API and Worker deploy the same
-SHA, `/health/live` and `/health/ready` return 200, and `system:ping` completes.
+the commit SHA and confirm CMS migration is followed by core migration before
+either platform release. Confirm Vercel serves the same SHA, Railway API and
+Worker deploy the same SHA, `/health/live` and `/health/ready` return 200, and
+`system:ping` completes.
 
 Do not create a `v*` tag for M0-T6 verification. Validate EAS YAML with
 `eas workflow:validate`; real store submission remains M5-T10.

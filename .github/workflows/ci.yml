@@ -238,19 +238,33 @@ jobs:
       deployment_environment: staging
     secrets: inherit
 
+  migrate_core:
+    name: Staging Core migration
+    needs:
+      - migrate_cms
+    if: always() && github.event_name == 'push' && needs.migrate_cms.result == 'success'
+    uses: ./.github/workflows/release-migrations.yml
+    with:
+      target: core
+      deployment_environment: staging
+    secrets: inherit
+
   staging_release_gate:
     name: Staging Release Gate
     needs:
       - ci_gate
       - migrate_cms
+      - migrate_core
     if: github.event_name == 'push' && always()
     runs-on: ubuntu-latest
     steps:
       - name: Require CI and migration success
         env:
           CI_GATE_RESULT: ${{ needs.ci_gate.result }}
-          MIGRATION_RESULT: ${{ needs.migrate_cms.result }}
+          CMS_MIGRATION_RESULT: ${{ needs.migrate_cms.result }}
+          CORE_MIGRATION_RESULT: ${{ needs.migrate_core.result }}
         shell: bash
         run: |
           [[ "$CI_GATE_RESULT" == "success" ]]
-          [[ "$MIGRATION_RESULT" == "success" ]]
+          [[ "$CMS_MIGRATION_RESULT" == "success" ]]
+          [[ "$CORE_MIGRATION_RESULT" == "success" ]]

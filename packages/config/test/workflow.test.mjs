@@ -28,7 +28,7 @@ test("migration workflow is reusable only and never deploys applications", async
   assert.doesNotMatch(source, /workflow_dispatch|\bpush:/);
 });
 
-test("CI runs the frozen PR checks and gates staging on the CMS migration", async () => {
+test("CI runs the frozen PR checks and gates staging on serial CMS and core migrations", async () => {
   const { source, workflow } = await readYaml(".github/workflows/ci.yml");
 
   assert.deepEqual(Object.keys(workflow.on).sort(), ["pull_request", "push"]);
@@ -68,11 +68,31 @@ test("CI runs the frozen PR checks and gates staging on the CMS migration", asyn
     workflow.jobs.migrate_cms.with.deployment_environment,
     "staging",
   );
+  assert.equal(
+    workflow.jobs.migrate_core.uses,
+    "./.github/workflows/release-migrations.yml",
+  );
+  assert.deepEqual(workflow.jobs.migrate_core.needs, ["migrate_cms"]);
+  assert.match(workflow.jobs.migrate_core.if, /always\(\)/);
+  assert.match(
+    workflow.jobs.migrate_core.if,
+    /needs\.migrate_cms\.result == 'success'/,
+  );
+  assert.equal(workflow.jobs.migrate_core.with.target, "core");
+  assert.equal(
+    workflow.jobs.migrate_core.with.deployment_environment,
+    "staging",
+  );
   assert.deepEqual(workflow.jobs.staging_release_gate.needs, [
     "ci_gate",
     "migrate_cms",
+    "migrate_core",
   ]);
   assert.equal(workflow.jobs.staging_release_gate.name, "Staging Release Gate");
+  assert.match(
+    workflow.jobs.staging_release_gate.steps.at(-1).run,
+    /CMS_MIGRATION_RESULT[\s\S]*CORE_MIGRATION_RESULT/,
+  );
   assert.doesNotMatch(source, /\beas\s+build\b|\beas\s+submit\b/);
 });
 

@@ -34,6 +34,9 @@ importers:
       "@chinasupply/config":
         specifier: workspace:*
         version: link:../../packages/config
+      "@chinasupply/schemas":
+        specifier: workspace:*
+        version: link:../../packages/schemas
       "@nestjs/bullmq":
         specifier: 11.0.4
         version: 11.0.4(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.28(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))(bullmq@5.80.10)
@@ -52,12 +55,18 @@ importers:
       bullmq:
         specifier: 5.80.10
         version: 5.80.10
+      drizzle-orm:
+        specifier: 0.45.2
+        version: 0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.22.0)
       fastify:
         specifier: 5.10.0
         version: 5.10.0
       ioredis:
         specifier: 5.8.2
         version: 5.8.2
+      nanoid:
+        specifier: 6.0.0
+        version: 6.0.0
       nestjs-zod:
         specifier: 5.4.0
         version: 5.4.0(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2))(rxjs@7.8.2)(zod@4.4.3)
@@ -86,6 +95,9 @@ importers:
       "@types/pg":
         specifier: 8.20.0
         version: 8.20.0
+      drizzle-kit:
+        specifier: 0.31.10
+        version: 0.31.10
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.7.0)
@@ -418,6 +430,9 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+      vitest:
+        specifier: 4.0.18
+        version: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@22.20.1)(jiti@2.7.0)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))(lightningcss@1.30.2)(sass@1.77.4)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0)
 
 packages:
   "@0no-co/graphql.web@1.3.2":
@@ -9204,6 +9219,13 @@ packages:
       }
     engines: { node: ">=12" }
 
+  drizzle-kit@0.31.10:
+    resolution:
+      {
+        integrity: sha512-7OZcmQUrdGI+DUNNsKBn1aW8qSoKuTH7d0mYgSP8bAzdFzKoovxEFnoGQp2dVs82EOJeYycqRtciopszwUf8bw==,
+      }
+    hasBin: true
+
   drizzle-kit@0.31.7:
     resolution:
       {
@@ -12777,6 +12799,14 @@ packages:
         integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==,
       }
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
+    hasBin: true
+
+  nanoid@6.0.0:
+    resolution:
+      {
+        integrity: sha512-mkUH+rPkwU2qPadJ0oJZOjeZ5Mxn8Q1UhevwkTRWNuUZzyia3h4rhzK39hxaHTk0o2OxB8W2SQ6A8k23ZDi1pQ==,
+      }
+    engines: { node: ^22 || ^24 || >=26 }
     hasBin: true
 
   napi-postinstall@0.3.4:
@@ -22895,6 +22925,13 @@ snapshots:
 
   dotenv@17.4.2: {}
 
+  drizzle-kit@0.31.10:
+    dependencies:
+      "@drizzle-team/brocli": 0.10.2
+      "@esbuild-kit/esm-loader": 2.6.5
+      esbuild: 0.25.12
+      tsx: 4.22.4
+
   drizzle-kit@0.31.7:
     dependencies:
       "@drizzle-team/brocli": 0.10.2
@@ -22909,6 +22946,12 @@ snapshots:
       "@opentelemetry/api": 1.9.1
       "@types/pg": 8.20.0
       pg: 8.20.0
+
+  drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.22.0):
+    optionalDependencies:
+      "@opentelemetry/api": 1.9.1
+      "@types/pg": 8.20.0
+      pg: 8.22.0
 
   dunder-proto@1.0.1:
     dependencies:
@@ -25733,6 +25776,8 @@ snapshots:
     optional: true
 
   nanoid@3.3.16: {}
+
+  nanoid@6.0.0: {}
 
   napi-postinstall@0.3.4: {}
 
