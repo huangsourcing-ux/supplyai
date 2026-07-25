@@ -5,9 +5,10 @@ import {
   CACHE_PURGE_FETCH,
   CloudflareCachePurgeService,
 } from "./cloudflare-cache-purge.service.js";
+import { MapCacheInvalidationService } from "./map-cache-invalidation.service.js";
 
 @Module({
-  exports: [CloudflareCachePurgeService],
+  exports: [CloudflareCachePurgeService, MapCacheInvalidationService],
   imports: [RuntimeConfigModule],
   providers: [
     {
@@ -15,6 +16,7 @@ import {
       useValue: globalThis.fetch.bind(globalThis),
     },
     CloudflareCachePurgeService,
+    MapCacheInvalidationService,
   ],
 })
 export class CacheModule {}

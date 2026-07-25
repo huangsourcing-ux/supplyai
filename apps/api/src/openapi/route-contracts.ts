@@ -460,4 +460,14 @@ export const apiRouteContracts = [
   }),
 ] as const satisfies readonly ApiRouteContract[];
 
+export function getRouteContract(operationId: string): ApiRouteContract {
+  const contract = apiRouteContracts.find(
+    (candidate) => candidate.operationId === operationId,
+  );
+  if (contract === undefined) {
+    throw new Error(`Unknown API operation: ${operationId}`);
+  }
+  return contract;
+}
+
 export { apiErrorEnvelopeSchema };
