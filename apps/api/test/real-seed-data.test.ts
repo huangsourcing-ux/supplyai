@@ -68,4 +68,49 @@ describe("M1-T8 real seed canonical data", () => {
     expect(ledger).toContain("ODbL");
     expect(ledger).toContain("1 req/s");
   });
+
+  it("keeps the M2 smoke slice canonical and reviewable", async () => {
+    const data = await loadRealSeedData(seedDirectory);
+    const smokeClusterSlugs = [
+      "dongguan-electronic-information",
+      "nantong-home-textiles",
+    ];
+    const smokeFactorySlugs = [
+      "dongguan-oppo-mobile",
+      "dongguan-vivo-mobile",
+      "dongguan-amperex-technology",
+      "dongguan-delta-electronics",
+      "dongguan-luxshare-precision",
+      "nantong-violet-home-textile",
+      "nantong-luolai-lifestyle",
+      "nantong-xinyi-home-textile",
+      "nantong-jinkanghong-textile",
+      "nantong-nanshing-home-textile",
+    ];
+
+    for (const slug of smokeClusterSlugs) {
+      const cluster = data.clusters.find(
+        (candidate) => candidate.slug === slug,
+      );
+      expect(cluster?.boundary?.type).toBe("MultiPolygon");
+      expect(cluster?.boundary?.coordinates.length).toBeGreaterThan(0);
+    }
+
+    expect(
+      data.factories
+        .filter(({ clusterSlug }) =>
+          smokeClusterSlugs.includes(clusterSlug ?? ""),
+        )
+        .map(({ slug }) => slug)
+        .sort(),
+    ).toEqual([...smokeFactorySlugs].sort());
+    const factorySlugs = data.factories.map(({ slug }) => slug);
+    for (const replacedSlug of [
+      "nantong-goldsun-textile",
+      "nantong-sunshine-textile",
+      "nantong-bestwin-textile",
+    ]) {
+      expect(factorySlugs).not.toContain(replacedSlug);
+    }
+  });
 });
