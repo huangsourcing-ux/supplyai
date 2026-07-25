@@ -13,15 +13,23 @@ export type SearchPerformedProperties = {
 
 export type SearchPerformedInput = Readonly<SearchPerformedProperties>;
 
-export type AnalyticsCapture = (
-  event: "search_performed",
-  properties: SearchPerformedProperties,
-) => void;
+export type ClusterViewedProperties = {
+  clusterId: string;
+  slug: string;
+};
+
+export type ClusterViewedInput = Readonly<ClusterViewedProperties>;
+
+export interface AnalyticsCapture {
+  (event: "search_performed", properties: SearchPerformedProperties): void;
+  (event: "cluster_viewed", properties: ClusterViewedProperties): void;
+}
 
 export interface AnalyticsClient {
   configureCapture(capture: AnalyticsCapture | null): void;
   getConsent(): AnalyticsConsent;
   setConsent(consent: AnalyticsConsent): void;
+  trackClusterViewed(input: ClusterViewedInput): void;
   trackSearchPerformed(input: SearchPerformedInput): void;
 }
 
@@ -58,6 +66,11 @@ export function createAnalyticsClient(): AnalyticsClient {
     },
     setConsent(nextConsent) {
       consent = nextConsent;
+    },
+    trackClusterViewed({ clusterId, slug }) {
+      if (consent !== "granted" || capture === null) return;
+
+      capture("cluster_viewed", { clusterId, slug });
     },
     trackSearchPerformed({ query, resultCount }) {
       if (consent !== "granted" || capture === null) return;
