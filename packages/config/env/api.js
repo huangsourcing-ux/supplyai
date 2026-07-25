@@ -20,6 +20,7 @@ const apiRuntimeShape = {
   REDIS_URL: networkUrlSchema,
   WEB_ORIGIN: networkUrlSchema,
   R2_CDN_BASE_URL: networkUrlSchema,
+  CLERK_SECRET_KEY: z.string().min(10).optional(),
   EDGE_PROXY_SECRET: z.string().min(32).optional(),
   CLOUDFLARE_ZONE_ID: secretSchema.optional(),
   CLOUDFLARE_PURGE_TOKEN: secretSchema.optional(),
@@ -119,6 +120,27 @@ export const apiRuntimeEnvSchema = z
 
 export const apiHttpEnvSchema = apiRuntimeEnvSchema.superRefine(
   (environment, context) => {
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.CLERK_SECRET_KEY === undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["CLERK_SECRET_KEY"],
+        message: "is required for remote HTTP deployments",
+      });
+    }
+
+    if (environment.CLERK_SECRET_KEY !== undefined) {
+      requireClerkKey(
+        environment.CLERK_SECRET_KEY,
+        "secret",
+        environment.APP_ENV,
+        "CLERK_SECRET_KEY",
+        context,
+      );
+    }
+
     if (
       environment.APP_ENV !== "local" &&
       environment.EDGE_PROXY_SECRET === undefined

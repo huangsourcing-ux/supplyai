@@ -167,6 +167,7 @@ test("remote API HTTP validation requires a non-placeholder edge secret", async 
   const runtimeOnly = {
     APP_ENV: "staging",
     PORT: "3001",
+    CLERK_SECRET_KEY: "sk_test_runtime_key_123456",
     DATABASE_URL: "postgresql://user:pass@db.staging.invalid/chinasupply",
     REDIS_URL: "redis://redis.staging.invalid:6379",
     R2_CDN_BASE_URL: "https://cdn.staging.invalid",
@@ -193,6 +194,17 @@ test("remote API HTTP validation requires a non-placeholder edge secret", async 
       EDGE_PROXY_SECRET: "0123456789abcdef0123456789abcdef",
     }).APP_ENV,
     "staging",
+  );
+  assert.throws(
+    () =>
+      parseApiHttpEnv({
+        ...runtimeOnly,
+        CLERK_SECRET_KEY: undefined,
+        CLOUDFLARE_PURGE_TOKEN: "cache-purge-test-token",
+        CLOUDFLARE_ZONE_ID: "0123456789abcdef0123456789abcdef",
+        EDGE_PROXY_SECRET: "0123456789abcdef0123456789abcdef",
+      }),
+    /CLERK_SECRET_KEY/,
   );
 });
 

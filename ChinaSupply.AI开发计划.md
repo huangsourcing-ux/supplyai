@@ -106,12 +106,13 @@ chinasupply/
 - [x] **M2-T1a 地图底座**：MapLibre + 自维护 style JSON；MAP-1 点渲染（color 着色）；地图 attribution（MapTiler + © OpenStreetMap contributors，F-11.2）自首次渲染即显示。
 - [x] **M2-T1b 地图分层加载**：zoom 阈值加载 MAP-2 boundary / MAP-3 工厂点 + 聚合；防抖 + abort（F-1.7）；truncated 提示条。
 - [x] **M2-T1c 卡片交互**：F-1.4/1.5——MAP 属性即时渲染 + skeleton + A-2/A-5 补全。
+- [x] **M2-T6 最小 Admin API（前置数据门禁）**：ADM-1/3 的 GET+PATCH、ADM-5 verify、ADM-2/4 publish/unpublish；API 自身验证 Clerk JWT + admin role，工厂 publish 前必须 verified。publish/unpublish 幂等保留首次 `published_at`，提交状态后同步 purge `/api/v1/map/`，失败可重复操作收敛；完整 Create 与 ADM-6 上传链留 M5。
+- [ ] **M2-T7 最小 /ops（前置数据门禁）**：列表 + 编辑表单 + verify + publish/unpublish（admin role）；地图选点、图片上传、新建与完整运营能力留 M5。**目标：数据人员能通过合规界面查看、修正、校验和发布录入数据。**
+- [ ] **M2 staging 真实数据门禁（人工）**：独立复核人按 M1-T8 SOP 完成 2 个带真实 boundary 的产业带 + 每带 5 家工厂核验；先发布 1+3 冒烟，再发布至 2+10。工厂必须记录 verifiedBy/verifiedAt/lastVerifiedAt，产业带复核清单保存到 `docs/operations/reviews/staging/`；失败记录不得为凑数降级通过。完成后验证 A-2/A-5/A-6、MAP-1/2/3、draft 隔离及 unpublish→publish 收敛。图片路径仍由 fixture 覆盖，不提前 ADM-6。
 - [ ] **M2-T2 搜索**：F-3 全部；埋点走 packages/analytics（未同意 no-op）。
 - [ ] **M2-T3 类目筛选**：F-1.6 chips 联动。
 - [ ] **M2-T4 产业带详情页**：F-2（SSR/ISR + metadata + OG）；收藏按钮 UI 占位。
 - [ ] **M2-T5 工厂详情页**：F-4；导航按钮组用 packages/geo/navigation；双语地址复制。
-- [ ] **M2-T6 最小 Admin API**：ADM-1/3 的 GET+PATCH、ADM-5 verify（完整 CRUD/publish 流转留 M5）。
-- [ ] **M2-T7 最小 /ops**：列表 + 编辑表单 + verify 操作（admin role）；地图选点、图片上传、publish 流转留 M5。**目标：数据人员能查看、修正、校验录入的数据。**
 - [ ] **M2-T8 Playwright**：CI 用 MSW mock MAP API + 固定 style/tile fixture（断言防抖、abort、truncated）；staging 跑真实 MapTiler 冒烟，避免外网抖动打红 PR。
 
 **M2 出口**：PRD F-1 验收路径在 staging 走通；Lighthouse SEO ≥ 90；运营在 /ops 完成一次数据修正 + verify。
@@ -153,9 +154,9 @@ chinasupply/
 
 ## M5 内容、数据增强与上线加固（预计 2 周）
 
-- [ ] **M5-T1 Admin API 补全**：ADM-1~4 完整 Create/Read/Update + publish/unpublish（写 published_at）。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。ADM-6 上传链：objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。Admin 列表 cursor e2e。
-- [ ] **M5-T2 /ops 增强**：新建表单 + 地图选点 + 图片上传 + publish 流转。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）
-- [ ] **M5-T3 发布联动**：publish/unpublish → Cloudflare Purge + `regenerate:search-text` 任务（PRD 3.8）。
+- [ ] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。
+- [ ] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）
+- [ ] **M5-T3 搜索列联动**：类目的 name/aliases 修改后触发 BullMQ `regenerate:search-text` 更新关联产业带与工厂（PRD 3.8）；publish/unpublish 的 MAP purge 已由 M2-T6 前置交付。
 - [ ] **M5-T4 Payload 文章**：F-7.1 + `/guides`（F-10.2）+ 文章内产业带卡片。
 - [ ] **M5-T5 导入增强**：`geocode:factories`（高德 + 转换 + verified=false）。（批量图片与任务监控告警超出 PRD，移入 P1。）
 - [ ] **M5-T6 备份**：F-9.3 每日加密 pg_dump → R2、30 天保留；**恢复演练一次并记录**。
@@ -230,7 +231,7 @@ M1-T3c  MSW mock 同源生成 + CI drift 检查
 M4-T1a  App 地图数据源与图层
 M4-T1b  App 聚合、卡片与交互
 
-M5-T1a  Admin Create/Read/Update + publish/unpublish
+M5-T1a  Admin Create + M2 已有 Read/Update/publish/unpublish 加固
 M5-T1b  R2 上传校验链（presign → HEAD 复验 → PATCH 归属校验）
 
 M5-T9a  生产资源核对 + migration dry-run
