@@ -1,9 +1,9 @@
 # M2 staging source remediation — 2026-07-25
 
 This is a staging-only remediation evidence package. It authorizes correction of
-canonical draft content but does not authorize ADM-5 verification, publication,
-or production changes. Final visual review and reviewer attestation remain
-pending.
+canonical draft content and, following the independent review recorded below,
+ADM-5 verification and the approved staged publication sequence. It does not
+authorize production changes.
 
 ## Review ownership and state
 
@@ -15,7 +15,7 @@ pending.
 - Reviewer independence: previously confirmed; the reviewer did not author the
   M1-T8 initial records
 - Evidence accessed at (UTC): 2026-07-25
-- Review completed at (UTC): pending
+- Review completed at (UTC): 2026-07-25T11:23:58Z
 - Staging Web: https://staging.chinasupply.ai
 - Staging API: https://api-staging.chinasupply.ai
 - Current database prerequisite: all affected rows must be
@@ -43,7 +43,7 @@ pending.
 - source:
   https://im.dg.gov.cn/gkmlpt/content/3/3874/post_3874985.html
 - Chinese/English name: existing canonical industrial-cluster normalization;
-  pending reviewer confirmation
+  independently reviewed and passed
 - centroid: existing Nominatim relation centroid
   `[113.7452332,23.0183568]`
 - boundary: OpenStreetMap relation
@@ -51,14 +51,14 @@ pending.
 - boundary query: Nominatim lookup with `polygon_geojson=1` and
   `polygon_threshold=0.0001`; Polygon wrapped as WGS-84 MultiPolygon
 - bbox: `[113.5158919,22.6564988,114.2554700,23.1449285]`
-- boundary visual check: pending independent reviewer
+- boundary visual check: passed by independent reviewer
 - linked factories:
   - `dongguan-oppo-mobile`
   - `dongguan-vivo-mobile`
   - `dongguan-amperex-technology`
   - `dongguan-delta-electronics`
   - `dongguan-luxshare-precision`
-- result: candidate; reviewer attestation pending
+- result: pass
 
 ## Industrial cluster 2 — Nantong home textiles
 
@@ -66,7 +66,7 @@ pending.
 - source:
   https://www.nantong.gov.cn/ntsrmzf/ntxw/content/0cc4a48e-02a7-4d83-a2c5-8ff423ba4a38.html
 - Chinese/English name: existing canonical industrial-cluster normalization;
-  pending reviewer confirmation
+  independently reviewed and passed
 - centroid: existing Nominatim relation centroid
   `[120.8904588,31.9827896]`
 - boundary: OpenStreetMap relation
@@ -74,19 +74,19 @@ pending.
 - boundary query: Nominatim lookup with `polygon_geojson=1` and
   `polygon_threshold=0.0001`; Polygon wrapped as WGS-84 MultiPolygon
 - bbox: `[120.1972423,31.6340915,122.3844852,32.8583333]`
-- boundary visual check: pending independent reviewer
+- boundary visual check: passed by independent reviewer
 - linked factories:
   - `nantong-violet-home-textile`
   - `nantong-luolai-lifestyle`
   - `nantong-xinyi-home-textile`
   - `nantong-jinkanghong-textile`
   - `nantong-nanshing-home-textile`
-- result: candidate; reviewer attestation pending
+- result: pass
 
 ## Factory evidence
 
-Every result below is `candidate`, not `pass`. The independent reviewer must
-confirm the visible factory grounds and all bilingual fields in `/ops`.
+Every result below was independently reviewed against the visible factory
+grounds, official sources, and bilingual fields in `/ops`.
 
 ### 01 — OPPO
 
@@ -104,8 +104,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[113.7771621452,22.7707857278]`
 - products: smartphones; smart devices
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 02 — vivo
 
@@ -123,8 +123,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[113.7540478336,22.7572758486]`
 - products: smartphones; wearable devices
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 03 — ATL
 
@@ -142,8 +142,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[113.7907694444,23.0993944444]`
 - products: lithium-ion batteries; battery cells
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 04 — Delta Electronics
 
@@ -161,8 +161,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - products: power supplies and network products; industrial automation
   components
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 05 — Luxshare
 
@@ -180,8 +180,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[114.1898699549,22.8439770706]`
 - products: connectors and cables; acoustic and wearable components
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 06 — Violet Home Textile
 
@@ -197,8 +197,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[121.01587,31.9649]`
 - products: bedding; quilts
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 07 — Luolai Lifestyle
 
@@ -217,8 +217,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[120.918809,31.934472]`
 - products: bed linen; silk bedding
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 08 — Xinyi Home Textile
 
@@ -237,8 +237,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[120.9732048,32.0685104]`
 - products: bedding sets; embroidered home textiles
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 09 — Jinkanghong Textile
 
@@ -255,8 +255,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[121.02599,32.09873]`
 - products: digitally printed bedding; quilt covers and sheets
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ### 10 — Nanshing Home Textile
 
@@ -273,8 +273,8 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 - canonical WGS-84: `[121.0369299,32.0469352]`
 - products: bedding sets; curtains and home textiles
 - contact: official website only
-- visual check: pending independent reviewer
-- result: candidate
+- visual check: passed by independent reviewer
+- result: pass
 
 ## Rejected source identities
 
@@ -324,15 +324,18 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
   CI, merged as `6a3db3cf8a97b192fd61d28ac64859ecd44e160e`,
   deployed to Railway staging, and the real preflight then advertised
   GET/HEAD/POST/PUT/PATCH/DELETE/OPTIONS.
-- Reviewer notes and attestation: pending independent review. No ADM-5,
-  publish, or unpublish action has been executed.
+- Reviewer notes and attestation: independent review passed. At the time the
+  statement below was received, no ADM-5, publish, or unpublish action had been
+  executed.
 
 ## Required independent reviewer statement
 
 After inspecting both boundaries, all ten map locations, every official source,
-and the corrected `/ops` previews, the reviewer must state:
+and the corrected `/ops` previews, the independent reviewer stated in the Codex
+task at 2026-07-25T11:23:58Z:
 
 > 我已按 SOP 独立复核 2 个产业带和 10 家工厂，全部通过，授权执行 verify/publish。
 
-Until that statement is received, do not call ADM-5 or any
-publish/unpublish operation.
+This statement authorizes ADM-5 and the staged verify/publish/unpublish
+acceptance sequence on staging only. It does not authorize production changes
+or waive any M2-T8 fixture Playwright or real MapTiler smoke requirement.
