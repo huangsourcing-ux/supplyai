@@ -286,13 +286,46 @@ confirm the visible factory grounds and all bilingual fields in `/ops`.
 
 ## Staging correction result
 
-- `/ops` prerequisite state check: pending
-- cluster updates: pending
-- factory updates/replacements: pending
-- post-update count: pending
-- all rows remain draft/unverified: pending
-- public A-1/A-4/MAP isolation: pending
-- reviewer notes: pending
+- Correction completed at (UTC): 2026-07-25T10:48:54Z
+- `/ops` prerequisite state check: passed. The authenticated Admin list response
+  contained exactly 10 clusters and 50 factories; every cluster was
+  `draft` with null `publishedAt`, and every factory was `draft + unverified`
+  with null `publishedAt`.
+- Detail audit prerequisite: passed for the ten selected factories. Each had
+  `verified=false` and null `publishedAt`, `verifiedAt`, `lastVerifiedAt`, and
+  `verifiedBy` before the review gate.
+- Cluster updates: Dongguan and Nantong boundaries were saved through `/ops`;
+  both PATCH requests returned HTTP 200. Reloaded Admin detail responses
+  matched the canonical MultiPolygon coordinates exactly and remained draft
+  with null `publishedAt`.
+- Factory updates/replacements: all ten records were saved through `/ops`.
+  Reloaded Admin detail responses matched the canonical slug, bilingual name
+  and address, WGS-84 location, products, source, website, and empty images.
+  The three replacement slugs are present and the three rejected slugs are
+  absent.
+- Post-update count: 10 clusters and 50 factories; each selected cluster still
+  has its original five associated factories.
+- Audit state after correction: all ten selected factories remain
+  `draft + unverified`, with null `publishedAt`, `verifiedAt`,
+  `lastVerifiedAt`, and `verifiedBy`.
+- Public isolation after correction:
+  - A-1 clusters: HTTP 200, zero records
+  - A-4 factories: HTTP 200, zero records
+  - A-6 `q=OPPO`: HTTP 200, zero category/cluster/factory results
+  - MAP-1: HTTP 200, zero features
+  - MAP-2 China bbox at zoom 9: HTTP 200, zero features
+  - MAP-3 China bbox: HTTP 200, zero features and `truncated=false`
+  - Dongguan cluster, OPPO factory, and Xinyi factory public details: HTTP 404
+- `/ops` defect encountered and resolved: the initial boundary save was
+  blocked before PATCH because staging CORS advertised only GET/HEAD/POST.
+  No data changed during that failed attempt. PR
+  [#38](https://github.com/huangsourcing-ux/supplyai/pull/38) explicitly
+  separated public MAP read methods from trusted Web mutation methods, passed
+  CI, merged as `6a3db3cf8a97b192fd61d28ac64859ecd44e160e`,
+  deployed to Railway staging, and the real preflight then advertised
+  GET/HEAD/POST/PUT/PATCH/DELETE/OPTIONS.
+- Reviewer notes and attestation: pending independent review. No ADM-5,
+  publish, or unpublish action has been executed.
 
 ## Required independent reviewer statement
 
