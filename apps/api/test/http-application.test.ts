@@ -18,6 +18,7 @@ describe("HTTP CORS policy", () => {
         ),
       ).toEqual({
         credentials: false,
+        methods: ["GET", "HEAD", "OPTIONS"],
         origin: "*",
       });
     },
@@ -30,6 +31,7 @@ describe("HTTP CORS policy", () => {
   ])("keeps $method $url restricted to WEB_ORIGIN", (request) => {
     expect(getCorsOptionsForRequest(request, webOrigin)).toEqual({
       credentials: true,
+      methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       origin: webOrigin,
     });
   });

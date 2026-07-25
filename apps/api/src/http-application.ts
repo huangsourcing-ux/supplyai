@@ -16,18 +16,36 @@ interface CorsRequest {
 }
 
 const publicMapCorsMethods = new Set(["GET", "HEAD", "OPTIONS"]);
+const publicMapAllowedMethods = ["GET", "HEAD", "OPTIONS"];
+const webAllowedMethods = [
+  "GET",
+  "HEAD",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+  "OPTIONS",
+];
 
 export function getCorsOptionsForRequest(
   request: CorsRequest,
   webOrigin: string,
-): { credentials: boolean; origin: string } {
+): { credentials: boolean; methods: string[]; origin: string } {
   const isPublicMapRead =
     publicMapCorsMethods.has(request.method) &&
     request.url.startsWith("/api/v1/map/");
 
   return isPublicMapRead
-    ? { credentials: false, origin: "*" }
-    : { credentials: true, origin: webOrigin };
+    ? {
+        credentials: false,
+        methods: publicMapAllowedMethods,
+        origin: "*",
+      }
+    : {
+        credentials: true,
+        methods: webAllowedMethods,
+        origin: webOrigin,
+      };
 }
 
 export function configureHttpApplication(app: NestFastifyApplication): void {
