@@ -107,7 +107,7 @@ chinasupply/
 - [x] **M2-T1b 地图分层加载**：zoom 阈值加载 MAP-2 boundary / MAP-3 工厂点 + 聚合；防抖 + abort（F-1.7）；truncated 提示条。
 - [x] **M2-T1c 卡片交互**：F-1.4/1.5——MAP 属性即时渲染 + skeleton + A-2/A-5 补全。
 - [x] **M2-T6 最小 Admin API（前置数据门禁）**：ADM-1/3 的 GET+PATCH、ADM-5 verify、ADM-2/4 publish/unpublish；API 自身验证 Clerk JWT + admin role，工厂 publish 前必须 verified。publish/unpublish 幂等保留首次 `published_at`，提交状态后同步 purge `/api/v1/map/`，失败可重复操作收敛；完整 Create 与 ADM-6 上传链留 M5。
-- [ ] **M2-T7 最小 /ops（前置数据门禁）**：列表 + 编辑表单 + verify + publish/unpublish（admin role）；地图选点、图片上传、新建与完整运营能力留 M5。**目标：数据人员能通过合规界面查看、修正、校验和发布录入数据。**
+- [x] **M2-T7 最小 /ops（前置数据门禁）**：列表 + 编辑表单 + verify + publish/unpublish（admin role）；地图选点、图片上传、新建与完整运营能力留 M5。**目标：数据人员能通过合规界面查看、修正、校验和发布录入数据。**
 - [ ] **M2 staging 真实数据门禁（人工）**：独立复核人按 M1-T8 SOP 完成 2 个带真实 boundary 的产业带 + 每带 5 家工厂核验；先发布 1+3 冒烟，再发布至 2+10。工厂必须记录 verifiedBy/verifiedAt/lastVerifiedAt，产业带复核清单保存到 `docs/operations/reviews/staging/`；失败记录不得为凑数降级通过。完成后验证 A-2/A-5/A-6、MAP-1/2/3、draft 隔离及 unpublish→publish 收敛。图片路径仍由 fixture 覆盖，不提前 ADM-6。
 - [ ] **M2-T2 搜索**：F-3 全部；埋点走 packages/analytics（未同意 no-op）。
 - [ ] **M2-T3 类目筛选**：F-1.6 chips 联动。
