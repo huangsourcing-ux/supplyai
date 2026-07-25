@@ -8,6 +8,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const environment = parseWebEnv(process.env);
+const mediaCdnUrl = new URL(environment.R2_CDN_BASE_URL);
+const mediaCdnPathname = mediaCdnUrl.pathname.replace(/\/+$/u, "");
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
@@ -39,6 +41,12 @@ const nextConfig: NextConfig = {
         hostname: "api.maptiler.com",
         pathname: "/resources/logo.svg",
         protocol: "https",
+      },
+      {
+        hostname: mediaCdnUrl.hostname,
+        pathname: `${mediaCdnPathname}/**`,
+        port: mediaCdnUrl.port,
+        protocol: mediaCdnUrl.protocol === "http:" ? "http" : "https",
       },
     ],
   },

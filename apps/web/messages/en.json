@@ -14,7 +14,21 @@
     "retry": "Retry",
     "truncated": "Zoom in to see all factories",
     "attributionLabel": "Map data attribution",
-    "mapTilerLogoAlt": "MapTiler logo"
+    "mapTilerLogoAlt": "MapTiler logo",
+    "card": {
+      "cluster": "Industrial cluster",
+      "factory": "Factory",
+      "factoryCount": "{count, plural, one {# factory} other {# factories}}",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "mainProducts": "Main products",
+      "loadingDetails": "Loading details",
+      "detailError": "Details could not be loaded.",
+      "retry": "Retry",
+      "close": "Close details",
+      "viewClusterDetails": "View cluster details",
+      "viewFactoryDetails": "View factory details"
+    }
   },
   "Operations": {
     "signInEyebrow": "Restricted staging access",

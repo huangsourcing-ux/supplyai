@@ -105,7 +105,7 @@ chinasupply/
 
 - [x] **M2-T1a 地图底座**：MapLibre + 自维护 style JSON；MAP-1 点渲染（color 着色）；地图 attribution（MapTiler + © OpenStreetMap contributors，F-11.2）自首次渲染即显示。
 - [x] **M2-T1b 地图分层加载**：zoom 阈值加载 MAP-2 boundary / MAP-3 工厂点 + 聚合；防抖 + abort（F-1.7）；truncated 提示条。
-- [ ] **M2-T1c 卡片交互**：F-1.4/1.5——MAP 属性即时渲染 + skeleton + A-2/A-5 补全。
+- [x] **M2-T1c 卡片交互**：F-1.4/1.5——MAP 属性即时渲染 + skeleton + A-2/A-5 补全。
 - [ ] **M2-T2 搜索**：F-3 全部；埋点走 packages/analytics（未同意 no-op）。
 - [ ] **M2-T3 类目筛选**：F-1.6 chips 联动。
 - [ ] **M2-T4 产业带详情页**：F-2（SSR/ISR + metadata + OG）；收藏按钮 UI 占位。
