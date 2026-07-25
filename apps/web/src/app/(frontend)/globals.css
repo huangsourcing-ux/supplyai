@@ -162,6 +162,25 @@ a {
   outline-offset: 2px;
 }
 
+.map-truncation-notice {
+  position: absolute;
+  z-index: 2;
+  top: max(0.75rem, env(safe-area-inset-top));
+  left: 50%;
+  max-width: min(28rem, calc(100% - 12rem));
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(194, 65, 12, 0.22);
+  border-radius: 999px;
+  color: #7c2d12;
+  background: rgba(255, 247, 237, 0.95);
+  box-shadow: 0 0.75rem 2rem rgba(55, 65, 61, 0.16);
+  font-size: 0.875rem;
+  font-weight: 620;
+  text-align: center;
+  transform: translateX(-50%);
+  backdrop-filter: blur(0.75rem);
+}
+
 .map-attribution {
   position: absolute;
   z-index: 2;
@@ -226,6 +245,14 @@ a {
   .industrial-map .maplibregl-ctrl-top-right {
     top: max(0.5rem, env(safe-area-inset-top));
     right: max(0.5rem, env(safe-area-inset-right));
+  }
+
+  .map-truncation-notice {
+    top: auto;
+    bottom: max(3.25rem, calc(env(safe-area-inset-bottom) + 3.25rem));
+    max-width: calc(100% - 1rem);
+    padding: 0.6rem 0.85rem;
+    font-size: 0.8rem;
   }
 
   .map-attribution {

@@ -20,6 +20,7 @@ export default async function HomePage() {
           mapError: map("mapError"),
           mapTilerLogoAlt: map("mapTilerLogoAlt"),
           retry: map("retry"),
+          truncated: map("truncated"),
         }}
       />
     </main>

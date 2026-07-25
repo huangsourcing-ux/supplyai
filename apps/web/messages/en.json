@@ -10,8 +10,9 @@
     "ariaLabel": "Interactive map of industrial clusters in China",
     "loading": "Loading industrial clusters…",
     "mapError": "The map could not be loaded.",
-    "dataError": "Industrial cluster data could not be loaded.",
+    "dataError": "Map data could not be loaded.",
     "retry": "Retry",
+    "truncated": "Zoom in to see all factories",
     "attributionLabel": "Map data attribution",
     "mapTilerLogoAlt": "MapTiler logo"
   },

@@ -15,11 +15,12 @@ import { MapStatus } from "../app/(frontend)/map/map-status";
 
 const labels = {
   attributionLabel: "Map data attribution",
-  dataError: "Industrial cluster data could not be loaded.",
+  dataError: "Map data could not be loaded.",
   loading: "Loading industrial clusters…",
   mapError: "The map could not be loaded.",
   mapTilerLogoAlt: "MapTiler logo",
   retry: "Retry",
+  truncated: "Zoom in to see all factories",
 };
 
 describe("Web map foundation", () => {
