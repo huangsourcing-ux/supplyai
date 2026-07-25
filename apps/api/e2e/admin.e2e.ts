@@ -46,6 +46,7 @@ const ids = {
 const adminHeaders = {
   authorization: "Bearer admin-token",
   host: "api-staging.chinasupply.ai",
+  "x-forwarded-proto": "https",
 };
 
 function runMigration(databaseUrl: string): void {
@@ -340,7 +341,9 @@ describe.sequential("admin API e2e", () => {
     expect(published.statusCode).toBe(200);
     const firstPublishedAt = published.json().data.publishedAt;
     expect(firstPublishedAt).toEqual(expect.any(String));
-    expect(purge).toHaveBeenLastCalledWith("http://api-staging.chinasupply.ai");
+    expect(purge).toHaveBeenLastCalledWith(
+      "https://api-staging.chinasupply.ai",
+    );
 
     const publishedAgain = await app.inject({
       headers: adminHeaders,

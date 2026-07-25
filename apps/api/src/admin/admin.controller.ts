@@ -109,7 +109,20 @@ export function getRequestOrigin(request: FastifyRequest): string {
     throw new UnauthorizedException();
   }
 
-  return new URL(`${request.protocol}://${host}`).origin;
+  const forwardedProtocol = request.headers["x-forwarded-proto"];
+  if (
+    Array.isArray(forwardedProtocol) ||
+    forwardedProtocol?.includes(",") === true
+  ) {
+    throw new UnauthorizedException();
+  }
+
+  const protocol = forwardedProtocol ?? request.protocol;
+  if (protocol !== "http" && protocol !== "https") {
+    throw new UnauthorizedException();
+  }
+
+  return new URL(`${protocol}://${host}`).origin;
 }
 
 @Controller("admin/clusters")

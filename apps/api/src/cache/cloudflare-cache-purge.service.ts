@@ -79,5 +79,5 @@ function validatePrefix(prefix: string): string {
     throw new Error("Cache purge prefixes must be public HTTPS URLs");
   }
 
-  return url.toString();
+  return `${url.host}${url.pathname}${url.search}`;
 }
