@@ -46,6 +46,12 @@ describe("Web internationalization contract", () => {
       retry: "Retry",
       search: {
         categoryResult: "Category",
+        categories: {
+          all: "All categories",
+          error: "Categories could not be loaded.",
+          group: "Filter map by category",
+          loading: "Loading categories…",
+        },
         clear: "Clear search",
         error: "Search could not be completed.",
         groups: {

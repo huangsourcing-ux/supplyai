@@ -20,6 +20,12 @@
       "placeholder": "Search products or factories",
       "clear": "Clear search",
       "removeCategory": "Remove {category} filter",
+      "categories": {
+        "all": "All categories",
+        "group": "Filter map by category",
+        "loading": "Loading categories…",
+        "error": "Categories could not be loaded."
+      },
       "loading": "Searching…",
       "error": "Search could not be completed.",
       "retry": "Retry",

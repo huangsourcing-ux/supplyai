@@ -18,8 +18,13 @@ import {
   getNextSearchOptionIndex,
   getPopularCategoryChoices,
   getSearchResultCount,
+  type MapCategory,
   type MapSearchChoice,
 } from "./map-search-model";
+import {
+  MapCategoryChips,
+  type MapCategoryChipsLabels,
+} from "./map-category-chips";
 import {
   MapSearchResults,
   type MapSearchResultLabels,
@@ -27,19 +32,14 @@ import {
 
 const DISABLED_SEARCH_QUERY = "xx";
 
-export type ActiveMapCategory = {
-  name: string;
-  slug: string;
-};
-
 export function MapSearch({
   activeCategory,
+  onChooseCategory,
   onChoose,
-  onClearCategory,
 }: Readonly<{
-  activeCategory: ActiveMapCategory | null;
+  activeCategory: MapCategory | null;
+  onChooseCategory: (category: MapCategory | null) => void;
   onChoose: (choice: MapSearchChoice) => void;
-  onClearCategory: () => void;
 }>) {
   const translate = useTranslations("Map.search");
   const optionIdPrefix = useId();
@@ -77,11 +77,7 @@ export function MapSearch({
     searchResults === undefined ? 0 : getSearchResultCount(searchResults);
   const noResults =
     searchQuery.isSuccess && searchQueryValue.length >= 2 && resultCount === 0;
-  const categoriesQuery = useGetCategories({
-    query: {
-      enabled: noResults,
-    },
-  });
+  const categoriesQuery = useGetCategories();
   const choices = (() => {
     if (searchResults !== undefined && resultCount > 0) {
       return flattenSearchResults(searchResults);
@@ -134,6 +130,17 @@ export function MapSearch({
     unverified: translate("unverified"),
     verified: translate("verified"),
   };
+  const categoryLabels: MapCategoryChipsLabels = {
+    all: translate("categories.all"),
+    error: translate("categories.error"),
+    group: translate("categories.group"),
+    loading: translate("categories.loading"),
+    removeCategory: (category) =>
+      translate("removeCategory", {
+        category,
+      }),
+    retry: translate("retry"),
+  };
   const panelVisible =
     open &&
     canSearch &&
@@ -146,6 +153,11 @@ export function MapSearch({
 
   const choose = (choice: MapSearchChoice) => {
     onChoose(choice);
+    setOpen(false);
+    setActiveIndex(-1);
+  };
+  const chooseCategory = (category: MapCategory | null) => {
+    onChooseCategory(category);
     setOpen(false);
     setActiveIndex(-1);
   };
@@ -232,20 +244,17 @@ export function MapSearch({
         )}
       </div>
 
-      {activeCategory === null ? null : (
-        <div className="map-search__filter">
-          <span>{activeCategory.name}</span>
-          <button
-            aria-label={translate("removeCategory", {
-              category: activeCategory.name,
-            })}
-            onClick={onClearCategory}
-            type="button"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-      )}
+      <MapCategoryChips
+        activeCategory={activeCategory}
+        categories={categoriesQuery.data?.data ?? []}
+        error={categoriesQuery.isError}
+        labels={categoryLabels}
+        loading={categoriesQuery.isPending}
+        onChoose={chooseCategory}
+        onRetry={() => {
+          void categoriesQuery.refetch();
+        }}
+      />
 
       {panelVisible ? (
         <div className="map-search__panel" id={`${optionIdPrefix}-panel`}>

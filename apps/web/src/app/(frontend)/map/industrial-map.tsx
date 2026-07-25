@@ -67,11 +67,13 @@ import {
 import { MapSelectionCard } from "./map-selection-card";
 import {
   addMapCategoryParam,
+  createDebouncedCategoryFilterUpdater,
   createMapCategoryParams,
+  type MapCategory,
   resolveMapSearchAction,
   type MapSearchChoice,
 } from "./map-search-model";
-import { MapSearch, type ActiveMapCategory } from "./map-search";
+import { MapSearch } from "./map-search";
 
 export interface IndustrialMapLabels
   extends MapAttributionLabels, MapStatusLabels {
@@ -111,17 +113,31 @@ export function IndustrialMap({
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
   const [selectedFeature, setSelectedFeature] =
     useState<SelectedMapFeature | null>(null);
-  const [activeCategory, setActiveCategory] =
-    useState<ActiveMapCategory | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<MapCategory | null>(
+    null,
+  );
+  const [appliedCategory, setAppliedCategory] = useState<MapCategory | null>(
+    null,
+  );
+  const [categoryIsSettling, setCategoryIsSettling] = useState(false);
   const [viewport, setViewport] = useState<MapViewport | null>(null);
   const [viewportIsSettling, setViewportIsSettling] = useState(true);
   const boundariesEnabled =
-    viewport !== null && viewport.zoom >= CLUSTER_BOUNDARY_MIN_ZOOM;
+    !categoryIsSettling &&
+    viewport !== null &&
+    viewport.zoom >= CLUSTER_BOUNDARY_MIN_ZOOM;
   const factoriesEnabled =
-    viewport !== null && viewport.zoom >= FACTORY_POINT_MIN_ZOOM;
-  const categorySlug = activeCategory?.slug;
+    !categoryIsSettling &&
+    viewport !== null &&
+    viewport.zoom >= FACTORY_POINT_MIN_ZOOM;
+  const categorySlug = appliedCategory?.slug;
   const clusterPointsQuery = useGetMapClusterPoints(
     createMapCategoryParams(categorySlug),
+    {
+      query: {
+        enabled: !categoryIsSettling,
+      },
+    },
   );
   const clusterBoundariesQuery = useGetMapClusterBoundaries(
     addMapCategoryParam(viewport ?? DISABLED_BOUNDARY_PARAMS, categorySlug),
@@ -177,6 +193,20 @@ export function IndustrialMap({
   const factoryPoints = factoriesEnabled
     ? (factoryPointsQuery.data?.data ?? EMPTY_FACTORY_POINTS)
     : EMPTY_FACTORY_POINTS;
+
+  useEffect(() => {
+    if (!categoryIsSettling) return;
+
+    const updater = createDebouncedCategoryFilterUpdater((category) => {
+      setAppliedCategory(category);
+      setCategoryIsSettling(false);
+    });
+    updater.schedule(selectedCategory);
+
+    return () => {
+      updater.cancel();
+    };
+  }, [categoryIsSettling, selectedCategory]);
 
   useEffect(() => {
     clusterPointsRef.current = clusterPoints;
@@ -456,22 +486,32 @@ export function IndustrialMap({
     });
   };
 
+  const chooseCategory = (category: MapCategory | null, resetView = true) => {
+    if (
+      selectedCategory?.slug === category?.slug &&
+      selectedCategory?.name === category?.name
+    ) {
+      return;
+    }
+
+    cancelMapDataQueries();
+    clearRenderedMapData();
+    setSelectedCategory(category);
+    setSelectedFeature(null);
+    setCategoryIsSettling(true);
+    if (resetView) fitChinaBounds();
+  };
+
   const chooseSearchResult = (choice: MapSearchChoice) => {
     const action = resolveMapSearchAction(choice);
 
     if (action.kind === "category") {
-      cancelMapDataQueries();
-      clearRenderedMapData();
-      setActiveCategory(action.category);
-      setSelectedFeature(null);
-      fitChinaBounds();
+      chooseCategory(action.category);
       return;
     }
 
-    if (activeCategory !== null) {
-      cancelMapDataQueries();
-      clearRenderedMapData();
-      setActiveCategory(null);
+    if (selectedCategory !== null) {
+      chooseCategory(null, false);
     }
     setSelectedFeature(action.selection);
     mapRef.current?.flyTo({
@@ -482,19 +522,12 @@ export function IndustrialMap({
     });
   };
 
-  const clearCategory = () => {
-    cancelMapDataQueries();
-    clearRenderedMapData();
-    setActiveCategory(null);
-    setSelectedFeature(null);
-    fitChinaBounds();
-  };
-
   const hasDataError =
     clusterPointsQuery.isError ||
     (boundariesEnabled && clusterBoundariesQuery.isError) ||
     (factoriesEnabled && factoryPointsQuery.isError);
   const hasPendingData =
+    categoryIsSettling ||
     clusterPointsQuery.isPending ||
     (boundariesEnabled && clusterBoundariesQuery.isPending) ||
     (factoriesEnabled && factoryPointsQuery.isPending);
@@ -519,16 +552,16 @@ export function IndustrialMap({
       className={[
         "industrial-map",
         selectedFeature === null ? "" : "industrial-map--has-selection",
-        activeCategory === null ? "" : "industrial-map--has-filter",
+        selectedCategory === null ? "" : "industrial-map--has-filter",
       ]
         .filter(Boolean)
         .join(" ")}
     >
       <div className="industrial-map__canvas" ref={containerRef} />
       <MapSearch
-        activeCategory={activeCategory}
+        activeCategory={selectedCategory}
+        onChooseCategory={chooseCategory}
         onChoose={chooseSearchResult}
-        onClearCategory={clearCategory}
       />
       {statusKind === null ? null : (
         <MapStatus kind={statusKind} labels={labels} onRetry={retry} />

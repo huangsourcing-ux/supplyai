@@ -9,9 +9,15 @@ import type {
 import type { SelectedMapFeature } from "./map-selection";
 
 export const SEARCH_DEBOUNCE_MS = 300;
+export const CATEGORY_FILTER_DEBOUNCE_MS = 500;
 export const POPULAR_CATEGORY_LIMIT = 5;
 export const CLUSTER_SEARCH_ZOOM = 9;
 export const FACTORY_SEARCH_ZOOM = 13;
+
+export type MapCategory = {
+  name: string;
+  slug: string;
+};
 
 export type MapSearchChoice =
   | Search200DataCategoriesItem
@@ -37,6 +43,14 @@ export interface DebouncedSearchUpdater {
   cancel(): void;
   schedule(value: string): void;
 }
+
+export interface DebouncedCategoryFilterUpdater {
+  cancel(): void;
+  schedule(value: MapCategory | null): void;
+}
+
+export type CategoryChipSelection =
+  { kind: "all" } | { kind: "child" } | { kind: "root"; slug: string };
 
 export function createMapCategoryParams(
   categorySlug: string | undefined,
@@ -72,6 +86,40 @@ export function createDebouncedSearchUpdater(
       }, SEARCH_DEBOUNCE_MS);
     },
   };
+}
+
+export function createDebouncedCategoryFilterUpdater(
+  onUpdate: (value: MapCategory | null) => void,
+): DebouncedCategoryFilterUpdater {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+
+  return {
+    cancel() {
+      if (timer === null) return;
+      clearTimeout(timer);
+      timer = null;
+    },
+    schedule(value) {
+      if (timer !== null) clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
+        onUpdate(value);
+      }, CATEGORY_FILTER_DEBOUNCE_MS);
+    },
+  };
+}
+
+export function resolveCategoryChipSelection(
+  categories: readonly GetCategories200DataItem[],
+  activeCategory: MapCategory | null,
+): CategoryChipSelection {
+  if (activeCategory === null) {
+    return { kind: "all" };
+  }
+
+  return categories.some(({ slug }) => slug === activeCategory.slug)
+    ? { kind: "root", slug: activeCategory.slug }
+    : { kind: "child" };
 }
 
 export function getSearchResultCount(results: Search200Data): number {
