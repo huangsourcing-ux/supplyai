@@ -25,6 +25,20 @@ describe("Web internationalization contract", () => {
     expect(messages.Metadata).toBeTypeOf("object");
     expect(messages.Home).toBeTypeOf("object");
     expect(messages.Map).toMatchObject({
+      card: {
+        close: "Close details",
+        cluster: "Industrial cluster",
+        detailError: "Details could not be loaded.",
+        factory: "Factory",
+        factoryCount: "{count, plural, one {# factory} other {# factories}}",
+        loadingDetails: "Loading details",
+        mainProducts: "Main products",
+        retry: "Retry",
+        unverified: "Unverified",
+        verified: "Verified",
+        viewClusterDetails: "View cluster details",
+        viewFactoryDetails: "View factory details",
+      },
       dataError: "Map data could not be loaded.",
       loading: "Loading industrial clusters…",
       mapError: "The map could not be loaded.",

@@ -3,7 +3,7 @@
 import type {
   GeoJSONSource,
   Map as MapLibreMap,
-  MapLayerMouseEvent,
+  MapMouseEvent,
   StyleSpecification,
 } from "maplibre-gl";
 import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +23,9 @@ import { createChinaSupplyMapStyle } from "@chinasupply/config/map/style";
 
 import {
   CHINA_BOUNDS,
+  CLUSTER_BOUNDARIES_FILL_LAYER_ID,
   CLUSTER_BOUNDARIES_SOURCE_ID,
+  CLUSTER_POINTS_LAYER_ID,
   CLUSTER_POINTS_SOURCE_ID,
   EMPTY_CLUSTER_BOUNDARIES,
   clusterPointsLayer,
@@ -31,6 +33,7 @@ import {
   EMPTY_FACTORY_POINTS,
   FACTORIES_SOURCE_ID,
   FACTORY_CLUSTERS_LAYER_ID,
+  FACTORY_POINTS_LAYER_ID,
   clusterBoundariesFillLayer,
   factoryClusterCountLayer,
   factoryClustersLayer,
@@ -52,6 +55,11 @@ import {
   type MapViewport,
   readMapViewport,
 } from "./map-viewport";
+import {
+  resolveMapClickTarget,
+  type SelectedMapFeature,
+} from "./map-selection";
+import { MapSelectionCard } from "./map-selection-card";
 
 export interface IndustrialMapLabels
   extends MapAttributionLabels, MapStatusLabels {
@@ -68,6 +76,12 @@ const DISABLED_BOUNDARY_PARAMS = {
 const DISABLED_FACTORY_PARAMS = {
   bbox: "0,0,1,1",
 };
+const INTERACTIVE_LAYER_IDS = [
+  FACTORY_CLUSTERS_LAYER_ID,
+  FACTORY_POINTS_LAYER_ID,
+  CLUSTER_POINTS_LAYER_ID,
+  CLUSTER_BOUNDARIES_FILL_LAYER_ID,
+] as const;
 
 export function IndustrialMap({
   labels,
@@ -83,6 +97,8 @@ export function IndustrialMap({
   const factoryPointsRef = useRef<GetMapFactories200Data>(EMPTY_FACTORY_POINTS);
   const [mapAttempt, setMapAttempt] = useState(0);
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
+  const [selectedFeature, setSelectedFeature] =
+    useState<SelectedMapFeature | null>(null);
   const [viewport, setViewport] = useState<MapViewport | null>(null);
   const [viewportIsSettling, setViewportIsSettling] = useState(true);
   const boundariesEnabled =
@@ -199,40 +215,43 @@ export function IndustrialMap({
 
           viewportUpdater.schedule(nextViewport);
         };
-        const handleFactoryClusterClick = (event: MapLayerMouseEvent) => {
-          const feature = event.features?.[0];
-          const clusterId = feature?.properties?.cluster_id;
-          const coordinates =
-            feature?.geometry.type === "Point"
-              ? feature.geometry.coordinates
-              : null;
+        const handleMapClick = (event: MapMouseEvent) => {
+          const readFirstFeature = (layerId: string) =>
+            map.queryRenderedFeatures(event.point, {
+              layers: [layerId],
+            })[0];
+          const target = resolveMapClickTarget({
+            clusterBoundary: readFirstFeature(CLUSTER_BOUNDARIES_FILL_LAYER_ID),
+            clusterPoint: readFirstFeature(CLUSTER_POINTS_LAYER_ID),
+            factoryCluster: readFirstFeature(FACTORY_CLUSTERS_LAYER_ID),
+            factoryPoint: readFirstFeature(FACTORY_POINTS_LAYER_ID),
+          });
 
-          if (
-            typeof clusterId !== "number" ||
-            coordinates === null ||
-            typeof coordinates[0] !== "number" ||
-            typeof coordinates[1] !== "number"
-          ) {
+          if (target.kind === "selection") {
+            setSelectedFeature(target.selection);
             return;
           }
 
+          setSelectedFeature(null);
+          if (target.kind === "empty") return;
+
           const source = map.getSource(FACTORIES_SOURCE_ID) as GeoJSONSource;
           void source
-            .getClusterExpansionZoom(clusterId)
+            .getClusterExpansionZoom(target.clusterId)
             .then((zoom) => {
               if (disposed) return;
               map.easeTo({
-                center: [coordinates[0]!, coordinates[1]!],
+                center: target.coordinates,
                 duration: 500,
                 zoom,
               });
             })
             .catch(() => undefined);
         };
-        const showFactoryClusterCursor = () => {
+        const showInteractiveCursor = () => {
           map.getCanvas().style.cursor = "pointer";
         };
-        const hideFactoryClusterCursor = () => {
+        const hideInteractiveCursor = () => {
           map.getCanvas().style.cursor = "";
         };
 
@@ -276,17 +295,11 @@ export function IndustrialMap({
           map.addLayer(factoryClustersLayer);
           map.addLayer(factoryClusterCountLayer);
           map.addLayer(factoryPointsLayer);
-          map.on("click", FACTORY_CLUSTERS_LAYER_ID, handleFactoryClusterClick);
-          map.on(
-            "mouseenter",
-            FACTORY_CLUSTERS_LAYER_ID,
-            showFactoryClusterCursor,
-          );
-          map.on(
-            "mouseleave",
-            FACTORY_CLUSTERS_LAYER_ID,
-            hideFactoryClusterCursor,
-          );
+          map.on("click", handleMapClick);
+          for (const layerId of INTERACTIVE_LAYER_IDS) {
+            map.on("mouseenter", layerId, showInteractiveCursor);
+            map.on("mouseleave", layerId, hideInteractiveCursor);
+          }
           scheduleViewportUpdate();
           setMapLoadState("ready");
         };
@@ -350,7 +363,10 @@ export function IndustrialMap({
   }
 
   return (
-    <section aria-label={labels.ariaLabel} className="industrial-map">
+    <section
+      aria-label={labels.ariaLabel}
+      className={`industrial-map${selectedFeature === null ? "" : " industrial-map--has-selection"}`}
+    >
       <div className="industrial-map__canvas" ref={containerRef} />
       {statusKind === null ? null : (
         <MapStatus kind={statusKind} labels={labels} onRetry={retry} />
@@ -358,6 +374,14 @@ export function IndustrialMap({
       {showTruncatedNotice ? (
         <MapTruncationNotice message={labels.truncated} />
       ) : null}
+      {selectedFeature === null ? null : (
+        <MapSelectionCard
+          onClose={() => {
+            setSelectedFeature(null);
+          }}
+          selection={selectedFeature}
+        />
+      )}
       <MapAttribution labels={labels} />
     </section>
   );
