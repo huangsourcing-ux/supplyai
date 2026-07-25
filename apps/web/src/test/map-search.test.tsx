@@ -9,7 +9,9 @@ import type {
 
 import {
   addMapCategoryParam,
+  CATEGORY_FILTER_DEBOUNCE_MS,
   CLUSTER_SEARCH_ZOOM,
+  createDebouncedCategoryFilterUpdater,
   createDebouncedSearchUpdater,
   createMapCategoryParams,
   FACTORY_SEARCH_ZOOM,
@@ -17,9 +19,14 @@ import {
   getNextSearchOptionIndex,
   getPopularCategoryChoices,
   getSearchResultCount,
+  resolveCategoryChipSelection,
   resolveMapSearchAction,
   SEARCH_DEBOUNCE_MS,
 } from "../app/(frontend)/map/map-search-model";
+import {
+  MapCategoryChips,
+  type MapCategoryChipsLabels,
+} from "../app/(frontend)/map/map-category-chips";
 import {
   MapSearchResults,
   type MapSearchResultLabels,
@@ -63,6 +70,39 @@ const searchResults: Search200Data = {
   ],
 };
 
+const rootCategories: GetCategories200DataItem[] = [
+  {
+    children: [
+      {
+        color: null,
+        icon: "sofa",
+        id: "chi000000000000000001",
+        name: "Home Furniture",
+        parentId: "cat000000000000000001",
+        slug: "home-furniture",
+        sortOrder: 11,
+      },
+    ],
+    color: "#2563EB",
+    icon: "cpu",
+    id: "cat000000000000000001",
+    name: "Electronics",
+    parentId: null,
+    slug: "electronics",
+    sortOrder: 10,
+  },
+  {
+    children: [],
+    color: "#92400E",
+    icon: "armchair",
+    id: "cat000000000000000002",
+    name: "Furniture",
+    parentId: null,
+    slug: "furniture",
+    sortOrder: 20,
+  },
+];
+
 function labels(): MapSearchResultLabels {
   return {
     categories: "Categories",
@@ -79,6 +119,17 @@ function labels(): MapSearchResultLabels {
     retry: "Retry",
     unverified: "Unverified factory",
     verified: "Verified factory",
+  };
+}
+
+function categoryLabels(): MapCategoryChipsLabels {
+  return {
+    all: "All categories",
+    error: "Categories could not be loaded.",
+    group: "Filter map by category",
+    loading: "Loading categories…",
+    removeCategory: (category) => `Remove ${category} filter`,
+    retry: "Retry",
   };
 }
 
@@ -105,6 +156,30 @@ describe("Web map search model", () => {
     updater.schedule("socks");
     updater.cancel();
     vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
+    expect(update).toHaveBeenCalledOnce();
+  });
+
+  it("debounces category filters for exactly 500ms and keeps only the latest choice", () => {
+    vi.useFakeTimers();
+    const update = vi.fn();
+    const updater = createDebouncedCategoryFilterUpdater(update);
+
+    updater.schedule({ name: "Electronics", slug: "electronics" });
+    vi.advanceTimersByTime(CATEGORY_FILTER_DEBOUNCE_MS - 1);
+    updater.schedule({ name: "Furniture", slug: "furniture" });
+    vi.advanceTimersByTime(CATEGORY_FILTER_DEBOUNCE_MS - 1);
+    expect(update).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(1);
+    expect(update).toHaveBeenCalledOnce();
+    expect(update).toHaveBeenCalledWith({
+      name: "Furniture",
+      slug: "furniture",
+    });
+
+    updater.schedule(null);
+    updater.cancel();
+    vi.advanceTimersByTime(CATEGORY_FILTER_DEBOUNCE_MS);
     expect(update).toHaveBeenCalledOnce();
   });
 
@@ -139,6 +214,29 @@ describe("Web map search model", () => {
       "category-3",
       "category-4",
     ]);
+  });
+
+  it("distinguishes all, root, and exact child category filter states", () => {
+    expect(resolveCategoryChipSelection(rootCategories, null)).toEqual({
+      kind: "all",
+    });
+    expect(
+      resolveCategoryChipSelection(rootCategories, {
+        name: "Furniture",
+        slug: "furniture",
+      }),
+    ).toEqual({
+      kind: "root",
+      slug: "furniture",
+    });
+    expect(
+      resolveCategoryChipSelection(rootCategories, {
+        name: "Home Furniture",
+        slug: "home-furniture",
+      }),
+    ).toEqual({
+      kind: "child",
+    });
   });
 
   it("wraps keyboard selection and keeps empty lists inactive", () => {
@@ -193,6 +291,106 @@ describe("Web map search model", () => {
       },
       zoom: FACTORY_SEARCH_ZOOM,
     });
+  });
+});
+
+describe("Web map category chips", () => {
+  it("renders ordered root chips with colors and an accessible all state", () => {
+    const markup = renderToStaticMarkup(
+      <MapCategoryChips
+        activeCategory={null}
+        categories={rootCategories}
+        error={false}
+        labels={categoryLabels()}
+        loading={false}
+        onChoose={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(markup).toContain('role="group"');
+    expect(markup).toContain('aria-label="Filter map by category"');
+    expect(markup).toContain('aria-pressed="true"');
+    expect(markup.indexOf("All categories")).toBeLessThan(
+      markup.indexOf("Electronics"),
+    );
+    expect(markup.indexOf("Electronics")).toBeLessThan(
+      markup.indexOf("Furniture"),
+    );
+    expect(markup).toContain("background-color:#2563EB");
+    expect(markup).not.toContain("Home Furniture");
+  });
+
+  it("highlights a root without a duplicate removable filter", () => {
+    const markup = renderToStaticMarkup(
+      <MapCategoryChips
+        activeCategory={{ name: "Furniture", slug: "furniture" }}
+        categories={rootCategories}
+        error={false}
+        labels={categoryLabels()}
+        loading={false}
+        onChoose={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(markup).toContain(
+      '<button aria-pressed="true" class="map-category-chip" type="button"><span aria-hidden="true" class="map-category-chip__color" style="background-color:#92400E"',
+    );
+    expect(markup).not.toContain("Remove Furniture filter");
+  });
+
+  it("preserves an exact child filter as a removable label without selecting a root", () => {
+    const markup = renderToStaticMarkup(
+      <MapCategoryChips
+        activeCategory={{
+          name: "Home Furniture",
+          slug: "home-furniture",
+        }}
+        categories={rootCategories}
+        error={false}
+        labels={categoryLabels()}
+        loading={false}
+        onChoose={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(markup).not.toContain('aria-pressed="true"');
+    expect(markup).toContain("Home Furniture");
+    expect(markup).toContain('aria-label="Remove Home Furniture filter"');
+  });
+
+  it("renders localized category loading and retry states without hiding All", () => {
+    const loadingMarkup = renderToStaticMarkup(
+      <MapCategoryChips
+        activeCategory={null}
+        categories={[]}
+        error={false}
+        labels={categoryLabels()}
+        loading
+        onChoose={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    );
+    const errorMarkup = renderToStaticMarkup(
+      <MapCategoryChips
+        activeCategory={null}
+        categories={[]}
+        error
+        labels={categoryLabels()}
+        loading={false}
+        onChoose={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(loadingMarkup).toContain("All categories");
+    expect(loadingMarkup).toContain("Loading categories…");
+    expect(loadingMarkup).toContain('role="status"');
+    expect(errorMarkup).toContain("Categories could not be loaded.");
+    expect(errorMarkup).toContain("Retry");
+    expect(errorMarkup).toContain('role="alert"');
   });
 });
 
