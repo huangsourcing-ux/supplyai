@@ -54,58 +54,58 @@
 
 以下页面用于企业身份、主营产品、制造依据及公开地址初筛；全部仍需 SOP 复核。
 
-| slug                          | 来源 URL                                                  |
-| ----------------------------- | --------------------------------------------------------- |
-| `shenzhen-dji-innovation`     | https://www.dji.com/company                               |
-| `shenzhen-skyworth-digital`   | https://en.skyworthdigital.com/                           |
-| `shenzhen-konka-group`        | https://www.konka.com/                                    |
-| `shenzhen-transsion-holdings` | https://www.transsion.com/                                |
-| `shenzhen-huntkey-electric`   | https://en.huntkey.com/                                   |
-| `dongguan-oppo-mobile`        | https://www.oppo.com/en/about/                            |
-| `dongguan-vivo-mobile`        | https://www.vivo.com/en/about-vivo                        |
-| `dongguan-amperex-technology` | https://www.atlbattery.com/en/about                       |
-| `dongguan-delta-electronics`  | https://www.deltaww.com/en-US/about/aboutDelta            |
-| `dongguan-luxshare-precision` | https://www.luxshare-ict.com/                             |
-| `guzhen-kinglong-lighting`    | https://www.kinglong-lighting.net/about-us/               |
-| `guzhen-hulang-lighting`      | https://www.hulanglighting.com/                           |
-| `guzhen-wosen-lighting`       | https://www.wosenled.com/                                 |
-| `guzhen-zichuan-lighting`     | https://zichuanlighting.com/                              |
-| `guzhen-voice-of-lighting`    | https://www.vollighting.cn/                               |
-| `shunde-shudidi-furniture`    | https://www.shudidi.com/                                  |
-| `shunde-shunuomei-furniture`  | https://www.snm-furniture.com/aboutus.html                |
-| `shunde-govan-furniture`      | https://www.govanliving.com/aboutus                       |
-| `shunde-youjian-furniture`    | https://www.youjianoffice.com/about-us/                   |
-| `shunde-baotian-furniture`    | https://www.baotian.com/                                  |
-| `chenghai-rastar-toys`        | https://rastar.com/html/gw-wap-en/About_Us/gongsijieshao/ |
-| `chenghai-jiexing-toys`       | https://www.jxtoys.com/ZJ/                                |
-| `chenghai-lingdong-creative`  | https://www.chinaldcx.com/en/                             |
-| `chenghai-shifeng-culture`    | https://www.shifengtoy.com/                               |
-| `chenghai-caipo-technology`   | https://www.caipotoys.com/                                |
-| `yiwu-yayu-textile`           | https://ywyayu.com/                                       |
-| `yiwu-first-eyew-jewelry`     | https://www.firsteyew.com/                                |
-| `yiwu-spark-beauty`           | https://www.yiwusparkbeauty.com/                          |
-| `yiwu-yolan-packaging`        | https://www.yolanpackagings.com/about.html                |
-| `yiwu-nianyou-stationery`     | https://www.nian-you.com/                                 |
-| `yongkang-haers-drinkware`    | https://www.haers.com/our-story/                          |
-| `yongkang-nengzhi-scales`     | https://www.chinazhengya.com/about/                       |
-| `yongkang-making-tools`       | https://www.kindustry.cn/About-us.html                    |
-| `yongkang-yishun-tools`       | https://www.boshuntools.com/                              |
-| `yongkang-delun-abrasives`    | https://www.delunabrasives.com/                           |
-| `nantong-goldsun-textile`     | https://www.goldsunhome.com/aboutus.html                  |
-| `nantong-violet-home-textile` | https://www.violet.com.cn/gsjs?_l=en                      |
-| `nantong-luolai-lifestyle`    | https://www.luolai.com/pages/about-us                     |
-| `nantong-sunshine-textile`    | https://www.ntsunshinetextile.com/                        |
-| `nantong-bestwin-textile`     | https://www.bestwintextile.com/                           |
-| `jinjiang-anta-sports`        | https://www.anta.cn/cms/contact                           |
-| `jinjiang-xtep-china`         | https://www.xtep.com/                                     |
-| `jinjiang-361-degrees`        | https://www.361sport.com/                                 |
-| `jinjiang-jinzun-shoes`       | https://www.jinzunshoes.com/                              |
-| `jinjiang-aodengke-shoes`     | https://www.aodengke.com/                                 |
-| `dehua-shunmei-group`         | https://shunmeigroup.com/about.html                       |
-| `dehua-xingye-ceramics`       | https://www.dehua-ceramics.com/                           |
-| `dehua-jiashun-ceramics`      | https://jiashunkitchenware.com/about/                     |
-| `dehua-longhe-ceramics`       | https://www.dehualonghe.com/                              |
-| `dehua-luchi-ceramics`        | https://www.luchiceramic.com/                             |
+| slug                            | 来源 URL                                                  |
+| ------------------------------- | --------------------------------------------------------- |
+| `shenzhen-dji-innovation`       | https://www.dji.com/company                               |
+| `shenzhen-skyworth-digital`     | https://en.skyworthdigital.com/                           |
+| `shenzhen-konka-group`          | https://www.konka.com/                                    |
+| `shenzhen-transsion-holdings`   | https://www.transsion.com/                                |
+| `shenzhen-huntkey-electric`     | https://en.huntkey.com/                                   |
+| `dongguan-oppo-mobile`          | https://www.oppo.com/en/about/                            |
+| `dongguan-vivo-mobile`          | https://www.vivo.com/en/about-vivo                        |
+| `dongguan-amperex-technology`   | https://www.atlbattery.com/en/about                       |
+| `dongguan-delta-electronics`    | https://www.deltaww.com/en-US/about/aboutDelta            |
+| `dongguan-luxshare-precision`   | https://www.luxshare-ict.com/                             |
+| `guzhen-kinglong-lighting`      | https://www.kinglong-lighting.net/about-us/               |
+| `guzhen-hulang-lighting`        | https://www.hulanglighting.com/                           |
+| `guzhen-wosen-lighting`         | https://www.wosenled.com/                                 |
+| `guzhen-zichuan-lighting`       | https://zichuanlighting.com/                              |
+| `guzhen-voice-of-lighting`      | https://www.vollighting.cn/                               |
+| `shunde-shudidi-furniture`      | https://www.shudidi.com/                                  |
+| `shunde-shunuomei-furniture`    | https://www.snm-furniture.com/aboutus.html                |
+| `shunde-govan-furniture`        | https://www.govanliving.com/aboutus                       |
+| `shunde-youjian-furniture`      | https://www.youjianoffice.com/about-us/                   |
+| `shunde-baotian-furniture`      | https://www.baotian.com/                                  |
+| `chenghai-rastar-toys`          | https://rastar.com/html/gw-wap-en/About_Us/gongsijieshao/ |
+| `chenghai-jiexing-toys`         | https://www.jxtoys.com/ZJ/                                |
+| `chenghai-lingdong-creative`    | https://www.chinaldcx.com/en/                             |
+| `chenghai-shifeng-culture`      | https://www.shifengtoy.com/                               |
+| `chenghai-caipo-technology`     | https://www.caipotoys.com/                                |
+| `yiwu-yayu-textile`             | https://ywyayu.com/                                       |
+| `yiwu-first-eyew-jewelry`       | https://www.firsteyew.com/                                |
+| `yiwu-spark-beauty`             | https://www.yiwusparkbeauty.com/                          |
+| `yiwu-yolan-packaging`          | https://www.yolanpackagings.com/about.html                |
+| `yiwu-nianyou-stationery`       | https://www.nian-you.com/                                 |
+| `yongkang-haers-drinkware`      | https://www.haers.com/our-story/                          |
+| `yongkang-nengzhi-scales`       | https://www.chinazhengya.com/about/                       |
+| `yongkang-making-tools`         | https://www.kindustry.cn/About-us.html                    |
+| `yongkang-yishun-tools`         | https://www.boshuntools.com/                              |
+| `yongkang-delun-abrasives`      | https://www.delunabrasives.com/                           |
+| `nantong-xinyi-home-textile`    | https://en.xinyihometextile.com/                          |
+| `nantong-violet-home-textile`   | https://www.violet.com.cn/gsjs?_l=en                      |
+| `nantong-luolai-lifestyle`      | https://www.luolai.com/pages/about-us                     |
+| `nantong-jinkanghong-textile`   | https://en.kifro.com/                                     |
+| `nantong-nanshing-home-textile` | https://www.nanshing.com.cn/                              |
+| `jinjiang-anta-sports`          | https://www.anta.cn/cms/contact                           |
+| `jinjiang-xtep-china`           | https://www.xtep.com/                                     |
+| `jinjiang-361-degrees`          | https://www.361sport.com/                                 |
+| `jinjiang-jinzun-shoes`         | https://www.jinzunshoes.com/                              |
+| `jinjiang-aodengke-shoes`       | https://www.aodengke.com/                                 |
+| `dehua-shunmei-group`           | https://shunmeigroup.com/about.html                       |
+| `dehua-xingye-ceramics`         | https://www.dehua-ceramics.com/                           |
+| `dehua-jiashun-ceramics`        | https://jiashunkitchenware.com/about/                     |
+| `dehua-longhe-ceramics`         | https://www.dehualonghe.com/                              |
+| `dehua-luchi-ceramics`          | https://www.luchiceramic.com/                             |
 
 ## 合成测试数据
 
@@ -113,3 +113,63 @@
 | ------------------------ | ---------------- | ------------------------------------------------------------------------ | ---------- |
 | `synthetic-m1t8-5000-*`  | `synthetic-test` | M1-T8 v1 固定 PRNG；项目自有测试数据，仅供负载测试，禁止 production 导出 | 2026-07-24 |
 | `synthetic-m1t8-20000-*` | `synthetic-test` | M1-T8 v1 固定 PRNG；项目自有测试数据，仅供负载测试，禁止 production 导出 | 2026-07-24 |
+
+## M2 staging 源数据修复（2026-07-25）
+
+本节对应独立批准的 source remediation 任务。修复范围仅为从未发布、从未核验的
+canonical draft；staging 中的相同内容变更只允许通过 `/ops`，不使用 seed/import
+写入。以下为证据候选，仍须由独立 Admin 在 `/ops` 逐项完成最终目视复核。
+
+### 产业带 boundary
+
+| slug                              | OSM/Nominatim 依据                                                                                  | canonical 处理                                                 |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `dongguan-electronic-information` | relation/3464319，ODbL，查询时间 2026-07-25；bbox `[113.5158919,22.6564988,114.2554700,23.1449285]` | `polygon_threshold=0.0001`；Polygon 包装为 WGS-84 MultiPolygon |
+| `nantong-home-textiles`           | relation/4430899，ODbL，查询时间 2026-07-25；bbox `[120.1972423,31.6340915,122.3844852,32.8583333]` | `polygon_threshold=0.0001`；Polygon 包装为 WGS-84 MultiPolygon |
+
+### Dongguan 工厂坐标
+
+高德对象的原始坐标为 GCJ-02，使用仓库既有
+`packages/geo` `gcj02ToWgs84` 转换后写入 canonical；ATL 坐标来自官方厂区验收
+报告，直接按 WGS-84 记录。
+
+| slug                          | 地图/坐标依据                                                                             | canonical WGS-84                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------- |
+| `dongguan-oppo-mobile`        | AMap POI `B0FFJ6YNLB`，`OPPO广东移动通信有限公司(1号门)`；GCJ-02 `[113.782309,22.767950]` | `[113.7771621452,22.7707857278]` |
+| `dongguan-vivo-mobile`        | AMap POI `B0FFKVXC2S`，`vivo工业园-A区`；GCJ-02 `[113.759222,22.754449]`                  | `[113.7540478336,22.7572758486]` |
+| `dongguan-amperex-technology` | ATL 官方厂区验收报告 `113°47′26.77″E, 23°05′57.82″N`                                      | `[113.7907694444,23.0993944444]` |
+| `dongguan-delta-electronics`  | AMap POI `B0FFGXX0YF`，`台达电子(东莞)有限公司`；GCJ-02 `[113.822122,23.107868]`          | `[113.8170423597,23.1106253923]` |
+| `dongguan-luxshare-precision` | AMap POI `B0FFKEB9HI`，地址匹配；GCJ-02 `[114.194816,22.841245]`                          | `[114.1898699549,22.8439770706]` |
+
+制造主体、地址和产品的补充官方来源：
+
+- OPPO：https://www.oppo.com/cn/about/ 和 https://business.oppo.com/
+- vivo：https://www.vivo.com/en/activity/about-us/ 和
+  https://wwwresstatic.vivo.com.cn/vivoportal/files/resource/files/1725879702055/vivo%E4%BD%8E%E7%A2%B3%E8%A1%8C%E5%8A%A8%E7%99%BD%E7%9A%AE%E4%B9%A6.pdf
+- ATL：https://www.atlbattery.com/zh/about.html、
+  https://www.atlbattery.com/zh/contactus.html 和
+  https://www.atlbattery.com/static/upload/file/20180727/1532685526772910.pdf
+- Delta：https://www.deltaww.com/zh-TW/company/global-operations 和
+  https://filecenter.deltaww.com/about/download/esg/ISO%2050001%20Delta%20Electronics.pdf
+- Luxshare：https://www.luxshare-ict.com/about/contact.html 和
+  https://www.luxshare-ict.com/Public/Uploads/uploadfile/files/20240617/lixunjingmiISO22301CN.pdf
+
+### Nantong 原位替换与坐标
+
+| 旧 canonical slug          | 新 canonical slug               | 替换理由                                                                                                    |
+| -------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `nantong-goldsun-textile`  | `nantong-xinyi-home-textile`    | Goldsun 地图对象对应名称存在集团/布业实体歧义；Xinyi 官网同时证明 30 亩生产园区、300+ 员工和精确厂址        |
+| `nantong-sunshine-textile` | `nantong-jinkanghong-textile`   | Sunshine 精确官网地址没有名称匹配的公司/厂区 POI；Jinkanghong 官网工厂地域与名称匹配 POI 一致               |
+| `nantong-bestwin-textile`  | `nantong-nanshing-home-textile` | Bestwin 精确官网地址没有名称匹配的公司/厂区 POI；Nanshing 官网证明 30,000㎡ 厂房且名称匹配 POI 给出精确地址 |
+
+| slug                            | 制造/地址来源                                                                                                | Google Maps 对象与 WGS-84                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `nantong-violet-home-textile`   | https://www.violet.com.cn/gsjs?_l=en；官网记录生产中心和产品，工业园地址由名称匹配地图对象交叉核对           | place `0x35b184edd3e99cb9:0xd70fe822e47dd124`，`Violet Home Textile Tech. Co.,Ltd.`，`[121.01587,31.9649]`                |
+| `nantong-luolai-lifestyle`      | https://static.cninfo.com.cn/finalpage/2024-08-20/1220911649.PDF；营业执照范围含生产销售，地址星湖大道1699号 | place `0x35b1818b2cb1e3cb:0xf3314c5d0d4268e8`，`Luolai Home Textile Co., Ltd. (Northeast Gate)`，`[120.918809,31.934472]` |
+| `nantong-xinyi-home-textile`    | https://en.xinyihometextile.com/；官网记录 30 亩现代产业园、生产设备、300+ 员工和紫星村2号                   | place `0x35b19c12fd77062b:0xcbf18daf26c440`，`Nantong Xinyi Home Textile Co.,Ltd.`，`[120.9732048,32.0685104]`            |
+| `nantong-jinkanghong-textile`   | https://en.kifro.com/；官网记录西亭镇自有工厂、数码印花全产业链和设计制造                                    | place `0x35b1990e9958c757:0xdaeecb40c89e0411`，`Nantong Jinkanghong Textile Co.,Ltd.`，`[121.02599,32.09873]`             |
+| `nantong-nanshing-home-textile` | https://www.nanshing.com.cn/；官网记录南通高新区 30,000㎡ 厂房、500+ 设备和研发设计生产                      | place `0x35b19a4a51824a85:0x3b199181a380a608`，`Jiangsu Nanxing Home Textile Limited Company`，`[121.0369299,32.0469352]` |
+
+Google Maps 对象为 WGS-84，未进行 GCJ-02/BD-09 转换。所有五个对象均须由独立
+复核人在卫星/地图视图中确认落在对应公司厂区，而不是道路、行政中心、门店或办公楼，
+之后才允许 ADM-5。
