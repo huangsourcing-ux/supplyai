@@ -43,7 +43,7 @@ describe("CloudflareCachePurgeService", () => {
       "https://api.cloudflare.com/client/v4/zones/0123456789abcdef0123456789abcdef/purge_cache",
       {
         body: JSON.stringify({
-          prefixes: ["https://api-staging.chinasupply.ai/api/v1/map/"],
+          prefixes: ["api-staging.chinasupply.ai/api/v1/map/"],
         }),
         headers: {
           Authorization: "Bearer cache-purge-token",
