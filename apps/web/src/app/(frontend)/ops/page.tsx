@@ -15,10 +15,8 @@ export default async function OperationsPage() {
   const labels: OpsLabels = {
     actionError: translate("dashboard.actionError"),
     authError: translate("dashboard.authError"),
-    clusterCount: (count) => translate("dashboard.clusterCount", { count }),
     clusterList: translate("dashboard.clusterList"),
     emptyList: translate("dashboard.emptyList"),
-    factoryCount: (count) => translate("dashboard.factoryCount", { count }),
     factoryList: translate("dashboard.factoryList"),
     fields: {
       addressEn: translate("dashboard.fields.addressEn"),

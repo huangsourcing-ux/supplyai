@@ -21,6 +21,7 @@ import {
 } from "@chinasupply/api-client";
 import { useAuth } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { useCallback, useState } from "react";
 
@@ -34,10 +35,8 @@ import styles from "./ops-dashboard.module.css";
 export interface OpsLabels {
   actionError: string;
   authError: string;
-  clusterCount: (count: number) => string;
   clusterList: string;
   emptyList: string;
-  factoryCount: (count: number) => string;
   factoryList: string;
   fields: {
     addressEn: string;
@@ -154,12 +153,14 @@ export function OpsEntityLists({
   onSelect: (selection: EntitySelection) => void;
   selection: EntitySelection | null;
 }>) {
+  const translate = useTranslations("Operations.dashboard");
+
   return (
     <div className={styles.lists}>
       <section aria-labelledby="ops-clusters-heading">
         <div className={styles.listHeading}>
           <h2 id="ops-clusters-heading">{labels.clusterList}</h2>
-          <span>{labels.clusterCount(clusters.length)}</span>
+          <span>{translate("clusterCount", { count: clusters.length })}</span>
         </div>
         {clusters.length === 0 ? (
           <p className={styles.empty}>{labels.emptyList}</p>
@@ -189,7 +190,7 @@ export function OpsEntityLists({
       <section aria-labelledby="ops-factories-heading">
         <div className={styles.listHeading}>
           <h2 id="ops-factories-heading">{labels.factoryList}</h2>
-          <span>{labels.factoryCount(factories.length)}</span>
+          <span>{translate("factoryCount", { count: factories.length })}</span>
         </div>
         {factories.length === 0 ? (
           <p className={styles.empty}>{labels.emptyList}</p>
