@@ -125,19 +125,19 @@
       "clusterSlug": "dongguan-electronic-information",
       "regionId": "reg_dongguan_city_001",
       "address": {
-        "en": "Binhaiwan Bay Area, Dongguan, Guangdong, China",
-        "zh": "中国广东省东莞市滨海湾新区"
+        "en": "No. 18 Haibin Road, Wusha, Chang'an Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市长安镇乌沙海滨路18号"
       },
-      "location": [113.7828, 22.7857],
+      "location": [113.7771621452, 22.7707857278],
       "categorySlugs": ["electronics", "electronic-components"],
       "mainProducts": [
         { "en": "Smartphones", "zh": "智能手机" },
         { "en": "Smart devices", "zh": "智能设备" }
       ],
-      "contact": { "website": "https://www.oppo.com/en/about/" },
+      "contact": { "website": "https://business.oppo.com/" },
       "images": [],
-      "sourceName": "OPPO official website",
-      "sourceUrl": "https://www.oppo.com/en/about/"
+      "sourceName": "OPPO official enterprise website",
+      "sourceUrl": "https://business.oppo.com/"
     },
     {
       "slug": "dongguan-vivo-mobile",
@@ -148,19 +148,19 @@
       "clusterSlug": "dongguan-electronic-information",
       "regionId": "reg_dongguan_city_001",
       "address": {
-        "en": "Chang'an Town, Dongguan, Guangdong, China",
-        "zh": "中国广东省东莞市长安镇"
+        "en": "Vivo Industrial Park A, No. 1 Vivo Road, Chang'an Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市长安镇维沃路1号vivo工业园A区"
       },
-      "location": [113.8012, 22.8167],
+      "location": [113.7540478336, 22.7572758486],
       "categorySlugs": ["electronics", "electronic-components"],
       "mainProducts": [
         { "en": "Smartphones", "zh": "智能手机" },
         { "en": "Wearable devices", "zh": "可穿戴设备" }
       ],
-      "contact": { "website": "https://www.vivo.com/en/about-vivo" },
+      "contact": { "website": "https://www.vivo.com/en/activity/about-us/" },
       "images": [],
       "sourceName": "vivo official website",
-      "sourceUrl": "https://www.vivo.com/en/about-vivo"
+      "sourceUrl": "https://www.vivo.com/en/activity/about-us/"
     },
     {
       "slug": "dongguan-amperex-technology",
@@ -171,19 +171,19 @@
       "clusterSlug": "dongguan-electronic-information",
       "regionId": "reg_dongguan_city_001",
       "address": {
-        "en": "Songshan Lake High-tech Industrial Development Zone, Dongguan, Guangdong, China",
-        "zh": "中国广东省东莞市松山湖高新技术产业开发区"
+        "en": "No. 1 Industrial West Road, Songshan Lake High-tech Industrial Development Zone, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市松山湖高新技术产业开发区工业西路1号"
       },
-      "location": [113.8941, 22.9238],
+      "location": [113.7907694444, 23.0993944444],
       "categorySlugs": ["electronics", "electronic-components"],
       "mainProducts": [
         { "en": "Lithium-ion batteries", "zh": "锂离子电池" },
         { "en": "Battery cells", "zh": "电芯" }
       ],
-      "contact": { "website": "https://www.atlbattery.com/en/about" },
+      "contact": { "website": "https://www.atlbattery.com/zh/about.html" },
       "images": [],
       "sourceName": "ATL official website",
-      "sourceUrl": "https://www.atlbattery.com/en/about"
+      "sourceUrl": "https://www.atlbattery.com/zh/about.html"
     },
     {
       "slug": "dongguan-delta-electronics",
@@ -194,21 +194,21 @@
       "clusterSlug": "dongguan-electronic-information",
       "regionId": "reg_dongguan_city_001",
       "address": {
-        "en": "Shijie Town, Dongguan, Guangdong, China",
-        "zh": "中国广东省东莞市石碣镇"
+        "en": "No. 33 Pantao Road, Shijie Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市石碣镇蟠桃路33号"
       },
-      "location": [113.8028, 23.1003],
+      "location": [113.8170423597, 23.1106253923],
       "categorySlugs": ["electronics", "electronic-components"],
       "mainProducts": [
-        { "en": "Power electronics", "zh": "电力电子产品" },
+        { "en": "Power supplies and network products", "zh": "电源及网络产品" },
         { "en": "Industrial automation components", "zh": "工业自动化部件" }
       ],
       "contact": {
-        "website": "https://www.deltaww.com/en-US/about/aboutDelta"
+        "website": "https://www.deltaww.com/zh-TW/company/global-operations"
       },
       "images": [],
       "sourceName": "Delta official website",
-      "sourceUrl": "https://www.deltaww.com/en-US/about/aboutDelta"
+      "sourceUrl": "https://www.deltaww.com/zh-TW/company/global-operations"
     },
     {
       "slug": "dongguan-luxshare-precision",
@@ -219,19 +219,21 @@
       "clusterSlug": "dongguan-electronic-information",
       "regionId": "reg_dongguan_city_001",
       "address": {
-        "en": "Qingxi Town, Dongguan, Guangdong, China",
-        "zh": "中国广东省东莞市清溪镇"
+        "en": "No. 313 North Ring Road, Qingxi Town, Dongguan, Guangdong, China",
+        "zh": "中国广东省东莞市清溪镇北环路313号"
       },
-      "location": [114.1635, 22.8448],
+      "location": [114.1898699549, 22.8439770706],
       "categorySlugs": ["electronics", "electronic-components"],
       "mainProducts": [
-        { "en": "Connectors", "zh": "连接器" },
-        { "en": "Consumer-electronics assemblies", "zh": "消费电子组件" }
+        { "en": "Connectors and cables", "zh": "连接器及线缆" },
+        { "en": "Acoustic and wearable components", "zh": "声学及可穿戴组件" }
       ],
-      "contact": { "website": "https://www.luxshare-ict.com/" },
+      "contact": {
+        "website": "https://www.luxshare-ict.com/about/contact.html"
+      },
       "images": [],
       "sourceName": "Luxshare official website",
-      "sourceUrl": "https://www.luxshare-ict.com/"
+      "sourceUrl": "https://www.luxshare-ict.com/about/contact.html"
     },
     {
       "slug": "guzhen-kinglong-lighting",
@@ -821,27 +823,27 @@
       "sourceUrl": "https://www.delunabrasives.com/"
     },
     {
-      "slug": "nantong-goldsun-textile",
+      "slug": "nantong-xinyi-home-textile",
       "name": {
-        "en": "Jiangsu Goldsun Textile Science and Technology Co., Ltd.",
-        "zh": "江苏金太阳纺织科技股份有限公司"
+        "en": "Nantong Xinyi Home Textile Co., Ltd.",
+        "zh": "南通欣颐家纺有限公司"
       },
       "clusterSlug": "nantong-home-textiles",
       "regionId": "reg_nantong_city_0001",
       "address": {
-        "en": "Tongzhou District, Nantong, Jiangsu, China",
-        "zh": "中国江苏省南通市通州区"
+        "en": "No. 2 Zixing Village, Tongzhou District, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市通州区紫星村2号"
       },
-      "location": [121.0778, 32.0644],
+      "location": [120.9732048, 32.0685104],
       "categorySlugs": ["home-textiles", "bedding"],
       "mainProducts": [
-        { "en": "Home-textile fabrics", "zh": "家纺面料" },
-        { "en": "Bedding sets", "zh": "床品套件" }
+        { "en": "Bedding sets", "zh": "床品套件" },
+        { "en": "Embroidered home textiles", "zh": "刺绣家纺" }
       ],
-      "contact": { "website": "https://www.goldsunhome.com/aboutus.html" },
+      "contact": { "website": "https://en.xinyihometextile.com/" },
       "images": [],
-      "sourceName": "Goldsun official website",
-      "sourceUrl": "https://www.goldsunhome.com/aboutus.html"
+      "sourceName": "Xinyi Home Textile official website",
+      "sourceUrl": "https://en.xinyihometextile.com/"
     },
     {
       "slug": "nantong-violet-home-textile",
@@ -852,10 +854,10 @@
       "clusterSlug": "nantong-home-textiles",
       "regionId": "reg_nantong_city_0001",
       "address": {
-        "en": "Tongzhou District, Nantong, Jiangsu, China",
-        "zh": "中国江苏省南通市通州区"
+        "en": "Violet Home Textile Industrial Park, Zhangjiang Road, Zhangzhishan Town, Tongzhou District, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市通州区张芝山镇336省道张江路口紫罗兰家纺工业园"
       },
-      "location": [121.1044, 32.0758],
+      "location": [121.01587, 31.9649],
       "categorySlugs": ["home-textiles", "bedding"],
       "mainProducts": [
         { "en": "Bedding", "zh": "床上用品" },
@@ -878,7 +880,7 @@
         "en": "No. 1699 Xinghu Avenue, Nantong Economic and Technological Development Area, Nantong, Jiangsu, China",
         "zh": "中国江苏省南通经济技术开发区星湖大道1699号"
       },
-      "location": [120.9995, 31.8719],
+      "location": [120.918809, 31.934472],
       "categorySlugs": ["home-textiles", "bedding"],
       "mainProducts": [
         { "en": "Bed linen", "zh": "床单被套" },
@@ -890,50 +892,50 @@
       "sourceUrl": "https://www.luolai.com/pages/about-us"
     },
     {
-      "slug": "nantong-sunshine-textile",
+      "slug": "nantong-jinkanghong-textile",
       "name": {
-        "en": "Nantong Sunshine Textile Co., Ltd.",
-        "zh": "南通阳光纺织有限公司"
+        "en": "Nantong Jinkanghong Textile Co., Ltd.",
+        "zh": "南通金康弘纺织品有限公司"
       },
       "clusterSlug": "nantong-home-textiles",
       "regionId": "reg_nantong_city_0001",
       "address": {
-        "en": "Nantong, Jiangsu, China",
-        "zh": "中国江苏省南通市"
+        "en": "No. 20 Tingnan Road, Xiting Town, Tongzhou District, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市通州区西亭镇亭南路20号"
       },
-      "location": [120.9532, 32.0104],
+      "location": [121.02599, 32.09873],
       "categorySlugs": ["home-textiles", "bedding"],
       "mainProducts": [
-        { "en": "Home-textile fabrics", "zh": "家纺面料" },
-        { "en": "Finished bedding", "zh": "成品床品" }
+        { "en": "Digitally printed bedding", "zh": "数码印花床品" },
+        { "en": "Quilt covers and sheets", "zh": "被套及床单" }
       ],
-      "contact": { "website": "https://www.ntsunshinetextile.com/" },
+      "contact": { "website": "https://en.kifro.com/" },
       "images": [],
-      "sourceName": "Nantong Sunshine Textile official website",
-      "sourceUrl": "https://www.ntsunshinetextile.com/"
+      "sourceName": "Jinkanghong official website",
+      "sourceUrl": "https://en.kifro.com/"
     },
     {
-      "slug": "nantong-bestwin-textile",
+      "slug": "nantong-nanshing-home-textile",
       "name": {
-        "en": "Nantong Bestwin Home Textile Co., Ltd.",
-        "zh": "南通百斯特家纺有限公司"
+        "en": "Jiangsu Nanshing Home Textile Co., Ltd.",
+        "zh": "江苏南星家纺有限公司"
       },
       "clusterSlug": "nantong-home-textiles",
       "regionId": "reg_nantong_city_0001",
       "address": {
-        "en": "Nantong, Jiangsu, China",
-        "zh": "中国江苏省南通市"
+        "en": "No. 999 Jianghai Avenue, Nantong High-tech Industrial Development Zone, Tongzhou District, Nantong, Jiangsu, China",
+        "zh": "中国江苏省南通市通州区南通高新技术产业开发区江海大道999号"
       },
-      "location": [121.0351, 32.0285],
+      "location": [121.0369299, 32.0469352],
       "categorySlugs": ["home-textiles", "bedding"],
       "mainProducts": [
-        { "en": "Duvet covers", "zh": "被套" },
-        { "en": "Sheet sets", "zh": "床单套件" }
+        { "en": "Bedding sets", "zh": "床品套件" },
+        { "en": "Curtains and home textiles", "zh": "窗帘及家纺产品" }
       ],
-      "contact": { "website": "https://www.bestwintextile.com/" },
+      "contact": { "website": "https://www.nanshing.com.cn/" },
       "images": [],
-      "sourceName": "Bestwin official website",
-      "sourceUrl": "https://www.bestwintextile.com/"
+      "sourceName": "Nanshing official website",
+      "sourceUrl": "https://www.nanshing.com.cn/"
     },
     {
       "slug": "jinjiang-anta-sports",

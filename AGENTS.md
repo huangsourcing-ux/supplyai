@@ -125,6 +125,7 @@ packages/
 - M0-T6 在 M1-T1 尚未建立真实 Drizzle `db:migrate` 前，只能执行已存在的 Payload `cms` migration，并以其成功门控当前 staging 发布；M1-T1 必须补接 `core` migration，之后 Railway API/Worker 只有 core migration 成功才可发布。禁止用 no-op 伪造 core migration。
 - 种子和合成数据只能进入 staging。production 数据默认 draft，只迁移 `verified` 且 `curated` 的 canonical 数据，并按开发计划 M5-T8a 使用 manifest、校验和和人工抽查后发布。
 - M2-T6/T7 已前置到 M2-T2 之前作为 staging 真实数据门禁：只能通过带 Clerk admin 鉴权的 Admin API 与 `/ops` 执行 verify、publish/unpublish；工厂 publish 前必须 verified，状态流转后同步 purge MAP 缓存。禁止用 SQL、seed、import 或临时脚本绕过审核留痕。
+- M2 staging 固定候选穷举后若仍不足 2+10，只有经单独批准的源数据修复任务，才可对 `draft + unverified` 且从未发布/核验的 canonical 记录做同产业带原位修复或替换。staging 内容修改仍只走 `/ops`，仓库同步 real-seed、来源台账和旧值→新值证据；不得跨产业带调配、降低厂区坐标标准、操作状态字段或提前 M5 Create。
 - 导入必须经 R2 中转、Zod 逐行校验、坐标转换、按 slug upsert、搜索列生成，并把逐行失败报告写回 R2。不要依赖 CLI 与 Worker 的共享文件系统。
 - 每日备份使用与生产 PostgreSQL 主版本一致且锁定的 `pg_dump`，加密后写入 R2，保留 30 天；只有人工记录的恢复演练成功才算验收。
 
