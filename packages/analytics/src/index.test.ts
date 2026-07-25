@@ -9,6 +9,10 @@ describe("consent-aware analytics", () => {
     client.configureCapture(capture);
 
     client.trackSearchPerformed({ query: "led", resultCount: 4 });
+    client.trackClusterViewed({
+      clusterId: "clu000000000000000001",
+      slug: "yiwu-small-commodities",
+    });
     client.setConsent("denied");
     client.trackSearchPerformed({ query: "socks", resultCount: 2 });
 
@@ -40,6 +44,26 @@ describe("consent-aware analytics", () => {
     expect(capture).toHaveBeenCalledWith("search_performed", {
       query: "led lighting",
       resultCount: 7,
+    });
+  });
+});
+
+describe("catalog view analytics", () => {
+  it("captures the frozen cluster view event after consent", () => {
+    const capture = vi.fn();
+    const client = createAnalyticsClient();
+    client.configureCapture(capture);
+    client.setConsent("granted");
+
+    client.trackClusterViewed({
+      clusterId: "clu000000000000000001",
+      slug: "yiwu-small-commodities",
+    });
+
+    expect(capture).toHaveBeenCalledOnce();
+    expect(capture).toHaveBeenCalledWith("cluster_viewed", {
+      clusterId: "clu000000000000000001",
+      slug: "yiwu-small-commodities",
     });
   });
 });

@@ -58,6 +58,67 @@
       "viewFactoryDetails": "View factory details"
     }
   },
+  "ClusterDetail": {
+    "backToMap": "Back to the map",
+    "location": "{city}, China",
+    "save": "Save cluster",
+    "saveUnavailable": "Favorites will be available after sign-in launches.",
+    "productsHeading": "Main products",
+    "aboutHeading": "About this industrial cluster",
+    "descriptionImageAlt": "{name} industrial cluster",
+    "stats": {
+      "heading": "Cluster at a glance",
+      "factoryCount": "Factories",
+      "annualOutput": "Annual output",
+      "exportShare": "Export share"
+    },
+    "map": {
+      "ariaLabel": "Map preview of {name}",
+      "boundaryUnavailable": "Boundary data is not available yet. Showing the cluster center.",
+      "loading": "Loading map preview…",
+      "error": "The map preview could not be loaded.",
+      "retry": "Retry",
+      "attributionLabel": "Map data attribution",
+      "mapTilerLogoAlt": "MapTiler logo"
+    },
+    "factories": {
+      "heading": "Factories in this cluster",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "mainProducts": "Main products from {name}",
+      "imageAlt": "{name} factory",
+      "viewFactory": "View {name} factory details",
+      "viewDetails": "View factory",
+      "empty": "No published factories are available in this cluster yet.",
+      "loadMore": "Load more factories",
+      "loadingMore": "Loading more factories…",
+      "loadError": "More factories could not be loaded.",
+      "retry": "Try again",
+      "allLoaded": "All available factories are shown."
+    },
+    "metadata": {
+      "title": "{name} in {city} | ChinaSupply.AI",
+      "imageAlt": "{name} industrial cluster",
+      "unavailableTitle": "Cluster temporarily unavailable | ChinaSupply.AI"
+    },
+    "notFound": {
+      "eyebrow": "Cluster unavailable",
+      "title": "This industrial cluster was not found",
+      "description": "The link may be outdated, or the cluster is not currently published.",
+      "backToMap": "Browse the map"
+    },
+    "error": {
+      "eyebrow": "Temporary problem",
+      "title": "We could not load this cluster",
+      "description": "The supplier catalog may be temporarily unavailable. Try the request again.",
+      "retry": "Try again",
+      "retrying": "Trying again…",
+      "backToMap": "Back to the map"
+    },
+    "loading": {
+      "label": "Loading industrial cluster details"
+    }
+  },
   "Operations": {
     "signInEyebrow": "Restricted staging access",
     "signInTitle": "Operations sign in",

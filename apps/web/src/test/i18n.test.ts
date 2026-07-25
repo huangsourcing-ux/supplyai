@@ -67,6 +67,24 @@ describe("Web internationalization contract", () => {
       },
       truncated: "Zoom in to see all factories",
     });
+    expect(messages.ClusterDetail).toMatchObject({
+      backToMap: "Back to the map",
+      factories: {
+        heading: "Factories in this cluster",
+        loadMore: "Load more factories",
+        retry: "Try again",
+      },
+      map: {
+        attributionLabel: "Map data attribution",
+        boundaryUnavailable:
+          "Boundary data is not available yet. Showing the cluster center.",
+      },
+      save: "Save cluster",
+      stats: {
+        factoryCount: "Factories",
+        heading: "Cluster at a glance",
+      },
+    });
     expect(messages.Operations).toMatchObject({
       dashboard: {
         actionError: "The operation could not be completed.",
