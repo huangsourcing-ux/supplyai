@@ -15,6 +15,28 @@
     "truncated": "Zoom in to see all factories",
     "attributionLabel": "Map data attribution",
     "mapTilerLogoAlt": "MapTiler logo",
+    "search": {
+      "label": "Search products, industrial clusters, and factories",
+      "placeholder": "Search products or factories",
+      "clear": "Clear search",
+      "removeCategory": "Remove {category} filter",
+      "loading": "Searching…",
+      "error": "Search could not be completed.",
+      "retry": "Retry",
+      "noResults": "No matching suppliers found. Try another product or browse a popular category.",
+      "loadingPopular": "Loading popular categories…",
+      "popularCategories": "Popular categories",
+      "results": "Search results",
+      "categoryResult": "Category",
+      "factoryCount": "{count, plural, one {# factory} other {# factories}}",
+      "verified": "Verified factory",
+      "unverified": "Unverified factory",
+      "groups": {
+        "categories": "Categories",
+        "clusters": "Industrial clusters",
+        "factories": "Factories"
+      }
+    },
     "card": {
       "cluster": "Industrial cluster",
       "factory": "Factory",

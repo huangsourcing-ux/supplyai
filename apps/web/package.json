@@ -25,6 +25,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@chinasupply/analytics": "workspace:*",
     "@chinasupply/api-client": "workspace:*",
     "@chinasupply/config": "workspace:*",
     "@clerk/nextjs": "7.5.22",

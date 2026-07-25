@@ -44,6 +44,21 @@ describe("Web internationalization contract", () => {
       mapError: "The map could not be loaded.",
       mapTilerLogoAlt: "MapTiler logo",
       retry: "Retry",
+      search: {
+        categoryResult: "Category",
+        clear: "Clear search",
+        error: "Search could not be completed.",
+        groups: {
+          categories: "Categories",
+          clusters: "Industrial clusters",
+          factories: "Factories",
+        },
+        loading: "Searching…",
+        noResults:
+          "No matching suppliers found. Try another product or browse a popular category.",
+        popularCategories: "Popular categories",
+        results: "Search results",
+      },
       truncated: "Zoom in to see all factories",
     });
     expect(messages.Operations).toMatchObject({

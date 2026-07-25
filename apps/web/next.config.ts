@@ -51,7 +51,11 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: true,
-  transpilePackages: ["@chinasupply/api-client", "@chinasupply/config"],
+  transpilePackages: [
+    "@chinasupply/analytics",
+    "@chinasupply/api-client",
+    "@chinasupply/config",
+  ],
   turbopack: {
     root: path.resolve(currentDirectory, "../.."),
   },

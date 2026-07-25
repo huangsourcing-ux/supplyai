@@ -309,6 +309,9 @@ importers:
 
   apps/web:
     dependencies:
+      "@chinasupply/analytics":
+        specifier: workspace:*
+        version: link:../../packages/analytics
       "@chinasupply/api-client":
         specifier: workspace:*
         version: link:../../packages/api-client
@@ -392,7 +395,20 @@ importers:
         specifier: 4.0.18
         version: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@22.19.9)(jiti@2.7.0)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))(lightningcss@1.30.2)(msw@2.15.0(@types/node@22.19.9)(typescript@5.9.2))(sass@1.77.4)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  packages/analytics: {}
+  packages/analytics:
+    devDependencies:
+      "@chinasupply/config":
+        specifier: workspace:*
+        version: link:../config
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: 4.0.18
+        version: 4.0.18(@opentelemetry/api@1.9.1)(@types/node@22.19.9)(jiti@2.7.0)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@6.0.6))(lightningcss@1.30.2)(msw@2.15.0(@types/node@22.19.9)(typescript@5.9.2))(sass@1.77.4)(terser@5.49.0)(tsx@4.22.4)(yaml@2.9.0)
 
   packages/api-client:
     dependencies:
