@@ -536,57 +536,6 @@
   background: transparent;
 }
 
-.skeleton {
-  border-radius: 0.75rem;
-  background: linear-gradient(90deg, #dce5df 25%, #eaf0ec 50%, #dce5df 75%);
-  background-size: 200% 100%;
-  animation: skeleton-pulse 1.4s ease-in-out infinite;
-}
-
-.skeletonBack {
-  width: 8rem;
-  height: 2.3rem;
-}
-
-.loadingHero {
-  display: grid;
-  gap: 1.25rem;
-  padding: clamp(3rem, 8vw, 6rem) 0;
-}
-
-.skeletonTitle {
-  width: min(42rem, 82%);
-  height: clamp(4rem, 10vw, 7rem);
-}
-
-.skeletonSummary {
-  width: min(34rem, 72%);
-  height: 1.6rem;
-}
-
-.skeletonMap {
-  height: clamp(19rem, 44vw, 31rem);
-  border-radius: 1.65rem;
-}
-
-.loadingCards {
-  display: grid;
-  gap: 1rem;
-  padding-top: 5rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.skeletonCard {
-  height: 10rem;
-  border-radius: 1.2rem;
-}
-
-@keyframes skeleton-pulse {
-  to {
-    background-position: -200% 0;
-  }
-}
-
 @media (max-width: 52rem) {
   .hero {
     grid-template-columns: 1fr;
@@ -603,8 +552,7 @@
   }
 
   .statsGrid,
-  .factoryGrid,
-  .loadingCards {
+  .factoryGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -637,8 +585,7 @@
   }
 
   .statsGrid,
-  .factoryGrid,
-  .loadingCards {
+  .factoryGrid {
     grid-template-columns: 1fr;
   }
 
@@ -655,9 +602,5 @@
   .factoryImage img,
   .factoryCardAction {
     transition: none;
-  }
-
-  .skeleton {
-    animation: none;
   }
 }

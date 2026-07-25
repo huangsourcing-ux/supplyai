@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+
 import { NextIntlClientProvider } from "next-intl";
 import { renderToStaticMarkup } from "react-dom/server";
 import React from "react";
@@ -299,5 +301,16 @@ describe("cluster request failure classification", () => {
     expect(isMissingClusterResponse({ status: 404 })).toBe(true);
     expect(isMissingClusterResponse({ status: 500 })).toBe(false);
     expect(isMissingClusterResponse(new Error("offline"))).toBe(false);
+  });
+
+  it("keeps the not-found decision outside a route-level streaming boundary", () => {
+    expect(
+      existsSync(
+        new URL(
+          "../app/(frontend)/clusters/[slug]/loading.tsx",
+          import.meta.url,
+        ),
+      ),
+    ).toBe(false);
   });
 });
