@@ -4,6 +4,7 @@ import type {
   GetAdminFactories200DataItem,
   GetAdminFactory200Data,
 } from "@chinasupply/api-client";
+import { NextIntlClientProvider } from "next-intl";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -30,10 +31,8 @@ const timestamp = "2026-07-24T12:00:00Z";
 const labels: OpsLabels = {
   actionError: "The operation could not be completed.",
   authError: "The administrator session could not be authorized.",
-  clusterCount: (count) => `${count} clusters`,
   clusterList: "Industrial clusters",
   emptyList: "No records found.",
-  factoryCount: (count) => `${count} factories`,
   factoryList: "Factories",
   fields: {
     addressEn: "Address (English)",
@@ -231,7 +230,7 @@ describe("operations data forms", () => {
 });
 
 describe("operations review components", () => {
-  it("renders list status and verification state immediately", () => {
+  it("renders list status, verification state, and singular ICU counts", () => {
     const clusters: GetAdminClusters200DataItem[] = [
       {
         factoryCount: 5,
@@ -255,19 +254,106 @@ describe("operations review components", () => {
       },
     ];
     const markup = renderToStaticMarkup(
-      <OpsEntityLists
-        clusters={clusters}
-        factories={factories}
-        labels={labels}
-        onSelect={vi.fn()}
-        selection={{ id: factoryId, kind: "factory" }}
-      />,
+      <NextIntlClientProvider
+        locale="en"
+        messages={{
+          Operations: {
+            dashboard: {
+              clusterCount:
+                "{count, plural, one {# cluster} other {# clusters}}",
+              factoryCount:
+                "{count, plural, one {# factory} other {# factories}}",
+            },
+          },
+        }}
+        timeZone="UTC"
+      >
+        <OpsEntityLists
+          clusters={clusters}
+          factories={factories}
+          labels={labels}
+          onSelect={vi.fn()}
+          selection={{ id: factoryId, kind: "factory" }}
+        />
+      </NextIntlClientProvider>,
     );
 
     expect(markup).toContain("Ningbo Fasteners");
     expect(markup).toContain("Ningbo Bolt Factory");
+    expect(markup).toContain("1 cluster");
+    expect(markup).toContain("1 factory");
     expect(markup).toContain("Unverified");
     expect(markup).toContain('aria-pressed="true"');
+  });
+
+  it("renders plural ICU counts inside the client translation boundary", () => {
+    const clusters: GetAdminClusters200DataItem[] = [
+      {
+        factoryCount: 5,
+        id: clusterId,
+        name: cluster.name,
+        publishedAt: null,
+        slug: cluster.slug,
+        status: "draft",
+        updatedAt: timestamp,
+      },
+      {
+        factoryCount: 5,
+        id: "clu_23456789012345678",
+        name: { en: "Second cluster", zh: "第二产业带" },
+        publishedAt: null,
+        slug: "second-cluster",
+        status: "draft",
+        updatedAt: timestamp,
+      },
+    ];
+    const factories: GetAdminFactories200DataItem[] = [
+      {
+        id: factoryId,
+        name: factory.name,
+        publishedAt: null,
+        slug: factory.slug,
+        status: "draft",
+        updatedAt: timestamp,
+        verified: false,
+      },
+      {
+        id: "fac_23456789012345678",
+        name: { en: "Second factory", zh: "第二工厂" },
+        publishedAt: null,
+        slug: "second-factory",
+        status: "draft",
+        updatedAt: timestamp,
+        verified: false,
+      },
+    ];
+    const markup = renderToStaticMarkup(
+      <NextIntlClientProvider
+        locale="en"
+        messages={{
+          Operations: {
+            dashboard: {
+              clusterCount:
+                "{count, plural, one {# cluster} other {# clusters}}",
+              factoryCount:
+                "{count, plural, one {# factory} other {# factories}}",
+            },
+          },
+        }}
+        timeZone="UTC"
+      >
+        <OpsEntityLists
+          clusters={clusters}
+          factories={factories}
+          labels={labels}
+          onSelect={vi.fn()}
+          selection={null}
+        />
+      </NextIntlClientProvider>,
+    );
+
+    expect(markup).toContain("2 clusters");
+    expect(markup).toContain("2 factories");
   });
 
   it("requires SOP confirmation before cluster publication", () => {
