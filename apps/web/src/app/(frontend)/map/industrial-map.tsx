@@ -43,6 +43,10 @@ import {
 } from "./map-config";
 import { MapAttribution, type MapAttributionLabels } from "./map-attribution";
 import {
+  hasRenderableMapSize,
+  observeRenderableMapContainer,
+} from "./map-container-size";
+import {
   MapStatus,
   type MapStatusKind,
   type MapStatusLabels,
@@ -162,6 +166,7 @@ export function IndustrialMap({
 
     let disposed = false;
     let activeMap: MapLibreMap | null = null;
+    let mapInitializationStarted = false;
     const viewportUpdater = createDebouncedViewportUpdater((nextViewport) => {
       setViewport(nextViewport);
       setViewportIsSettling(false);
@@ -171,148 +176,180 @@ export function IndustrialMap({
     setViewport(null);
     setViewportIsSettling(true);
 
-    void import("maplibre-gl")
-      .then(({ Map, NavigationControl, setWorkerUrl }) => {
-        if (disposed) return;
+    const initializeMap = () => {
+      if (
+        disposed ||
+        mapInitializationStarted ||
+        !hasRenderableMapSize(container)
+      ) {
+        return;
+      }
+      mapInitializationStarted = true;
 
-        setWorkerUrl(MAPLIBRE_WORKER_URL);
-        const style = createChinaSupplyMapStyle(
-          process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
-        ) as unknown as StyleSpecification;
-        const map = new Map({
-          attributionControl: false,
-          bounds: CHINA_BOUNDS,
-          container,
-          fitBoundsOptions: {
-            animate: false,
-            padding: { bottom: 48, left: 24, right: 24, top: 48 },
-          },
-          style,
-        });
-
-        activeMap = map;
-        mapRef.current = map;
-        const cancelViewportQueries = () => {
-          setViewportIsSettling(true);
-          viewportUpdater.cancel();
-          void Promise.all([
-            queryClient.cancelQueries({
-              queryKey: getGetMapClusterBoundariesQueryKey(),
-            }),
-            queryClient.cancelQueries({
-              queryKey: getGetMapFactoriesQueryKey(),
-            }),
-          ]);
-        };
-        const scheduleViewportUpdate = () => {
-          const nextViewport = readMapViewport(map);
-          if (nextViewport === null) {
-            viewportUpdater.cancel();
-            setViewport(null);
-            setViewportIsSettling(false);
-            return;
-          }
-
-          viewportUpdater.schedule(nextViewport);
-        };
-        const handleMapClick = (event: MapMouseEvent) => {
-          const readFirstFeature = (layerId: string) =>
-            map.queryRenderedFeatures(event.point, {
-              layers: [layerId],
-            })[0];
-          const target = resolveMapClickTarget({
-            clusterBoundary: readFirstFeature(CLUSTER_BOUNDARIES_FILL_LAYER_ID),
-            clusterPoint: readFirstFeature(CLUSTER_POINTS_LAYER_ID),
-            factoryCluster: readFirstFeature(FACTORY_CLUSTERS_LAYER_ID),
-            factoryPoint: readFirstFeature(FACTORY_POINTS_LAYER_ID),
-          });
-
-          if (target.kind === "selection") {
-            setSelectedFeature(target.selection);
-            return;
-          }
-
-          setSelectedFeature(null);
-          if (target.kind === "empty") return;
-
-          const source = map.getSource(FACTORIES_SOURCE_ID) as GeoJSONSource;
-          void source
-            .getClusterExpansionZoom(target.clusterId)
-            .then((zoom) => {
-              if (disposed) return;
-              map.easeTo({
-                center: target.coordinates,
-                duration: 500,
-                zoom,
-              });
-            })
-            .catch(() => undefined);
-        };
-        const showInteractiveCursor = () => {
-          map.getCanvas().style.cursor = "pointer";
-        };
-        const hideInteractiveCursor = () => {
-          map.getCanvas().style.cursor = "";
-        };
-
-        map.on("movestart", cancelViewportQueries);
-        map.on("moveend", scheduleViewportUpdate);
-        map.addControl(
-          new NavigationControl({
-            showCompass: true,
-            showZoom: true,
-            visualizePitch: false,
-          }),
-          "top-right",
-        );
-
-        let initialLoadComplete = false;
-        const handleInitialError = () => {
-          if (!initialLoadComplete && !disposed) {
-            setMapLoadState("error");
-          }
-        };
-        const handleStyleLoad = () => {
+      void import("maplibre-gl")
+        .then(({ Map, NavigationControl, setWorkerUrl }) => {
           if (disposed) return;
-
-          initialLoadComplete = true;
-          map.off("error", handleInitialError);
-          map.addSource(CLUSTER_BOUNDARIES_SOURCE_ID, {
-            data: clusterBoundariesRef.current,
-            type: "geojson",
-          });
-          map.addLayer(clusterBoundariesFillLayer);
-          map.addSource(CLUSTER_POINTS_SOURCE_ID, {
-            data: clusterPointsRef.current,
-            type: "geojson",
-          });
-          map.addLayer(clusterPointsLayer);
-          map.addSource(FACTORIES_SOURCE_ID, {
-            data: factoryPointsRef.current,
-            type: "geojson",
-            ...factorySourceOptions,
-          });
-          map.addLayer(factoryClustersLayer);
-          map.addLayer(factoryClusterCountLayer);
-          map.addLayer(factoryPointsLayer);
-          map.on("click", handleMapClick);
-          for (const layerId of INTERACTIVE_LAYER_IDS) {
-            map.on("mouseenter", layerId, showInteractiveCursor);
-            map.on("mouseleave", layerId, hideInteractiveCursor);
+          if (!hasRenderableMapSize(container)) {
+            mapInitializationStarted = false;
+            return;
           }
-          scheduleViewportUpdate();
-          setMapLoadState("ready");
-        };
 
-        map.on("error", handleInitialError);
-        map.once("style.load", handleStyleLoad);
-      })
-      .catch(() => {
-        if (!disposed) setMapLoadState("error");
-      });
+          setWorkerUrl(MAPLIBRE_WORKER_URL);
+          const style = createChinaSupplyMapStyle(
+            process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
+          ) as unknown as StyleSpecification;
+          const map = new Map({
+            attributionControl: false,
+            bounds: CHINA_BOUNDS,
+            container,
+            fitBoundsOptions: {
+              animate: false,
+              padding: { bottom: 48, left: 24, right: 24, top: 48 },
+            },
+            style,
+            // The app-owned observer also guards initial zero-size layouts.
+            trackResize: false,
+          });
+
+          activeMap = map;
+          mapRef.current = map;
+          const cancelViewportQueries = () => {
+            setViewportIsSettling(true);
+            viewportUpdater.cancel();
+            void Promise.all([
+              queryClient.cancelQueries({
+                queryKey: getGetMapClusterBoundariesQueryKey(),
+              }),
+              queryClient.cancelQueries({
+                queryKey: getGetMapFactoriesQueryKey(),
+              }),
+            ]);
+          };
+          const scheduleViewportUpdate = () => {
+            const nextViewport = readMapViewport(map);
+            if (nextViewport === null) {
+              viewportUpdater.cancel();
+              setViewport(null);
+              setViewportIsSettling(false);
+              return;
+            }
+
+            viewportUpdater.schedule(nextViewport);
+          };
+          const handleMapClick = (event: MapMouseEvent) => {
+            const readFirstFeature = (layerId: string) =>
+              map.queryRenderedFeatures(event.point, {
+                layers: [layerId],
+              })[0];
+            const target = resolveMapClickTarget({
+              clusterBoundary: readFirstFeature(
+                CLUSTER_BOUNDARIES_FILL_LAYER_ID,
+              ),
+              clusterPoint: readFirstFeature(CLUSTER_POINTS_LAYER_ID),
+              factoryCluster: readFirstFeature(FACTORY_CLUSTERS_LAYER_ID),
+              factoryPoint: readFirstFeature(FACTORY_POINTS_LAYER_ID),
+            });
+
+            if (target.kind === "selection") {
+              setSelectedFeature(target.selection);
+              return;
+            }
+
+            setSelectedFeature(null);
+            if (target.kind === "empty") return;
+
+            const source = map.getSource(FACTORIES_SOURCE_ID) as GeoJSONSource;
+            void source
+              .getClusterExpansionZoom(target.clusterId)
+              .then((zoom) => {
+                if (disposed) return;
+                map.easeTo({
+                  center: target.coordinates,
+                  duration: 500,
+                  zoom,
+                });
+              })
+              .catch(() => undefined);
+          };
+          const showInteractiveCursor = () => {
+            map.getCanvas().style.cursor = "pointer";
+          };
+          const hideInteractiveCursor = () => {
+            map.getCanvas().style.cursor = "";
+          };
+
+          map.on("movestart", cancelViewportQueries);
+          map.on("moveend", scheduleViewportUpdate);
+          map.addControl(
+            new NavigationControl({
+              showCompass: true,
+              showZoom: true,
+              visualizePitch: false,
+            }),
+            "top-right",
+          );
+
+          let initialLoadComplete = false;
+          const handleInitialError = () => {
+            if (!initialLoadComplete && !disposed) {
+              setMapLoadState("error");
+            }
+          };
+          const handleStyleLoad = () => {
+            if (disposed) return;
+
+            initialLoadComplete = true;
+            map.off("error", handleInitialError);
+            map.addSource(CLUSTER_BOUNDARIES_SOURCE_ID, {
+              data: clusterBoundariesRef.current,
+              type: "geojson",
+            });
+            map.addLayer(clusterBoundariesFillLayer);
+            map.addSource(CLUSTER_POINTS_SOURCE_ID, {
+              data: clusterPointsRef.current,
+              type: "geojson",
+            });
+            map.addLayer(clusterPointsLayer);
+            map.addSource(FACTORIES_SOURCE_ID, {
+              data: factoryPointsRef.current,
+              type: "geojson",
+              ...factorySourceOptions,
+            });
+            map.addLayer(factoryClustersLayer);
+            map.addLayer(factoryClusterCountLayer);
+            map.addLayer(factoryPointsLayer);
+            map.on("click", handleMapClick);
+            for (const layerId of INTERACTIVE_LAYER_IDS) {
+              map.on("mouseenter", layerId, showInteractiveCursor);
+              map.on("mouseleave", layerId, hideInteractiveCursor);
+            }
+            scheduleViewportUpdate();
+            setMapLoadState("ready");
+          };
+
+          map.on("error", handleInitialError);
+          map.once("style.load", handleStyleLoad);
+        })
+        .catch(() => {
+          if (!disposed) setMapLoadState("error");
+        });
+    };
+    const disconnectResizeObserver = observeRenderableMapContainer(
+      container,
+      () => {
+        if (disposed) return;
+        if (activeMap === null) {
+          initializeMap();
+          return;
+        }
+
+        activeMap.resize();
+      },
+    );
 
     return () => {
       disposed = true;
+      disconnectResizeObserver();
       viewportUpdater.cancel();
       void Promise.all([
         queryClient.cancelQueries({
