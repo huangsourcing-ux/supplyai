@@ -13,6 +13,17 @@ describe("consent-aware analytics", () => {
       clusterId: "clu000000000000000001",
       slug: "yiwu-small-commodities",
     });
+    client.trackFactoryContactClicked({
+      factoryId: "fac000000000000000001",
+      method: "email",
+      slug: "yiwu-lighting-factory",
+    });
+    client.trackNavigationClicked({
+      factoryId: "fac000000000000000001",
+      platform: "web",
+      provider: "google",
+      slug: "yiwu-lighting-factory",
+    });
     client.setConsent("denied");
     client.trackSearchPerformed({ query: "socks", resultCount: 2 });
 
@@ -65,6 +76,50 @@ describe("catalog view analytics", () => {
       clusterId: "clu000000000000000001",
       slug: "yiwu-small-commodities",
     });
+  });
+});
+
+describe("factory action analytics", () => {
+  it("captures contact clicks without contact values", () => {
+    const capture = vi.fn();
+    const client = createAnalyticsClient();
+    client.configureCapture(capture);
+    client.setConsent("granted");
+
+    client.trackFactoryContactClicked({
+      factoryId: "fac000000000000000001",
+      method: "website",
+      slug: "yiwu-lighting-factory",
+    });
+
+    expect(capture).toHaveBeenCalledWith("factory_contact_clicked", {
+      factoryId: "fac000000000000000001",
+      method: "website",
+      slug: "yiwu-lighting-factory",
+    });
+    expect(JSON.stringify(capture.mock.calls)).not.toContain("example.com");
+  });
+
+  it("captures navigation provider and platform without coordinates", () => {
+    const capture = vi.fn();
+    const client = createAnalyticsClient();
+    client.configureCapture(capture);
+    client.setConsent("granted");
+
+    client.trackNavigationClicked({
+      factoryId: "fac000000000000000001",
+      platform: "ios",
+      provider: "amap",
+      slug: "yiwu-lighting-factory",
+    });
+
+    expect(capture).toHaveBeenCalledWith("navigation_clicked", {
+      factoryId: "fac000000000000000001",
+      platform: "ios",
+      provider: "amap",
+      slug: "yiwu-lighting-factory",
+    });
+    expect(JSON.stringify(capture.mock.calls)).not.toContain("coordinates");
   });
 });
 

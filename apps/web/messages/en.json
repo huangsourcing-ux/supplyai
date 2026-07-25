@@ -116,6 +116,98 @@
       "backToMap": "Back to the map"
     }
   },
+  "FactoryDetail": {
+    "backToMap": "Back to the map",
+    "location": "{city}, China",
+    "trust": {
+      "verified": "Verified",
+      "verifiedMonth": "Verified {month}",
+      "unverified": "Unverified",
+      "source": "Source:"
+    },
+    "gallery": {
+      "ariaLabel": "Images of {name}",
+      "previous": "Show previous image",
+      "next": "Show next image",
+      "position": "Image {current} of {count}",
+      "chooseImage": "Choose a factory image",
+      "showImage": "Show image {index}"
+    },
+    "details": {
+      "heading": "Factory information",
+      "mainProducts": "Main products",
+      "certifications": "Certifications",
+      "moq": "Minimum order quantity",
+      "establishedYear": "Established",
+      "employeeRange": "Factory size"
+    },
+    "map": {
+      "heading": "Factory location",
+      "ariaLabel": "Map preview of {name}",
+      "loading": "Loading map preview…",
+      "error": "The map preview could not be loaded.",
+      "retry": "Retry",
+      "attributionLabel": "Map data attribution",
+      "mapTilerLogoAlt": "MapTiler logo"
+    },
+    "address": {
+      "heading": "Address",
+      "english": "English address",
+      "chinese": "Chinese address"
+    },
+    "copy": {
+      "action": "Copy",
+      "actionLabel": "Copy {label}",
+      "success": "Copied",
+      "error": "Could not copy"
+    },
+    "contact": {
+      "heading": "Contact",
+      "website": "Website",
+      "visitWebsite": "Visit official website",
+      "email": "Email",
+      "phone": "Phone",
+      "wechat": "WeChat",
+      "copyWechat": "Copy WeChat ID",
+      "copied": "Copied",
+      "copyError": "Could not copy"
+    },
+    "navigation": {
+      "heading": "Plan a visit",
+      "providers": {
+        "apple": "Apple Maps",
+        "google": "Google Maps",
+        "amap": "Amap",
+        "baidu": "Baidu Maps"
+      }
+    },
+    "related": {
+      "heading": "Related factories",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "viewDetails": "View factory"
+    },
+    "metadata": {
+      "title": "{name} in {city} | ChinaSupply.AI",
+      "description": "Source {products} from {name}, a factory in {city}, China.",
+      "imageAlt": "{name} factory",
+      "unavailableTitle": "Factory temporarily unavailable | ChinaSupply.AI"
+    },
+    "notFound": {
+      "eyebrow": "Factory unavailable",
+      "title": "This factory was not found",
+      "description": "The link may be outdated, or the factory is not currently published.",
+      "backToMap": "Browse the map"
+    },
+    "error": {
+      "eyebrow": "Temporary problem",
+      "title": "We could not load this factory",
+      "description": "The supplier catalog may be temporarily unavailable. Try the request again.",
+      "retry": "Try again",
+      "retrying": "Trying again…",
+      "backToMap": "Back to the map"
+    }
+  },
   "Operations": {
     "signInEyebrow": "Restricted staging access",
     "signInTitle": "Operations sign in",

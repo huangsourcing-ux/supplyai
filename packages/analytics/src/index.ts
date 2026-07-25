@@ -20,9 +20,37 @@ export type ClusterViewedProperties = {
 
 export type ClusterViewedInput = Readonly<ClusterViewedProperties>;
 
+export type FactoryContactMethod = "email" | "phone" | "wechat" | "website";
+
+export type FactoryContactClickedProperties = {
+  factoryId: string;
+  method: FactoryContactMethod;
+  slug: string;
+};
+
+export type FactoryContactClickedInput =
+  Readonly<FactoryContactClickedProperties>;
+
+export type NavigationProvider = "amap" | "apple" | "baidu" | "google";
+export type NavigationPlatform = "android" | "ios" | "web";
+
+export type NavigationClickedProperties = {
+  factoryId: string;
+  platform: NavigationPlatform;
+  provider: NavigationProvider;
+  slug: string;
+};
+
+export type NavigationClickedInput = Readonly<NavigationClickedProperties>;
+
 export interface AnalyticsCapture {
   (event: "search_performed", properties: SearchPerformedProperties): void;
   (event: "cluster_viewed", properties: ClusterViewedProperties): void;
+  (
+    event: "factory_contact_clicked",
+    properties: FactoryContactClickedProperties,
+  ): void;
+  (event: "navigation_clicked", properties: NavigationClickedProperties): void;
 }
 
 export interface AnalyticsClient {
@@ -30,6 +58,8 @@ export interface AnalyticsClient {
   getConsent(): AnalyticsConsent;
   setConsent(consent: AnalyticsConsent): void;
   trackClusterViewed(input: ClusterViewedInput): void;
+  trackFactoryContactClicked(input: FactoryContactClickedInput): void;
+  trackNavigationClicked(input: NavigationClickedInput): void;
   trackSearchPerformed(input: SearchPerformedInput): void;
 }
 
@@ -71,6 +101,21 @@ export function createAnalyticsClient(): AnalyticsClient {
       if (consent !== "granted" || capture === null) return;
 
       capture("cluster_viewed", { clusterId, slug });
+    },
+    trackFactoryContactClicked({ factoryId, method, slug }) {
+      if (consent !== "granted" || capture === null) return;
+
+      capture("factory_contact_clicked", { factoryId, method, slug });
+    },
+    trackNavigationClicked({ factoryId, platform, provider, slug }) {
+      if (consent !== "granted" || capture === null) return;
+
+      capture("navigation_clicked", {
+        factoryId,
+        platform,
+        provider,
+        slug,
+      });
     },
     trackSearchPerformed({ query, resultCount }) {
       if (consent !== "granted" || capture === null) return;

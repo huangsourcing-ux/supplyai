@@ -85,6 +85,38 @@ describe("Web internationalization contract", () => {
         heading: "Cluster at a glance",
       },
     });
+    expect(messages.FactoryDetail).toMatchObject({
+      address: {
+        chinese: "Chinese address",
+        english: "English address",
+        heading: "Address",
+      },
+      backToMap: "Back to the map",
+      contact: {
+        heading: "Contact",
+        visitWebsite: "Visit official website",
+      },
+      details: {
+        heading: "Factory information",
+        mainProducts: "Main products",
+      },
+      map: {
+        attributionLabel: "Map data attribution",
+        heading: "Factory location",
+      },
+      navigation: {
+        heading: "Plan a visit",
+        providers: {
+          amap: "Amap",
+          apple: "Apple Maps",
+          baidu: "Baidu Maps",
+          google: "Google Maps",
+        },
+      },
+      related: {
+        heading: "Related factories",
+      },
+    });
     expect(messages.Operations).toMatchObject({
       dashboard: {
         actionError: "The operation could not be completed.",

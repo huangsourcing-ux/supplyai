@@ -112,7 +112,7 @@ chinasupply/
 - [x] **M2-T2 搜索**：F-3 全部；埋点走 packages/analytics（未同意 no-op）。
 - [x] **M2-T3 类目筛选**：F-1.6 chips 联动。
 - [x] **M2-T4 产业带详情页**：F-2（SSR/ISR + metadata + OG）；收藏按钮 UI 占位。
-- [ ] **M2-T5 工厂详情页**：F-4；导航按钮组用 packages/geo/navigation；双语地址复制。
+- [x] **M2-T5 工厂详情页**：F-4；导航按钮组用 packages/geo/navigation；双语地址复制。
 - [ ] **M2-T8 Playwright**：CI 用 MSW mock MAP API + 固定 style/tile fixture（断言防抖、abort、truncated）；staging 跑真实 MapTiler 冒烟，避免外网抖动打红 PR。
 
 **M2 出口**：PRD F-1 验收路径在 staging 走通；Lighthouse SEO ≥ 90；运营在 /ops 完成一次数据修正 + verify。

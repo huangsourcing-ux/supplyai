@@ -318,6 +318,9 @@ importers:
       "@chinasupply/config":
         specifier: workspace:*
         version: link:../../packages/config
+      "@chinasupply/geo":
+        specifier: workspace:*
+        version: link:../../packages/geo
       "@clerk/nextjs":
         specifier: 7.5.22
         version: 7.5.22(next@16.2.11(@opentelemetry/api@1.9.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.77.4))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
