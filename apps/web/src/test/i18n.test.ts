@@ -46,6 +46,24 @@ describe("Web internationalization contract", () => {
       retry: "Retry",
       truncated: "Zoom in to see all factories",
     });
-    expect(messages.Operations).toBeTypeOf("object");
+    expect(messages.Operations).toMatchObject({
+      dashboard: {
+        actionError: "The operation could not be completed.",
+        authError: "The administrator session could not be authorized.",
+        clusterCount: "{count, plural, one {# cluster} other {# clusters}}",
+        factoryCount: "{count, plural, one {# factory} other {# factories}}",
+        formError:
+          "Review the form values and use English | Chinese for each product line.",
+        publish: "Publish",
+        publishingBlocked: "Verify this factory before publishing it.",
+        retry: "Retry",
+        statusDraft: "Draft",
+        statusPublished: "Published",
+        unpublish: "Unpublish",
+        unverified: "Unverified",
+        verified: "Verified",
+        verify: "Verify factory",
+      },
+    });
   });
 });
