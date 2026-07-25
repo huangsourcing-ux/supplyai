@@ -1,3 +1,12 @@
 # @chinasupply/analytics
 
-Reserved for the consent-aware PostHog facade. It must remain a complete no-op before consent.
+Consent-aware analytics facade shared by Web and Mobile.
+
+The package deliberately has no PostHog dependency. Applications may inject a
+capture adapter only after loading their analytics SDK following explicit
+consent. Until consent is `granted` and an adapter is configured, every tracking
+method is a complete no-op.
+
+Search queries are privacy-filtered inside this package before an event reaches
+an adapter: email and phone-like values are redacted, whitespace is normalized,
+and the result is limited to 100 Unicode characters.

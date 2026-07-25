@@ -14,6 +14,7 @@ import {
   type GetMapClusterPoints200Data,
   type GetMapFactories200Data,
   getGetMapClusterBoundariesQueryKey,
+  getGetMapClusterPointsQueryKey,
   getGetMapFactoriesQueryKey,
   useGetMapClusterBoundaries,
   useGetMapClusterPoints,
@@ -64,6 +65,13 @@ import {
   type SelectedMapFeature,
 } from "./map-selection";
 import { MapSelectionCard } from "./map-selection-card";
+import {
+  addMapCategoryParam,
+  createMapCategoryParams,
+  resolveMapSearchAction,
+  type MapSearchChoice,
+} from "./map-search-model";
+import { MapSearch, type ActiveMapCategory } from "./map-search";
 
 export interface IndustrialMapLabels
   extends MapAttributionLabels, MapStatusLabels {
@@ -103,28 +111,62 @@ export function IndustrialMap({
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
   const [selectedFeature, setSelectedFeature] =
     useState<SelectedMapFeature | null>(null);
+  const [activeCategory, setActiveCategory] =
+    useState<ActiveMapCategory | null>(null);
   const [viewport, setViewport] = useState<MapViewport | null>(null);
   const [viewportIsSettling, setViewportIsSettling] = useState(true);
   const boundariesEnabled =
     viewport !== null && viewport.zoom >= CLUSTER_BOUNDARY_MIN_ZOOM;
   const factoriesEnabled =
     viewport !== null && viewport.zoom >= FACTORY_POINT_MIN_ZOOM;
-  const clusterPointsQuery = useGetMapClusterPoints();
+  const categorySlug = activeCategory?.slug;
+  const clusterPointsQuery = useGetMapClusterPoints(
+    createMapCategoryParams(categorySlug),
+  );
   const clusterBoundariesQuery = useGetMapClusterBoundaries(
-    viewport ?? DISABLED_BOUNDARY_PARAMS,
+    addMapCategoryParam(viewport ?? DISABLED_BOUNDARY_PARAMS, categorySlug),
     {
       query: {
         enabled: boundariesEnabled,
-        placeholderData: keepPreviousData,
+        placeholderData: (previousData, previousQuery) => {
+          const previousParams = previousQuery?.queryKey[1];
+          const previousCategory =
+            typeof previousParams === "object" &&
+            previousParams !== null &&
+            "category" in previousParams &&
+            typeof previousParams.category === "string"
+              ? previousParams.category
+              : undefined;
+
+          return previousCategory === categorySlug
+            ? keepPreviousData(previousData)
+            : undefined;
+        },
       },
     },
   );
   const factoryPointsQuery = useGetMapFactories(
-    viewport === null ? DISABLED_FACTORY_PARAMS : { bbox: viewport.bbox },
+    addMapCategoryParam(
+      viewport === null ? DISABLED_FACTORY_PARAMS : { bbox: viewport.bbox },
+      categorySlug,
+    ),
     {
       query: {
         enabled: factoriesEnabled,
-        placeholderData: keepPreviousData,
+        placeholderData: (previousData, previousQuery) => {
+          const previousParams = previousQuery?.queryKey[1];
+          const previousCategory =
+            typeof previousParams === "object" &&
+            previousParams !== null &&
+            "category" in previousParams &&
+            typeof previousParams.category === "string"
+              ? previousParams.category
+              : undefined;
+
+          return previousCategory === categorySlug
+            ? keepPreviousData(previousData)
+            : undefined;
+        },
       },
     },
   );
@@ -376,6 +418,78 @@ export function IndustrialMap({
     if (factoriesEnabled) void factoryPointsQuery.refetch();
   };
 
+  const clearRenderedMapData = () => {
+    clusterPointsRef.current = EMPTY_CLUSTER_POINTS;
+    clusterBoundariesRef.current = EMPTY_CLUSTER_BOUNDARIES;
+    factoryPointsRef.current = EMPTY_FACTORY_POINTS;
+
+    const map = mapRef.current;
+    (
+      map?.getSource(CLUSTER_POINTS_SOURCE_ID) as GeoJSONSource | undefined
+    )?.setData(EMPTY_CLUSTER_POINTS);
+    (
+      map?.getSource(CLUSTER_BOUNDARIES_SOURCE_ID) as GeoJSONSource | undefined
+    )?.setData(EMPTY_CLUSTER_BOUNDARIES);
+    (map?.getSource(FACTORIES_SOURCE_ID) as GeoJSONSource | undefined)?.setData(
+      EMPTY_FACTORY_POINTS,
+    );
+  };
+
+  const cancelMapDataQueries = () => {
+    void Promise.all([
+      queryClient.cancelQueries({
+        queryKey: getGetMapClusterPointsQueryKey(),
+      }),
+      queryClient.cancelQueries({
+        queryKey: getGetMapClusterBoundariesQueryKey(),
+      }),
+      queryClient.cancelQueries({
+        queryKey: getGetMapFactoriesQueryKey(),
+      }),
+    ]);
+  };
+
+  const fitChinaBounds = () => {
+    mapRef.current?.fitBounds(CHINA_BOUNDS, {
+      duration: 700,
+      padding: { bottom: 48, left: 24, right: 24, top: 48 },
+    });
+  };
+
+  const chooseSearchResult = (choice: MapSearchChoice) => {
+    const action = resolveMapSearchAction(choice);
+
+    if (action.kind === "category") {
+      cancelMapDataQueries();
+      clearRenderedMapData();
+      setActiveCategory(action.category);
+      setSelectedFeature(null);
+      fitChinaBounds();
+      return;
+    }
+
+    if (activeCategory !== null) {
+      cancelMapDataQueries();
+      clearRenderedMapData();
+      setActiveCategory(null);
+    }
+    setSelectedFeature(action.selection);
+    mapRef.current?.flyTo({
+      center: action.center,
+      duration: 700,
+      essential: true,
+      zoom: action.zoom,
+    });
+  };
+
+  const clearCategory = () => {
+    cancelMapDataQueries();
+    clearRenderedMapData();
+    setActiveCategory(null);
+    setSelectedFeature(null);
+    fitChinaBounds();
+  };
+
   const hasDataError =
     clusterPointsQuery.isError ||
     (boundariesEnabled && clusterBoundariesQuery.isError) ||
@@ -402,9 +516,20 @@ export function IndustrialMap({
   return (
     <section
       aria-label={labels.ariaLabel}
-      className={`industrial-map${selectedFeature === null ? "" : " industrial-map--has-selection"}`}
+      className={[
+        "industrial-map",
+        selectedFeature === null ? "" : "industrial-map--has-selection",
+        activeCategory === null ? "" : "industrial-map--has-filter",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div className="industrial-map__canvas" ref={containerRef} />
+      <MapSearch
+        activeCategory={activeCategory}
+        onChoose={chooseSearchResult}
+        onClearCategory={clearCategory}
+      />
       {statusKind === null ? null : (
         <MapStatus kind={statusKind} labels={labels} onRetry={retry} />
       )}
