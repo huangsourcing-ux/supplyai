@@ -10,3 +10,7 @@ method is a complete no-op.
 Search queries are privacy-filtered inside this package before an event reaches
 an adapter: email and phone-like values are redacted, whitespace is normalized,
 and the result is limited to 100 Unicode characters.
+
+Factory contact and navigation events only include the factory identity plus the
+selected contact method or navigation provider/platform. Contact values,
+addresses, and coordinates never enter analytics payloads.
