@@ -496,7 +496,7 @@ a {
 .map-truncation-notice {
   position: absolute;
   z-index: 2;
-  top: max(0.75rem, env(safe-area-inset-top));
+  top: max(8.25rem, calc(env(safe-area-inset-top) + 8.25rem));
   left: 50%;
   max-width: min(28rem, calc(100% - 12rem));
   padding: 0.7rem 1rem;
@@ -814,7 +814,7 @@ a {
   }
 
   .industrial-map--has-selection .map-truncation-notice {
-    top: max(0.5rem, env(safe-area-inset-top));
+    top: max(8.25rem, calc(env(safe-area-inset-top) + 8.25rem));
     bottom: auto;
     max-width: calc(100% - 7rem);
   }

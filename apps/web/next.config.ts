@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SENTRY_RELEASE: sentryRelease,
   },
+  experimental: {
+    testProxy: process.env.PLAYWRIGHT_TEST === "1",
+  },
   images: {
     remotePatterns: [
       {
