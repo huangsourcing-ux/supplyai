@@ -177,6 +177,20 @@ Do not record the signing secret, request headers, JWT, or disposable-user
 credentials in source, logs, screenshots, or review evidence. M3-T3 still owns
 the one-time backfill for users created before this endpoint is active.
 
+Staging acceptance completed on 2026-07-26 after PR #52 was merged. The
+Railway `api` deployment ran the merged commit with PostgreSQL and Redis ready,
+the Worker remained free of `CLERK_WEBHOOK_SECRET`, and the Clerk Development
+endpoint subscribed to exactly the three lifecycle events above. A disposable
+user produced successful created, updated, and deleted deliveries; database
+checks confirmed email/name synchronization, retained `locale`, a persistent
+user tombstone, zero remaining favorites, and one receipt for each event. A
+signing secret displayed during controlled verification was treated as exposed:
+it was immediately rotated in Clerk, replaced on Railway, and the API was
+redeployed. A second disposable user then completed created and deleted delivery
+with the rotated secret, after which both Clerk users and all local temporary
+material were removed. Svix's automatic 24-hour overlap for the retired secret
+remains in effect; no repository or application log contains either value.
+
 M0-T6 connects both application services to `huangsourcing-ux/supplyai:main`
 with Railway Wait for CI enabled. Railway must skip a deployment whenever the
 GitHub CI or staging migration gate fails. Production resources remain M5-T9.
