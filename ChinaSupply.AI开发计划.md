@@ -122,7 +122,7 @@ chinasupply/
 
 ## M3 账户、收藏与隐私同意（预计 1-1.5 周）
 
-- [ ] **M3-T1 Clerk Web 接线**：邮箱 + Google OAuth；登录回跳（F-2.3）。
+- [x] **M3-T1 Clerk Web 接线**：邮箱 + Google OAuth；登录回跳（F-2.3）。**2026-07-26 已配置 staging Clerk Development instance 并完成邮箱新/旧用户、登录回跳、直接登录 fallback、现有 Google OAuth 与 `/ops` 三权限 smoke；Owner 明确接受交付并豁免第二个全新 Google 身份的注册 smoke。该勾选不表示被豁免场景已执行。**
 - [ ] **M3-T2 Webhook**：A-11——raw body svix 验签、webhook_events 幂等、created/updated/deleted；F-8.4 软删 + 收藏硬删 + 已删用户 401。
 - [ ] **M3-T3 用户回填**：一次性 `clerk:sync-users` 命令，回填 M0-M2 期间产生的测试用户（或明确清空重建）。
 - [ ] **M3-T4 收藏与账户 API 接线**：A-8（含 cursor）/A-9/A-10。
