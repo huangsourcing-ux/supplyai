@@ -13,13 +13,27 @@ const clerkEmailSchema = z.looseObject({
   email_address: z.email(),
 });
 
-const clerkUserDataSchema = z.looseObject({
-  id: z.string().min(1),
-  first_name: z.string().nullable(),
-  last_name: z.string().nullable(),
-  primary_email_address_id: z.string().min(1),
-  email_addresses: z.array(clerkEmailSchema).min(1),
-});
+const clerkUserDataSchema = z
+  .looseObject({
+    id: z.string().min(1),
+    first_name: z.string().nullable(),
+    last_name: z.string().nullable(),
+    primary_email_address_id: z.string().min(1),
+    email_addresses: z.array(clerkEmailSchema).min(1),
+  })
+  .superRefine((user, context) => {
+    if (
+      !user.email_addresses.some(
+        (email) => email.id === user.primary_email_address_id,
+      )
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Primary email address is missing",
+        path: ["primary_email_address_id"],
+      });
+    }
+  });
 
 const clerkDeletedUserDataSchema = z.looseObject({
   id: z.string().min(1),

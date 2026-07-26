@@ -159,6 +159,24 @@ must not be treated as the real production environment.
 - Both services require the matching `SENTRY_DSN`; Railway's commit SHA forms
   their shared Sentry release.
 
+M3-T2 adds the Clerk lifecycle endpoint at
+`https://api-staging.chinasupply.ai/api/v1/webhooks/clerk`. The Clerk
+Development endpoint must subscribe only to `user.created`, `user.updated`, and
+`user.deleted`. Its signing secret is stored as `CLERK_WEBHOOK_SECRET` on the
+Railway `api` service only; the Worker does not receive or validate it. Requests
+must use the public Cloudflare hostname so the existing trusted-edge transform
+can reach Railway without exposing the direct origin.
+
+The repository e2e suite verifies real Standard Webhooks signatures, exact raw
+body handling, concurrent replay idempotency, user synchronization, deletion
+tombstones, favorite removal, and deleted-user 401 responses. This does not
+replace the staging gate: before marking M3-T2 complete, configure the encrypted
+Railway value, deploy the API, create the Clerk endpoint, and use a disposable
+staging user to observe created, updated, and deleted deliveries succeeding.
+Do not record the signing secret, request headers, JWT, or disposable-user
+credentials in source, logs, screenshots, or review evidence. M3-T3 still owns
+the one-time backfill for users created before this endpoint is active.
+
 M0-T6 connects both application services to `huangsourcing-ux/supplyai:main`
 with Railway Wait for CI enabled. Railway must skip a deployment whenever the
 GitHub CI or staging migration gate fails. Production resources remain M5-T9.

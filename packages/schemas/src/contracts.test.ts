@@ -734,6 +734,29 @@ describe("contract rejection boundaries", () => {
     ).toThrow();
   });
 
+  it("rejects Clerk user events without the declared primary email", () => {
+    expect(() =>
+      contracts.clerkWebhookBodySchema.parse({
+        object: "event",
+        instance_id: "ins_123",
+        timestamp: 1784822400000,
+        type: "user.updated",
+        data: {
+          id: "user_123",
+          first_name: "Buyer",
+          last_name: null,
+          primary_email_address_id: "idn_missing",
+          email_addresses: [
+            {
+              id: "idn_123",
+              email_address: "buyer@example.com",
+            },
+          ],
+        },
+      }),
+    ).toThrow();
+  });
+
   it("keeps public media object keys and extra MAP properties out", () => {
     expect(() =>
       contracts.publicFactoryImageSchema.parse({

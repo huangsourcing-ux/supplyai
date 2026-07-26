@@ -137,6 +137,7 @@ test("staging rejects provider placeholder values", async () => {
     (error) => {
       assert.ok(error instanceof Error);
       assert.match(error.message, /CLERK_SECRET_KEY/);
+      assert.match(error.message, /CLERK_WEBHOOK_SECRET/);
       assert.match(error.message, /SENTRY_DSN/);
       return true;
     },
@@ -181,6 +182,7 @@ test("remote API HTTP validation requires a non-placeholder edge secret", async 
     (error) => {
       assert.ok(error instanceof Error);
       assert.match(error.message, /EDGE_PROXY_SECRET/);
+      assert.match(error.message, /CLERK_WEBHOOK_SECRET/);
       assert.match(error.message, /CLOUDFLARE_ZONE_ID/);
       assert.match(error.message, /CLOUDFLARE_PURGE_TOKEN/);
       return true;
@@ -189,6 +191,7 @@ test("remote API HTTP validation requires a non-placeholder edge secret", async 
   assert.equal(
     parseApiHttpEnv({
       ...runtimeOnly,
+      CLERK_WEBHOOK_SECRET: "whsec_c3RhZ2luZ193ZWJob29rX3Rlc3Rfc2VjcmV0",
       CLOUDFLARE_PURGE_TOKEN: "cache-purge-test-token",
       CLOUDFLARE_ZONE_ID: "0123456789abcdef0123456789abcdef",
       EDGE_PROXY_SECRET: "0123456789abcdef0123456789abcdef",
@@ -200,6 +203,7 @@ test("remote API HTTP validation requires a non-placeholder edge secret", async 
       parseApiHttpEnv({
         ...runtimeOnly,
         CLERK_SECRET_KEY: undefined,
+        CLERK_WEBHOOK_SECRET: "whsec_c3RhZ2luZ193ZWJob29rX3Rlc3Rfc2VjcmV0",
         CLOUDFLARE_PURGE_TOKEN: "cache-purge-test-token",
         CLOUDFLARE_ZONE_ID: "0123456789abcdef0123456789abcdef",
         EDGE_PROXY_SECRET: "0123456789abcdef0123456789abcdef",

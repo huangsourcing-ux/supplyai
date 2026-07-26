@@ -11,6 +11,7 @@ import { HealthModule } from "./health/health.module.js";
 import { MapModule } from "./map/map.module.js";
 import { OpenApiModule } from "./openapi/openapi.module.js";
 import { SearchModule } from "./search/search.module.js";
+import { WebhooksModule } from "./webhooks/webhooks.module.js";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SearchModule } from "./search/search.module.js";
     ClustersModule,
     FactoriesModule,
     SearchModule,
+    WebhooksModule,
     MapModule,
     HealthModule,
     OpenApiModule,
