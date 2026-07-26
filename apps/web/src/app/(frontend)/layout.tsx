@@ -4,7 +4,10 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 
-import { OPS_HOME_PATH, OPS_SIGN_IN_PATH } from "@/auth/ops-routes";
+import {
+  PUBLIC_AUTH_FALLBACK_PATH,
+  PUBLIC_SIGN_IN_PATH,
+} from "@/auth/public-auth-routes";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 
 import { ApiQueryProvider } from "./api-query-provider";
@@ -30,8 +33,9 @@ export default async function FrontendLayout({
     <html className={GeistSans.variable} lang={DEFAULT_LOCALE}>
       <body>
         <ClerkProvider
-          signInFallbackRedirectUrl={OPS_HOME_PATH}
-          signInUrl={OPS_SIGN_IN_PATH}
+          signInFallbackRedirectUrl={PUBLIC_AUTH_FALLBACK_PATH}
+          signInUrl={PUBLIC_SIGN_IN_PATH}
+          signUpFallbackRedirectUrl={PUBLIC_AUTH_FALLBACK_PATH}
         >
           <NextIntlClientProvider messages={messages}>
             <ApiQueryProvider>{children}</ApiQueryProvider>

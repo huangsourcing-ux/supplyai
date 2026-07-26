@@ -53,7 +53,34 @@ build-only auth token in both Vercel scopes. Vercel's commit SHA is embedded in
 the Sentry release and the build uploads source maps as described in
 `docs/operations/sentry.md`.
 
-The Clerk Development instance must be put in Restricted mode with public sign-up disabled. Configure the session token claim as `{"metadata":"{{user.public_metadata}}"}`, give invited administrators `{"role":"admin"}` in Public Metadata, and allow only the staging origin and redirect URL. `/admin` does not use Clerk; it has an independent Payload `cms_users` account.
+M0-T3 initially put the Clerk Development instance in Restricted mode with
+public sign-up disabled. Before M3-T1 can be accepted on staging, an authorized
+human must change the instance to the following current state:
+
+- allow public self-service sign-up;
+- enable email verification codes for sign-up and sign-in, without enabling
+  email passwords or email links;
+- enable Google as a social connection for both sign-up and sign-in, using the
+  approved Google OAuth credentials and redirect URI when custom credentials
+  are configured;
+- keep the session token claim as
+  `{"metadata":"{{user.public_metadata}}"}` and keep administrator Public
+  Metadata as `{"role":"admin"}`;
+- allow only the approved localhost/staging origins and Clerk redirect URLs;
+  do not commit OAuth credentials, Clerk keys, session tokens, or smoke-user
+  credentials.
+
+The public `/sign-in` route and `/ops/sign-in` share this Clerk instance.
+`/ops/**` still requires the exact admin role in both the proxy and protected
+Server Component, while `/admin` continues to use the independent Payload
+`cms_users` account. Users created during M3-T1 are not synchronized into the
+core `users` table until M3-T2/M3-T3.
+
+M3-T1 staging acceptance must cover an existing and new email-code user, a new
+Google user, return from a cluster Save action to the same canonical cluster
+URL, direct `/sign-in` fallback to `/`, and anonymous/non-admin/admin `/ops`
+behavior. Do not check off M3-T1 when only the code or Preview deployment has
+passed.
 
 Do not mark M0-T3 complete until the CMS release migration has run against Railway staging, the Vercel deployment is healthy over HTTPS, and anonymous, non-admin, and admin `/ops` access have all been smoke-tested.
 

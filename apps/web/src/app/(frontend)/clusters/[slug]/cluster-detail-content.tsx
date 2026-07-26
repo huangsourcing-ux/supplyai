@@ -11,6 +11,10 @@ import type {
 import { ClusterBoundaryMap } from "./cluster-boundary-map";
 import styles from "./cluster-detail.module.css";
 import { ClusterFactoryList } from "./cluster-factory-list";
+import {
+  ClusterSaveAction,
+  type ClusterSaveActionLabels,
+} from "./cluster-save-action";
 import type { FormattedClusterStats } from "./cluster-stats";
 import { ClusterViewTracker } from "./cluster-view-tracker";
 
@@ -24,8 +28,7 @@ export interface ClusterDetailLabels {
   factoryCount: string;
   location: string;
   productsHeading: string;
-  save: string;
-  saveUnavailable: string;
+  saveAction: ClusterSaveActionLabels;
   statsHeading: string;
 }
 
@@ -93,20 +96,7 @@ export function ClusterDetailContent({
             <p className={styles.location}>{labels.location}</p>
             <p className={styles.summary}>{cluster.summary}</p>
           </div>
-          <div>
-            <button
-              aria-describedby="cluster-save-unavailable"
-              className={styles.saveButton}
-              disabled
-              type="button"
-            >
-              <span aria-hidden="true">♡</span>
-              {labels.save}
-            </button>
-            <p className={styles.saveUnavailable} id="cluster-save-unavailable">
-              {labels.saveUnavailable}
-            </p>
-          </div>
+          <ClusterSaveAction labels={labels.saveAction} slug={cluster.slug} />
         </header>
 
         <ClusterBoundaryMap

@@ -96,8 +96,12 @@ export default async function ClusterPage({ params }: ClusterPageProps) {
         factoryCount: translate("stats.factoryCount"),
         location: translate("location", { city: cluster.region.name }),
         productsHeading: translate("productsHeading"),
-        save: translate("save"),
-        saveUnavailable: translate("saveUnavailable"),
+        saveAction: {
+          loading: translate("saveAction.loading"),
+          pending: translate("saveAction.pending"),
+          save: translate("saveAction.save"),
+          signInHint: translate("saveAction.signInHint"),
+        },
         statsHeading: translate("stats.heading"),
       }}
     />

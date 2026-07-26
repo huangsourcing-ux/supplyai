@@ -3,6 +3,11 @@
     "title": "ChinaSupply.AI",
     "description": "Find Chinese industrial clusters and verified factories."
   },
+  "Authentication": {
+    "signInEyebrow": "Buyer account",
+    "signInTitle": "Save suppliers for later",
+    "signInDescription": "Sign in or create an account with email or Google. You will return to where you left off."
+  },
   "Home": {
     "title": "China industrial clusters"
   },
@@ -61,8 +66,12 @@
   "ClusterDetail": {
     "backToMap": "Back to the map",
     "location": "{city}, China",
-    "save": "Save cluster",
-    "saveUnavailable": "Favorites will be available after sign-in launches.",
+    "saveAction": {
+      "save": "Save cluster",
+      "loading": "Checking your sign-in status…",
+      "signInHint": "Sign in to save this cluster.",
+      "pending": "Saving will be connected in the next account step."
+    },
     "productsHeading": "Main products",
     "aboutHeading": "About this industrial cluster",
     "descriptionImageAlt": "{name} industrial cluster",

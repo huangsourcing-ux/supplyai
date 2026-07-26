@@ -32,6 +32,7 @@
 }
 
 .backLink:focus-visible,
+.saveButton:focus-visible,
 .factoryCardLink:focus-visible,
 .stateActions a:focus-visible,
 .stateActions button:focus-visible,
@@ -85,6 +86,10 @@
   line-height: 1.65;
 }
 
+.saveAction {
+  justify-self: end;
+}
+
 .saveButton {
   display: inline-flex;
   min-height: 2.85rem;
@@ -93,18 +98,34 @@
   padding: 0.7rem 1rem;
   border: 1px solid rgba(49, 84, 71, 0.18);
   border-radius: 999px;
-  color: #718179;
-  background: rgba(255, 255, 255, 0.58);
+  color: #315447;
+  background: rgba(255, 255, 255, 0.78);
   font: inherit;
   font-weight: 650;
-  cursor: not-allowed;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background 160ms ease;
 }
 
 .saveButton span {
   font-size: 1.25rem;
 }
 
-.saveUnavailable {
+.saveButton:hover:not(:disabled) {
+  border-color: rgba(15, 118, 110, 0.42);
+  color: #0f5f55;
+  background: #ffffff;
+}
+
+.saveButton:disabled {
+  color: #718179;
+  background: rgba(255, 255, 255, 0.58);
+  cursor: not-allowed;
+}
+
+.saveStatus {
   max-width: 14rem;
   margin: 0.55rem 0 0;
   color: #708078;
@@ -547,7 +568,7 @@
     gap: 0.75rem;
   }
 
-  .saveUnavailable {
+  .saveStatus {
     margin: 0;
   }
 

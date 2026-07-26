@@ -31,5 +31,5 @@ export default clerkMiddleware(async (authentication, request) => {
 });
 
 export const config = {
-  matcher: ["/ops/:path*"],
+  matcher: ["/ops/:path*", "/sign-in/:path*"],
 };

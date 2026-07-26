@@ -35,6 +35,12 @@ vi.mock("../app/(frontend)/clusters/[slug]/cluster-view-tracker", () => ({
   ClusterViewTracker: () => null,
 }));
 
+vi.mock("../app/(frontend)/clusters/[slug]/cluster-save-action", () => ({
+  ClusterSaveAction: ({ labels }: { labels: { signInHint: string } }) => (
+    <div data-testid="cluster-save-action">{labels.signInHint}</div>
+  ),
+}));
+
 import {
   ClusterBoundaryMap,
   getClusterBoundaryBounds,
@@ -138,8 +144,12 @@ const labels = {
   factoryCount: "Factories",
   location: "Shenzhen, China",
   productsHeading: "Main products",
-  save: "Save cluster",
-  saveUnavailable: "Favorites unavailable.",
+  saveAction: {
+    loading: "Checking account status.",
+    pending: "Favorites pending.",
+    save: "Save cluster",
+    signInHint: "Sign in to save this cluster.",
+  },
   statsHeading: "Cluster at a glance",
 };
 
@@ -188,7 +198,7 @@ describe("cluster detail presentation", () => {
     expect(markup).toContain("<strong>Export ready.</strong>");
     expect(markup).not.toContain("<script");
     expect(markup).not.toContain("alert(&#x27;unsafe&#x27;)");
-    expect(markup).toContain("Favorites unavailable.");
+    expect(markup).toContain("Sign in to save this cluster.");
   });
 
   it("omits empty optional sections while always rendering factoryCount", () => {
