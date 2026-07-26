@@ -24,6 +24,8 @@ describe("Web internationalization contract", () => {
 
     expect(messages.Metadata).toBeTypeOf("object");
     expect(messages.Authentication).toMatchObject({
+      legalNotice:
+        "By creating an account, you agree to the <terms>Terms of Use</terms> and acknowledge the <privacy>Privacy Policy</privacy>.",
       signInDescription:
         "Sign in or create an account with email or Google. You will return to where you left off.",
       signInEyebrow: "Buyer account",
@@ -37,6 +39,7 @@ describe("Web internationalization contract", () => {
     });
     expect(messages.AnalyticsConsent).toMatchObject({
       allow: "Allow analytics",
+      privacyLink: "Read the Privacy Policy",
       reject: "Reject analytics",
       title: "Help us improve ChinaSupply.AI",
     });
@@ -163,6 +166,51 @@ describe("Web internationalization contract", () => {
       },
       signOut: {
         action: "Sign out",
+      },
+    });
+    expect(messages.Legal).toMatchObject({
+      privacy: {
+        metadata: {
+          title: "Privacy Policy | ChinaSupply.AI",
+        },
+        sections: {
+          analytics: {
+            paragraph1: expect.stringContaining("browser storage"),
+          },
+          retention: {
+            items: {
+              deleted: expect.stringContaining("disabled local record"),
+            },
+          },
+          sharing: {
+            paragraph2: expect.stringContaining(
+              "We do not sell personal information",
+            ),
+          },
+        },
+      },
+      shared: {
+        company: {
+          address: "61 Bridge Street, Kington, United Kingdom, HR5 3DJ",
+          email: "huang.sourcing@gmail.com",
+          name: "HUANG SOURCING LTD",
+          number: "17241958",
+          registration: "Registered in England and Wales",
+        },
+        effectiveDate: "July 26, 2026",
+      },
+      terms: {
+        metadata: {
+          title: "Terms of Use | ChinaSupply.AI",
+        },
+        sections: {
+          liability: {
+            paragraph3: expect.stringContaining("£100"),
+          },
+          verified: {
+            paragraph1: expect.stringContaining("point-in-time"),
+          },
+        },
       },
     });
     expect(messages.Operations).toMatchObject({

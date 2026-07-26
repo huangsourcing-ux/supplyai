@@ -51,6 +51,7 @@ export default async function FrontendLayout({
                 close: analyticsConsent("close"),
                 deniedStatus: analyticsConsent("deniedStatus"),
                 description: analyticsConsent("description"),
+                privacyLink: analyticsConsent("privacyLink"),
                 reject: analyticsConsent("reject"),
                 title: analyticsConsent("title"),
               }}

@@ -48,6 +48,21 @@
   font-weight: 650;
 }
 
+.copy .policy {
+  font-size: 0.8rem;
+}
+
+.policy a {
+  color: #79e5b8;
+  text-underline-offset: 0.18em;
+}
+
+.policy a:focus-visible {
+  border-radius: 0.15rem;
+  outline: 3px solid rgba(94, 228, 173, 0.55);
+  outline-offset: 2px;
+}
+
 .actions {
   display: flex;
   flex: 0 0 auto;

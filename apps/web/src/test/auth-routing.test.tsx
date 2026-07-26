@@ -16,7 +16,21 @@ vi.mock("next-intl", () => ({
 
 vi.mock("next-intl/server", () => ({
   getMessages: vi.fn(async () => ({})),
-  getTranslations: vi.fn(async () => (key: string) => `translated:${key}`),
+  getTranslations: vi.fn(async () => {
+    const translate = (key: string) => `translated:${key}`;
+    translate.rich = (
+      key: string,
+      values: Record<string, (chunks: React.ReactNode) => React.ReactNode>,
+    ) => (
+      <>
+        {`translated:${key}:`}
+        {values.terms?.("Terms of Use")}
+        {" and "}
+        {values.privacy?.("Privacy Policy")}
+      </>
+    );
+    return translate;
+  }),
 }));
 
 vi.mock("@clerk/nextjs", () => ({
@@ -113,6 +127,8 @@ describe("public Clerk routing", () => {
     expect(markup).toContain('data-fallback="/"');
     expect(markup).toContain('data-sign-up-fallback="/"');
     expect(markup).toContain('data-with-sign-up="true"');
+    expect(markup).toContain('href="/terms"');
+    expect(markup).toContain('href="/privacy"');
   });
 
   it("keeps the operations sign-in force-redirected to /ops", async () => {
