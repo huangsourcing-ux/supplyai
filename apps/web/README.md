@@ -45,7 +45,7 @@ runs Payload migrations during build or startup.
 
 For staging, configure the Clerk session token claim as
 `{"metadata":"{{user.public_metadata}}"}` and administrator Public Metadata as
-`{"role":"admin"}`. Restricted mode, allowed origins, redirect URLs, and the
+`{"role":"admin"}`. Public sign-up, allowed origins, redirect URLs, and the
 Vercel/Railway environment are deployment settings documented in
 `docs/operations/environments.md`.
 

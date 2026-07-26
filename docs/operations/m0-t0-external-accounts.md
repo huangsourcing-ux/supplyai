@@ -39,7 +39,7 @@ M0-T0 must remain unchecked in `ChinaSupply.AI开发计划.md` until every requi
 
 ## Google OAuth and legal prerequisites
 
-- Google OAuth credentials are not created yet. The Clerk Development application and live staging URL now exist, but credential creation and exact callbacks remain intentionally scoped to M3-T1.
+- The Clerk Development application's Google connection was enabled for sign-up and sign-in during M3-T1 using Clerk's shared Development credentials. No custom Google OAuth credential is stored in the repository; production/custom credential provisioning remains a separate release concern.
 - `/privacy` and `/terms` launch-ready legal copy remains a human deliverable due before M3 starts. F-11.1 implementation cannot substitute generated legal advice for approved copy.
 - Apple Developer Program and Google Play Console enrollment are intentionally deferred by the user. This conflicts with the development plan's schedule warning that they should start in M0 because review can be slow; the deferral is recorded here without marking the accounts complete.
 
