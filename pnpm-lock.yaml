@@ -471,6 +471,9 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
+      "@maplibre/maplibre-gl-style-spec":
+        specifier: 26.2.1
+        version: 26.2.1
       eslint:
         specifier: ^9.39.1
         version: 9.39.5(jiti@2.7.0)

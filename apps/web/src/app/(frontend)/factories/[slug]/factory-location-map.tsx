@@ -69,6 +69,7 @@ export function FactoryLocationMap({
             center: location.coordinates,
             container,
             interactive: false,
+            pitch: 0,
             style: createChinaSupplyMapStyle(
               process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
             ) as unknown as StyleSpecification,

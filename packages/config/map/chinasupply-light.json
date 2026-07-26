@@ -1,15 +1,35 @@
 {
   "version": 8,
-  "name": "ChinaSupply.AI Light",
+  "name": "ChinaSupply Streets v4 2D",
   "metadata": {
     "chinasupply:owner": "packages/config",
-    "chinasupply:purpose": "Shared Web and mobile product basemap"
+    "chinasupply:purpose": "Shared Web and mobile product basemap",
+    "chinasupply:profile": "streets-v4-complete-2d",
+    "chinasupply:schema": "maptiler-planet-v4"
   },
+  "center": [104, 36],
+  "zoom": 3,
+  "bearing": 0,
+  "pitch": 0,
   "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=__MAPTILER_KEY__",
+  "sprite": [
+    {
+      "id": "transportation",
+      "url": "https://api.maptiler.com/sprites/transportation/sprite?key=__MAPTILER_KEY__"
+    },
+    {
+      "id": "general",
+      "url": "https://api.maptiler.com/sprites/general/sprite?key=__MAPTILER_KEY__"
+    },
+    {
+      "id": "misc",
+      "url": "https://api.maptiler.com/sprites/misc/sprite?key=__MAPTILER_KEY__"
+    }
+  ],
   "sources": {
-    "maptiler-planet": {
+    "maptiler-planet-v4": {
       "type": "vector",
-      "url": "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=__MAPTILER_KEY__",
+      "url": "https://api.maptiler.com/tiles/v4/tiles.json?key=__MAPTILER_KEY__",
       "attribution": "<a href=\"https://www.maptiler.com/copyright/\" target=\"_blank\">© MapTiler</a> <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">© OpenStreetMap contributors</a>"
     }
   },
@@ -22,110 +42,507 @@
       }
     },
     {
-      "id": "landcover",
+      "id": "forest",
       "type": "fill",
-      "source": "maptiler-planet",
-      "source-layer": "landcover",
+      "source": "maptiler-planet-v4",
+      "source-layer": "forest",
+      "minzoom": 4,
       "paint": {
-        "fill-color": [
-          "match",
-          ["get", "class"],
-          "wood",
-          "#DDE8DA",
-          "grass",
-          "#E6EDDF",
-          "ice",
-          "#F7FAFB",
-          "#EBEEE8"
-        ],
-        "fill-opacity": 0.7
+        "fill-color": "#DDE8DA",
+        "fill-opacity": 0.62
       }
     },
     {
-      "id": "landuse",
+      "id": "farmland",
       "type": "fill",
-      "source": "maptiler-planet",
-      "source-layer": "landuse",
-      "minzoom": 6,
+      "source": "maptiler-planet-v4",
+      "source-layer": "farmland",
+      "minzoom": 8,
       "paint": {
-        "fill-color": [
-          "match",
-          ["get", "class"],
-          "residential",
-          "#E9E9E4",
-          "industrial",
-          "#E7E3DD",
-          "commercial",
-          "#EAE4E0",
-          "cemetery",
-          "#DFE9DD",
-          "#ECEDE8"
-        ],
+        "fill-color": "#E8EBD9",
+        "fill-opacity": 0.55
+      }
+    },
+    {
+      "id": "vegetation",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "vegetation",
+      "minzoom": 9,
+      "paint": {
+        "fill-color": "#E2EBDD",
+        "fill-opacity": 0.55
+      }
+    },
+    {
+      "id": "grass",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "grass",
+      "minzoom": 10,
+      "paint": {
+        "fill-color": "#E6EDDF",
+        "fill-opacity": 0.58
+      }
+    },
+    {
+      "id": "sand",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "sand",
+      "minzoom": 8,
+      "paint": {
+        "fill-color": "#EFE8D2",
+        "fill-opacity": 0.72
+      }
+    },
+    {
+      "id": "ice",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "ice",
+      "paint": {
+        "fill-color": "#F7FAFB"
+      }
+    },
+    {
+      "id": "residential",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "residential",
+      "minzoom": 5,
+      "paint": {
+        "fill-color": "#E9E9E4",
+        "fill-opacity": 0.58
+      }
+    },
+    {
+      "id": "industrial",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "industrial",
+      "minzoom": 8,
+      "paint": {
+        "fill-color": "#E7E3DD",
         "fill-opacity": 0.62
+      }
+    },
+    {
+      "id": "commercial",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "commercial",
+      "minzoom": 9,
+      "paint": {
+        "fill-color": "#EAE4E0",
+        "fill-opacity": 0.55
+      }
+    },
+    {
+      "id": "education-areas",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "education",
+      "minzoom": 10,
+      "paint": {
+        "fill-color": "#E9E6D9",
+        "fill-opacity": 0.6
+      }
+    },
+    {
+      "id": "hospital-areas",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "hospital",
+      "minzoom": 10,
+      "paint": {
+        "fill-color": "#EFE1E1",
+        "fill-opacity": 0.55
       }
     },
     {
       "id": "water",
       "type": "fill",
-      "source": "maptiler-planet",
+      "source": "maptiler-planet-v4",
       "source-layer": "water",
       "paint": {
         "fill-color": "#C9DDE8"
       }
     },
     {
-      "id": "administrative-boundaries",
+      "id": "waterways",
       "type": "line",
-      "source": "maptiler-planet",
-      "source-layer": "boundary",
-      "filter": [
-        "all",
-        ["in", ["get", "admin_level"], ["literal", [2, 4]]],
-        ["!=", ["get", "maritime"], 1]
-      ],
-      "paint": {
-        "line-color": [
-          "match",
-          ["get", "admin_level"],
-          2,
-          "#78847D",
-          "#A9B1AC"
-        ],
-        "line-dasharray": [2, 1.5],
-        "line-opacity": 0.66,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.65, 8, 1.2]
-      }
-    },
-    {
-      "id": "major-roads-casing",
-      "type": "line",
-      "source": "maptiler-planet",
-      "source-layer": "transportation",
-      "minzoom": 5,
-      "filter": [
-        "in",
-        ["get", "class"],
-        ["literal", ["motorway", "trunk", "primary", "secondary"]]
-      ],
+      "source": "maptiler-planet-v4",
+      "source-layer": "waterway",
+      "minzoom": 9,
       "layout": {
         "line-cap": "round",
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#D6D8D2",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.3, 12, 5.5]
+        "line-color": "#B9D4E2",
+        "line-opacity": 0.85,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 9, 0.5, 16, 2.2]
       }
     },
     {
-      "id": "major-roads",
+      "id": "airport-surfaces",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "aviation",
+      "minzoom": 9,
+      "paint": {
+        "fill-color": "#E8E7EA",
+        "fill-opacity": 0.78
+      }
+    },
+    {
+      "id": "airport-runways",
       "type": "line",
-      "source": "maptiler-planet",
-      "source-layer": "transportation",
+      "source": "maptiler-planet-v4",
+      "source-layer": "aviation_line",
+      "minzoom": 9,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#D4D2D8",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 9, 1, 16, 8]
+      }
+    },
+    {
+      "id": "building-footprints",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "building",
+      "minzoom": 15,
+      "paint": {
+        "fill-color": "#D9D8D3",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          15,
+          0.28,
+          18,
+          0.48
+        ],
+        "fill-outline-color": "#CBCBC5"
+      }
+    },
+    {
+      "id": "pedestrian-areas",
+      "type": "fill",
+      "source": "maptiler-planet-v4",
+      "source-layer": "pedestrian",
+      "minzoom": 12,
+      "paint": {
+        "fill-color": "#EEEAE2",
+        "fill-opacity": 0.7
+      }
+    },
+    {
+      "id": "pathways",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "pathway",
+      "minzoom": 11,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "class"],
+          "cycleway",
+          "#91A99D",
+          "steps",
+          "#A89E94",
+          "#B6B1A9"
+        ],
+        "line-dasharray": [1.5, 1.2],
+        "line-opacity": 0.75,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 11, 0.5, 18, 2]
+      }
+    },
+    {
+      "id": "aerialways",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "aerialway",
+      "minzoom": 8,
+      "paint": {
+        "line-color": "#8E9692",
+        "line-dasharray": [2, 1.5],
+        "line-opacity": 0.72,
+        "line-width": 1.1
+      }
+    },
+    {
+      "id": "trees",
+      "type": "circle",
+      "source": "maptiler-planet-v4",
+      "source-layer": "tree",
+      "minzoom": 15,
+      "paint": {
+        "circle-color": "#9DBA91",
+        "circle-opacity": 0.7,
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 15, 1.3, 19, 3]
+      }
+    },
+    {
+      "id": "ferry-routes",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "ferry",
+      "minzoom": 4,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#75A9C4",
+        "line-dasharray": [2.2, 1.8],
+        "line-opacity": 0.8,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 14, 1.8]
+      }
+    },
+    {
+      "id": "railway-tunnels",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "railway",
+      "minzoom": 8,
+      "filter": ["==", ["get", "brunnel"], "tunnel"],
+      "paint": {
+        "line-color": "#8A9290",
+        "line-dasharray": [2, 2],
+        "line-opacity": 0.46,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 8, 0.55, 16, 1.6]
+      }
+    },
+    {
+      "id": "railways",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "railway",
+      "minzoom": 7,
+      "filter": ["!=", ["get", "brunnel"], "tunnel"],
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "class"],
+          "rail",
+          "#7D8784",
+          "light_rail",
+          "#899895",
+          "tram",
+          "#9BA4A1",
+          "#AAB0AE"
+        ],
+        "line-opacity": [
+          "match",
+          ["get", "class"],
+          ["abandoned", "disused"],
+          0.35,
+          0.72
+        ],
+        "line-width": ["interpolate", ["linear"], ["zoom"], 7, 0.5, 16, 1.7]
+      }
+    },
+    {
+      "id": "country-border-disputed",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "country_border_disputed",
+      "paint": {
+        "line-color": "#8F9994",
+        "line-dasharray": [2, 2],
+        "line-opacity": 0.7,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.8, 8, 1.4]
+      }
+    },
+    {
+      "id": "country-border",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "country_border",
+      "paint": {
+        "line-color": "#737F79",
+        "line-opacity": 0.72,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.8, 8, 1.5]
+      }
+    },
+    {
+      "id": "sub-border",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "sub_border",
+      "minzoom": 4,
+      "paint": {
+        "line-color": "#A6AEA9",
+        "line-dasharray": [2, 1.5],
+        "line-opacity": 0.58,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.55, 10, 1.1]
+      }
+    },
+    {
+      "id": "road-tunnel-casing",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
       "minzoom": 5,
+      "filter": ["==", ["get", "brunnel"], "tunnel"],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#D1D3CE",
+        "line-dasharray": [3, 2],
+        "line-opacity": 0.6,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          5,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            1.7,
+            "trunk",
+            1.5,
+            "primary",
+            1.3,
+            0.8
+          ],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            6.8,
+            "trunk",
+            6,
+            "primary",
+            5.4,
+            "secondary",
+            4.8,
+            "tertiary",
+            4.1,
+            3.1
+          ],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            15,
+            "trunk",
+            13.5,
+            "primary",
+            12.5,
+            "secondary",
+            11,
+            "tertiary",
+            9.5,
+            "minor",
+            8,
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "id": "road-tunnels",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
+      "minzoom": 5,
+      "filter": ["==", ["get", "brunnel"], "tunnel"],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "class"],
+          "motorway",
+          "#F2D2A0",
+          "trunk",
+          "#F2DDC0",
+          "primary",
+          "#F4E8D5",
+          "#F5F4EE"
+        ],
+        "line-dasharray": [3, 2],
+        "line-opacity": 0.72,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          5,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            0.9,
+            "trunk",
+            0.8,
+            "primary",
+            0.65,
+            0.35
+          ],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            4.6,
+            "trunk",
+            4,
+            "primary",
+            3.5,
+            "secondary",
+            3,
+            "tertiary",
+            2.4,
+            1.6
+          ],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            12,
+            "trunk",
+            10.5,
+            "primary",
+            9.5,
+            "secondary",
+            8,
+            "tertiary",
+            6.5,
+            "minor",
+            5,
+            3.5
+          ]
+        ]
+      }
+    },
+    {
+      "id": "roads-casing",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
+      "minzoom": 4,
       "filter": [
-        "in",
-        ["get", "class"],
-        ["literal", ["motorway", "trunk", "primary", "secondary"]]
+        "!",
+        ["in", ["get", "brunnel"], ["literal", ["bridge", "tunnel"]]]
       ],
       "layout": {
         "line-cap": "round",
@@ -136,41 +553,998 @@
           "match",
           ["get", "class"],
           "motorway",
-          "#F8D8A6",
+          "#D5B780",
           "trunk",
-          "#F6DFC0",
-          "#F8F7F1"
+          "#D7C09C",
+          ["primary", "secondary"],
+          "#D4D3CD",
+          "#DADBD6"
         ],
-        "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.65, 12, 3.5]
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            1.6,
+            "trunk",
+            1.4,
+            "primary",
+            1.15,
+            0.6
+          ],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            7,
+            "trunk",
+            6.3,
+            "primary",
+            5.5,
+            "secondary",
+            4.9,
+            "tertiary",
+            4.2,
+            3.2
+          ],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            15.5,
+            "trunk",
+            14,
+            "primary",
+            13,
+            "secondary",
+            11.5,
+            "tertiary",
+            10,
+            "minor",
+            8.5,
+            "service",
+            6.5,
+            7
+          ]
+        ]
+      }
+    },
+    {
+      "id": "roads",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
+      "minzoom": 4,
+      "filter": [
+        "!",
+        ["in", ["get", "brunnel"], ["literal", ["bridge", "tunnel"]]]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "class"],
+          "motorway",
+          "#F6C979",
+          "trunk",
+          "#F6D9A8",
+          "primary",
+          "#F8E6CA",
+          "secondary",
+          "#FAF1E3",
+          "#FAF9F4"
+        ],
+        "line-opacity": ["case", ["==", ["get", "access"], "no"], 0.62, 1],
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            1,
+            "trunk",
+            0.85,
+            "primary",
+            0.7,
+            0.3
+          ],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            4.8,
+            "trunk",
+            4.2,
+            "primary",
+            3.6,
+            "secondary",
+            3.1,
+            "tertiary",
+            2.5,
+            1.7
+          ],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            12.5,
+            "trunk",
+            11,
+            "primary",
+            10,
+            "secondary",
+            8.5,
+            "tertiary",
+            7,
+            "minor",
+            5.5,
+            "service",
+            3.8,
+            4.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": "road-bridge-casing",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
+      "minzoom": 5,
+      "filter": ["==", ["get", "brunnel"], "bridge"],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#C7CAC5",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          5,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            2,
+            "trunk",
+            1.8,
+            "primary",
+            1.5,
+            1
+          ],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            7.6,
+            "trunk",
+            6.9,
+            "primary",
+            6.1,
+            "secondary",
+            5.5,
+            "tertiary",
+            4.8,
+            3.8
+          ],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            16.5,
+            "trunk",
+            15,
+            "primary",
+            14,
+            "secondary",
+            12.5,
+            "tertiary",
+            11,
+            "minor",
+            9.5,
+            7
+          ]
+        ]
+      }
+    },
+    {
+      "id": "road-bridges",
+      "type": "line",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
+      "minzoom": 5,
+      "filter": ["==", ["get", "brunnel"], "bridge"],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "class"],
+          "motorway",
+          "#F7CC80",
+          "trunk",
+          "#F7DBAD",
+          "primary",
+          "#F9E9D0",
+          "#FFFFFF"
+        ],
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          5,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            1.1,
+            "trunk",
+            0.95,
+            "primary",
+            0.8,
+            0.45
+          ],
+          12,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            5,
+            "trunk",
+            4.4,
+            "primary",
+            3.8,
+            "secondary",
+            3.3,
+            "tertiary",
+            2.7,
+            1.9
+          ],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            "motorway",
+            13,
+            "trunk",
+            11.5,
+            "primary",
+            10.5,
+            "secondary",
+            9,
+            "tertiary",
+            7.5,
+            "minor",
+            6,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "id": "water-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "water_label",
+      "minzoom": 3,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-letter-spacing": 0.04,
+        "text-max-width": 9,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 3, 10, 12, 12]
+      },
+      "paint": {
+        "text-color": "#668DA2",
+        "text-halo-color": "#D7E5EC",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "ferry-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "ferry_label",
+      "minzoom": 7,
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": [
+          "coalesce",
+          ["get", "name:en"],
+          ["get", "name"],
+          ["get", "ref"]
+        ],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10
+      },
+      "paint": {
+        "text-color": "#5E879C",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.4
+      }
+    },
+    {
+      "id": "railway-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "railway_label",
+      "minzoom": 11,
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": [
+          "coalesce",
+          ["get", "name:en"],
+          ["get", "name"],
+          ["get", "ref"]
+        ],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 10
+      },
+      "paint": {
+        "text-color": "#68716E",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.4
+      }
+    },
+    {
+      "id": "road-shields",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road_label",
+      "minzoom": 6,
+      "filter": [
+        "all",
+        ["has", "ref"],
+        ["has", "ref_length"],
+        ["<=", ["get", "ref_length"], 12]
+      ],
+      "layout": {
+        "symbol-placement": "line-center",
+        "icon-image": [
+          "match",
+          ["get", "ref_length"],
+          1,
+          "transportation:road_1",
+          2,
+          "transportation:road_2",
+          3,
+          "transportation:road_3",
+          4,
+          "transportation:road_4",
+          5,
+          "transportation:road_5",
+          6,
+          "transportation:road_6",
+          7,
+          "transportation:road_7",
+          8,
+          "transportation:road_8",
+          9,
+          "transportation:road_9",
+          10,
+          "transportation:road_10",
+          11,
+          "transportation:road_11",
+          "transportation:road_12"
+        ],
+        "icon-text-fit": "both",
+        "icon-text-fit-padding": [2, 3, 2, 3],
+        "symbol-spacing": 420,
+        "text-field": ["get", "ref"],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#35423D"
+      }
+    },
+    {
+      "id": "road-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road_label",
+      "minzoom": 8,
+      "filter": ["has", "name"],
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-letter-spacing": 0.01,
+        "text-max-angle": 35,
+        "text-padding": 2,
+        "text-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          8,
+          ["match", ["get", "class"], ["motorway", "trunk"], 10, 9],
+          16,
+          [
+            "match",
+            ["get", "class"],
+            ["motorway", "trunk", "primary"],
+            13,
+            "secondary",
+            12,
+            11
+          ]
+        ]
+      },
+      "paint": {
+        "text-color": [
+          "match",
+          ["get", "class"],
+          ["motorway", "trunk"],
+          "#765D38",
+          "#59635F"
+        ],
+        "text-halo-color": "#FAF9F4",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "oneway-arrows",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "road",
+      "minzoom": 15,
+      "filter": ["==", ["get", "oneway"], true],
+      "layout": {
+        "icon-image": "transportation:oneway",
+        "icon-rotation-alignment": "map",
+        "icon-size": 0.55,
+        "symbol-placement": "line",
+        "symbol-spacing": 120
+      }
+    },
+    {
+      "id": "aerialway-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "aerialway_label",
+      "minzoom": 11,
+      "layout": {
+        "icon-image": "transportation:aerialway",
+        "icon-size": 0.65,
+        "symbol-placement": "line",
+        "symbol-spacing": 260,
+        "text-field": [
+          "coalesce",
+          ["get", "name:en"],
+          ["get", "name"],
+          ["get", "ref"]
+        ],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#66706C",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.3
+      }
+    },
+    {
+      "id": "pathway-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "pathway_label",
+      "minzoom": 14,
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#747C77",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.3
+      }
+    },
+    {
+      "id": "pedestrian-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "pedestrian_label",
+      "minzoom": 15,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#77766F",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.3
+      }
+    },
+    {
+      "id": "building-numbers",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "building_number",
+      "minzoom": 17,
+      "layout": {
+        "text-field": ["get", "number"],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#858580",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "traffic-controls",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "traffic_control",
+      "minzoom": 16,
+      "layout": {
+        "icon-image": [
+          "match",
+          ["get", "class"],
+          ["crossing", "crosswalk"],
+          "transportation:crossing",
+          "misc:traffic_signal"
+        ],
+        "icon-size": 0.6
+      }
+    },
+    {
+      "id": "street-furniture",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "street_furniture",
+      "minzoom": 17,
+      "layout": {
+        "icon-image": "general:dot",
+        "icon-size": 0.45
+      },
+      "paint": {
+        "icon-opacity": 0.65
+      }
+    },
+    {
+      "id": "transit-stations",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_station",
+      "minzoom": 7,
+      "layout": {
+        "icon-image": [
+          "match",
+          ["get", "class"],
+          ["aerodrome", "aeroway"],
+          "transportation:airport",
+          "aerialway",
+          "transportation:aerialway",
+          "bus",
+          "transportation:bus_stop",
+          "entrance",
+          "transportation:subway_entrance",
+          "marina",
+          "transportation:ferry_terminal",
+          [
+            "match",
+            ["get", "subclass"],
+            "subway",
+            "transportation:subway",
+            "tram_stop",
+            "transportation:tram_stop",
+            "transportation:transit"
+          ]
+        ],
+        "icon-size": 0.8,
+        "text-anchor": "top",
+        "text-field": [
+          "coalesce",
+          ["get", "name:en"],
+          ["get", "name"],
+          ["get", "iata"],
+          ["get", "ref"]
+        ],
+        "text-font": ["Noto Sans Regular"],
+        "text-max-width": 9,
+        "text-offset": [0, 1.1],
+        "text-size": 10
+      },
+      "paint": {
+        "text-color": "#485550",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.4
+      }
+    },
+    {
+      "id": "poi-accommodation",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_accommodation",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-culture",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_culture",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-education",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_education",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-food",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_food",
+      "minzoom": 14,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-healthcare",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_healthcare",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-public",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_public",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-shopping",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_shopping",
+      "minzoom": 14,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-sport",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_sport",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-tourism",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_tourism",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "poi-transport",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "poi_transport",
+      "minzoom": 13,
+      "layout": {
+        "icon-image": [
+          "coalesce",
+          ["image", ["concat", "general:", ["get", "subclass"]]],
+          ["image", ["concat", "general:", ["get", "class"]]],
+          ["image", "general:dot"]
+        ],
+        "icon-size": 0.7,
+        "text-anchor": "top",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-offset": [0, 1],
+        "text-size": 9
+      },
+      "paint": {
+        "text-color": "#616C67",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.2
+      }
+    },
+    {
+      "id": "continent-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "continent_label",
+      "maxzoom": 3,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-letter-spacing": 0.08,
+        "text-size": 12,
+        "text-transform": "uppercase"
+      },
+      "paint": {
+        "text-color": "#64716B",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "country-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "country_label",
+      "minzoom": 2,
+      "maxzoom": 8,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-letter-spacing": 0.04,
+        "text-max-width": 7,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 2, 11, 6, 15]
+      },
+      "paint": {
+        "text-color": "#46534D",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.6
+      }
+    },
+    {
+      "id": "state-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "state_label",
+      "minzoom": 4,
+      "maxzoom": 10,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-letter-spacing": 0.03,
+        "text-max-width": 8,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 9, 13]
+      },
+      "paint": {
+        "text-color": "#5E6A64",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "city-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "city_label",
+      "minzoom": 4,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-max-width": 8,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 11, 15]
+      },
+      "paint": {
+        "text-color": "#394641",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.7
+      }
+    },
+    {
+      "id": "town-labels",
+      "type": "symbol",
+      "source": "maptiler-planet-v4",
+      "source-layer": "town_label",
+      "minzoom": 7,
+      "layout": {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-max-width": 8,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 7, 10, 14, 13]
+      },
+      "paint": {
+        "text-color": "#46534D",
+        "text-halo-color": "#F4F5F1",
+        "text-halo-width": 1.5
       }
     },
     {
       "id": "place-labels",
       "type": "symbol",
-      "source": "maptiler-planet",
-      "source-layer": "place",
-      "minzoom": 2,
+      "source": "maptiler-planet-v4",
+      "source-layer": "place_label",
+      "minzoom": 10,
       "layout": {
-        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
         "text-font": ["Noto Sans Regular"],
-        "text-letter-spacing": 0.02,
         "text-max-width": 8,
-        "text-size": [
-          "match",
-          ["get", "class"],
-          "country",
-          14,
-          "state",
-          12,
-          "province",
-          12,
-          "city",
-          11,
-          10
-        ]
+        "text-size": ["interpolate", ["linear"], ["zoom"], 10, 9, 16, 12]
       },
       "paint": {
-        "text-color": "#46534D",
+        "text-color": "#66716C",
         "text-halo-color": "#F4F5F1",
         "text-halo-width": 1.4
       }

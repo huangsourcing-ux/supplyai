@@ -1,6 +1,7 @@
 import styleTemplate from "./chinasupply-light.json" with { type: "json" };
 
 export const MAPTILER_KEY_TOKEN = "__MAPTILER_KEY__";
+export const BASEMAP_LABEL_ANCHOR_LAYER_ID = "water-labels";
 
 /**
  * Return an isolated MapLibre style object with the public MapTiler key

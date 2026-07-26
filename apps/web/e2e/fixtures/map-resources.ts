@@ -1,6 +1,12 @@
 import type { BrowserContext } from "@playwright/test";
 
+import planetV4SchemaManifest from "../../../../packages/config/test/fixtures/planet-v4-schema-manifest.json" with { type: "json" };
+
 const EMPTY_VECTOR_TILE = Buffer.from([]);
+const TRANSPARENT_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+  "base64",
+);
 const MAPTILER_HOST = "api.maptiler.com";
 const FIXTURE_TILE_HOST = "tiles.fixture.invalid";
 const FIXTURE_API_HOST = "api.fixture.invalid";
@@ -11,21 +17,51 @@ const tileJson = {
   bounds: [-180, -85.0511, 180, 85.0511],
   center: [104, 36, 3],
   format: "pbf",
-  maxzoom: 14,
+  maxzoom: 15,
   minzoom: 0,
   name: "ChinaSupply.AI Playwright fixture tiles",
   scheme: "xyz",
-  tilejson: "3.0.0",
+  tilejson: "2.0.0",
   tiles: ["https://tiles.fixture.invalid/{z}/{x}/{y}.pbf"],
-  vector_layers: [
-    { fields: {}, id: "boundary", maxzoom: 14, minzoom: 0 },
-    { fields: {}, id: "landcover", maxzoom: 14, minzoom: 0 },
-    { fields: {}, id: "landuse", maxzoom: 14, minzoom: 0 },
-    { fields: {}, id: "place", maxzoom: 14, minzoom: 0 },
-    { fields: {}, id: "transportation", maxzoom: 14, minzoom: 0 },
-    { fields: {}, id: "water", maxzoom: 14, minzoom: 0 },
-  ],
+  vector_layers: planetV4SchemaManifest.vector_layers.map(({ id }) => ({
+    fields: {},
+    id,
+    maxzoom: 15,
+    minzoom: 0,
+  })),
 };
+
+const spriteNames = [
+  "aerialway",
+  "airport",
+  "bus_stop",
+  "crossing",
+  "dot",
+  "ferry_terminal",
+  "oneway",
+  "subway",
+  "subway_entrance",
+  "traffic_signal",
+  "tram_stop",
+  "transit",
+  ...Array.from({ length: 12 }, (_, index) => `road_${index + 1}`),
+];
+
+const spriteIndex = Object.fromEntries(
+  spriteNames.map((name) => [
+    name,
+    {
+      content: [0, 0, 1, 1],
+      height: 1,
+      pixelRatio: 1,
+      stretchX: [[0, 1]],
+      stretchY: [[0, 1]],
+      width: 1,
+      x: 0,
+      y: 0,
+    },
+  ]),
+);
 
 const logoSvg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="68" height="21" viewBox="0 0 68 21">
@@ -92,6 +128,29 @@ export async function installFixedMapResources(
         contentType: "application/x-protobuf",
         status: 200,
       });
+      return;
+    }
+
+    if (
+      url.hostname === MAPTILER_HOST &&
+      url.pathname.startsWith("/sprites/")
+    ) {
+      if (url.pathname.endsWith(".json")) {
+        await route.fulfill({
+          body: JSON.stringify(spriteIndex),
+          contentType: "application/json",
+          status: 200,
+        });
+      } else if (url.pathname.endsWith(".png")) {
+        await route.fulfill({
+          body: TRANSPARENT_PNG,
+          contentType: "image/png",
+          status: 200,
+        });
+      } else {
+        unexpectedExternalRequests.push(url.href);
+        await route.abort("blockedbyclient");
+      }
       return;
     }
 

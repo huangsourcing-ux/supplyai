@@ -64,7 +64,7 @@ packages/
 - API/Worker：NestJS + Fastify、Drizzle ORM、Redis + BullMQ。
 - 数据：PostgreSQL + PostGIS；首版搜索使用 PostgreSQL FTS + `pg_trgm`。
 - CMS：Payload，仅管理内容；与主业务共用 PostgreSQL，但迁移边界严格隔离。
-- 基础设施：MapTiler Cloud Flex、Cloudflare R2/CDN、Clerk、Resend、Sentry、PostHog；Web/Payload 部署到 Vercel，API/Worker 部署到 Railway 美区。
+- 基础设施：MapTiler Cloud（Local/Staging 可用 Free 做测试评估，Production 必须 Flex）、Cloudflare R2/CDN、Clerk、Resend、Sentry、PostHog；Web/Payload 部署到 Vercel，API/Worker 部署到 Railway 美区。
 - CI/CD：GitHub Actions + EAS Build。
 
 未经已确认文档修订，不得替换框架、ORM、数据库、认证、地图、CMS、存储、部署平台或引入“后期规划”组件。Expo/React Native/Obytes/MapLibre 的兼容组合必须在 M0-T5 验证后锁定；V1 期间只允许安全修复与阻塞性 bugfix，不做框架大版本升级。
@@ -79,7 +79,7 @@ packages/
 - MAP-2 边界简化容差固定为：zoom `<10` 使用 `0.01°`，zoom `10–11` 使用 `0.002°`，zoom `≥12` 返回原始精度。
 - 导航目标所需坐标系不得凭经验写死。F-6 的实现被 M0-T9 真机验证门阻塞；验证完成后只在 `packages/geo/navigation` 的纯函数和测试夹具中固化结论。
 - 导航发布前必须由人工在真机验证落点误差小于 50m；代理不能用模拟器或单测替代该结论。
-- Web 和 App 使用同一份自行维护的 MapLibre style JSON，只引用 MapTiler 瓦片源；不要直接依赖可能漂移的托管样式。MapTiler key 分别按 Web 域名、iOS Bundle ID 和 Android Package 限制。
+- Web 和 App 使用同一份自行维护、基于 Planet v4 schema 的 Streets v4 2D MapLibre style JSON，只引用 MapTiler 瓦片、glyph 与 sprite 资源；不要直接依赖可能漂移的托管样式。底图保留完整道路、交通、POI 与街道细节，英文名优先并以当地名称 fallback；建筑只允许 zoom ≥15 的淡化 2D footprint，禁止 `fill-extrusion` 与非零初始 pitch。产业带 fill 放在首个底图 symbol layer 之前，边界线、产业带点、工厂点和聚合点放在底图标签之上。MapTiler key 分别按 Web 域名、iOS Bundle ID 和 Android Package 限制。
 
 ### 6.2 数据与 Schema 所有权
 
@@ -120,6 +120,7 @@ packages/
 - Local：Docker PostGIS + Redis、Clerk Dev、R2 媒体/私有操作 bucket 的 dev prefix、localhost。
 - Staging：Railway staging DB、Clerk Dev instance、`chinasupply-staging-media` 公开媒体 bucket + `chinasupply-staging` 私有操作 bucket，均使用 staging prefix、`staging.*`。
 - Production：独立生产 DB、Clerk Production instance、两只独立 production bucket（空 prefix）、正式域名。
+- MapTiler Free 只允许用于 Local/Staging 测试评估；M5-T9 commercial production 上线前必须升级 Flex、确认商业授权与账单上限、创建 Web/iOS/Android 三只受限 production key，并完成 Planet v4 TileJSON/PBF/glyph/sprite smoke。禁止把 Free 或 staging key 带入 production。
 - 所有应用提供完整 `.env.example`，启动时用 Zod 校验环境变量；密钥不得提交到仓库、日志、fixture 或客户端 bundle。
 - Drizzle migration 作为部署前独立 release command，不得在应用启动时隐式执行；失败时不得启动新版本。生产环境不得自动 seed 或写入测试/合成数据。
 - M0-T6 在 M1-T1 尚未建立真实 Drizzle `db:migrate` 前，只能执行已存在的 Payload `cms` migration，并以其成功门控当前 staging 发布；M1-T1 必须补接 `core` migration，之后 Railway API/Worker 只有 core migration 成功才可发布。禁止用 no-op 伪造 core migration。

@@ -1,6 +1,7 @@
 import type {
   CircleLayerSpecification,
   FillLayerSpecification,
+  LineLayerSpecification,
   LngLatBoundsLike,
   SymbolLayerSpecification,
 } from "maplibre-gl";
@@ -26,6 +27,8 @@ export const CLUSTER_POINTS_LAYER_ID = "industrial-cluster-points-circles";
 export const CLUSTER_BOUNDARIES_SOURCE_ID = "industrial-cluster-boundaries";
 export const CLUSTER_BOUNDARIES_FILL_LAYER_ID =
   "industrial-cluster-boundaries-fill";
+export const CLUSTER_BOUNDARIES_LINE_LAYER_ID =
+  "industrial-cluster-boundaries-line";
 export const FACTORIES_SOURCE_ID = "industrial-factories";
 export const FACTORY_CLUSTERS_LAYER_ID = "industrial-factory-clusters";
 export const FACTORY_CLUSTER_COUNT_LAYER_ID =
@@ -58,10 +61,21 @@ export const clusterBoundariesFillLayer: FillLayerSpecification = {
   paint: {
     "fill-color": ["coalesce", ["get", "color"], "#0F766E"],
     "fill-opacity": 0.24,
-    "fill-outline-color": ["coalesce", ["get", "color"], "#0F766E"],
   },
   source: CLUSTER_BOUNDARIES_SOURCE_ID,
   type: "fill",
+};
+
+export const clusterBoundariesLineLayer: LineLayerSpecification = {
+  id: CLUSTER_BOUNDARIES_LINE_LAYER_ID,
+  minzoom: CLUSTER_BOUNDARY_MIN_ZOOM,
+  paint: {
+    "line-color": ["coalesce", ["get", "color"], "#0F766E"],
+    "line-opacity": 0.88,
+    "line-width": ["interpolate", ["linear"], ["zoom"], 8, 1.25, 14, 2.25],
+  },
+  source: CLUSTER_BOUNDARIES_SOURCE_ID,
+  type: "line",
 };
 
 export const clusterPointsLayer: CircleLayerSpecification = {
