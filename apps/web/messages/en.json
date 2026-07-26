@@ -12,7 +12,17 @@
     "brand": "ChinaSupply.AI",
     "map": "Map",
     "saved": "Saved",
-    "account": "Account"
+    "account": "Account",
+    "analytics": "Analytics"
+  },
+  "AnalyticsConsent": {
+    "title": "Help us improve ChinaSupply.AI",
+    "description": "With your permission, anonymous analytics help us understand how search, maps, and supplier pages are used. PostHog will not load unless you allow analytics.",
+    "allow": "Allow analytics",
+    "reject": "Reject analytics",
+    "close": "Close analytics settings",
+    "allowedStatus": "Anonymous analytics are currently allowed.",
+    "deniedStatus": "Analytics are currently disabled."
   },
   "Home": {
     "title": "China industrial clusters"

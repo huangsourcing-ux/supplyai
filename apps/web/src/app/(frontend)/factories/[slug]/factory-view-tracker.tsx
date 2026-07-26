@@ -6,11 +6,11 @@ import { analytics } from "@chinasupply/analytics";
 
 import { useAnalyticsConsent } from "@/analytics/use-analytics-consent";
 
-export function ClusterViewTracker({
-  clusterId,
+export function FactoryViewTracker({
+  factoryId,
   slug,
 }: Readonly<{
-  clusterId: string;
+  factoryId: string;
   slug: string;
 }>) {
   const consent = useAnalyticsConsent();
@@ -19,11 +19,11 @@ export function ClusterViewTracker({
   useEffect(() => {
     if (consent !== "granted") return;
 
-    const identity = `${clusterId}:${slug}`;
+    const identity = `${factoryId}:${slug}`;
     if (trackedIdentity.current === identity) return;
     trackedIdentity.current = identity;
-    analytics.trackClusterViewed({ clusterId, slug });
-  }, [clusterId, consent, slug]);
+    analytics.trackFactoryViewed({ factoryId, slug });
+  }, [consent, factoryId, slug]);
 
   return null;
 }

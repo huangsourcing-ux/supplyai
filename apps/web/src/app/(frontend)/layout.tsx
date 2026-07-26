@@ -10,6 +10,7 @@ import {
 } from "@/auth/public-auth-routes";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 
+import { AnalyticsConsentProvider } from "./analytics-consent-provider";
 import { ApiQueryProvider } from "./api-query-provider";
 import { PublicNavigation } from "./public-navigation";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -28,7 +29,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FrontendLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [messages, navigation] = await Promise.all([
+  const [analyticsConsent, messages, navigation] = await Promise.all([
+    getTranslations("AnalyticsConsent"),
     getMessages(),
     getTranslations("Navigation"),
   ]);
@@ -42,17 +44,30 @@ export default async function FrontendLayout({
           signUpFallbackRedirectUrl={PUBLIC_AUTH_FALLBACK_PATH}
         >
           <NextIntlClientProvider messages={messages}>
-            <ApiQueryProvider>
-              <PublicNavigation
-                labels={{
-                  account: navigation("account"),
-                  brand: navigation("brand"),
-                  map: navigation("map"),
-                  saved: navigation("saved"),
-                }}
-              />
-              {children}
-            </ApiQueryProvider>
+            <AnalyticsConsentProvider
+              labels={{
+                allow: analyticsConsent("allow"),
+                allowedStatus: analyticsConsent("allowedStatus"),
+                close: analyticsConsent("close"),
+                deniedStatus: analyticsConsent("deniedStatus"),
+                description: analyticsConsent("description"),
+                reject: analyticsConsent("reject"),
+                title: analyticsConsent("title"),
+              }}
+            >
+              <ApiQueryProvider>
+                <PublicNavigation
+                  labels={{
+                    account: navigation("account"),
+                    analytics: navigation("analytics"),
+                    brand: navigation("brand"),
+                    map: navigation("map"),
+                    saved: navigation("saved"),
+                  }}
+                />
+                {children}
+              </ApiQueryProvider>
+            </AnalyticsConsentProvider>
           </NextIntlClientProvider>
         </ClerkProvider>
       </body>

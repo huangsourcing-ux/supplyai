@@ -11,6 +11,7 @@ const MAPTILER_HOST = "api.maptiler.com";
 const FIXTURE_TILE_HOST = "tiles.fixture.invalid";
 const FIXTURE_API_HOST = "api.fixture.invalid";
 const FIXTURE_CLERK_HOST = "clerk.fixture.invalid";
+const FIXTURE_POSTHOG_HOST = "posthog.fixture.invalid";
 const FIXTURE_WEB_ORIGIN = "http://127.0.0.1:3100";
 
 const tileJson = {
@@ -72,6 +73,11 @@ const logoSvg = `
 
 export interface FixedMapResources {
   assertNoUnexpectedExternalRequests: () => void;
+  postHogRequests: Array<{
+    method: string;
+    postData: string | null;
+    url: string;
+  }>;
   tileRequests: string[];
 }
 
@@ -79,6 +85,7 @@ export async function installFixedMapResources(
   context: BrowserContext,
 ): Promise<FixedMapResources> {
   const unexpectedExternalRequests: string[] = [];
+  const postHogRequests: FixedMapResources["postHogRequests"] = [];
   const tileRequests: string[] = [];
 
   await context.route("**/*", async (route) => {
@@ -100,6 +107,20 @@ export async function installFixedMapResources(
 
     if (url.hostname === FIXTURE_CLERK_HOST) {
       await route.abort("blockedbyclient");
+      return;
+    }
+
+    if (url.hostname === FIXTURE_POSTHOG_HOST) {
+      postHogRequests.push({
+        method: route.request().method(),
+        postData: route.request().postData(),
+        url: url.href,
+      });
+      await route.fulfill({
+        body: JSON.stringify({ status: 1 }),
+        contentType: "application/json",
+        status: 200,
+      });
       return;
     }
 
@@ -178,6 +199,7 @@ export async function installFixedMapResources(
         );
       }
     },
+    postHogRequests,
     tileRequests,
   };
 }

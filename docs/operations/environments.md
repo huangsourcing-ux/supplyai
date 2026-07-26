@@ -53,6 +53,17 @@ build-only auth token in both Vercel scopes. Vercel's commit SHA is embedded in
 the Sentry release and the build uploads source maps as described in
 `docs/operations/sentry.md`.
 
+M3-T6 requires `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST` in both
+Vercel scopes. The staging project already stores the matching public project
+key and US ingestion host as encrypted values; do not print or copy them into
+repository files, build logs, screenshots, or review evidence. The SDK loads
+only after an explicit grant on a buyer-facing route. Unknown, denied, and
+withdrawn states must produce no PostHog requests, and `/ops/**`, `/sign-in/**`,
+and Payload `/admin/**` must not initiate the first SDK load. After merge,
+canonical staging acceptance must exercise clean-browser unknown, deny, grant,
+and revoke states and inspect PostHog Live Events for exactly the six frozen V1
+events, including search redaction and the ten-second `map_moved` throttle.
+
 M0-T3 initially put the Clerk Development instance in Restricted mode with
 public sign-up disabled. M3-T1 changed the staging Development instance to the
 following state on 2026-07-26:
@@ -110,9 +121,9 @@ The EAS Preview environment must contain:
 
 Both MapTiler platform keys are required outside local development and may not
 be reused across platforms. MapLibre adds the matching restricted User-Agent
-only to `https://api.maptiler.com/` requests. PostHog remains optional until its
-owning task; key/host must be provided together. Sentry is required by M0-T7
-for every non-local Mobile build.
+only to `https://api.maptiler.com/` requests. Mobile PostHog remains inactive;
+M3-T6 configures only Web and does not add or load an analytics SDK in Mobile.
+Sentry is required by M0-T7 for every non-local Mobile build.
 
 The retained Development smoke user password is stored only in macOS Keychain
 under service `ai.chinasupply.clerk.mobile-smoke`. Neither the password nor

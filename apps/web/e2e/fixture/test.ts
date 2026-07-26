@@ -18,6 +18,17 @@ export interface MapFetchRecord {
 
 async function installMapFetchProbe(page: Page) {
   await page.addInitScript(() => {
+    // PostHog intentionally drops events from automation. The fixture models a
+    // real buyer browser so consent-gated requests can be asserted end to end.
+    Object.defineProperty(Navigator.prototype, "webdriver", {
+      configurable: true,
+      get: () => false,
+    });
+    Object.defineProperty(Navigator.prototype, "userAgentData", {
+      configurable: true,
+      get: () => undefined,
+    });
+
     const originalFetch = window.fetch.bind(window);
     window.__mapFetchRecords = [];
 

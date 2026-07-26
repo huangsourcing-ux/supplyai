@@ -14,6 +14,7 @@ import { PublicNavigation } from "../app/(frontend)/public-navigation";
 
 const labels = {
   account: "Account",
+  analytics: "Analytics",
   brand: "ChinaSupply.AI",
   map: "Map",
   saved: "Saved",
@@ -33,6 +34,8 @@ describe("public navigation", () => {
     expect(markup).toContain('href="/account"');
     expect(markup).toContain('aria-current="page"');
     expect(markup).toContain('href="/favorites">Saved</a>');
+    expect(markup).toContain("Analytics</button>");
+    expect(markup).toContain('aria-controls="analytics-consent-panel"');
   });
 
   it("stays out of public and operations sign-in flows", () => {

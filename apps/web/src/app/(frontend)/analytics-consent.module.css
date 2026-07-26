@@ -1,0 +1,123 @@
+.panel {
+  position: fixed;
+  z-index: 40;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  left: max(1rem, env(safe-area-inset-left));
+  display: flex;
+  width: min(44rem, calc(100% - 2rem));
+  max-width: 44rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid rgba(167, 243, 208, 0.24);
+  border-radius: 1rem;
+  color: #ecfdf5;
+  background: rgba(8, 17, 14, 0.98);
+  box-shadow: 0 1.25rem 3.5rem rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(1rem);
+}
+
+.copy {
+  min-width: 0;
+}
+
+.copy h2 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+}
+
+.copy h2:focus-visible {
+  border-radius: 0.2rem;
+  outline: 3px solid rgba(94, 228, 173, 0.55);
+  outline-offset: 4px;
+}
+
+.copy p {
+  max-width: 34rem;
+  margin: 0.4rem 0 0;
+  color: #b7cbc2;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.copy .status {
+  color: #79e5b8;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.55rem;
+}
+
+.choice {
+  min-height: 2.65rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(94, 228, 173, 0.42);
+  border-radius: 999px;
+  color: #ecfdf5;
+  background: rgba(94, 228, 173, 0.12);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 680;
+  cursor: pointer;
+}
+
+.choice:hover {
+  background: rgba(94, 228, 173, 0.2);
+}
+
+.choice:focus-visible,
+.close:focus-visible {
+  outline: 3px solid rgba(94, 228, 173, 0.55);
+  outline-offset: 2px;
+}
+
+.close {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.55rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: #b7cbc2;
+  background: transparent;
+  font: inherit;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #ecfdf5;
+  background: rgba(94, 228, 173, 0.12);
+}
+
+@media (max-width: 42rem) {
+  .panel {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .panel:has(.close) {
+    padding-top: 2.25rem;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .choice {
+    padding-inline: 0.65rem;
+  }
+}

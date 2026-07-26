@@ -31,8 +31,14 @@ describe("Web internationalization contract", () => {
     });
     expect(messages.Navigation).toMatchObject({
       account: "Account",
+      analytics: "Analytics",
       map: "Map",
       saved: "Saved",
+    });
+    expect(messages.AnalyticsConsent).toMatchObject({
+      allow: "Allow analytics",
+      reject: "Reject analytics",
+      title: "Help us improve ChinaSupply.AI",
     });
     expect(messages.Home).toBeTypeOf("object");
     expect(messages.Map).toMatchObject({

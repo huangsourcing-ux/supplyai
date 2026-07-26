@@ -17,6 +17,7 @@ import { FactoryCopyField } from "./factory-copy-field";
 import { FactoryImageCarousel } from "./factory-image-carousel";
 import { FactoryLocationMap } from "./factory-location-map";
 import { FactoryNavigationButtons } from "./factory-navigation-buttons";
+import { FactoryViewTracker } from "./factory-view-tracker";
 import { RelatedFactoryRail } from "./related-factory-rail";
 
 export interface FactoryDetailLabels {
@@ -57,6 +58,7 @@ export function FactoryDetailContent({
 
   return (
     <main className={styles.page}>
+      <FactoryViewTracker factoryId={factory.id} slug={factory.slug} />
       <div className={styles.shell}>
         <Link className={styles.backLink} href="/">
           <span aria-hidden="true">←</span>

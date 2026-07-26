@@ -9,6 +9,7 @@ import type {
 import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
+import { analytics } from "@chinasupply/analytics";
 import {
   type GetMapClusterBoundaries200Data,
   type GetMapClusterPoints200Data,
@@ -113,6 +114,7 @@ export function IndustrialMap({
     EMPTY_CLUSTER_BOUNDARIES,
   );
   const factoryPointsRef = useRef<GetMapFactories200Data>(EMPTY_FACTORY_POINTS);
+  const appliedCategorySlugRef = useRef<string | null>(null);
   const [mapAttempt, setMapAttempt] = useState(0);
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
   const [selectedFeature, setSelectedFeature] =
@@ -213,6 +215,10 @@ export function IndustrialMap({
   }, [categoryIsSettling, selectedCategory]);
 
   useEffect(() => {
+    appliedCategorySlugRef.current = categorySlug ?? null;
+  }, [categorySlug]);
+
+  useEffect(() => {
     clusterPointsRef.current = clusterPoints;
     const source = mapRef.current?.getSource(
       CLUSTER_POINTS_SOURCE_ID,
@@ -243,9 +249,21 @@ export function IndustrialMap({
     let disposed = false;
     let activeMap: MapLibreMap | null = null;
     let mapInitializationStarted = false;
+    let hasInitialViewport = false;
+    let movementPending = false;
     const viewportUpdater = createDebouncedViewportUpdater((nextViewport) => {
+      const shouldTrackMovement = hasInitialViewport && movementPending;
+      hasInitialViewport = true;
+      movementPending = false;
       setViewport(nextViewport);
       setViewportIsSettling(false);
+      if (shouldTrackMovement) {
+        analytics.trackMapMoved({
+          bbox: nextViewport.bbox,
+          categorySlug: appliedCategorySlugRef.current,
+          zoom: nextViewport.zoom,
+        });
+      }
     });
 
     setMapLoadState("loading");
@@ -293,6 +311,7 @@ export function IndustrialMap({
           const cancelViewportQueries = () => {
             setViewportIsSettling(true);
             viewportUpdater.cancel();
+            movementPending = false;
             void Promise.all([
               queryClient.cancelQueries({
                 queryKey: getGetMapClusterBoundariesQueryKey(),
@@ -302,15 +321,17 @@ export function IndustrialMap({
               }),
             ]);
           };
-          const scheduleViewportUpdate = () => {
+          const scheduleViewportUpdate = (trackMovement: boolean) => {
             const nextViewport = readMapViewport(map);
             if (nextViewport === null) {
               viewportUpdater.cancel();
+              movementPending = false;
               setViewport(null);
               setViewportIsSettling(false);
               return;
             }
 
+            movementPending = trackMovement;
             viewportUpdater.schedule(nextViewport);
           };
           const handleMapClick = (event: MapMouseEvent) => {
@@ -356,7 +377,7 @@ export function IndustrialMap({
           };
 
           map.on("movestart", cancelViewportQueries);
-          map.on("moveend", scheduleViewportUpdate);
+          map.on("moveend", () => scheduleViewportUpdate(true));
           map.addControl(
             new NavigationControl({
               showCompass: true,
@@ -404,7 +425,7 @@ export function IndustrialMap({
               map.on("mouseenter", layerId, showInteractiveCursor);
               map.on("mouseleave", layerId, hideInteractiveCursor);
             }
-            scheduleViewportUpdate();
+            scheduleViewportUpdate(false);
             setMapLoadState("ready");
           };
 
