@@ -8,13 +8,16 @@ import type {
   GetClusterFactories200,
 } from "@chinasupply/api-client";
 
+import { buildClusterAuthReturnPath } from "@/auth/public-auth-routes";
+
+import {
+  FavoriteSaveAction,
+  type FavoriteSaveActionLabels,
+} from "../../favorites/favorite-save-action";
+
 import { ClusterBoundaryMap } from "./cluster-boundary-map";
 import styles from "./cluster-detail.module.css";
 import { ClusterFactoryList } from "./cluster-factory-list";
-import {
-  ClusterSaveAction,
-  type ClusterSaveActionLabels,
-} from "./cluster-save-action";
 import type { FormattedClusterStats } from "./cluster-stats";
 import { ClusterViewTracker } from "./cluster-view-tracker";
 
@@ -28,7 +31,7 @@ export interface ClusterDetailLabels {
   factoryCount: string;
   location: string;
   productsHeading: string;
-  saveAction: ClusterSaveActionLabels;
+  saveAction: FavoriteSaveActionLabels;
   statsHeading: string;
 }
 
@@ -96,7 +99,12 @@ export function ClusterDetailContent({
             <p className={styles.location}>{labels.location}</p>
             <p className={styles.summary}>{cluster.summary}</p>
           </div>
-          <ClusterSaveAction labels={labels.saveAction} slug={cluster.slug} />
+          <FavoriteSaveAction
+            labels={labels.saveAction}
+            returnPath={buildClusterAuthReturnPath(cluster.slug)}
+            targetId={cluster.id}
+            targetType="cluster"
+          />
         </header>
 
         <ClusterBoundaryMap

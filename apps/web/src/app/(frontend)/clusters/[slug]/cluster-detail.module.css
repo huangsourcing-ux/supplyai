@@ -1,5 +1,5 @@
 .page {
-  min-height: 100svh;
+  min-height: calc(100svh - var(--public-navigation-height));
   color: #1d2a25;
   background:
     radial-gradient(

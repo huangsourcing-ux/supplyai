@@ -8,6 +8,12 @@
     "signInTitle": "Save suppliers for later",
     "signInDescription": "Sign in or create an account with email or Google. You will return to where you left off."
   },
+  "Navigation": {
+    "brand": "ChinaSupply.AI",
+    "map": "Map",
+    "saved": "Saved",
+    "account": "Account"
+  },
   "Home": {
     "title": "China industrial clusters"
   },
@@ -68,9 +74,12 @@
     "location": "{city}, China",
     "saveAction": {
       "save": "Save cluster",
-      "loading": "Checking your sign-in status…",
+      "saved": "Saved",
+      "checking": "Checking your account…",
+      "saving": "Saving…",
       "signInHint": "Sign in to save this cluster.",
-      "pending": "Saving will be connected in the next account step."
+      "error": "This cluster could not be saved.",
+      "retry": "Try saving again"
     },
     "productsHeading": "Main products",
     "aboutHeading": "About this industrial cluster",
@@ -133,6 +142,15 @@
       "verifiedMonth": "Verified {month}",
       "unverified": "Unverified",
       "source": "Source:"
+    },
+    "saveAction": {
+      "save": "Save factory",
+      "saved": "Saved",
+      "checking": "Checking your account…",
+      "saving": "Saving…",
+      "signInHint": "Sign in to save this factory.",
+      "error": "This factory could not be saved.",
+      "retry": "Try saving again"
     },
     "gallery": {
       "ariaLabel": "Images of {name}",
@@ -215,6 +233,82 @@
       "retry": "Try again",
       "retrying": "Trying again…",
       "backToMap": "Back to the map"
+    }
+  },
+  "Favorites": {
+    "eyebrow": "Buyer shortlist",
+    "title": "Saved suppliers",
+    "description": "Keep industrial clusters and factories together while you plan your sourcing work.",
+    "tabs": {
+      "factory": "Factories",
+      "cluster": "Industrial clusters"
+    },
+    "loading": "Loading your saved suppliers…",
+    "error": "Your saved suppliers could not be loaded.",
+    "retry": "Try again",
+    "empty": "You have not saved anything in this section yet.",
+    "moreMayMatch": "More saved items may be available. Load the next page to continue.",
+    "loadMore": "Load more saved items",
+    "loadingMore": "Loading more…",
+    "allLoaded": "All saved items are shown.",
+    "remove": "Remove",
+    "removing": "Removing…",
+    "removed": "Removed from saved items.",
+    "removeError": "This item could not be removed. Your saved list was restored.",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "viewDetails": "View details",
+    "signIn": {
+      "title": "Sign in to see your saved suppliers",
+      "description": "Your shortlist is private to your buyer account.",
+      "action": "Sign in or create an account"
+    },
+    "unavailable": {
+      "title": "Saved item unavailable",
+      "description": "This supplier is no longer publicly available. You can remove it from your shortlist."
+    },
+    "metadata": {
+      "title": "Saved suppliers | ChinaSupply.AI",
+      "description": "Review your saved Chinese industrial clusters and factories."
+    }
+  },
+  "Account": {
+    "eyebrow": "Buyer account",
+    "title": "Account settings",
+    "description": "Review your account email, language preference, and account controls.",
+    "loading": "Checking your account…",
+    "emailLabel": "Email",
+    "emailFallback": "Email unavailable",
+    "language": {
+      "title": "Language preference",
+      "description": "ChinaSupply.AI currently supports English. More languages can be added without changing your account structure.",
+      "english": "English",
+      "action": "Save language",
+      "saving": "Saving…",
+      "saved": "Language preference saved.",
+      "error": "Your language preference could not be saved."
+    },
+    "signOut": {
+      "action": "Sign out",
+      "pending": "Signing out…"
+    },
+    "delete": {
+      "title": "Delete account",
+      "description": "Deleting your account permanently removes your sign-in and all saved suppliers.",
+      "confirm": "This cannot be undone. Confirm that you want to permanently delete this account.",
+      "action": "Delete account",
+      "pending": "Deleting account…",
+      "cancel": "Keep account",
+      "error": "Your account could not be deleted. No local account data was changed."
+    },
+    "signIn": {
+      "title": "Sign in to manage your account",
+      "description": "Account settings are available after you sign in.",
+      "action": "Sign in or create an account"
+    },
+    "metadata": {
+      "title": "Account | ChinaSupply.AI",
+      "description": "Manage your ChinaSupply.AI buyer account."
     }
   },
   "Operations": {

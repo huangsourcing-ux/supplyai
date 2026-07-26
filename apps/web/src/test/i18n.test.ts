@@ -29,6 +29,11 @@ describe("Web internationalization contract", () => {
       signInEyebrow: "Buyer account",
       signInTitle: "Save suppliers for later",
     });
+    expect(messages.Navigation).toMatchObject({
+      account: "Account",
+      map: "Map",
+      saved: "Saved",
+    });
     expect(messages.Home).toBeTypeOf("object");
     expect(messages.Map).toMatchObject({
       card: {
@@ -86,8 +91,9 @@ describe("Web internationalization contract", () => {
           "Boundary data is not available yet. Showing the cluster center.",
       },
       saveAction: {
-        pending: "Saving will be connected in the next account step.",
+        retry: "Try saving again",
         save: "Save cluster",
+        saved: "Saved",
         signInHint: "Sign in to save this cluster.",
       },
       stats: {
@@ -125,6 +131,32 @@ describe("Web internationalization contract", () => {
       },
       related: {
         heading: "Related factories",
+      },
+      saveAction: {
+        save: "Save factory",
+        saved: "Saved",
+      },
+    });
+    expect(messages.Favorites).toMatchObject({
+      remove: "Remove",
+      tabs: {
+        cluster: "Industrial clusters",
+        factory: "Factories",
+      },
+      unavailable: {
+        title: "Saved item unavailable",
+      },
+    });
+    expect(messages.Account).toMatchObject({
+      delete: {
+        action: "Delete account",
+        cancel: "Keep account",
+      },
+      language: {
+        english: "English",
+      },
+      signOut: {
+        action: "Sign out",
       },
     });
     expect(messages.Operations).toMatchObject({

@@ -80,9 +80,12 @@ import FrontendLayout from "../app/(frontend)/layout";
 import OperationsSignInPage from "../app/(frontend)/ops/sign-in/[[...sign-in]]/page";
 import PublicSignInPage from "../app/(frontend)/sign-in/[[...sign-in]]/page";
 import {
+  PUBLIC_ACCOUNT_PATH,
   PUBLIC_AUTH_FALLBACK_PATH,
+  PUBLIC_FAVORITES_PATH,
   PUBLIC_SIGN_IN_PATH,
   buildClusterAuthReturnPath,
+  buildFactoryAuthReturnPath,
 } from "../auth/public-auth-routes";
 import { config as proxyConfig } from "../proxy";
 
@@ -120,11 +123,16 @@ describe("public Clerk routing", () => {
     expect(markup).toContain('data-with-sign-up="false"');
   });
 
-  it("keeps public auth paths and encoded cluster return paths stable", () => {
+  it("keeps public auth paths and encoded detail return paths stable", () => {
     expect(PUBLIC_SIGN_IN_PATH).toBe("/sign-in");
     expect(PUBLIC_AUTH_FALLBACK_PATH).toBe("/");
+    expect(PUBLIC_FAVORITES_PATH).toBe("/favorites");
+    expect(PUBLIC_ACCOUNT_PATH).toBe("/account");
     expect(buildClusterAuthReturnPath("lighting/fixtures")).toBe(
       "/clusters/lighting%2Ffixtures",
+    );
+    expect(buildFactoryAuthReturnPath("lighting/factory")).toBe(
+      "/factories/lighting%2Ffactory",
     );
   });
 });

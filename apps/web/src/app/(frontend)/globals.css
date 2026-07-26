@@ -2,6 +2,7 @@
 
 :root {
   color-scheme: dark;
+  --public-navigation-height: 4rem;
   --background: #08110e;
   --foreground: #ecfdf5;
   --muted: #9fb8ad;
@@ -57,8 +58,8 @@ a {
 .map-page {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: calc(100vh - var(--public-navigation-height));
+  min-height: calc(100dvh - var(--public-navigation-height));
   overflow: hidden;
   background: #f4f5f1;
 }
