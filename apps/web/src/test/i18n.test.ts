@@ -23,6 +23,12 @@ describe("Web internationalization contract", () => {
     );
 
     expect(messages.Metadata).toBeTypeOf("object");
+    expect(messages.Authentication).toMatchObject({
+      signInDescription:
+        "Sign in or create an account with email or Google. You will return to where you left off.",
+      signInEyebrow: "Buyer account",
+      signInTitle: "Save suppliers for later",
+    });
     expect(messages.Home).toBeTypeOf("object");
     expect(messages.Map).toMatchObject({
       card: {
@@ -79,7 +85,11 @@ describe("Web internationalization contract", () => {
         boundaryUnavailable:
           "Boundary data is not available yet. Showing the cluster center.",
       },
-      save: "Save cluster",
+      saveAction: {
+        pending: "Saving will be connected in the next account step.",
+        save: "Save cluster",
+        signInHint: "Sign in to save this cluster.",
+      },
       stats: {
         factoryCount: "Factories",
         heading: "Cluster at a glance",

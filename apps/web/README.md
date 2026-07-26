@@ -17,6 +17,8 @@ pnpm --filter @chinasupply/web dev
 The local routes are:
 
 - `http://localhost:3000/` — public Web skeleton.
+- `http://localhost:3000/sign-in` — public Clerk email/Google sign-in and
+  sign-up flow.
 - `http://localhost:3000/admin` — Payload Admin using the independent
   `cms_users` auth collection.
 - `http://localhost:3000/ops/sign-in` — Clerk sign-in for operations users.
@@ -33,13 +35,24 @@ runs Payload migrations during build or startup.
 - `/ops/**` authenticates with Clerk and requires the exact session claim
   `metadata.role = "admin"`. Proxy enforcement is repeated in the protected
   Server Component.
-- There is no public Clerk registration or ordinary user sign-in in M0-T3.
+- `/sign-in/**` is the ordinary user flow. Clerk Dashboard controls the enabled
+  methods; M3-T1 requires public sign-up, email verification codes, and Google
+  sign-up/sign-in. Cluster save actions preserve their canonical detail URL
+  through both sign-in and sign-up.
+- Ordinary users and operations administrators share the Clerk instance, but
+  ordinary authentication never grants the `admin` role. Payload authentication
+  remains completely separate.
 
 For staging, configure the Clerk session token claim as
 `{"metadata":"{{user.public_metadata}}"}` and administrator Public Metadata as
 `{"role":"admin"}`. Restricted mode, allowed origins, redirect URLs, and the
 Vercel/Railway environment are deployment settings documented in
 `docs/operations/environments.md`.
+
+M3-T1 only establishes the Web authentication and return path. Users created
+before the Clerk webhook lands are intentionally absent from the application
+`users` table; M3-T2 owns ongoing synchronization and M3-T3 owns the one-time
+backfill.
 
 ## CMS schema changes
 
