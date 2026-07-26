@@ -39,7 +39,7 @@ raw-body preservation, Clerk signature verification, and transactional
 the core `users` table; deletion keeps the user tombstone and hard-deletes its
 favorites. `UserAuthGuard` rejects missing or soft-deleted users and is reserved
 for the M3-T4 favorites/account controllers; the existing Admin guard remains
-unchanged until M3-T3 has backfilled staging users. M0-T7 adds Sentry to both
+independent. M0-T7 adds Sentry to both
 entrypoints: bootstrap failures and global API exceptions are captured, and
 `pnpm --filter @chinasupply/api sentry:smoke` provides the controlled staging
 verification command.
@@ -58,6 +58,15 @@ synthetic webhook receipts. Local runs accept no arguments, staging requires
 the exact `--confirm-staging` argument, and production is always rejected
 before a Clerk or PostgreSQL connection is opened. Successful output contains
 only environment and aggregate fetched/inserted/existing counts.
+
+M3-T4 exposes the authenticated `GET/POST/DELETE /api/v1/favorites` and
+`PATCH/DELETE /api/v1/me` routes. Favorites use stable `created_at DESC, id
+DESC` cursor pagination and return `target: null` when a previously saved
+entity is no longer public. New favorites require a published target and are
+idempotent under concurrent requests. User mutations share the Redis-backed
+60 requests/minute budget independently per user and route. Account deletion
+requests Clerk deletion first; the signed `user.deleted` webhook remains the
+only path that tombstones the local user and hard-deletes favorites.
 
 Railway uses the shared root `railway.json` for the API-only build. Its start
 command dispatches to the distinct `start:api` or `start:worker` script from

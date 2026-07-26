@@ -7,6 +7,7 @@ import { ClustersService } from "./clusters.service.js";
 
 @Module({
   controllers: [ClustersController],
+  exports: [ClustersService],
   imports: [DatabaseModule, MediaModule],
   providers: [ClustersService],
 })

@@ -64,6 +64,7 @@ export class RedisThrottlerStorage
   constructor(@Inject(RUNTIME_CONFIG) config: RuntimeConfig) {
     this.client = new Redis({
       ...createRedisOptions(config.REDIS_URL, 1),
+      commandTimeout: 3_000,
       connectTimeout: 3_000,
       lazyConnect: true,
     });

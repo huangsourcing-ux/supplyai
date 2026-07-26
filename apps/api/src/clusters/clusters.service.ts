@@ -12,6 +12,7 @@ import {
   eq,
   exists,
   isNotNull,
+  inArray,
   lt,
   or,
   sql,
@@ -39,6 +40,7 @@ import {
   type PublicClusterDetail,
   type PublicClusterDetailRow,
   type PublicClusterRow,
+  type PublicClusterSummary,
 } from "./cluster.mapper.js";
 
 type GetClustersQuery = z.output<typeof getClustersQuerySchema>;
@@ -165,6 +167,34 @@ export class ClustersService {
     );
 
     return responseWithMeta(data, { nextCursor });
+  }
+
+  async getPublishedSummariesByIds(
+    ids: readonly string[],
+  ): Promise<Map<string, PublicClusterSummary>> {
+    if (ids.length === 0) {
+      return new Map();
+    }
+
+    const rows = await this.database.db
+      .select(summarySelection)
+      .from(clusters)
+      .innerJoin(regions, eq(clusters.regionId, regions.id))
+      .innerJoin(categories, eq(clusters.primaryCategoryId, categories.id))
+      .where(
+        and(
+          inArray(clusters.id, [...new Set(ids)]),
+          eq(clusters.status, "published"),
+          isNotNull(clusters.publishedAt),
+        ),
+      );
+
+    return new Map(
+      rows.map((row) => [
+        row.id,
+        toPublicClusterSummary(row satisfies PublicClusterRow, this.mediaUrls),
+      ]),
+    );
   }
 
   async getBySlug(slug: string): Promise<PublicClusterDetail> {

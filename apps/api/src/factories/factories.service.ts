@@ -12,6 +12,7 @@ import {
   eq,
   exists,
   isNotNull,
+  inArray,
   lt,
   ne,
   or,
@@ -36,6 +37,7 @@ import {
   toPublicFactorySummary,
   type PublicFactoryDetailRow,
   type PublicFactoryRow,
+  type PublicFactorySummary,
 } from "./factory.mapper.js";
 
 type GetFactoriesQuery = z.output<typeof getFactoriesQuerySchema>;
@@ -139,6 +141,34 @@ export class FactoriesService {
     }
 
     return this.listPublishedRows(query, conditions);
+  }
+
+  async getPublishedSummariesByIds(
+    ids: readonly string[],
+  ): Promise<Map<string, PublicFactorySummary>> {
+    if (ids.length === 0) {
+      return new Map();
+    }
+
+    const rows = await this.database.db
+      .select(summarySelection)
+      .from(factories)
+      .innerJoin(regions, eq(factories.regionId, regions.id))
+      .leftJoin(clusters, publicClusterJoin)
+      .where(
+        and(
+          inArray(factories.id, [...new Set(ids)]),
+          eq(factories.status, "published"),
+          isNotNull(factories.publishedAt),
+        ),
+      );
+
+    return new Map(
+      rows.map((row) => [
+        row.id,
+        toPublicFactorySummary(row satisfies PublicFactoryRow, this.mediaUrls),
+      ]),
+    );
   }
 
   async listByClusterSlug(slug: string, query: FactoryPaginationQuery) {

@@ -10,6 +10,7 @@ import { FactoriesService } from "./factories.service.js";
 
 @Module({
   controllers: [ClusterFactoriesController, FactoriesController],
+  exports: [FactoriesService],
   imports: [DatabaseModule, MediaModule],
   providers: [FactoriesService],
 })
