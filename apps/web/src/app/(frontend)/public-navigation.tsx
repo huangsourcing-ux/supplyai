@@ -9,10 +9,15 @@ import {
   PUBLIC_FAVORITES_PATH,
 } from "@/auth/public-auth-routes";
 
+import {
+  ANALYTICS_CONSENT_PANEL_ID,
+  useAnalyticsSettings,
+} from "./analytics-consent-provider";
 import styles from "./public-navigation.module.css";
 
 export interface PublicNavigationLabels {
   account: string;
+  analytics: string;
   brand: string;
   map: string;
   saved: string;
@@ -28,6 +33,7 @@ export function PublicNavigation({
   labels,
 }: Readonly<{ labels: PublicNavigationLabels }>) {
   const pathname = usePathname();
+  const analyticsSettings = useAnalyticsSettings();
   if (
     pathname === null ||
     pathname.startsWith("/ops") ||
@@ -60,6 +66,15 @@ export function PublicNavigation({
             {link.label}
           </Link>
         ))}
+        <button
+          aria-controls={ANALYTICS_CONSENT_PANEL_ID}
+          aria-expanded={analyticsSettings.open}
+          className={styles.link}
+          onClick={analyticsSettings.openSettings}
+          type="button"
+        >
+          {labels.analytics}
+        </button>
       </div>
     </nav>
   );

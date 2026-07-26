@@ -54,6 +54,29 @@ before the Clerk webhook lands are intentionally absent from the application
 `users` table; M3-T2 owns ongoing synchronization and M3-T3 owns the one-time
 backfill.
 
+## Analytics consent
+
+Buyer-facing routes show a non-blocking analytics choice on the first visit.
+The exact `granted` or `denied` choice is stored under
+`chinasupply.analytics-consent.v1`; the public navigation's **Analytics** button
+reopens the settings so the choice can be changed. Invalid or unavailable
+storage is treated as unknown and analytics remains fail-closed.
+
+The Web app dynamically imports `posthog-js` only after an explicit grant on a
+buyer-facing route. Unknown and denied states do not import or initialize the
+SDK, and withdrawing consent immediately disconnects the shared capture facade
+and opts out the loaded PostHog instance. Automatic capture, page views,
+page-leave events, replay, surveys, exceptions, performance, heatmaps, and
+feature flags are disabled; only the six events owned by
+`@chinasupply/analytics` may be sent. The integration remains anonymous and
+does not call Clerk `identify`.
+
+`/ops/**`, `/sign-in/**`, and Payload `/admin/**` do not show the consent UI and
+cannot trigger the first PostHog load from a saved grant. Configure
+`NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST` together through the
+matching environment's encrypted deployment settings; never commit their real
+values or a PostHog personal access token.
+
 ## CMS schema changes
 
 Create and review a migration explicitly:

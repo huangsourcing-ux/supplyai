@@ -43,6 +43,7 @@
     "next": "16.2.11",
     "next-intl": "4.13.3",
     "payload": "3.86.0",
+    "posthog-js": "1.407.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-markdown": "10.1.0",
