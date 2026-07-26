@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CLUSTER_BOUNDARIES_SOURCE_ID,
   clusterBoundariesFillLayer,
+  clusterBoundariesLineLayer,
   FACTORIES_SOURCE_ID,
   factoryClusterCountLayer,
   factoryClustersLayer,
@@ -114,6 +115,11 @@ describe("Web map layered loading", () => {
     expect(clusterBoundariesFillLayer.paint?.["fill-opacity"]).toBeLessThan(
       0.5,
     );
+    expect(clusterBoundariesLineLayer.source).toBe(
+      "industrial-cluster-boundaries",
+    );
+    expect(clusterBoundariesLineLayer.minzoom).toBe(8);
+    expect(clusterBoundariesLineLayer.type).toBe("line");
   });
 
   it("configures clustered factories, counts, and individual points at zoom 10", () => {

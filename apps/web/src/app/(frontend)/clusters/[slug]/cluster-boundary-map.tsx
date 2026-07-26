@@ -8,7 +8,10 @@ import type {
   GetCluster200DataBoundary,
   GetCluster200DataCentroid,
 } from "@chinasupply/api-client";
-import { createChinaSupplyMapStyle } from "@chinasupply/config/map/style";
+import {
+  BASEMAP_LABEL_ANCHOR_LAYER_ID,
+  createChinaSupplyMapStyle,
+} from "@chinasupply/config/map/style";
 
 import { MapAttribution } from "../../map/map-attribution";
 import { MAPLIBRE_WORKER_URL } from "../../map/map-config";
@@ -114,6 +117,7 @@ export function ClusterBoundaryMap({
             center: centroid.coordinates,
             container,
             interactive: false,
+            pitch: 0,
             style: createChinaSupplyMapStyle(
               process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
             ) as unknown as StyleSpecification,
@@ -148,15 +152,18 @@ export function ClusterBoundaryMap({
                 },
                 type: "geojson",
               });
-              map.addLayer({
-                id: BOUNDARY_FILL_LAYER_ID,
-                paint: {
-                  "fill-color": ["get", "color"],
-                  "fill-opacity": 0.3,
+              map.addLayer(
+                {
+                  id: BOUNDARY_FILL_LAYER_ID,
+                  paint: {
+                    "fill-color": ["get", "color"],
+                    "fill-opacity": 0.3,
+                  },
+                  source: BOUNDARY_SOURCE_ID,
+                  type: "fill",
                 },
-                source: BOUNDARY_SOURCE_ID,
-                type: "fill",
-              });
+                BASEMAP_LABEL_ANCHOR_LAYER_ID,
+              );
               map.addLayer({
                 id: BOUNDARY_LINE_LAYER_ID,
                 paint: {

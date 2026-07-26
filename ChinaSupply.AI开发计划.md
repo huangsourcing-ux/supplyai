@@ -114,6 +114,7 @@ chinasupply/
 - [x] **M2-T4 产业带详情页**：F-2（SSR/ISR + metadata + OG）；收藏按钮 UI 占位。
 - [x] **M2-T5 工厂详情页**：F-4；导航按钮组用 packages/geo/navigation；双语地址复制。
 - [x] **M2-T8 Playwright**：CI 用 MSW mock MAP API + 固定 style/tile fixture（断言防抖、abort、truncated）；staging 跑真实 MapTiler 冒烟，避免外网抖动打红 PR。
+- [ ] **M2-T9 Streets v4 2D 底图迁移**：自维护 style JSON 迁移到 MapTiler Planet v4，保留 Streets v4 的完整道路、交通、POI 与街道细节，英文名优先并以当地名称 fallback；建筑仅为 zoom ≥15 的淡化 2D footprint，禁止 `fill-extrusion`、3D 建筑和非零初始 pitch。以提交的 Planet v4 schema manifest 保持 tileset/source-layer 一致性护栏，继续禁止运行时 `/maps/{id}/style.json`；产业带 fill 插入首个底图 symbol layer 之前，其余业务图层保持在底图标签之上。Local/Staging 的 Free 仅限测试评估，production Flex 门禁留 M5-T9。
 
 **M2 出口**：PRD F-1 验收路径在 staging 走通；Lighthouse SEO ≥ 90；运营在 /ops 完成一次数据修正 + verify。
 
@@ -163,7 +164,7 @@ chinasupply/
 - [ ] **M5-T7 静态页与 SEO**：创建 /about；在 production **复核**已上线的 /privacy、/terms（M3-T7）与地图 attribution（M2/M4 已实现，勿重写）；sitemap；空状态/骨架屏与 SEO 核查（F-10.4 / N-2）。
 - [ ] **M5-T8 性能与加固**：k6 复测（真实数据量）对照 N-1；限流复核；生产环境变量与密钥审计。
 - [ ] **M5-T8a 生产内容迁移（上线数据来源，唯一实质缺口的补齐项）**：数据三分类贯穿全程——测试/合成、真实未验证、已验证可迁移（curated）。staging 中 synthetic/test 数据使用独立 namespace（slug 前缀或标记），永不导出；以干净 CSV/JSON 为 canonical dataset，只导出 **verified 且 curated** 的 clusters/factories；生成导出 manifest（记录数、slug、校验和、R2 objectKey）；被引用图片复制到 production bucket/prefix；导入 production 保持 draft，production admin 核对 manifest + 抽样后 publish；导入后校验记录数、对象存在性与校验和；Payload articles/media 单独制定导入或生产重录方案。
-- [ ] **M5-T9 Production Cutover**：创建/核对生产 DB、Redis、R2、Clerk Production、Cloudflare；生产 migration dry-run；上线前备份；部署 API/Worker/Web；production smoke test；验证 staging 数据未流入 production；记录回滚命令与上一版本。
+- [ ] **M5-T9 Production Cutover**：先将 MapTiler 升级为 Flex 并确认商业授权，创建按正式 Web 域名、iOS Bundle ID、Android Package 分别限制的三只 production key，设置账单上限/告警并验证 Planet v4 TileJSON、PBF、glyph、sprite；Free 与 staging key 不得进入 commercial production。随后创建/核对生产 DB、Redis、R2、Clerk Production、Cloudflare；生产 migration dry-run；上线前备份；部署 API/Worker/Web；production smoke test；验证 staging 数据未流入 production；记录回滚命令与上一版本。
 - [ ] **M5-T10 App Production Release**：EAS Production Build + EAS Submit；App Store / Google Play 审核；分阶段发布或手动发布；验证商店链接、Clerk OAuth callback 与自定义 URL Scheme。（**V1 不做 Universal/App Links，移入 P1**，降低商店发布风险。）
 - [ ] **M5-T11 Go/No-Go**：执行下节最终检查清单。
 

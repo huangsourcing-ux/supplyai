@@ -20,7 +20,10 @@ import {
   useGetMapClusterPoints,
   useGetMapFactories,
 } from "@chinasupply/api-client";
-import { createChinaSupplyMapStyle } from "@chinasupply/config/map/style";
+import {
+  BASEMAP_LABEL_ANCHOR_LAYER_ID,
+  createChinaSupplyMapStyle,
+} from "@chinasupply/config/map/style";
 
 import {
   CHINA_BOUNDS,
@@ -36,6 +39,7 @@ import {
   FACTORY_CLUSTERS_LAYER_ID,
   FACTORY_POINTS_LAYER_ID,
   clusterBoundariesFillLayer,
+  clusterBoundariesLineLayer,
   factoryClusterCountLayer,
   factoryClustersLayer,
   factoryPointsLayer,
@@ -278,6 +282,7 @@ export function IndustrialMap({
               animate: false,
               padding: { bottom: 48, left: 24, right: 24, top: 48 },
             },
+            pitch: 0,
             style,
             // The app-owned observer also guards initial zero-size layouts.
             trackResize: false,
@@ -376,7 +381,11 @@ export function IndustrialMap({
               data: clusterBoundariesRef.current,
               type: "geojson",
             });
-            map.addLayer(clusterBoundariesFillLayer);
+            map.addLayer(
+              clusterBoundariesFillLayer,
+              BASEMAP_LABEL_ANCHOR_LAYER_ID,
+            );
+            map.addLayer(clusterBoundariesLineLayer);
             map.addSource(CLUSTER_POINTS_SOURCE_ID, {
               data: clusterPointsRef.current,
               type: "geojson",
