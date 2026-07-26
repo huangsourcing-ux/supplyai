@@ -20,6 +20,10 @@ import {
 } from "../config/runtime-config.module.js";
 import { DatabaseService } from "../database/database.service.js";
 import { favorites, users, webhookEvents } from "../database/schema.js";
+import {
+  formatClerkName,
+  getPrimaryEmail as findPrimaryEmail,
+} from "../users/clerk-user-profile.js";
 
 type RequestHeaders = Record<string, string | string[] | undefined>;
 type ClerkUserEvent = Extract<
@@ -45,27 +49,21 @@ function parseWithZod<Output>(
   return result.data as Output;
 }
 
-export function formatClerkName(
-  firstName: string | null,
-  lastName: string | null,
-): string | null {
-  const name = [firstName, lastName]
-    .map((part) => part?.trim() ?? "")
-    .filter((part) => part.length > 0)
-    .join(" ")
-    .trim();
-  return name.length > 0 ? name : null;
-}
-
 export function getPrimaryEmail(event: ClerkUserEvent): string {
-  const primaryEmail = event.data.email_addresses.find(
-    (email) => email.id === event.data.primary_email_address_id,
-  );
-  if (primaryEmail === undefined) {
+  const primaryEmail = findPrimaryEmail({
+    emailAddresses: event.data.email_addresses.map((email) => ({
+      emailAddress: email.email_address,
+      id: email.id,
+    })),
+    firstName: event.data.first_name,
+    lastName: event.data.last_name,
+    primaryEmailAddressId: event.data.primary_email_address_id,
+  });
+  if (primaryEmail === null) {
     throw new InternalServerErrorException();
   }
 
-  return primaryEmail.email_address;
+  return primaryEmail;
 }
 
 @Injectable()

@@ -191,6 +191,28 @@ with the rotated secret, after which both Clerk users and all local temporary
 material were removed. Svix's automatic 24-hour overlap for the retired secret
 remains in effect; no repository or application log contains either value.
 
+M3-T3 owns the one-time backfill of Clerk users that existed before the
+lifecycle endpoint. The checked-in command is intentionally insert-only and
+idempotent: existing active rows, local locale preferences, deletion
+tombstones, favorites, and `webhook_events` are never changed. It emits only
+aggregate counts and rejects production before opening provider connections.
+After the implementation commit passes CI, run that exact commit from the
+repository root with the encrypted variables of Railway's `api` service:
+
+```bash
+railway run --service api --environment production --no-local -- \
+  pnpm clerk:sync-users -- --confirm-staging
+```
+
+The Railway project is `chinasupply-staging`; its sole Railway environment is
+historically named `production`, while its injected application value remains
+`APP_ENV=staging`. The command's safety decision uses `APP_ENV`, not Railway's
+environment label. Run the command a second time and require `inserted: 0` as
+the idempotency check. Verify by aggregate comparison that every current Clerk
+user has an active core user row, the retained review administrator is present,
+and the pre-existing tombstone count is unchanged. Never print or record Clerk
+keys, database URLs, emails, names, or full user inventories as evidence.
+
 M0-T6 connects both application services to `huangsourcing-ux/supplyai:main`
 with Railway Wait for CI enabled. Railway must skip a deployment whenever the
 GitHub CI or staging migration gate fails. Production resources remain M5-T9.

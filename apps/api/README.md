@@ -49,6 +49,16 @@ the Worker. Store the real value only in the API service's encrypted platform
 configuration. The Clerk endpoint must use the public Cloudflare hostname and
 subscribe only to `user.created`, `user.updated`, and `user.deleted`.
 
+M3-T3 provides the one-time `pnpm clerk:sync-users` backfill for users created
+before the webhook endpoint became active. It reads Clerk users in 500-row
+pages and inserts only missing core `users` rows; conflicts are left untouched,
+so existing locale values and deletion tombstones cannot be overwritten or
+reactivated. The command never deletes rows, modifies favorites, or creates
+synthetic webhook receipts. Local runs accept no arguments, staging requires
+the exact `--confirm-staging` argument, and production is always rejected
+before a Clerk or PostgreSQL connection is opened. Successful output contains
+only environment and aggregate fetched/inserted/existing counts.
+
 Railway uses the shared root `railway.json` for the API-only build. Its start
 command dispatches to the distinct `start:api` or `start:worker` script from
 the service's non-secret `SERVICE_ROLE`; only `api` receives a public domain
