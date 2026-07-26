@@ -30,7 +30,7 @@ Free 仅用于官方允许的开发/staging 测试评估。M5-T9 在 commercial 
 | 迁移前 v3 |              12 | 5,039,391 bytes | TileJSON 1/16,616 B；vector PBF 6/4,621,497 B；glyph 4/384,622 B；other 1/16,656 B |
 | 迁移后 v4 | 待 staging 部署 | 待 staging 部署 | 由 `maptiler-performance.json` Playwright attachment 记录                          |
 
-## Staging 验收（合并部署后执行）
+## Staging 延后人工复核
 
 - [ ] Planet v4 TileJSON、PBF、glyph、三组实际引用 sprite 均返回 HTTP 200。
 - [ ] Playwright attachments 包含中国全境、Dongguan 产业带场景和 zoom 14 工厂详情场景。
@@ -38,4 +38,4 @@ Free 仅用于官方允许的开发/staging 测试评估。M5-T9 在 commercial 
 - [ ] 记录迁移后请求数/传输量并与上表 v3 基线比较。
 - [ ] 美国网络 Lighthouse 地图首页 LCP `<2.5s`。
 
-上述 staging 与 Lighthouse 项未完成前，`ChinaSupply.AI开发计划.md` 的 M2-T9 保持未勾选。
+2026-07-26，Owner 确认接受 PR #48 已合并的实现与全绿自动化验收，要求直接勾选 M2-T9，并由 Owner 稍后执行上述真实 staging 与 Lighthouse 复核。清单保持未勾选以如实表示它们尚未执行；M2-T9 任务勾选不得被引用为这些延后检查已通过的证据。
