@@ -8,6 +8,7 @@
     "api:generate:check": "node scripts/check-api-generation.mjs",
     "api:runtime:check": "node scripts/check-api-runtime.mjs",
     "build": "turbo run build",
+    "clerk:sync-users": "pnpm --filter @chinasupply/api build && pnpm --filter @chinasupply/api clerk:sync-users",
     "dev": "turbo run dev",
     "infra:check": "node scripts/check-infra.mjs",
     "infra:down": "docker compose down",

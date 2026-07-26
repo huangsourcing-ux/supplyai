@@ -6,6 +6,7 @@ import { parseEnv } from "node:util";
 import { fileURLToPath } from "node:url";
 
 import {
+  parseClerkUserSyncCliEnv,
   parseApiEnv,
   parseApiHttpEnv,
   parseApiRuntimeEnv,
@@ -117,6 +118,29 @@ test("private R2 endpoint overrides are local-only", async () => {
         R2_ENDPOINT: "https://minio.example.test",
       }),
     /R2_ENDPOINT/,
+  );
+});
+
+test("Clerk user sync CLI validates only its scoped credentials", async () => {
+  const api = await readExample("apps/api/.env.example");
+
+  assert.equal(parseClerkUserSyncCliEnv(api).APP_ENV, "local");
+  assert.equal(
+    parseClerkUserSyncCliEnv({
+      APP_ENV: "staging",
+      CLERK_SECRET_KEY: "sk_test_staging_sync_key_123456",
+      DATABASE_URL: "postgresql://user:pass@db.staging.invalid/chinasupply",
+    }).APP_ENV,
+    "staging",
+  );
+  assert.throws(
+    () =>
+      parseClerkUserSyncCliEnv({
+        APP_ENV: "staging",
+        CLERK_SECRET_KEY: "sk_live_wrong_environment_123456",
+        DATABASE_URL: api.DATABASE_URL,
+      }),
+    /Clerk user sync CLI environment validation failed: CLERK_SECRET_KEY, DATABASE_URL/,
   );
 });
 

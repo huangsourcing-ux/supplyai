@@ -1,10 +1,8 @@
 import type { ClerkWebhookEvent } from "@chinasupply/schemas";
 import { describe, expect, it } from "vitest";
 
-import {
-  formatClerkName,
-  getPrimaryEmail,
-} from "../src/webhooks/webhooks.service.js";
+import { formatClerkName } from "../src/users/clerk-user-profile.js";
+import { getPrimaryEmail } from "../src/webhooks/webhooks.service.js";
 
 const userEvent = {
   object: "event",

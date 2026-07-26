@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "nest build",
+    "clerk:sync-users": "node --env-file-if-exists=.env.local --enable-source-maps dist/clerk-sync-users.js",
     "db:check": "node --env-file-if-exists=.env.local ./node_modules/drizzle-kit/bin.cjs check --config=drizzle.config.ts",
     "db:generate": "node --env-file-if-exists=.env.local ./node_modules/drizzle-kit/bin.cjs generate --config=drizzle.config.ts",
     "db:migrate": "node --env-file-if-exists=.env.local ./node_modules/drizzle-kit/bin.cjs migrate --config=drizzle.config.ts",

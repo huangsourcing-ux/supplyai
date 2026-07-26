@@ -292,6 +292,31 @@ export const seedCliEnvSchema = importCliEnvSchema.and(
   }),
 );
 
+export const clerkUserSyncCliEnvSchema = z
+  .object({
+    APP_ENV: deploymentEnvironmentSchema,
+    CLERK_SECRET_KEY: z.string().min(10),
+    DATABASE_URL: networkUrlSchema,
+  })
+  .superRefine((environment, context) => {
+    requireClerkKey(
+      environment.CLERK_SECRET_KEY,
+      "secret",
+      environment.APP_ENV,
+      "CLERK_SECRET_KEY",
+      context,
+    );
+
+    if (environment.APP_ENV !== "local") {
+      requireRemoteUrl(environment.DATABASE_URL, "DATABASE_URL", context);
+      rejectPlaceholder(
+        environment.CLERK_SECRET_KEY,
+        "CLERK_SECRET_KEY",
+        context,
+      );
+    }
+  });
+
 /**
  * @param {unknown} source
  * @returns {z.infer<typeof apiEnvSchema>}
@@ -326,6 +351,18 @@ export function parseImportCliEnv(source) {
  */
 export function parseSeedCliEnv(source) {
   return parseEnvironment(seedCliEnvSchema, source, "Seed CLI");
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof clerkUserSyncCliEnvSchema>}
+ */
+export function parseClerkUserSyncCliEnv(source) {
+  return parseEnvironment(
+    clerkUserSyncCliEnvSchema,
+    source,
+    "Clerk user sync CLI",
+  );
 }
 
 /**
