@@ -8,7 +8,7 @@ artifacts. EAS Build is never called by the GitHub PR or `main` workflow.
 
 | Trigger                       | Required work                                                                                                                   |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Pull request to `main`        | lint, typecheck, all unit tests, Web build, API/Worker build, API Testcontainers e2e                                            |
+| Pull request to `main`        | lint, typecheck, all unit tests, Web/API/Worker build, API Testcontainers e2e, deterministic Chromium Web Playwright            |
 | Mobile-affecting pull request | all PR checks plus Expo Doctor, public Expo config validation, and Mobile unit tests                                            |
 | Push to `main`                | all applicable checks, serial CMS → core staging migrations, `Staging Release Gate`, then native Vercel/Railway staging release |
 | `rc-*` tag                    | Android EAS Preview Build                                                                                                       |
@@ -19,6 +19,29 @@ Mobile-affecting paths are `apps/mobile`, the mobile-consumed `config`, `geo`,
 `i18n`, and `schemas` packages, and root workspace/package-manager manifests.
 GitHub reports one stable `CI Gate` after all applicable jobs. Pull requests use
 no deployment secret and the workflow never uses `pull_request_target`.
+
+## Web Playwright split
+
+Pull requests run `pnpm test:web:e2e` in the independent `Web Playwright` job.
+The suite enables Next test proxy only for that process, reuses the generated
+Orval MSW handler factories, and serves fixed TileJSON, glyph, logo, and empty
+vector-tile fixtures. Unexpected external requests fail the test. Chromium,
+the HTML report, traces, screenshots, videos, and test results are isolated
+from the normal Web build; failure artifacts are retained by GitHub Actions.
+
+The real staging smoke is intentionally outside PR CI. Run it explicitly after
+the staging alias contains the candidate behavior:
+
+```bash
+PLAYWRIGHT_STAGING_BASE_URL=https://staging.chinasupply.ai \
+  pnpm test:web:e2e:staging
+```
+
+That command starts no local server and mounts no MSW handlers. It must observe
+successful real MAP-1, MapTiler TileJSON, and vector-tile responses before
+checking the Canvas, mandatory attribution, and the published Dongguan search
+to card path. `PLAYWRIGHT_STAGING_BASE_URL` must be an HTTPS URL whose hostname
+is exactly `staging.chinasupply.ai`; omitting it uses that same default.
 
 ## Staging release ordering
 

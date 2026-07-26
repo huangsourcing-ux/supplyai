@@ -21,6 +21,8 @@
     "predev": "pnpm --filter @chinasupply/geo build && pnpm prepare:maplibre-worker",
     "prepare:maplibre-worker": "node scripts/prepare-maplibre-worker.mjs",
     "start": "next start",
+    "test:e2e": "playwright test --config playwright.config.ts",
+    "test:e2e:staging": "playwright test --config playwright.staging.config.ts",
     "test:unit": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -47,6 +49,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "1.62.0",
     "@tailwindcss/postcss": "4.1.18",
     "@types/node": "22.19.9",
     "@types/react": "19.2.14",

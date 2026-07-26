@@ -51,11 +51,35 @@ test("CI runs the frozen PR checks and gates staging on serial CMS and core migr
     /pnpm build[\s\S]*api:runtime:check/,
   );
   assert.match(workflow.jobs.api_e2e.steps.at(-1).run, /pnpm test:e2e/);
+  assert.equal(workflow.jobs.web_e2e.name, "Web Playwright");
+  const webE2eCommands = workflow.jobs.web_e2e.steps
+    .map((step) => step.run ?? "")
+    .join("\n");
+  assert.match(
+    webE2eCommands,
+    /playwright install --with-deps chromium[\s\S]*pnpm test:web:e2e/,
+  );
+  assert.doesNotMatch(
+    webE2eCommands,
+    /test:web:e2e:staging|PLAYWRIGHT_STAGING_BASE_URL/,
+  );
+  const webE2eArtifact = workflow.jobs.web_e2e.steps.at(-1);
+  assert.equal(webE2eArtifact.if, "failure()");
+  assert.equal(webE2eArtifact.uses, "actions/upload-artifact@v4");
+  assert.match(
+    webE2eArtifact.with.path,
+    /playwright-report[\s\S]*test-results/,
+  );
   assert.match(
     workflow.jobs.mobile.steps.map((step) => step.run ?? "").join("\n"),
     /mobile:check[\s\S]*test:unit/,
   );
   assert.equal(workflow.jobs.ci_gate.name, "CI Gate");
+  assert.ok(workflow.jobs.ci_gate.needs.includes("web_e2e"));
+  assert.match(
+    workflow.jobs.ci_gate.steps.at(-1).run,
+    /WEB_E2E_RESULT.*success/,
+  );
 
   assert.equal(
     workflow.jobs.migrate_cms.uses,

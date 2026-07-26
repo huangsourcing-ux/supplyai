@@ -164,6 +164,44 @@ jobs:
       - name: Run API e2e with Testcontainers
         run: pnpm test:e2e
 
+  web_e2e:
+    name: Web Playwright
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.1
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm --filter @chinasupply/web exec playwright install --with-deps chromium
+
+      - name: Run deterministic Web Playwright suite
+        run: pnpm test:web:e2e
+
+      - name: Upload Web Playwright failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-playwright-failure-${{ github.run_attempt }}
+          path: |
+            apps/web/playwright-report/fixture
+            apps/web/test-results/fixture
+          if-no-files-found: ignore
+          retention-days: 7
+
   mobile:
     name: Mobile PR checks
     needs:
@@ -205,6 +243,7 @@ jobs:
       - quality
       - build
       - api_e2e
+      - web_e2e
       - mobile
     if: always()
     runs-on: ubuntu-latest
@@ -216,12 +255,14 @@ jobs:
           CHANGES_RESULT: ${{ needs.changes.result }}
           MOBILE_RESULT: ${{ needs.mobile.result }}
           QUALITY_RESULT: ${{ needs.quality.result }}
+          WEB_E2E_RESULT: ${{ needs.web_e2e.result }}
         shell: bash
         run: |
           [[ "$CHANGES_RESULT" == "success" ]]
           [[ "$QUALITY_RESULT" == "success" ]]
           [[ "$BUILD_RESULT" == "success" ]]
           [[ "$API_E2E_RESULT" == "success" ]]
+          [[ "$WEB_E2E_RESULT" == "success" ]]
           [[ "$MOBILE_RESULT" == "success" || "$MOBILE_RESULT" == "skipped" ]]
 
   migrate_cms:
