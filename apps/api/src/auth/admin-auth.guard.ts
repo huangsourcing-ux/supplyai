@@ -46,7 +46,7 @@ export function getBearerToken(
   return match?.[1] ?? null;
 }
 
-function getSubject(claims: unknown): string | null {
+export function getSubject(claims: unknown): string | null {
   if (!isRecord(claims)) {
     return null;
   }

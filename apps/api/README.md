@@ -33,10 +33,21 @@ per minute per validated client IP, using an atomic Redis rolling window shared
 by all API instances. Redis failures fail closed. Successful MAP responses use
 `Cache-Control: public, max-age=0, s-maxage=3600`; API errors are `no-store`.
 The internal Cloudflare purge client is reserved for M5-T3 and is never invoked
-automatically. Authentication remains in its later task package. M0-T7 adds
-Sentry to both entrypoints: bootstrap failures and global API exceptions are captured, and
+automatically. M3-T2 implements `POST /api/v1/webhooks/clerk` with Nest/Fastify
+raw-body preservation, Clerk signature verification, and transactional
+`webhook_events` idempotency. Created and updated users are synchronized into
+the core `users` table; deletion keeps the user tombstone and hard-deletes its
+favorites. `UserAuthGuard` rejects missing or soft-deleted users and is reserved
+for the M3-T4 favorites/account controllers; the existing Admin guard remains
+unchanged until M3-T3 has backfilled staging users. M0-T7 adds Sentry to both
+entrypoints: bootstrap failures and global API exceptions are captured, and
 `pnpm --filter @chinasupply/api sentry:smoke` provides the controlled staging
 verification command.
+
+`CLERK_WEBHOOK_SECRET` is required by non-local API HTTP deployments but not by
+the Worker. Store the real value only in the API service's encrypted platform
+configuration. The Clerk endpoint must use the public Cloudflare hostname and
+subscribe only to `user.created`, `user.updated`, and `user.deleted`.
 
 Railway uses the shared root `railway.json` for the API-only build. Its start
 command dispatches to the distinct `start:api` or `start:worker` script from

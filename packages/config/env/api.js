@@ -12,6 +12,7 @@ import {
 } from "./common.js";
 
 const secretSchema = z.string().min(8);
+const clerkWebhookSecretSchema = z.string().startsWith("whsec_").min(10);
 
 const apiRuntimeShape = {
   APP_ENV: deploymentEnvironmentSchema,
@@ -21,6 +22,7 @@ const apiRuntimeShape = {
   WEB_ORIGIN: networkUrlSchema,
   R2_CDN_BASE_URL: networkUrlSchema,
   CLERK_SECRET_KEY: z.string().min(10).optional(),
+  CLERK_WEBHOOK_SECRET: clerkWebhookSecretSchema.optional(),
   EDGE_PROXY_SECRET: z.string().min(32).optional(),
   CLOUDFLARE_ZONE_ID: secretSchema.optional(),
   CLOUDFLARE_PURGE_TOKEN: secretSchema.optional(),
@@ -143,6 +145,28 @@ export const apiHttpEnvSchema = apiRuntimeEnvSchema.superRefine(
 
     if (
       environment.APP_ENV !== "local" &&
+      environment.CLERK_WEBHOOK_SECRET === undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["CLERK_WEBHOOK_SECRET"],
+        message: "is required for remote HTTP deployments",
+      });
+    }
+
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.CLERK_WEBHOOK_SECRET !== undefined
+    ) {
+      rejectPlaceholder(
+        environment.CLERK_WEBHOOK_SECRET,
+        "CLERK_WEBHOOK_SECRET",
+        context,
+      );
+    }
+
+    if (
+      environment.APP_ENV !== "local" &&
       environment.EDGE_PROXY_SECRET === undefined
     ) {
       context.addIssue({
@@ -180,7 +204,7 @@ export const apiEnvSchema = z
   .object({
     ...apiRuntimeShape,
     CLERK_SECRET_KEY: z.string().min(10),
-    CLERK_WEBHOOK_SECRET: z.string().startsWith("whsec_").min(10),
+    CLERK_WEBHOOK_SECRET: clerkWebhookSecretSchema,
     R2_ACCOUNT_ID: secretSchema,
     R2_ACCESS_KEY_ID: secretSchema,
     R2_SECRET_ACCESS_KEY: secretSchema,
