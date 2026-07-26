@@ -104,6 +104,15 @@ export default async function FactoryPage({ params }: FactoryPageProps) {
           verified: translate("related.verified"),
           viewDetails: translate("related.viewDetails"),
         },
+        saveAction: {
+          checking: translate("saveAction.checking"),
+          error: translate("saveAction.error"),
+          retry: translate("saveAction.retry"),
+          save: translate("saveAction.save"),
+          saved: translate("saveAction.saved"),
+          saving: translate("saveAction.saving"),
+          signInHint: translate("saveAction.signInHint"),
+        },
         source: translate("trust.source"),
         verificationLabel,
       }}

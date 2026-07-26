@@ -8,6 +8,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { GetFactory200, GetFactory200Data } from "@chinasupply/api-client";
 import { buildNavUrl } from "@chinasupply/geo/navigation";
 
+vi.mock("../app/(frontend)/favorites/favorite-save-action", () => ({
+  FavoriteSaveAction: ({ labels }: { labels: { signInHint: string } }) => (
+    <div data-testid="factory-save-action">{labels.signInHint}</div>
+  ),
+}));
+
 import { copyTextToClipboard } from "../app/(frontend)/factories/[slug]/factory-clipboard";
 import {
   hasFactoryContact,
@@ -141,6 +147,15 @@ const labels = {
     verified: "Verified",
     viewDetails: "View factory",
   },
+  saveAction: {
+    checking: "Checking account status.",
+    error: "Save error.",
+    retry: "Retry save",
+    save: "Save factory",
+    saved: "Saved",
+    saving: "Saving…",
+    signInHint: "Sign in to save this factory.",
+  },
   source: "Source:",
   verificationLabel: "Verified 2026-05",
 };
@@ -228,6 +243,7 @@ describe("factory detail presentation", () => {
     expect(markup).toContain("Google Maps");
     expect(markup).not.toContain("Apple Maps");
     expect(markup).toContain("Related Components Factory");
+    expect(markup).toContain("Sign in to save this factory.");
   });
 
   it("hides every empty optional section and row", () => {

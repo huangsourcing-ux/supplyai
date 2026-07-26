@@ -11,6 +11,7 @@ import {
 import { DEFAULT_LOCALE } from "@/i18n/config";
 
 import { ApiQueryProvider } from "./api-query-provider";
+import { PublicNavigation } from "./public-navigation";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
@@ -27,7 +28,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FrontendLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const messages = await getMessages();
+  const [messages, navigation] = await Promise.all([
+    getMessages(),
+    getTranslations("Navigation"),
+  ]);
 
   return (
     <html className={GeistSans.variable} lang={DEFAULT_LOCALE}>
@@ -38,7 +42,17 @@ export default async function FrontendLayout({
           signUpFallbackRedirectUrl={PUBLIC_AUTH_FALLBACK_PATH}
         >
           <NextIntlClientProvider messages={messages}>
-            <ApiQueryProvider>{children}</ApiQueryProvider>
+            <ApiQueryProvider>
+              <PublicNavigation
+                labels={{
+                  account: navigation("account"),
+                  brand: navigation("brand"),
+                  map: navigation("map"),
+                  saved: navigation("saved"),
+                }}
+              />
+              {children}
+            </ApiQueryProvider>
           </NextIntlClientProvider>
         </ClerkProvider>
       </body>

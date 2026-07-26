@@ -1,0 +1,191 @@
+.page {
+  min-height: calc(100svh - var(--public-navigation-height));
+  padding: clamp(2rem, 6vw, 5rem) 1.5rem 6rem;
+  color: #1d2a25;
+  background:
+    radial-gradient(
+      circle at 88% 3%,
+      rgba(191, 219, 254, 0.46),
+      transparent 28rem
+    ),
+    #f4f5f1;
+}
+
+.shell {
+  width: min(48rem, 100%);
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #3c6a59;
+  font-size: 0.78rem;
+  font-weight: 730;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.heading {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 680;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.description {
+  max-width: 42rem;
+  margin: 1rem 0 0;
+  color: #53645d;
+  line-height: 1.65;
+}
+
+.stack {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.card,
+.dangerCard {
+  padding: clamp(1.4rem, 4vw, 2.25rem);
+  border: 1px solid rgba(49, 84, 71, 0.16);
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 1rem 3rem rgba(55, 65, 61, 0.08);
+}
+
+.dangerCard {
+  border-color: rgba(153, 51, 43, 0.22);
+}
+
+.card h2,
+.dangerCard h2,
+.card p,
+.dangerCard p {
+  margin: 0;
+}
+
+.card p,
+.dangerCard p {
+  margin-top: 0.65rem;
+  color: #5b6c65;
+  line-height: 1.6;
+}
+
+.email {
+  margin-top: 1rem;
+  color: #233b32;
+  font-weight: 680;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.15rem;
+}
+
+.label {
+  color: #40574e;
+  font-size: 0.86rem;
+  font-weight: 680;
+}
+
+.select {
+  width: min(100%, 22rem);
+  min-height: 2.85rem;
+  padding: 0.65rem 2.5rem 0.65rem 0.85rem;
+  border: 1px solid rgba(49, 84, 71, 0.22);
+  border-radius: 0.8rem;
+  color: #21342c;
+  background: #ffffff;
+  font: inherit;
+}
+
+.actions,
+.confirmActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton {
+  display: inline-flex;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(15, 118, 110, 0.28);
+  border-radius: 999px;
+  color: #ffffff;
+  background: #0f766e;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 680;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  color: #315447;
+  background: #ffffff;
+}
+
+.dangerButton {
+  border-color: #a23e35;
+  color: #ffffff;
+  background: #a23e35;
+}
+
+.primaryButton:hover:not(:disabled),
+.secondaryButton:hover:not(:disabled) {
+  border-color: #0f766e;
+}
+
+.dangerButton:hover:not(:disabled) {
+  background: #892f28;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.dangerButton:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible,
+.dangerButton:focus-visible,
+.select:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.4);
+  outline-offset: 3px;
+}
+
+.status {
+  min-height: 1.3rem;
+  margin: 0.65rem 0 0;
+  color: #48675b;
+  font-size: 0.84rem;
+}
+
+.status[data-error="true"] {
+  color: #963a32;
+}
+
+.confirmPanel {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(153, 51, 43, 0.2);
+  border-radius: 1rem;
+  background: #fff7f6;
+}
+
+@media (max-width: 36rem) {
+  .page {
+    padding-inline: 1rem;
+  }
+}

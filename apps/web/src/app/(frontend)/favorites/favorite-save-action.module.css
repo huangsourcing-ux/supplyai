@@ -1,0 +1,74 @@
+.action {
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 2.85rem;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(49, 84, 71, 0.22);
+  border-radius: 999px;
+  color: #315447;
+  background: rgba(255, 255, 255, 0.84);
+  font: inherit;
+  font-weight: 680;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.button span {
+  font-size: 1.2rem;
+}
+
+.button:hover:not(:disabled) {
+  border-color: rgba(15, 118, 110, 0.46);
+  color: #0f5f55;
+  background: #ffffff;
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.button[aria-pressed="true"] {
+  color: #0f5f55;
+  background: #e2f6ed;
+  cursor: default;
+  opacity: 1;
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.38);
+  outline-offset: 3px;
+}
+
+.status {
+  max-width: 18rem;
+  margin: 0;
+  color: #61716b;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.status[data-error="true"] {
+  color: #9c352d;
+}
+
+@media (max-width: 44rem) {
+  .action {
+    justify-items: start;
+  }
+
+  .status {
+    text-align: left;
+  }
+}

@@ -3,6 +3,13 @@ import React from "react";
 
 import type { GetFactory200 } from "@chinasupply/api-client";
 
+import { buildFactoryAuthReturnPath } from "@/auth/public-auth-routes";
+
+import {
+  FavoriteSaveAction,
+  type FavoriteSaveActionLabels,
+} from "../../favorites/favorite-save-action";
+
 import { FactoryContactActions } from "./factory-contact-actions";
 import { hasFactoryContact } from "./factory-contact";
 import styles from "./factory-detail.module.css";
@@ -33,6 +40,7 @@ export interface FactoryDetailLabels {
     verified: string;
     viewDetails: string;
   }>;
+  saveAction: FavoriteSaveActionLabels;
   source: string;
   verificationLabel: string;
 }
@@ -56,8 +64,18 @@ export function FactoryDetailContent({
         </Link>
 
         <header className={styles.hero}>
-          <p className={styles.eyebrow}>{labels.location}</p>
-          <h1>{factory.name}</h1>
+          <div className={styles.heroHeading}>
+            <div>
+              <p className={styles.eyebrow}>{labels.location}</p>
+              <h1>{factory.name}</h1>
+            </div>
+            <FavoriteSaveAction
+              labels={labels.saveAction}
+              returnPath={buildFactoryAuthReturnPath(factory.slug)}
+              targetId={factory.id}
+              targetType="factory"
+            />
+          </div>
           <div className={styles.trustRow}>
             <span
               className={styles.verificationBadge}

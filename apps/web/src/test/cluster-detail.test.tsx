@@ -35,8 +35,8 @@ vi.mock("../app/(frontend)/clusters/[slug]/cluster-view-tracker", () => ({
   ClusterViewTracker: () => null,
 }));
 
-vi.mock("../app/(frontend)/clusters/[slug]/cluster-save-action", () => ({
-  ClusterSaveAction: ({ labels }: { labels: { signInHint: string } }) => (
+vi.mock("../app/(frontend)/favorites/favorite-save-action", () => ({
+  FavoriteSaveAction: ({ labels }: { labels: { signInHint: string } }) => (
     <div data-testid="cluster-save-action">{labels.signInHint}</div>
   ),
 }));
@@ -145,9 +145,12 @@ const labels = {
   location: "Shenzhen, China",
   productsHeading: "Main products",
   saveAction: {
-    loading: "Checking account status.",
-    pending: "Favorites pending.",
+    checking: "Checking account status.",
+    error: "Save error.",
+    retry: "Retry save",
     save: "Save cluster",
+    saved: "Saved",
+    saving: "Saving.",
     signInHint: "Sign in to save this cluster.",
   },
   statsHeading: "Cluster at a glance",
