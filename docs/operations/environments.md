@@ -59,10 +59,14 @@ key and US ingestion host as encrypted values; do not print or copy them into
 repository files, build logs, screenshots, or review evidence. The SDK loads
 only after an explicit grant on a buyer-facing route. Unknown, denied, and
 withdrawn states must produce no PostHog requests, and `/ops/**`, `/sign-in/**`,
-and Payload `/admin/**` must not initiate the first SDK load. After merge,
-canonical staging acceptance must exercise clean-browser unknown, deny, grant,
-and revoke states and inspect PostHog Live Events for exactly the six frozen V1
-events, including search redaction and the ten-second `map_moved` throttle.
+and Payload `/admin/**` must not initiate the first SDK load. Canonical staging
+acceptance completed on 2026-07-26: unknown, denied, and revoked states produced
+zero matching requests; the isolated granted session contained exactly the six
+frozen V1 event types with correct cardinality, redacted search PII, two
+ten-second-separated `map_moved` rows, and no automatic events. Fresh-document
+checks of the three excluded route families produced zero matching resources.
+See `docs/operations/m3-t6-analytics-consent-acceptance.md` for the non-sensitive
+evidence record. Production PostHog configuration and revalidation remain M5-T9.
 
 M0-T3 initially put the Clerk Development instance in Restricted mode with
 public sign-up disabled. M3-T1 changed the staging Development instance to the
