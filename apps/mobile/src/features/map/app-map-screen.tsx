@@ -3,6 +3,9 @@ import {
   GeoJSONSource,
   Layer,
   Map,
+  type CameraRef,
+  type GeoJSONSourceRef,
+  type PressEventWithFeatures,
   type ViewStateChangeEvent,
 } from "@maplibre/maplibre-react-native";
 import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +22,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { analytics } from "@chinasupply/analytics";
 import {
   getGetMapClusterBoundariesQueryKey,
   getGetMapFactoriesQueryKey,
@@ -39,8 +43,16 @@ import {
   clusterBoundariesFillLayer,
   clusterBoundariesLineLayer,
   clusterPointsLayer,
+  factoryClusterCountLayer,
+  factoryClustersLayer,
   factoryPointsLayer,
+  factorySourceOptions,
 } from "./map-config";
+import {
+  resolveMapPressTarget,
+  type SelectedMapFeature,
+} from "./map-selection";
+import { MapSelectionCard } from "./map-selection-card";
 import {
   CLUSTER_BOUNDARY_MIN_ZOOM,
   FACTORY_POINT_MIN_ZOOM,
@@ -64,8 +76,14 @@ const DISABLED_FACTORY_PARAMS = {
 export default function AppMapScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const cameraRef = useRef<CameraRef>(null);
+  const factorySourceRef = useRef<GeoJSONSourceRef>(null);
+  const hasInitialViewportRef = useRef(false);
+  const movementPendingRef = useRef(false);
   const [mapAttempt, setMapAttempt] = useState(0);
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
+  const [selectedFeature, setSelectedFeature] =
+    useState<SelectedMapFeature | null>(null);
   const [viewport, setViewport] = useState<MapViewport | null>(null);
   const [viewportIsSettling, setViewportIsSettling] = useState(true);
   const viewportUpdaterRef = useRef<DebouncedViewportUpdater | null>(null);
@@ -73,8 +91,19 @@ export default function AppMapScreen() {
   if (viewportUpdaterRef.current === null) {
     viewportUpdaterRef.current = createDebouncedViewportUpdater(
       (nextViewport) => {
+        const shouldTrackMovement =
+          hasInitialViewportRef.current && movementPendingRef.current;
+        hasInitialViewportRef.current = true;
+        movementPendingRef.current = false;
         setViewport(nextViewport);
         setViewportIsSettling(false);
+        if (shouldTrackMovement) {
+          analytics.trackMapMoved({
+            bbox: nextViewport.bbox,
+            categorySlug: null,
+            zoom: nextViewport.zoom,
+          });
+        }
       },
     );
   }
@@ -142,6 +171,7 @@ export default function AppMapScreen() {
 
   const handleRegionWillChange = useCallback(() => {
     viewportUpdaterRef.current?.cancel();
+    movementPendingRef.current = hasInitialViewportRef.current;
     setViewportIsSettling(true);
     cancelViewportQueries();
   }, [cancelViewportQueries]);
@@ -151,6 +181,7 @@ export default function AppMapScreen() {
       const nextViewport = readMapViewport(event.nativeEvent);
       if (nextViewport === null) {
         viewportUpdaterRef.current?.cancel();
+        movementPendingRef.current = false;
         setViewport(null);
         setViewportIsSettling(false);
         return;
@@ -163,6 +194,8 @@ export default function AppMapScreen() {
 
   const retry = () => {
     if (mapLoadState === "error" || mapStyle === null) {
+      hasInitialViewportRef.current = false;
+      movementPendingRef.current = false;
       setMapLoadState("loading");
       setMapAttempt((attempt) => attempt + 1);
     }
@@ -190,6 +223,37 @@ export default function AppMapScreen() {
     statusKind = "loading";
   }
 
+  const handleFeaturePress = useCallback(
+    (event: NativeSyntheticEvent<PressEventWithFeatures>) => {
+      event.stopPropagation();
+      const target = resolveMapPressTarget(event.nativeEvent.features);
+
+      if (target.kind === "selection") {
+        setSelectedFeature(target.selection);
+        return;
+      }
+
+      setSelectedFeature(null);
+      if (target.kind === "empty") return;
+
+      void factorySourceRef.current
+        ?.getClusterExpansionZoom(target.clusterId)
+        .then((zoom) => {
+          if (!Number.isFinite(zoom)) return;
+          cameraRef.current?.easeTo({
+            center: target.coordinates,
+            duration: 500,
+            zoom: Math.min(24, Math.max(0, zoom)),
+          });
+        })
+        .catch(() => undefined);
+    },
+    [],
+  );
+
+  const factoriesAreTruncated =
+    factoriesEnabled && factoryPointsQuery.data?.meta.truncated === true;
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <StatusBar style="dark" />
@@ -205,6 +269,7 @@ export default function AppMapScreen() {
             mapStyle={mapStyle}
             onDidFailLoadingMap={() => setMapLoadState("error")}
             onDidFinishLoadingMap={() => setMapLoadState("ready")}
+            onPress={() => setSelectedFeature(null)}
             onRegionDidChange={handleRegionDidChange}
             onRegionWillChange={handleRegionWillChange}
             scaleBar={false}
@@ -213,6 +278,7 @@ export default function AppMapScreen() {
             touchPitch={false}
           >
             <Camera
+              ref={cameraRef}
               initialViewState={{
                 bounds: [...CHINA_BOUNDS],
                 padding: { bottom: 48, left: 24, right: 24, top: 48 },
@@ -223,16 +289,29 @@ export default function AppMapScreen() {
             <GeoJSONSource
               data={clusterBoundaries}
               id={CLUSTER_BOUNDARIES_SOURCE_ID}
+              onPress={handleFeaturePress}
             >
               <Layer {...clusterBoundariesFillLayer} />
               <Layer {...clusterBoundariesLineLayer} />
             </GeoJSONSource>
 
-            <GeoJSONSource data={clusterPoints} id={CLUSTER_POINTS_SOURCE_ID}>
+            <GeoJSONSource
+              data={clusterPoints}
+              id={CLUSTER_POINTS_SOURCE_ID}
+              onPress={handleFeaturePress}
+            >
               <Layer {...clusterPointsLayer} />
             </GeoJSONSource>
 
-            <GeoJSONSource data={factoryPoints} id={FACTORIES_SOURCE_ID}>
+            <GeoJSONSource
+              data={factoryPoints}
+              id={FACTORIES_SOURCE_ID}
+              onPress={handleFeaturePress}
+              ref={factorySourceRef}
+              {...factorySourceOptions}
+            >
+              <Layer {...factoryClustersLayer} />
+              <Layer {...factoryClusterCountLayer} />
               <Layer {...factoryPointsLayer} />
             </GeoJSONSource>
           </Map>
@@ -266,6 +345,29 @@ export default function AppMapScreen() {
               </Pressable>
             )}
           </View>
+        )}
+
+        {factoriesAreTruncated ? (
+          <View
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            style={[
+              styles.truncationNotice,
+              selectedFeature === null
+                ? styles.truncationNoticeBottom
+                : styles.truncationNoticeTop,
+            ]}
+            testID="map-truncation-notice"
+          >
+            <Text style={styles.truncationText}>{t("map.truncated")}</Text>
+          </View>
+        ) : null}
+
+        {selectedFeature === null ? null : (
+          <MapSelectionCard
+            onClose={() => setSelectedFeature(null)}
+            selection={selectedFeature}
+          />
         )}
 
         <View pointerEvents="none" style={styles.attributionContainer}>
@@ -335,5 +437,28 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     marginLeft: 8,
+  },
+  truncationNotice: {
+    backgroundColor: "rgba(255, 247, 237, 0.96)",
+    borderColor: "rgba(194, 65, 12, 0.22)",
+    borderRadius: 999,
+    borderWidth: 1,
+    left: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    position: "absolute",
+    right: 14,
+  },
+  truncationNoticeBottom: {
+    bottom: 34,
+  },
+  truncationNoticeTop: {
+    top: 66,
+  },
+  truncationText: {
+    color: "#7C2D12",
+    fontSize: 12,
+    fontWeight: "700",
+    textAlign: "center",
   },
 });

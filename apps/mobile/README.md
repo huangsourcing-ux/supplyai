@@ -6,9 +6,21 @@ Obytes Starter v9.0.0 during M0-T5.
 The root route is the public industrial map. It uses the generated workspace API
 client and the shared checked-in Streets v4 style to load MAP-1 cluster points,
 MAP-2 boundaries at zoom 8 and above, and MAP-3 factory points at zoom 10 and
-above. Viewport requests are debounced for 500ms and canceled when movement
-starts. Factory clustering, selection cards, search, registration, OAuth,
-account management, and logout UI remain in later M4 task packages.
+above. MAP-3 points use native MapLibre clustering with cluster expansion on
+press. MAP-1 points, MAP-2 boundaries, and unclustered MAP-3 points open a
+bottom card that renders the lightweight map identity immediately and fills in
+the image and main products through A-2/A-5. The detail CTA remains visibly
+disabled until the native detail routes land in M4-T2b/T2c.
+
+Viewport requests are debounced for 500ms and canceled when movement starts.
+The first camera position is excluded from analytics; later settled movements
+call the shared consent-aware analytics facade, which owns the ten-second
+`map_moved` throttle. Mobile does not yet install a PostHog adapter or grant
+analytics consent, so the facade remains a network no-op. A real Mobile adapter
+and consent flow require a separately approved development-plan revision.
+
+Search, registration, OAuth, account management, and logout UI remain in later
+M4 task packages.
 
 Clerk tokens are stored in a dedicated encrypted MMKV instance. Its randomly
 generated encryption key is persisted with Expo SecureStore and is never placed

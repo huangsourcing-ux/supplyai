@@ -5,11 +5,16 @@ import {
   CLUSTER_BOUNDARIES_FILL_LAYER_ID,
   CLUSTER_BOUNDARIES_LINE_LAYER_ID,
   CLUSTER_POINTS_LAYER_ID,
+  FACTORY_CLUSTER_COUNT_LAYER_ID,
+  FACTORY_CLUSTERS_LAYER_ID,
   FACTORY_POINTS_LAYER_ID,
   clusterBoundariesFillLayer,
   clusterBoundariesLineLayer,
   clusterPointsLayer,
+  factoryClusterCountLayer,
+  factoryClustersLayer,
   factoryPointsLayer,
+  factorySourceOptions,
 } from "./map-config";
 import {
   CLUSTER_BOUNDARY_MIN_ZOOM,
@@ -46,8 +51,26 @@ describe("mobile industrial map layers", () => {
     });
   });
 
-  it("keeps MAP-3 factory points hidden below zoom 10", () => {
+  it("clusters MAP-3 factories with the Web parity settings and layers", () => {
+    expect(factorySourceOptions).toEqual({
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50,
+    });
+    expect(factoryClustersLayer).toMatchObject({
+      filter: ["has", "point_count"],
+      id: FACTORY_CLUSTERS_LAYER_ID,
+      minzoom: FACTORY_POINT_MIN_ZOOM,
+      type: "circle",
+    });
+    expect(factoryClusterCountLayer).toMatchObject({
+      filter: ["has", "point_count"],
+      id: FACTORY_CLUSTER_COUNT_LAYER_ID,
+      minzoom: FACTORY_POINT_MIN_ZOOM,
+      type: "symbol",
+    });
     expect(factoryPointsLayer).toMatchObject({
+      filter: ["!", ["has", "point_count"]],
       id: FACTORY_POINTS_LAYER_ID,
       minzoom: FACTORY_POINT_MIN_ZOOM,
       type: "circle",

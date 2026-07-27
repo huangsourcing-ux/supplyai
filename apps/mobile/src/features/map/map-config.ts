@@ -22,6 +22,9 @@ export const CLUSTER_BOUNDARIES_FILL_LAYER_ID =
 export const CLUSTER_BOUNDARIES_LINE_LAYER_ID =
   "industrial-cluster-boundaries-line";
 export const FACTORIES_SOURCE_ID = "industrial-factories";
+export const FACTORY_CLUSTERS_LAYER_ID = "industrial-factory-clusters";
+export const FACTORY_CLUSTER_COUNT_LAYER_ID =
+  "industrial-factory-cluster-count";
 export const FACTORY_POINTS_LAYER_ID = "industrial-factory-points";
 
 export const EMPTY_CLUSTER_POINTS: GetMapClusterPoints200Data = {
@@ -38,6 +41,12 @@ export const EMPTY_FACTORY_POINTS: GetMapFactories200Data = {
   features: [],
   type: "FeatureCollection",
 };
+
+export const factorySourceOptions = {
+  cluster: true,
+  clusterMaxZoom: 14,
+  clusterRadius: 50,
+} as const;
 
 export const clusterBoundariesFillLayer: LayerProps = {
   beforeId: BASEMAP_LABEL_ANCHOR_LAYER_ID,
@@ -84,7 +93,47 @@ export const clusterPointsLayer: LayerProps = {
   type: "circle",
 };
 
+export const factoryClustersLayer: LayerProps = {
+  filter: ["has", "point_count"],
+  id: FACTORY_CLUSTERS_LAYER_ID,
+  minzoom: FACTORY_POINT_MIN_ZOOM,
+  paint: {
+    "circle-color": "#F97316",
+    "circle-opacity": 0.94,
+    "circle-radius": [
+      "step",
+      ["get", "point_count"],
+      17,
+      10,
+      22,
+      100,
+      28,
+      1000,
+      34,
+    ],
+    "circle-stroke-color": "#FFFFFF",
+    "circle-stroke-width": 2.5,
+  },
+  type: "circle",
+};
+
+export const factoryClusterCountLayer: LayerProps = {
+  filter: ["has", "point_count"],
+  id: FACTORY_CLUSTER_COUNT_LAYER_ID,
+  layout: {
+    "text-field": ["get", "point_count_abbreviated"],
+    "text-font": ["Noto Sans Regular"],
+    "text-size": 12,
+  },
+  minzoom: FACTORY_POINT_MIN_ZOOM,
+  paint: {
+    "text-color": "#FFFFFF",
+  },
+  type: "symbol",
+};
+
 export const factoryPointsLayer: LayerProps = {
+  filter: ["!", ["has", "point_count"]],
   id: FACTORY_POINTS_LAYER_ID,
   minzoom: FACTORY_POINT_MIN_ZOOM,
   paint: {

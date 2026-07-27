@@ -140,6 +140,9 @@ importers:
       "@babel/runtime":
         specifier: 7.29.2
         version: 7.29.2
+      "@chinasupply/analytics":
+        specifier: workspace:*
+        version: link:../../packages/analytics
       "@chinasupply/api-client":
         specifier: workspace:*
         version: file:packages/api-client(@tanstack/react-query@5.101.4(react@19.1.0))(@types/node@22.19.9)(typescript@5.9.2)

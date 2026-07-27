@@ -141,7 +141,7 @@ chinasupply/
 - [x] **M4-T0 地图体验诊断与方向稿（M4-T1 前置门禁）**：对应 F-1.1~F-1.7、F-11.2 与 N-1/N-6，本任务只做诊断和方向冻结，不修改 Web/Mobile 业务代码、共享 style JSON、API 或线上数据。固定产出放入 `docs/design/map-experience/`：（1）canonical staging Web 在 1440×900 与 390×844 视口的现状截图；（2）全国/城市/街道三个缩放层级的逐项标注，覆盖底图道路/标签/POI 密度、产业带点/边界/工厂点/聚合层级、搜索/chips/卡片/attribution/Consent 浮层关系；（3）同时对照 staging 真实稀疏数据与仅用于设计评估的 30 产业带/200 工厂本地 fixture 密集态，fixture 不写入 staging/production；（4）至少 2 套可对比方向稿，分别说明视觉层级、品牌感、跨端适配和取舍。所有方向必须留在已冻结 F-1 和共享 Streets v4 2D style 约束内；若需改 zoom 阈值、新增热力图/定位/列表抽屉等需求，必须单独指出 PRD 冲突并停止实现。**验收：诊断、方向稿、比较表与 Owner 选择（或明确保留现基线）均记录在同一 PR；未形成选择记录时不勾选 M4-T0，不开工 M4-T1。**
 - [ ] **M4-T1 App 地图页**：复用 packages/api-client；MapLibre RN 实现 F-1（底部卡片形态）；attribution 同 M2-T1a。
   - [x] **M4-T1a App 地图数据源与图层**：共享 Streets v4 2D style；MAP-1/2/3 生成客户端数据源；zoom 8/10 分层；500ms 防抖、abort、错误重试与 attribution。
-  - [ ] **M4-T1b App 聚合、卡片与交互**：工厂聚合与放大、MAP-1/MAP-3 选择、底部卡片补全、truncated 提示、`map_moved` 节流及交互验收。
+  - [ ] **M4-T1b App 聚合、卡片与交互**：工厂聚合与放大、MAP-1/MAP-3 选择、底部卡片补全、truncated 提示、`map_moved` 节流及交互验收。**代码与自动化覆盖已完成；当前无已启动的 iOS Simulator 或 Android Emulator，按任务门禁保持未勾选，待使用真实受限平台 key 与 canonical staging API 完成双端交互 smoke 后收口。详情 CTA 在 M4-T2b/T2c 原生路由落地前保持可见禁用态；Mobile 真实 PostHog adapter + Consent 不得夹带，须另行批准并先修订本计划。**
 - [ ] **M4-T2a App 搜索**：F-3 RN 实现。
 - [ ] **M4-T2b App 产业带详情**：F-2 RN 实现。
 - [ ] **M4-T2c App 工厂详情**：F-4 RN 实现。
