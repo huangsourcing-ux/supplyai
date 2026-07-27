@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 
 import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
@@ -16,6 +17,8 @@ const PLANET_V4_SOURCE_ID = "maptiler_planet_v4";
 const ATTRIBUTION_SOURCE_ID = "maptiler_attribution";
 const OFFICIAL_STREETS_V4_STYLE_URL =
   "https://api.maptiler.com/maps/streets-v4/style.json";
+const OFFICIAL_STREETS_V4_2D_SEMANTIC_SHA256 =
+  "034dafc04dbe83a0839433f5e9564bf4e7a0d313ccc7a99c3725bba39353afe1";
 
 const collectRuntimeResourceUrls = (style) =>
   [
@@ -39,42 +42,35 @@ const collectStrings = (value, strings = []) => {
   return strings;
 };
 
-const isGetExpression = (value, field) =>
-  Array.isArray(value) &&
-  value.length === 2 &&
-  value[0] === "get" &&
-  value[1] === field;
+const canonicalize = (value) => {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value === null || typeof value !== "object") return value;
 
-const assertNameAccessesUseEnglishFirstFallback = (
-  value,
-  layerId,
-  insideEnglishFirstFallback = false,
-) => {
-  if (value === "{name}" || value === "{name:en}") {
-    assert.fail(`${layerId} retains an unnormalized name token`);
-  }
-  if (!Array.isArray(value)) return;
-
-  const isEnglishFirstFallback =
-    value[0] === "coalesce" &&
-    isGetExpression(value[1], "name:en") &&
-    isGetExpression(value[2], "name");
-
-  if (
-    (isGetExpression(value, "name") || isGetExpression(value, "name:en")) &&
-    !insideEnglishFirstFallback
-  ) {
-    assert.fail(`${layerId} has a name access outside the English fallback`);
-  }
-
-  for (const item of value) {
-    assertNameAccessesUseEnglishFirstFallback(
-      item,
-      layerId,
-      insideEnglishFirstFallback || isEnglishFirstFallback,
-    );
-  }
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort()
+      .map((key) => [key, canonicalize(value[key])]),
+  );
 };
+
+const createOfficialStreetsV4TwoDimensionalParitySnapshot = (style) => {
+  const snapshot = structuredClone(style);
+  snapshot.sprite = snapshot.sprite.map((sprite) => ({
+    ...sprite,
+    url: sprite.url.replace(`?key=${MAPTILER_KEY_TOKEN}`, ""),
+  }));
+  snapshot.metadata = { maptiler: snapshot.metadata.maptiler };
+
+  const buildingLayer = snapshot.layers.find(({ id }) => id === "Building");
+  buildingLayer.maxzoom = 15;
+
+  return snapshot;
+};
+
+const semanticSha256 = (value) =>
+  createHash("sha256")
+    .update(JSON.stringify(canonicalize(value)))
+    .digest("hex");
 
 test("shared map style stays checked in, key-safe, MapTiler-only, and 2D", () => {
   assert.equal(chinaSupplyMapStyleTemplate.version, 8);
@@ -251,30 +247,36 @@ test("complete Streets resources and the shared label anchor remain coherent", (
   }
 });
 
-test("official Streets snapshot keeps English-first names and subdued 2D buildings", () => {
+test("official Streets snapshot differs visually only by continuing 2D buildings", () => {
   const buildingLayers = chinaSupplyMapStyleTemplate.layers.filter(
     (layer) => layer["source-layer"] === "building",
   );
   assert.equal(buildingLayers.length, 1);
   assert.equal(buildingLayers[0].id, "Building");
   assert.equal(buildingLayers[0].type, "fill");
-  assert.equal(buildingLayers[0].minzoom, 15);
+  assert.equal(buildingLayers[0].minzoom, 12);
   assert.equal(buildingLayers[0].maxzoom, undefined);
-  assert.equal(buildingLayers[0].paint["fill-opacity"], 0.22);
+  assert.deepEqual(buildingLayers[0].paint["fill-opacity"], [
+    "interpolate",
+    ["linear"],
+    ["zoom"],
+    12,
+    0.2,
+    13,
+    0.3,
+  ]);
 
-  let localizedLayerCount = 0;
-  for (const layer of chinaSupplyMapStyleTemplate.layers) {
-    const textField = layer.layout?.["text-field"];
-    if (
-      textField === undefined ||
-      !JSON.stringify(textField).includes("name")
-    ) {
-      continue;
-    }
-    localizedLayerCount += 1;
-    assertNameAccessesUseEnglishFirstFallback(textField, layer.id);
-  }
-  assert.ok(localizedLayerCount >= 30);
+  assert.equal(chinaSupplyMapStyleTemplate.name, "Streets");
+  assert.deepEqual(chinaSupplyMapStyleTemplate.center, [0, 0]);
+  assert.equal(chinaSupplyMapStyleTemplate.zoom, 1);
+  assert.equal(
+    semanticSha256(
+      createOfficialStreetsV4TwoDimensionalParitySnapshot(
+        chinaSupplyMapStyleTemplate,
+      ),
+    ),
+    OFFICIAL_STREETS_V4_2D_SEMANTIC_SHA256,
+  );
 });
 
 test("MapLibre style validator reports zero errors", () => {
