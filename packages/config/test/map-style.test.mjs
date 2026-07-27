@@ -12,18 +12,20 @@ import {
 } from "../map/style.js";
 
 const PLANET_V4_TILESET_URL = "https://api.maptiler.com/tiles/v4/tiles.json";
+const PLANET_V4_SOURCE_ID = "maptiler_planet_v4";
+const ATTRIBUTION_SOURCE_ID = "maptiler_attribution";
+const OFFICIAL_STREETS_V4_STYLE_URL =
+  "https://api.maptiler.com/maps/streets-v4/style.json";
 
-const collectRemoteUrls = (value, urls = []) => {
-  if (typeof value === "string" && /^https?:\/\//.test(value)) {
-    urls.push(value);
-  } else if (Array.isArray(value)) {
-    for (const item of value) collectRemoteUrls(item, urls);
-  } else if (value !== null && typeof value === "object") {
-    for (const item of Object.values(value)) collectRemoteUrls(item, urls);
-  }
-
-  return urls;
-};
+const collectRuntimeResourceUrls = (style) =>
+  [
+    style.glyphs,
+    ...style.sprite.map(({ url }) => url),
+    ...Object.values(style.sources).flatMap((source) => [
+      source.url,
+      ...(source.tiles ?? []),
+    ]),
+  ].filter((value) => typeof value === "string");
 
 const collectStrings = (value, strings = []) => {
   if (typeof value === "string") {
@@ -37,17 +39,70 @@ const collectStrings = (value, strings = []) => {
   return strings;
 };
 
+const isGetExpression = (value, field) =>
+  Array.isArray(value) &&
+  value.length === 2 &&
+  value[0] === "get" &&
+  value[1] === field;
+
+const assertNameAccessesUseEnglishFirstFallback = (
+  value,
+  layerId,
+  insideEnglishFirstFallback = false,
+) => {
+  if (value === "{name}" || value === "{name:en}") {
+    assert.fail(`${layerId} retains an unnormalized name token`);
+  }
+  if (!Array.isArray(value)) return;
+
+  const isEnglishFirstFallback =
+    value[0] === "coalesce" &&
+    isGetExpression(value[1], "name:en") &&
+    isGetExpression(value[2], "name");
+
+  if (
+    (isGetExpression(value, "name") || isGetExpression(value, "name:en")) &&
+    !insideEnglishFirstFallback
+  ) {
+    assert.fail(`${layerId} has a name access outside the English fallback`);
+  }
+
+  for (const item of value) {
+    assertNameAccessesUseEnglishFirstFallback(
+      item,
+      layerId,
+      insideEnglishFirstFallback || isEnglishFirstFallback,
+    );
+  }
+};
+
 test("shared map style stays checked in, key-safe, MapTiler-only, and 2D", () => {
   assert.equal(chinaSupplyMapStyleTemplate.version, 8);
   assert.equal(chinaSupplyMapStyleTemplate.pitch, 0);
   assert.equal(chinaSupplyMapStyleTemplate.bearing, 0);
   assert.equal(
-    chinaSupplyMapStyleTemplate.sources["maptiler-planet-v4"].type,
+    chinaSupplyMapStyleTemplate.sources[PLANET_V4_SOURCE_ID].type,
     "vector",
   );
+  assert.equal(
+    chinaSupplyMapStyleTemplate.metadata["chinasupply:upstream"],
+    OFFICIAL_STREETS_V4_STYLE_URL,
+  );
+  assert.equal(
+    chinaSupplyMapStyleTemplate.metadata["chinasupply:retrievedAt"],
+    "2026-07-27",
+  );
+  assert.match(
+    chinaSupplyMapStyleTemplate.metadata["chinasupply:upstreamSha256"],
+    /^[a-f0-9]{64}$/,
+  );
+  assert.match(
+    chinaSupplyMapStyleTemplate.sources[ATTRIBUTION_SOURCE_ID].attribution,
+    /MapTiler.*OpenStreetMap contributors/,
+  );
 
-  const remoteUrls = collectRemoteUrls(chinaSupplyMapStyleTemplate);
-  assert.ok(remoteUrls.length >= 5);
+  const remoteUrls = collectRuntimeResourceUrls(chinaSupplyMapStyleTemplate);
+  assert.equal(remoteUrls.length, 5);
   for (const url of remoteUrls) {
     assert.equal(
       new URL(url.replace(MAPTILER_KEY_TOKEN, "test_key")).hostname,
@@ -66,6 +121,7 @@ test("shared map style stays checked in, key-safe, MapTiler-only, and 2D", () =>
     ),
     false,
   );
+  assert.equal(chinaSupplyMapStyleTemplate.layers.length, 158);
 });
 
 test("style source layers match the committed Planet v4 schema manifest", () => {
@@ -73,7 +129,7 @@ test("style source layers match the committed Planet v4 schema manifest", () => 
   assert.match(planetV4SchemaManifest.retrievedAt, /^\d{4}-\d{2}-\d{2}$/);
 
   const tileSourceUrl =
-    chinaSupplyMapStyleTemplate.sources["maptiler-planet-v4"].url;
+    chinaSupplyMapStyleTemplate.sources[PLANET_V4_SOURCE_ID].url;
   const parsedTileSourceUrl = new URL(
     tileSourceUrl.replace(MAPTILER_KEY_TOKEN, "test_key"),
   );
@@ -142,6 +198,7 @@ test("complete Streets resources and the shared label anchor remain coherent", (
   const sprites = chinaSupplyMapStyleTemplate.sprite;
   assert.ok(Array.isArray(sprites));
   for (const sprite of sprites) {
+    if (sprite.id === "default") continue;
     assert.ok(
       referencedStrings.some((value) => value.includes(`${sprite.id}:`)),
       `sprite ${sprite.id} is not referenced by a style layer`,
@@ -158,7 +215,6 @@ test("complete Streets resources and the shared label anchor remain coherent", (
     "poi_station",
     "tree",
     "building_number",
-    "traffic_control",
     "street_furniture",
     "pathway_label",
   ]) {
@@ -169,6 +225,56 @@ test("complete Streets resources and the shared label anchor remain coherent", (
       `complete Streets layer ${sourceLayer} was dropped`,
     );
   }
+
+  const layerIds = new Set(
+    chinaSupplyMapStyleTemplate.layers.map(({ id }) => id),
+  );
+  for (const layerId of [
+    "Highway",
+    "Major road",
+    "Minor road z12",
+    "Road labels",
+    "Traffic light",
+    "Zebra crossing",
+    "Railway station",
+    "Bus stop",
+    "Shopping",
+    "Healthcare",
+    "Education",
+    "Food",
+    "Tourism",
+  ]) {
+    assert.ok(
+      layerIds.has(layerId),
+      `official Streets layer ${layerId} missing`,
+    );
+  }
+});
+
+test("official Streets snapshot keeps English-first names and subdued 2D buildings", () => {
+  const buildingLayers = chinaSupplyMapStyleTemplate.layers.filter(
+    (layer) => layer["source-layer"] === "building",
+  );
+  assert.equal(buildingLayers.length, 1);
+  assert.equal(buildingLayers[0].id, "Building");
+  assert.equal(buildingLayers[0].type, "fill");
+  assert.equal(buildingLayers[0].minzoom, 15);
+  assert.equal(buildingLayers[0].maxzoom, undefined);
+  assert.equal(buildingLayers[0].paint["fill-opacity"], 0.22);
+
+  let localizedLayerCount = 0;
+  for (const layer of chinaSupplyMapStyleTemplate.layers) {
+    const textField = layer.layout?.["text-field"];
+    if (
+      textField === undefined ||
+      !JSON.stringify(textField).includes("name")
+    ) {
+      continue;
+    }
+    localizedLayerCount += 1;
+    assertNameAccessesUseEnglishFirstFallback(textField, layer.id);
+  }
+  assert.ok(localizedLayerCount >= 30);
 });
 
 test("MapLibre style validator reports zero errors", () => {
@@ -188,7 +294,7 @@ test("MapTiler key substitution preserves resource tokens and isolates callers",
     "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=public%20key%2Fwith%20symbols",
   );
   assert.match(
-    firstStyle.sources["maptiler-planet-v4"].url,
+    firstStyle.sources[PLANET_V4_SOURCE_ID].url,
     /public%20key%2Fwith%20symbols$/,
   );
   assert.ok(
@@ -197,11 +303,11 @@ test("MapTiler key substitution preserves resource tokens and isolates callers",
     ),
   );
   assert.match(
-    secondStyle.sources["maptiler-planet-v4"].url,
+    secondStyle.sources[PLANET_V4_SOURCE_ID].url,
     /second_public_key$/,
   );
   assert.match(
-    chinaSupplyMapStyleTemplate.sources["maptiler-planet-v4"].url,
+    chinaSupplyMapStyleTemplate.sources[PLANET_V4_SOURCE_ID].url,
     new RegExp(`${MAPTILER_KEY_TOKEN}$`),
   );
 });
