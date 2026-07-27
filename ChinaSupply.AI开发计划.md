@@ -1,6 +1,6 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.2** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T0** ｜ 日期：2026-07-26
+> 版本：**v1.2** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T1a** ｜ 日期：2026-07-26
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.4 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
@@ -138,7 +138,7 @@ chinasupply/
 
 ## M4 App 对等功能与内测（预计 2-2.5 周 + M4-T0 0.5-1 工程日）
 
-- [ ] **M4-T0 地图体验诊断与方向稿（M4-T1 前置门禁）**：对应 F-1.1~F-1.7、F-11.2 与 N-1/N-6，本任务只做诊断和方向冻结，不修改 Web/Mobile 业务代码、共享 style JSON、API 或线上数据。固定产出放入 `docs/design/map-experience/`：（1）canonical staging Web 在 1440×900 与 390×844 视口的现状截图；（2）全国/城市/街道三个缩放层级的逐项标注，覆盖底图道路/标签/POI 密度、产业带点/边界/工厂点/聚合层级、搜索/chips/卡片/attribution/Consent 浮层关系；（3）同时对照 staging 真实稀疏数据与仅用于设计评估的 30 产业带/200 工厂本地 fixture 密集态，fixture 不写入 staging/production；（4）至少 2 套可对比方向稿，分别说明视觉层级、品牌感、跨端适配和取舍。所有方向必须留在已冻结 F-1 和共享 Streets v4 2D style 约束内；若需改 zoom 阈值、新增热力图/定位/列表抽屉等需求，必须单独指出 PRD 冲突并停止实现。**验收：诊断、方向稿、比较表与 Owner 选择（或明确保留现基线）均记录在同一 PR；未形成选择记录时不勾选 M4-T0，不开工 M4-T1。**
+- [x] **M4-T0 地图体验诊断与方向稿（M4-T1 前置门禁）**：对应 F-1.1~F-1.7、F-11.2 与 N-1/N-6，本任务只做诊断和方向冻结，不修改 Web/Mobile 业务代码、共享 style JSON、API 或线上数据。固定产出放入 `docs/design/map-experience/`：（1）canonical staging Web 在 1440×900 与 390×844 视口的现状截图；（2）全国/城市/街道三个缩放层级的逐项标注，覆盖底图道路/标签/POI 密度、产业带点/边界/工厂点/聚合层级、搜索/chips/卡片/attribution/Consent 浮层关系；（3）同时对照 staging 真实稀疏数据与仅用于设计评估的 30 产业带/200 工厂本地 fixture 密集态，fixture 不写入 staging/production；（4）至少 2 套可对比方向稿，分别说明视觉层级、品牌感、跨端适配和取舍。所有方向必须留在已冻结 F-1 和共享 Streets v4 2D style 约束内；若需改 zoom 阈值、新增热力图/定位/列表抽屉等需求，必须单独指出 PRD 冲突并停止实现。**验收：诊断、方向稿、比较表与 Owner 选择（或明确保留现基线）均记录在同一 PR；未形成选择记录时不勾选 M4-T0，不开工 M4-T1。**
 - [ ] **M4-T1 App 地图页**：复用 packages/api-client；MapLibre RN 实现 F-1（底部卡片形态）；attribution 同 M2-T1a。
 - [ ] **M4-T2a App 搜索**：F-3 RN 实现。
 - [ ] **M4-T2b App 产业带详情**：F-2 RN 实现。

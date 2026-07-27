@@ -1,0 +1,4042 @@
+{
+  "metadata": {
+    "coordinateSystem": "WGS-84",
+    "factoryCount": 200,
+    "generatedAt": "2026-07-27T00:00:00.000Z",
+    "purpose": "M4-T0 visual density evaluation only; never import or seed",
+    "seed": 20260727,
+    "synthetic": true,
+    "clusterCount": 30
+  },
+  "responses": {
+    "mapClusterBoundaries": {
+      "data": {
+        "features": [
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [113.8779, 22.4131],
+                    [114.2379, 22.4131],
+                    [114.2379, 22.6731],
+                    [113.8779, 22.6731],
+                    [113.8779, 22.4131]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000001",
+              "name_en": "Shenzhen electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-shenzhen-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [113.4252, 22.7884],
+                    [114.0652, 22.7884],
+                    [114.0652, 23.2484],
+                    [113.4252, 23.2484],
+                    [113.4252, 22.7884]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 25,
+              "id": "designCluster00000002",
+              "name_en": "Dongguan electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-dongguan-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [113.0844, 22.9991],
+                    [113.4444, 22.9991],
+                    [113.4444, 23.2591],
+                    [113.0844, 23.2591],
+                    [113.0844, 22.9991]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#F59E0B",
+              "factoryCount": 7,
+              "id": "designCluster00000003",
+              "name_en": "Guangzhou lighting design fixture",
+              "primaryCategoryId": "cat_lighting_00000010",
+              "slug": "design-guangzhou-lighting"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [112.9414, 22.8915],
+                    [113.3014, 22.8915],
+                    [113.3014, 23.1515],
+                    [112.9414, 23.1515],
+                    [112.9414, 22.8915]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#92400E",
+              "factoryCount": 6,
+              "id": "designCluster00000004",
+              "name_en": "Foshan furniture design fixture",
+              "primaryCategoryId": "cat_furniture_0000010",
+              "slug": "design-foshan-furniture"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [113.2128, 22.3876],
+                    [113.5728, 22.3876],
+                    [113.5728, 22.6476],
+                    [113.2128, 22.6476],
+                    [113.2128, 22.3876]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#F59E0B",
+              "factoryCount": 6,
+              "id": "designCluster00000005",
+              "name_en": "Zhongshan lighting design fixture",
+              "primaryCategoryId": "cat_lighting_00000010",
+              "slug": "design-zhongshan-lighting"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [114.2362, 22.9815],
+                    [114.5962, 22.9815],
+                    [114.5962, 23.2415],
+                    [114.2362, 23.2415],
+                    [114.2362, 22.9815]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000006",
+              "name_en": "Huizhou hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-huizhou-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [119.8951, 29.1769],
+                    [120.2551, 29.1769],
+                    [120.2551, 29.4369],
+                    [119.8951, 29.4369],
+                    [119.8951, 29.1769]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000007",
+              "name_en": "Yiwu general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-yiwu-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [120.5194, 27.8643],
+                    [120.8794, 27.8643],
+                    [120.8794, 28.1243],
+                    [120.5194, 28.1243],
+                    [120.5194, 27.8643]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#7C3AED",
+              "factoryCount": 6,
+              "id": "designCluster00000008",
+              "name_en": "Wenzhou footwear design fixture",
+              "primaryCategoryId": "cat_footwear_00000010",
+              "slug": "design-wenzhou-footwear"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [121.364, 29.7383],
+                    [121.724, 29.7383],
+                    [121.724, 29.9983],
+                    [121.364, 29.9983],
+                    [121.364, 29.7383]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000009",
+              "name_en": "Ningbo hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-ningbo-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [119.9751, 30.1441],
+                    [120.3351, 30.1441],
+                    [120.3351, 30.4041],
+                    [119.9751, 30.4041],
+                    [119.9751, 30.1441]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000010",
+              "name_en": "Hangzhou textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-hangzhou-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [120.4021, 29.8671],
+                    [120.7621, 29.8671],
+                    [120.7621, 30.1271],
+                    [120.4021, 30.1271],
+                    [120.4021, 29.8671]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000011",
+              "name_en": "Shaoxing textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-shaoxing-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [120.7143, 31.8502],
+                    [121.0743, 31.8502],
+                    [121.0743, 32.1102],
+                    [120.7143, 32.1102],
+                    [120.7143, 31.8502]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000012",
+              "name_en": "Nantong textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-nantong-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [120.4053, 31.1689],
+                    [120.7653, 31.1689],
+                    [120.7653, 31.4289],
+                    [120.4053, 31.4289],
+                    [120.4053, 31.1689]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000013",
+              "name_en": "Suzhou electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-suzhou-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [120.1319, 31.3612],
+                    [120.4919, 31.3612],
+                    [120.4919, 31.6212],
+                    [120.1319, 31.6212],
+                    [120.1319, 31.3612]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000014",
+              "name_en": "Wuxi electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-wuxi-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [121.2937, 31.1004],
+                    [121.6537, 31.1004],
+                    [121.6537, 31.3604],
+                    [121.2937, 31.3604],
+                    [121.2937, 31.1004]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000015",
+              "name_en": "Shanghai general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-shanghai-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [120.2026, 35.9371],
+                    [120.5626, 35.9371],
+                    [120.5626, 36.1971],
+                    [120.2026, 36.1971],
+                    [120.2026, 35.9371]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000016",
+              "name_en": "Qingdao hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-qingdao-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [118.1764, 34.9747],
+                    [118.5364, 34.9747],
+                    [118.5364, 35.2347],
+                    [118.1764, 35.2347],
+                    [118.1764, 34.9747]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000017",
+              "name_en": "Linyi general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-linyi-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [117.8749, 36.6835],
+                    [118.2349, 36.6835],
+                    [118.2349, 36.9435],
+                    [117.8749, 36.9435],
+                    [117.8749, 36.6835]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#A16207",
+              "factoryCount": 6,
+              "id": "designCluster00000018",
+              "name_en": "Zibo ceramics design fixture",
+              "primaryCategoryId": "cat_ceramics_00000010",
+              "slug": "design-zibo-ceramics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [117.0208, 38.9542],
+                    [117.3808, 38.9542],
+                    [117.3808, 39.2142],
+                    [117.0208, 39.2142],
+                    [117.0208, 38.9542]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000019",
+              "name_en": "Tianjin hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-tianjin-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [116.2274, 39.7742],
+                    [116.5874, 39.7742],
+                    [116.5874, 40.0342],
+                    [116.2274, 40.0342],
+                    [116.2274, 39.7742]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000020",
+              "name_en": "Beijing electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-beijing-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [114.3349, 37.9128],
+                    [114.6949, 37.9128],
+                    [114.6949, 38.1728],
+                    [114.3349, 38.1728],
+                    [114.3349, 37.9128]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000021",
+              "name_en": "Shijiazhuang textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-shijiazhuang-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [113.4454, 34.6166],
+                    [113.8054, 34.6166],
+                    [113.8054, 34.8766],
+                    [113.4454, 34.8766],
+                    [113.4454, 34.6166]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000022",
+              "name_en": "Zhengzhou general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-zhengzhou-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [114.1255, 30.4628],
+                    [114.4855, 30.4628],
+                    [114.4855, 30.7228],
+                    [114.1255, 30.7228],
+                    [114.1255, 30.4628]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000023",
+              "name_en": "Wuhan electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-wuhan-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [112.7588, 28.0982],
+                    [113.1188, 28.0982],
+                    [113.1188, 28.3582],
+                    [112.7588, 28.3582],
+                    [112.7588, 28.0982]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000024",
+              "name_en": "Changsha general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-changsha-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [115.6782, 28.5529],
+                    [116.0382, 28.5529],
+                    [116.0382, 28.8129],
+                    [115.6782, 28.8129],
+                    [115.6782, 28.5529]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000025",
+              "name_en": "Nanchang textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-nanchang-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [118.4957, 24.7441],
+                    [118.8557, 24.7441],
+                    [118.8557, 25.0041],
+                    [118.4957, 25.0041],
+                    [118.4957, 24.7441]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#7C3AED",
+              "factoryCount": 6,
+              "id": "designCluster00000026",
+              "name_en": "Quanzhou footwear design fixture",
+              "primaryCategoryId": "cat_footwear_00000010",
+              "slug": "design-quanzhou-footwear"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [117.9094, 24.3498],
+                    [118.2694, 24.3498],
+                    [118.2694, 24.6098],
+                    [117.9094, 24.6098],
+                    [117.9094, 24.3498]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000027",
+              "name_en": "Xiamen electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-xiamen-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [103.8865, 30.4423],
+                    [104.2465, 30.4423],
+                    [104.2465, 30.7023],
+                    [103.8865, 30.7023],
+                    [103.8865, 30.4423]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#92400E",
+              "factoryCount": 6,
+              "id": "designCluster00000028",
+              "name_en": "Chengdu furniture design fixture",
+              "primaryCategoryId": "cat_furniture_0000010",
+              "slug": "design-chengdu-furniture"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [106.3716, 29.433],
+                    [106.7316, 29.433],
+                    [106.7316, 29.693],
+                    [106.3716, 29.693],
+                    [106.3716, 29.433]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#DB2777",
+              "factoryCount": 6,
+              "id": "designCluster00000029",
+              "name_en": "Chongqing toys design fixture",
+              "primaryCategoryId": "cat_toys_000000000010",
+              "slug": "design-chongqing-toys"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  [
+                    [102.6529, 24.7501],
+                    [103.0129, 24.7501],
+                    [103.0129, 25.0101],
+                    [102.6529, 25.0101],
+                    [102.6529, 24.7501]
+                  ]
+                ]
+              ],
+              "type": "MultiPolygon"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000030",
+              "name_en": "Kunming general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-kunming-general"
+            },
+            "type": "Feature"
+          }
+        ],
+        "type": "FeatureCollection"
+      },
+      "error": null,
+      "meta": {}
+    },
+    "mapClusterPoints": {
+      "data": {
+        "features": [
+          {
+            "geometry": {
+              "coordinates": [114.0579, 22.5431],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000001",
+              "name_en": "Shenzhen electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-shenzhen-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.7452, 23.0184],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 25,
+              "id": "designCluster00000002",
+              "name_en": "Dongguan electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-dongguan-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.2644, 23.1291],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#F59E0B",
+              "factoryCount": 7,
+              "id": "designCluster00000003",
+              "name_en": "Guangzhou lighting design fixture",
+              "primaryCategoryId": "cat_lighting_00000010",
+              "slug": "design-guangzhou-lighting"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.1214, 23.0215],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#92400E",
+              "factoryCount": 6,
+              "id": "designCluster00000004",
+              "name_en": "Foshan furniture design fixture",
+              "primaryCategoryId": "cat_furniture_0000010",
+              "slug": "design-foshan-furniture"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.3928, 22.5176],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#F59E0B",
+              "factoryCount": 6,
+              "id": "designCluster00000005",
+              "name_en": "Zhongshan lighting design fixture",
+              "primaryCategoryId": "cat_lighting_00000010",
+              "slug": "design-zhongshan-lighting"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.4162, 23.1115],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000006",
+              "name_en": "Huizhou hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-huizhou-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.0751, 29.3069],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000007",
+              "name_en": "Yiwu general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-yiwu-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.6994, 27.9943],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#7C3AED",
+              "factoryCount": 6,
+              "id": "designCluster00000008",
+              "name_en": "Wenzhou footwear design fixture",
+              "primaryCategoryId": "cat_footwear_00000010",
+              "slug": "design-wenzhou-footwear"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.544, 29.8683],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000009",
+              "name_en": "Ningbo hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-ningbo-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.1551, 30.2741],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000010",
+              "name_en": "Hangzhou textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-hangzhou-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.5821, 29.9971],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000011",
+              "name_en": "Shaoxing textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-shaoxing-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.8943, 31.9802],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000012",
+              "name_en": "Nantong textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-nantong-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.5853, 31.2989],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000013",
+              "name_en": "Suzhou electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-suzhou-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.3119, 31.4912],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000014",
+              "name_en": "Wuxi electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-wuxi-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.4737, 31.2304],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000015",
+              "name_en": "Shanghai general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-shanghai-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.3826, 36.0671],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000016",
+              "name_en": "Qingdao hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-qingdao-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.3564, 35.1047],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000017",
+              "name_en": "Linyi general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-linyi-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.0549, 36.8135],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#A16207",
+              "factoryCount": 6,
+              "id": "designCluster00000018",
+              "name_en": "Zibo ceramics design fixture",
+              "primaryCategoryId": "cat_ceramics_00000010",
+              "slug": "design-zibo-ceramics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.2008, 39.0842],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#475569",
+              "factoryCount": 6,
+              "id": "designCluster00000019",
+              "name_en": "Tianjin hardware design fixture",
+              "primaryCategoryId": "cat_hardware_00000010",
+              "slug": "design-tianjin-hardware"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.4074, 39.9042],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000020",
+              "name_en": "Beijing electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-beijing-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.5149, 38.0428],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000021",
+              "name_en": "Shijiazhuang textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-shijiazhuang-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.6254, 34.7466],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000022",
+              "name_en": "Zhengzhou general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-zhengzhou-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.3055, 30.5928],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000023",
+              "name_en": "Wuhan electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-wuhan-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [112.9388, 28.2282],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000024",
+              "name_en": "Changsha general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-changsha-general"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.8582, 28.6829],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#14B8A6",
+              "factoryCount": 6,
+              "id": "designCluster00000025",
+              "name_en": "Nanchang textiles design fixture",
+              "primaryCategoryId": "cat_home_textiles_001",
+              "slug": "design-nanchang-textiles"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.6757, 24.8741],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#7C3AED",
+              "factoryCount": 6,
+              "id": "designCluster00000026",
+              "name_en": "Quanzhou footwear design fixture",
+              "primaryCategoryId": "cat_footwear_00000010",
+              "slug": "design-quanzhou-footwear"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.0894, 24.4798],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#2563EB",
+              "factoryCount": 6,
+              "id": "designCluster00000027",
+              "name_en": "Xiamen electronics design fixture",
+              "primaryCategoryId": "cat_electronics_00001",
+              "slug": "design-xiamen-electronics"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [104.0665, 30.5723],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#92400E",
+              "factoryCount": 6,
+              "id": "designCluster00000028",
+              "name_en": "Chengdu furniture design fixture",
+              "primaryCategoryId": "cat_furniture_0000010",
+              "slug": "design-chengdu-furniture"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.5516, 29.563],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#DB2777",
+              "factoryCount": 6,
+              "id": "designCluster00000029",
+              "name_en": "Chongqing toys design fixture",
+              "primaryCategoryId": "cat_toys_000000000010",
+              "slug": "design-chongqing-toys"
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.8329, 24.8801],
+              "type": "Point"
+            },
+            "properties": {
+              "color": "#0F766E",
+              "factoryCount": 6,
+              "id": "designCluster00000030",
+              "name_en": "Kunming general design fixture",
+              "primaryCategoryId": "cat_general_goods_001",
+              "slug": "design-kunming-general"
+            },
+            "type": "Feature"
+          }
+        ],
+        "type": "FeatureCollection"
+      },
+      "error": null,
+      "meta": {}
+    },
+    "mapFactories": {
+      "data": {
+        "features": [
+          {
+            "geometry": {
+              "coordinates": [114.020341, 22.592792],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000001",
+              "id": "designFactory00000001",
+              "name_en": "Shenzhen design factory 01",
+              "slug": "design-shenzhen-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.071144, 22.572776],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000001",
+              "id": "designFactory00000002",
+              "name_en": "Shenzhen design factory 02",
+              "slug": "design-shenzhen-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.042212, 22.590728],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000001",
+              "id": "designFactory00000003",
+              "name_en": "Shenzhen design factory 03",
+              "slug": "design-shenzhen-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.148598, 22.535442],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000001",
+              "id": "designFactory00000004",
+              "name_en": "Shenzhen design factory 04",
+              "slug": "design-shenzhen-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.152324, 22.519192],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000001",
+              "id": "designFactory00000005",
+              "name_en": "Shenzhen design factory 05",
+              "slug": "design-shenzhen-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.046924, 22.573594],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000001",
+              "id": "designFactory00000006",
+              "name_en": "Shenzhen design factory 06",
+              "slug": "design-shenzhen-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.774089, 23.101559],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000007",
+              "name_en": "Dongguan design factory 01",
+              "slug": "design-dongguan-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.7769, 23.097888],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000008",
+              "name_en": "Dongguan design factory 02",
+              "slug": "design-dongguan-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.77928, 23.105594],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000009",
+              "name_en": "Dongguan design factory 03",
+              "slug": "design-dongguan-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.777463, 23.09245],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000010",
+              "name_en": "Dongguan design factory 04",
+              "slug": "design-dongguan-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.790713, 23.111151],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000011",
+              "name_en": "Dongguan design factory 05",
+              "slug": "design-dongguan-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.798172, 23.099397],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000012",
+              "name_en": "Dongguan design factory 06",
+              "slug": "design-dongguan-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.792624, 23.102589],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000013",
+              "name_en": "Dongguan design factory 07",
+              "slug": "design-dongguan-electronics-factory-07",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.782847, 23.094322],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000014",
+              "name_en": "Dongguan design factory 08",
+              "slug": "design-dongguan-electronics-factory-08",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.787714, 23.09708],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000015",
+              "name_en": "Dongguan design factory 09",
+              "slug": "design-dongguan-electronics-factory-09",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.794561, 23.088964],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000016",
+              "name_en": "Dongguan design factory 10",
+              "slug": "design-dongguan-electronics-factory-10",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.785661, 23.105222],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000017",
+              "name_en": "Dongguan design factory 11",
+              "slug": "design-dongguan-electronics-factory-11",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.788687, 23.095035],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000018",
+              "name_en": "Dongguan design factory 12",
+              "slug": "design-dongguan-electronics-factory-12",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.782457, 23.103861],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000019",
+              "name_en": "Dongguan design factory 13",
+              "slug": "design-dongguan-electronics-factory-13",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.800282, 23.108614],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000020",
+              "name_en": "Dongguan design factory 14",
+              "slug": "design-dongguan-electronics-factory-14",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.800377, 23.102848],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000021",
+              "name_en": "Dongguan design factory 15",
+              "slug": "design-dongguan-electronics-factory-15",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.781295, 23.103266],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000022",
+              "name_en": "Dongguan design factory 16",
+              "slug": "design-dongguan-electronics-factory-16",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.776524, 23.098349],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000023",
+              "name_en": "Dongguan design factory 17",
+              "slug": "design-dongguan-electronics-factory-17",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.776394, 23.100929],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000024",
+              "name_en": "Dongguan design factory 18",
+              "slug": "design-dongguan-electronics-factory-18",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.774612, 23.09419],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000025",
+              "name_en": "Dongguan design factory 19",
+              "slug": "design-dongguan-electronics-factory-19",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.79451, 23.103782],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000026",
+              "name_en": "Dongguan design factory 20",
+              "slug": "design-dongguan-electronics-factory-20",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.772958, 23.098626],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000027",
+              "name_en": "Dongguan design factory 21",
+              "slug": "design-dongguan-electronics-factory-21",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.792629, 23.092208],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000028",
+              "name_en": "Dongguan design factory 22",
+              "slug": "design-dongguan-electronics-factory-22",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.78884, 23.106194],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000029",
+              "name_en": "Dongguan design factory 23",
+              "slug": "design-dongguan-electronics-factory-23",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.799039, 23.109062],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000030",
+              "name_en": "Dongguan design factory 24",
+              "slug": "design-dongguan-electronics-factory-24",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.774525, 23.102167],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000002",
+              "id": "designFactory00000031",
+              "name_en": "Dongguan design factory 25",
+              "slug": "design-dongguan-electronics-factory-25",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.217221, 23.10603],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000032",
+              "name_en": "Guangzhou design factory 01",
+              "slug": "design-guangzhou-lighting-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.267427, 23.151189],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000033",
+              "name_en": "Guangzhou design factory 02",
+              "slug": "design-guangzhou-lighting-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.229336, 23.087964],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000034",
+              "name_en": "Guangzhou design factory 03",
+              "slug": "design-guangzhou-lighting-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.360785, 23.105102],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000035",
+              "name_en": "Guangzhou design factory 04",
+              "slug": "design-guangzhou-lighting-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.331657, 23.180976],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000036",
+              "name_en": "Guangzhou design factory 05",
+              "slug": "design-guangzhou-lighting-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.307495, 23.148171],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000037",
+              "name_en": "Guangzhou design factory 06",
+              "slug": "design-guangzhou-lighting-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.174759, 23.12023],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000003",
+              "id": "designFactory00000038",
+              "name_en": "Guangzhou design factory 07",
+              "slug": "design-guangzhou-lighting-factory-07",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.125966, 22.945974],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000004",
+              "id": "designFactory00000039",
+              "name_en": "Foshan design factory 01",
+              "slug": "design-foshan-furniture-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.113438, 22.94962],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000004",
+              "id": "designFactory00000040",
+              "name_en": "Foshan design factory 02",
+              "slug": "design-foshan-furniture-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.1817, 23.01603],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000004",
+              "id": "designFactory00000041",
+              "name_en": "Foshan design factory 03",
+              "slug": "design-foshan-furniture-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.165692, 23.053508],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000004",
+              "id": "designFactory00000042",
+              "name_en": "Foshan design factory 04",
+              "slug": "design-foshan-furniture-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.091146, 23.036987],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000004",
+              "id": "designFactory00000043",
+              "name_en": "Foshan design factory 05",
+              "slug": "design-foshan-furniture-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.096439, 22.948605],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000004",
+              "id": "designFactory00000044",
+              "name_en": "Foshan design factory 06",
+              "slug": "design-foshan-furniture-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.402322, 22.566754],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000005",
+              "id": "designFactory00000045",
+              "name_en": "Zhongshan design factory 01",
+              "slug": "design-zhongshan-lighting-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.291268, 22.492849],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000005",
+              "id": "designFactory00000046",
+              "name_en": "Zhongshan design factory 02",
+              "slug": "design-zhongshan-lighting-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.339141, 22.526398],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000005",
+              "id": "designFactory00000047",
+              "name_en": "Zhongshan design factory 03",
+              "slug": "design-zhongshan-lighting-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.326785, 22.557257],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000005",
+              "id": "designFactory00000048",
+              "name_en": "Zhongshan design factory 04",
+              "slug": "design-zhongshan-lighting-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.416313, 22.473627],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000005",
+              "id": "designFactory00000049",
+              "name_en": "Zhongshan design factory 05",
+              "slug": "design-zhongshan-lighting-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.4803, 22.561754],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000005",
+              "id": "designFactory00000050",
+              "name_en": "Zhongshan design factory 06",
+              "slug": "design-zhongshan-lighting-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.412275, 23.050475],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000006",
+              "id": "designFactory00000051",
+              "name_en": "Huizhou design factory 01",
+              "slug": "design-huizhou-hardware-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.39618, 23.104314],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000006",
+              "id": "designFactory00000052",
+              "name_en": "Huizhou design factory 02",
+              "slug": "design-huizhou-hardware-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.36821, 23.041659],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000006",
+              "id": "designFactory00000053",
+              "name_en": "Huizhou design factory 03",
+              "slug": "design-huizhou-hardware-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.446459, 23.125317],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000006",
+              "id": "designFactory00000054",
+              "name_en": "Huizhou design factory 04",
+              "slug": "design-huizhou-hardware-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.432403, 23.164272],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000006",
+              "id": "designFactory00000055",
+              "name_en": "Huizhou design factory 05",
+              "slug": "design-huizhou-hardware-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.416944, 23.144161],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000006",
+              "id": "designFactory00000056",
+              "name_en": "Huizhou design factory 06",
+              "slug": "design-huizhou-hardware-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.121685, 29.272186],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000007",
+              "id": "designFactory00000057",
+              "name_en": "Yiwu design factory 01",
+              "slug": "design-yiwu-general-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.147487, 29.316707],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000007",
+              "id": "designFactory00000058",
+              "name_en": "Yiwu design factory 02",
+              "slug": "design-yiwu-general-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.102127, 29.26307],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000007",
+              "id": "designFactory00000059",
+              "name_en": "Yiwu design factory 03",
+              "slug": "design-yiwu-general-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.026673, 29.269047],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000007",
+              "id": "designFactory00000060",
+              "name_en": "Yiwu design factory 04",
+              "slug": "design-yiwu-general-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.01788, 29.315807],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000007",
+              "id": "designFactory00000061",
+              "name_en": "Yiwu design factory 05",
+              "slug": "design-yiwu-general-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.180268, 29.323514],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000007",
+              "id": "designFactory00000062",
+              "name_en": "Yiwu design factory 06",
+              "slug": "design-yiwu-general-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.781313, 28.004682],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000008",
+              "id": "designFactory00000063",
+              "name_en": "Wenzhou design factory 01",
+              "slug": "design-wenzhou-footwear-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.641727, 27.987967],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000008",
+              "id": "designFactory00000064",
+              "name_en": "Wenzhou design factory 02",
+              "slug": "design-wenzhou-footwear-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.678142, 28.053399],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000008",
+              "id": "designFactory00000065",
+              "name_en": "Wenzhou design factory 03",
+              "slug": "design-wenzhou-footwear-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.636003, 27.961707],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000008",
+              "id": "designFactory00000066",
+              "name_en": "Wenzhou design factory 04",
+              "slug": "design-wenzhou-footwear-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.691543, 28.041905],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000008",
+              "id": "designFactory00000067",
+              "name_en": "Wenzhou design factory 05",
+              "slug": "design-wenzhou-footwear-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.805709, 27.982949],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000008",
+              "id": "designFactory00000068",
+              "name_en": "Wenzhou design factory 06",
+              "slug": "design-wenzhou-footwear-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.459991, 29.866655],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000009",
+              "id": "designFactory00000069",
+              "name_en": "Ningbo design factory 01",
+              "slug": "design-ningbo-hardware-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.495567, 29.808711],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000009",
+              "id": "designFactory00000070",
+              "name_en": "Ningbo design factory 02",
+              "slug": "design-ningbo-hardware-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.612949, 29.916387],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000009",
+              "id": "designFactory00000071",
+              "name_en": "Ningbo design factory 03",
+              "slug": "design-ningbo-hardware-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.540933, 29.888489],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000009",
+              "id": "designFactory00000072",
+              "name_en": "Ningbo design factory 04",
+              "slug": "design-ningbo-hardware-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.640895, 29.849584],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000009",
+              "id": "designFactory00000073",
+              "name_en": "Ningbo design factory 05",
+              "slug": "design-ningbo-hardware-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.593151, 29.871377],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000009",
+              "id": "designFactory00000074",
+              "name_en": "Ningbo design factory 06",
+              "slug": "design-ningbo-hardware-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.095722, 30.335316],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000010",
+              "id": "designFactory00000075",
+              "name_en": "Hangzhou design factory 01",
+              "slug": "design-hangzhou-textiles-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.181166, 30.324547],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000010",
+              "id": "designFactory00000076",
+              "name_en": "Hangzhou design factory 02",
+              "slug": "design-hangzhou-textiles-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.10055, 30.311216],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000010",
+              "id": "designFactory00000077",
+              "name_en": "Hangzhou design factory 03",
+              "slug": "design-hangzhou-textiles-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.205283, 30.263177],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000010",
+              "id": "designFactory00000078",
+              "name_en": "Hangzhou design factory 04",
+              "slug": "design-hangzhou-textiles-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.142551, 30.201751],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000010",
+              "id": "designFactory00000079",
+              "name_en": "Hangzhou design factory 05",
+              "slug": "design-hangzhou-textiles-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.147146, 30.263292],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000010",
+              "id": "designFactory00000080",
+              "name_en": "Hangzhou design factory 06",
+              "slug": "design-hangzhou-textiles-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.556214, 30.018602],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000011",
+              "id": "designFactory00000081",
+              "name_en": "Shaoxing design factory 01",
+              "slug": "design-shaoxing-textiles-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.556511, 30.027948],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000011",
+              "id": "designFactory00000082",
+              "name_en": "Shaoxing design factory 02",
+              "slug": "design-shaoxing-textiles-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.574403, 29.96583],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000011",
+              "id": "designFactory00000083",
+              "name_en": "Shaoxing design factory 03",
+              "slug": "design-shaoxing-textiles-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.535825, 29.942504],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000011",
+              "id": "designFactory00000084",
+              "name_en": "Shaoxing design factory 04",
+              "slug": "design-shaoxing-textiles-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.613772, 30.047761],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000011",
+              "id": "designFactory00000085",
+              "name_en": "Shaoxing design factory 05",
+              "slug": "design-shaoxing-textiles-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.647867, 29.950157],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000011",
+              "id": "designFactory00000086",
+              "name_en": "Shaoxing design factory 06",
+              "slug": "design-shaoxing-textiles-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.980196, 31.94062],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000012",
+              "id": "designFactory00000087",
+              "name_en": "Nantong design factory 01",
+              "slug": "design-nantong-textiles-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.865329, 31.998053],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000012",
+              "id": "designFactory00000088",
+              "name_en": "Nantong design factory 02",
+              "slug": "design-nantong-textiles-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.851445, 32.003189],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000012",
+              "id": "designFactory00000089",
+              "name_en": "Nantong design factory 03",
+              "slug": "design-nantong-textiles-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.916239, 31.913083],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000012",
+              "id": "designFactory00000090",
+              "name_en": "Nantong design factory 04",
+              "slug": "design-nantong-textiles-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.866953, 32.05578],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000012",
+              "id": "designFactory00000091",
+              "name_en": "Nantong design factory 05",
+              "slug": "design-nantong-textiles-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.933473, 31.954214],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000012",
+              "id": "designFactory00000092",
+              "name_en": "Nantong design factory 06",
+              "slug": "design-nantong-textiles-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.552125, 31.363592],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000013",
+              "id": "designFactory00000093",
+              "name_en": "Suzhou design factory 01",
+              "slug": "design-suzhou-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.580075, 31.272639],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000013",
+              "id": "designFactory00000094",
+              "name_en": "Suzhou design factory 02",
+              "slug": "design-suzhou-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.529206, 31.350018],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000013",
+              "id": "designFactory00000095",
+              "name_en": "Suzhou design factory 03",
+              "slug": "design-suzhou-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.638148, 31.237022],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000013",
+              "id": "designFactory00000096",
+              "name_en": "Suzhou design factory 04",
+              "slug": "design-suzhou-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.610395, 31.331385],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000013",
+              "id": "designFactory00000097",
+              "name_en": "Suzhou design factory 05",
+              "slug": "design-suzhou-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.67204, 31.324141],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000013",
+              "id": "designFactory00000098",
+              "name_en": "Suzhou design factory 06",
+              "slug": "design-suzhou-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.345088, 31.491051],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000014",
+              "id": "designFactory00000099",
+              "name_en": "Wuxi design factory 01",
+              "slug": "design-wuxi-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.330886, 31.413136],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000014",
+              "id": "designFactory00000100",
+              "name_en": "Wuxi design factory 02",
+              "slug": "design-wuxi-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.301262, 31.542704],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000014",
+              "id": "designFactory00000101",
+              "name_en": "Wuxi design factory 03",
+              "slug": "design-wuxi-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.284477, 31.500694],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000014",
+              "id": "designFactory00000102",
+              "name_en": "Wuxi design factory 04",
+              "slug": "design-wuxi-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.327512, 31.544735],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000014",
+              "id": "designFactory00000103",
+              "name_en": "Wuxi design factory 05",
+              "slug": "design-wuxi-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.262271, 31.484839],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000014",
+              "id": "designFactory00000104",
+              "name_en": "Wuxi design factory 06",
+              "slug": "design-wuxi-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.477559, 31.223104],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000015",
+              "id": "designFactory00000105",
+              "name_en": "Shanghai design factory 01",
+              "slug": "design-shanghai-general-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.41168, 31.177605],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000015",
+              "id": "designFactory00000106",
+              "name_en": "Shanghai design factory 02",
+              "slug": "design-shanghai-general-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.46302, 31.220222],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000015",
+              "id": "designFactory00000107",
+              "name_en": "Shanghai design factory 03",
+              "slug": "design-shanghai-general-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.569384, 31.235831],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000015",
+              "id": "designFactory00000108",
+              "name_en": "Shanghai design factory 04",
+              "slug": "design-shanghai-general-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.410337, 31.219598],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000015",
+              "id": "designFactory00000109",
+              "name_en": "Shanghai design factory 05",
+              "slug": "design-shanghai-general-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [121.537041, 31.166169],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000015",
+              "id": "designFactory00000110",
+              "name_en": "Shanghai design factory 06",
+              "slug": "design-shanghai-general-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.435528, 36.037967],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000016",
+              "id": "designFactory00000111",
+              "name_en": "Qingdao design factory 01",
+              "slug": "design-qingdao-hardware-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.315751, 36.128574],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000016",
+              "id": "designFactory00000112",
+              "name_en": "Qingdao design factory 02",
+              "slug": "design-qingdao-hardware-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.35267, 36.143124],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000016",
+              "id": "designFactory00000113",
+              "name_en": "Qingdao design factory 03",
+              "slug": "design-qingdao-hardware-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.426687, 36.089563],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000016",
+              "id": "designFactory00000114",
+              "name_en": "Qingdao design factory 04",
+              "slug": "design-qingdao-hardware-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.361551, 36.018066],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000016",
+              "id": "designFactory00000115",
+              "name_en": "Qingdao design factory 05",
+              "slug": "design-qingdao-hardware-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [120.355316, 36.126493],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000016",
+              "id": "designFactory00000116",
+              "name_en": "Qingdao design factory 06",
+              "slug": "design-qingdao-hardware-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.332624, 35.162274],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000017",
+              "id": "designFactory00000117",
+              "name_en": "Linyi design factory 01",
+              "slug": "design-linyi-general-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.442318, 35.154599],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000017",
+              "id": "designFactory00000118",
+              "name_en": "Linyi design factory 02",
+              "slug": "design-linyi-general-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.434818, 35.051819],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000017",
+              "id": "designFactory00000119",
+              "name_en": "Linyi design factory 03",
+              "slug": "design-linyi-general-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.426073, 35.082066],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000017",
+              "id": "designFactory00000120",
+              "name_en": "Linyi design factory 04",
+              "slug": "design-linyi-general-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.353799, 35.159956],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000017",
+              "id": "designFactory00000121",
+              "name_en": "Linyi design factory 05",
+              "slug": "design-linyi-general-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.291499, 35.126731],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000017",
+              "id": "designFactory00000122",
+              "name_en": "Linyi design factory 06",
+              "slug": "design-linyi-general-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.121605, 36.857048],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000018",
+              "id": "designFactory00000123",
+              "name_en": "Zibo design factory 01",
+              "slug": "design-zibo-ceramics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.038938, 36.742257],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000018",
+              "id": "designFactory00000124",
+              "name_en": "Zibo design factory 02",
+              "slug": "design-zibo-ceramics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.014704, 36.882769],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000018",
+              "id": "designFactory00000125",
+              "name_en": "Zibo design factory 03",
+              "slug": "design-zibo-ceramics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.094216, 36.790527],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000018",
+              "id": "designFactory00000126",
+              "name_en": "Zibo design factory 04",
+              "slug": "design-zibo-ceramics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.957313, 36.795212],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000018",
+              "id": "designFactory00000127",
+              "name_en": "Zibo design factory 05",
+              "slug": "design-zibo-ceramics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.135768, 36.762736],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000018",
+              "id": "designFactory00000128",
+              "name_en": "Zibo design factory 06",
+              "slug": "design-zibo-ceramics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.217127, 39.033425],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000019",
+              "id": "designFactory00000129",
+              "name_en": "Tianjin design factory 01",
+              "slug": "design-tianjin-hardware-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.156506, 39.127749],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000019",
+              "id": "designFactory00000130",
+              "name_en": "Tianjin design factory 02",
+              "slug": "design-tianjin-hardware-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.253164, 39.127173],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000019",
+              "id": "designFactory00000131",
+              "name_en": "Tianjin design factory 03",
+              "slug": "design-tianjin-hardware-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.304532, 39.102435],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000019",
+              "id": "designFactory00000132",
+              "name_en": "Tianjin design factory 04",
+              "slug": "design-tianjin-hardware-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.187092, 39.030968],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000019",
+              "id": "designFactory00000133",
+              "name_en": "Tianjin design factory 05",
+              "slug": "design-tianjin-hardware-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [117.21283, 39.022171],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000019",
+              "id": "designFactory00000134",
+              "name_en": "Tianjin design factory 06",
+              "slug": "design-tianjin-hardware-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.46198, 39.890057],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000020",
+              "id": "designFactory00000135",
+              "name_en": "Beijing design factory 01",
+              "slug": "design-beijing-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.435187, 39.94651],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000020",
+              "id": "designFactory00000136",
+              "name_en": "Beijing design factory 02",
+              "slug": "design-beijing-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.400408, 39.977809],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000020",
+              "id": "designFactory00000137",
+              "name_en": "Beijing design factory 03",
+              "slug": "design-beijing-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.349697, 39.869402],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000020",
+              "id": "designFactory00000138",
+              "name_en": "Beijing design factory 04",
+              "slug": "design-beijing-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.473029, 39.942373],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000020",
+              "id": "designFactory00000139",
+              "name_en": "Beijing design factory 05",
+              "slug": "design-beijing-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [116.513152, 39.898077],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000020",
+              "id": "designFactory00000140",
+              "name_en": "Beijing design factory 06",
+              "slug": "design-beijing-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.547442, 38.002469],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000021",
+              "id": "designFactory00000141",
+              "name_en": "Shijiazhuang design factory 01",
+              "slug": "design-shijiazhuang-textiles-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.464247, 38.040971],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000021",
+              "id": "designFactory00000142",
+              "name_en": "Shijiazhuang design factory 02",
+              "slug": "design-shijiazhuang-textiles-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.477544, 37.984004],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000021",
+              "id": "designFactory00000143",
+              "name_en": "Shijiazhuang design factory 03",
+              "slug": "design-shijiazhuang-textiles-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.442533, 38.072658],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000021",
+              "id": "designFactory00000144",
+              "name_en": "Shijiazhuang design factory 04",
+              "slug": "design-shijiazhuang-textiles-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.561834, 38.085546],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000021",
+              "id": "designFactory00000145",
+              "name_en": "Shijiazhuang design factory 05",
+              "slug": "design-shijiazhuang-textiles-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.485698, 38.100753],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000021",
+              "id": "designFactory00000146",
+              "name_en": "Shijiazhuang design factory 06",
+              "slug": "design-shijiazhuang-textiles-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.589566, 34.819386],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000022",
+              "id": "designFactory00000147",
+              "name_en": "Zhengzhou design factory 01",
+              "slug": "design-zhengzhou-general-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.595538, 34.726059],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000022",
+              "id": "designFactory00000148",
+              "name_en": "Zhengzhou design factory 02",
+              "slug": "design-zhengzhou-general-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.648865, 34.743288],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000022",
+              "id": "designFactory00000149",
+              "name_en": "Zhengzhou design factory 03",
+              "slug": "design-zhengzhou-general-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.605335, 34.763255],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000022",
+              "id": "designFactory00000150",
+              "name_en": "Zhengzhou design factory 04",
+              "slug": "design-zhengzhou-general-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.606344, 34.725923],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000022",
+              "id": "designFactory00000151",
+              "name_en": "Zhengzhou design factory 05",
+              "slug": "design-zhengzhou-general-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.662436, 34.794551],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000022",
+              "id": "designFactory00000152",
+              "name_en": "Zhengzhou design factory 06",
+              "slug": "design-zhengzhou-general-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.321619, 30.556158],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000023",
+              "id": "designFactory00000153",
+              "name_en": "Wuhan design factory 01",
+              "slug": "design-wuhan-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.316502, 30.61672],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000023",
+              "id": "designFactory00000154",
+              "name_en": "Wuhan design factory 02",
+              "slug": "design-wuhan-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.293427, 30.529454],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000023",
+              "id": "designFactory00000155",
+              "name_en": "Wuhan design factory 03",
+              "slug": "design-wuhan-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.247996, 30.562786],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000023",
+              "id": "designFactory00000156",
+              "name_en": "Wuhan design factory 04",
+              "slug": "design-wuhan-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.305647, 30.619709],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000023",
+              "id": "designFactory00000157",
+              "name_en": "Wuhan design factory 05",
+              "slug": "design-wuhan-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [114.243559, 30.615753],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000023",
+              "id": "designFactory00000158",
+              "name_en": "Wuhan design factory 06",
+              "slug": "design-wuhan-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [112.950461, 28.223334],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000024",
+              "id": "designFactory00000159",
+              "name_en": "Changsha design factory 01",
+              "slug": "design-changsha-general-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [112.927566, 28.303885],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000024",
+              "id": "designFactory00000160",
+              "name_en": "Changsha design factory 02",
+              "slug": "design-changsha-general-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [112.89803, 28.298207],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000024",
+              "id": "designFactory00000161",
+              "name_en": "Changsha design factory 03",
+              "slug": "design-changsha-general-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [113.006167, 28.235032],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000024",
+              "id": "designFactory00000162",
+              "name_en": "Changsha design factory 04",
+              "slug": "design-changsha-general-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [112.995832, 28.206339],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000024",
+              "id": "designFactory00000163",
+              "name_en": "Changsha design factory 05",
+              "slug": "design-changsha-general-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [112.896954, 28.22603],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000024",
+              "id": "designFactory00000164",
+              "name_en": "Changsha design factory 06",
+              "slug": "design-changsha-general-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.779647, 28.714358],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000025",
+              "id": "designFactory00000165",
+              "name_en": "Nanchang design factory 01",
+              "slug": "design-nanchang-textiles-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.92563, 28.648238],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000025",
+              "id": "designFactory00000166",
+              "name_en": "Nanchang design factory 02",
+              "slug": "design-nanchang-textiles-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.770423, 28.698715],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000025",
+              "id": "designFactory00000167",
+              "name_en": "Nanchang design factory 03",
+              "slug": "design-nanchang-textiles-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.924784, 28.736189],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000025",
+              "id": "designFactory00000168",
+              "name_en": "Nanchang design factory 04",
+              "slug": "design-nanchang-textiles-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.832765, 28.742728],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000025",
+              "id": "designFactory00000169",
+              "name_en": "Nanchang design factory 05",
+              "slug": "design-nanchang-textiles-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [115.866466, 28.662702],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000025",
+              "id": "designFactory00000170",
+              "name_en": "Nanchang design factory 06",
+              "slug": "design-nanchang-textiles-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.700979, 24.80378],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000026",
+              "id": "designFactory00000171",
+              "name_en": "Quanzhou design factory 01",
+              "slug": "design-quanzhou-footwear-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.701016, 24.916686],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000026",
+              "id": "designFactory00000172",
+              "name_en": "Quanzhou design factory 02",
+              "slug": "design-quanzhou-footwear-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.618298, 24.806987],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000026",
+              "id": "designFactory00000173",
+              "name_en": "Quanzhou design factory 03",
+              "slug": "design-quanzhou-footwear-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.628545, 24.885042],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000026",
+              "id": "designFactory00000174",
+              "name_en": "Quanzhou design factory 04",
+              "slug": "design-quanzhou-footwear-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.767211, 24.895037],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000026",
+              "id": "designFactory00000175",
+              "name_en": "Quanzhou design factory 05",
+              "slug": "design-quanzhou-footwear-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.725642, 24.893932],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000026",
+              "id": "designFactory00000176",
+              "name_en": "Quanzhou design factory 06",
+              "slug": "design-quanzhou-footwear-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.068869, 24.430135],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000027",
+              "id": "designFactory00000177",
+              "name_en": "Xiamen design factory 01",
+              "slug": "design-xiamen-electronics-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.107808, 24.495794],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000027",
+              "id": "designFactory00000178",
+              "name_en": "Xiamen design factory 02",
+              "slug": "design-xiamen-electronics-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.022079, 24.514198],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000027",
+              "id": "designFactory00000179",
+              "name_en": "Xiamen design factory 03",
+              "slug": "design-xiamen-electronics-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.178899, 24.479681],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000027",
+              "id": "designFactory00000180",
+              "name_en": "Xiamen design factory 04",
+              "slug": "design-xiamen-electronics-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.072847, 24.48838],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000027",
+              "id": "designFactory00000181",
+              "name_en": "Xiamen design factory 05",
+              "slug": "design-xiamen-electronics-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [118.033338, 24.484613],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000027",
+              "id": "designFactory00000182",
+              "name_en": "Xiamen design factory 06",
+              "slug": "design-xiamen-electronics-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [104.17207, 30.578821],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000028",
+              "id": "designFactory00000183",
+              "name_en": "Chengdu design factory 01",
+              "slug": "design-chengdu-furniture-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [104.010173, 30.528418],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000028",
+              "id": "designFactory00000184",
+              "name_en": "Chengdu design factory 02",
+              "slug": "design-chengdu-furniture-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [103.99918, 30.515479],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000028",
+              "id": "designFactory00000185",
+              "name_en": "Chengdu design factory 03",
+              "slug": "design-chengdu-furniture-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [103.990178, 30.541429],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000028",
+              "id": "designFactory00000186",
+              "name_en": "Chengdu design factory 04",
+              "slug": "design-chengdu-furniture-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [104.088043, 30.533077],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000028",
+              "id": "designFactory00000187",
+              "name_en": "Chengdu design factory 05",
+              "slug": "design-chengdu-furniture-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [104.091782, 30.627739],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000028",
+              "id": "designFactory00000188",
+              "name_en": "Chengdu design factory 06",
+              "slug": "design-chengdu-furniture-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.575848, 29.58107],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000029",
+              "id": "designFactory00000189",
+              "name_en": "Chongqing design factory 01",
+              "slug": "design-chongqing-toys-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.523153, 29.566838],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000029",
+              "id": "designFactory00000190",
+              "name_en": "Chongqing design factory 02",
+              "slug": "design-chongqing-toys-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.610926, 29.58633],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000029",
+              "id": "designFactory00000191",
+              "name_en": "Chongqing design factory 03",
+              "slug": "design-chongqing-toys-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.577534, 29.527872],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000029",
+              "id": "designFactory00000192",
+              "name_en": "Chongqing design factory 04",
+              "slug": "design-chongqing-toys-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.593014, 29.617042],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000029",
+              "id": "designFactory00000193",
+              "name_en": "Chongqing design factory 05",
+              "slug": "design-chongqing-toys-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [106.60157, 29.526382],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000029",
+              "id": "designFactory00000194",
+              "name_en": "Chongqing design factory 06",
+              "slug": "design-chongqing-toys-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.884607, 24.835059],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000030",
+              "id": "designFactory00000195",
+              "name_en": "Kunming design factory 01",
+              "slug": "design-kunming-general-factory-01",
+              "verified": false
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.845497, 24.91056],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000030",
+              "id": "designFactory00000196",
+              "name_en": "Kunming design factory 02",
+              "slug": "design-kunming-general-factory-02",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.851596, 24.919405],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000030",
+              "id": "designFactory00000197",
+              "name_en": "Kunming design factory 03",
+              "slug": "design-kunming-general-factory-03",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.82159, 24.928818],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000030",
+              "id": "designFactory00000198",
+              "name_en": "Kunming design factory 04",
+              "slug": "design-kunming-general-factory-04",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.867628, 24.9244],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000030",
+              "id": "designFactory00000199",
+              "name_en": "Kunming design factory 05",
+              "slug": "design-kunming-general-factory-05",
+              "verified": true
+            },
+            "type": "Feature"
+          },
+          {
+            "geometry": {
+              "coordinates": [102.785554, 24.86904],
+              "type": "Point"
+            },
+            "properties": {
+              "clusterId": "designCluster00000030",
+              "id": "designFactory00000200",
+              "name_en": "Kunming design factory 06",
+              "slug": "design-kunming-general-factory-06",
+              "verified": false
+            },
+            "type": "Feature"
+          }
+        ],
+        "type": "FeatureCollection"
+      },
+      "error": null,
+      "meta": {
+        "truncated": false
+      }
+    }
+  }
+}
