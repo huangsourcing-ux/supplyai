@@ -115,7 +115,7 @@ chinasupply/
 - [x] **M2-T4 产业带详情页**：F-2（SSR/ISR + metadata + OG）；收藏按钮 UI 占位。
 - [x] **M2-T5 工厂详情页**：F-4；导航按钮组用 packages/geo/navigation；双语地址复制。
 - [x] **M2-T8 Playwright**：CI 用 MSW mock MAP API + 固定 style/tile fixture（断言防抖、abort、truncated）；staging 跑真实 MapTiler 冒烟，避免外网抖动打红 PR。
-- [x] **M2-T9 Streets v4 2D 底图迁移**：自维护 style JSON 迁移到 MapTiler Planet v4，保留 Streets v4 的完整道路、交通、POI 与街道细节，英文名优先并以当地名称 fallback；建筑仅为 zoom ≥15 的淡化 2D footprint，禁止 `fill-extrusion`、3D 建筑和非零初始 pitch。以提交的 Planet v4 schema manifest 保持 tileset/source-layer 一致性护栏，继续禁止运行时 `/maps/{id}/style.json`；产业带 fill 插入首个底图 symbol layer 之前，其余业务图层保持在底图标签之上。Local/Staging 的 Free 仅限测试评估，production Flex 门禁留 M5-T9。**2026-07-26 由 Owner 确认接受已合并实现与全部自动化验收，并将未执行的真实 staging 视觉/资源与 Lighthouse 检查延后人工复核；勾选不表示这些延后项已通过。**
+- [x] **M2-T9 Streets v4 2D 底图迁移**：自维护 style JSON 迁移到 MapTiler Planet v4；除把唯一的 `Building 3D` 替换为平面建筑外，标签表达式、道路、交通、POI、配色、线宽、过滤条件、图层顺序与默认相机保持取得的官方 Streets v4 快照原值。官方 `Building` 的 zoom 12–15 2D 样式原样保留，并在 zoom ≥15 延续同款 2D footprint；禁止 `fill-extrusion`、3D 建筑和非零初始 pitch。以提交的 Planet v4 schema manifest 与官方快照语义摘要保持 tileset/source-layer 和视觉一致性护栏，继续禁止运行时 `/maps/{id}/style.json`；产业带 fill 插入首个底图 symbol layer 之前，其余业务图层保持在底图标签之上。Local/Staging 的 Free 仅限测试评估，production Flex 门禁留 M5-T9。**2026-07-26 由 Owner 确认接受已合并实现与全部自动化验收，并将未执行的真实 staging 视觉/资源与 Lighthouse 检查延后人工复核；2026-07-27 Owner 进一步确认以官方视觉一致性取代原“英文优先、建筑仅 zoom ≥15”正规化规则。勾选不表示延后项已通过。**
 
 **M2 出口**：PRD F-1 验收路径在 staging 走通；Lighthouse SEO ≥ 90；运营在 /ops 完成一次数据修正 + verify。
 

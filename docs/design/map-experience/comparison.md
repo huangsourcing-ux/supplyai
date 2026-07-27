@@ -58,7 +58,7 @@
 
 - zoom 8/10 阈值；
 - MAP-1/MAP-2/MAP-3 输入、响应、缓存或刷新模型；
-- Streets v4 2D、完整道路/交通/POI、英文优先 fallback、零 pitch；
+- Streets v4 2D、完整道路/交通/POI、官方标签表达式、零 pitch；
 - 搜索、单选 chips、选择卡片、Consent、attribution 的存在与功能；
 - 新增热力图、定位、列表抽屉、新 API、外部视觉资源或 DOM marker。
 

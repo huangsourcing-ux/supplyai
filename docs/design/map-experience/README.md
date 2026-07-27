@@ -27,7 +27,7 @@
 两套方向均保留：
 
 - zoom `< 8` 的 MAP-1 产业带点、zoom `≥ 8` 的 MAP-2 boundary、zoom `≥ 10` 的 MAP-3 工厂点与 MapLibre cluster；
-- 自维护 Streets v4 2D 底图、完整道路/交通/POI、英文名称优先并以当地名称 fallback、零 pitch；
+- 自维护 Streets v4 2D 底图、完整道路/交通/POI、官方标签表达式与零 pitch；
 - 现有搜索、一级类目 chips、选择卡片、Consent 和 MapTiler / © OpenStreetMap contributors attribution；
 - 现有 MAP-* 数据流、500ms 防抖、abort 与 `map_moved` 十秒节流。
 
@@ -82,4 +82,4 @@ Owner 已在 Draft PR 中明确回复：
 
 - `Keep baseline`
 
-该决定保留当前业务图层、浮层和交互基线。官方 Streets v4 底图快照的修正按 Owner 后续指令在独立 M2-T9 修复中实施，不属于 M4-T0 代码范围。完整选择原文、Owner、日期和 PR 评论链接见 [decision.md](decision.md)。
+该决定保留当前业务图层、浮层和交互基线。官方 Streets v4 底图快照修正已按 Owner 后续指令在独立 M2-T9 修复 PR #66/#67 中完成并合入 `main`，不属于 M4-T0 代码范围。完整选择原文、Owner、日期和 PR 评论链接见 [decision.md](decision.md)。

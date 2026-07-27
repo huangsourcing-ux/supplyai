@@ -24,4 +24,4 @@
 
 **当前结论：允许进入 M4-T1。**
 
-Owner 选择保留现有 F-1 业务图层、浮层和交互基线，未选择 Direction A/B 的视觉改造。Owner 同时在 Codex 任务中指出当前手工底图与官方 Streets v4 差异过大，要求下载官方 `streets-v4/style.json` 并更新共享地图。该要求不改变本次 `Keep baseline` 的 F-1 方向选择；共享 style 修正必须在后续独立的 M2-T9 修复 PR 中完成，不混入 M4-T0。
+Owner 选择保留现有 F-1 业务图层、浮层和交互基线，未选择 Direction A/B 的视觉改造。Owner 同时在 Codex 任务中指出当前手工底图与官方 Streets v4 差异过大；共享 style 已在独立 M2-T9 修复 PR #66/#67 中完成官方快照修正并合入 `main`。该修正不改变本次 `Keep baseline` 的 F-1 方向选择，也未混入 M4-T0 实现范围。
