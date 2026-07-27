@@ -51,7 +51,7 @@
 ## 三、关键约定（开发前必读）
 
 1. **坐标系**：数据库统一存 WGS-84。来自高德/腾讯的数据入库前必须 GCJ-02 → WGS-84 转换；跳转国内导航 App 时再反向转换。禁止两套坐标混存。
-2. **底图样式与套餐门禁**：自行维护一份基于 MapTiler Planet v4 schema 的 Streets v4 2D style JSON，仅引用 MapTiler 瓦片、glyph 与 sprite 资源，避免托管 style 漂移；保留完整道路、交通、POI 与街道细节，英文名优先并以当地名称 fallback，建筑只渲染 zoom ≥15 的淡化 2D footprint，禁止 `fill-extrusion`、非零初始 pitch 与 3D 相机交互变更。Local/Staging 仅在 MapTiler 官方允许的测试/评估范围内使用 Free；M5-T9 上线前必须升级 Flex、确认商业授权、账单上限及生产配额。MapTiler 后台分别创建 Web、iOS、Android key，Web 按域名限制，移动端按由 Bundle ID/Package 派生的大小写敏感 User-Agent 子串限制，禁止跨平台复用 key，staging key 不得复用于 production。
+2. **底图样式与套餐门禁**：自行维护一份基于 MapTiler Planet v4 schema 的 Streets v4 2D style JSON，仅引用 MapTiler 瓦片、glyph 与 sprite 资源，避免托管 style 漂移；保留完整道路、交通、POI 与街道细节，英文名优先并以当地名称 fallback，建筑只渲染 zoom ≥15 的淡化 2D footprint，禁止 `fill-extrusion`、非零初始 pitch 与 3D 相机交互变更。MapTiler 公开 Maps API 的内置 `GET /maps/streets-v4/style.json` 可用有效 key 读取，不等同于网页编辑器中可能受 Flex 限制的 custom-style 下载权益。允许在人工审查的刷新流程中用受限 key 一次性获取官方样式，但必须在写盘前去除 key、记录上游摘要并完成本条的 2D/语言正规化；运行时仍禁止请求托管 `style.json`。Local/Staging 仅在 MapTiler 官方允许的测试/评估范围内使用 Free；M5-T9 上线前必须升级 Flex、确认商业授权、账单上限及生产配额。MapTiler 后台分别创建 Web、iOS、Android key，Web 按域名限制，移动端按由 Bundle ID/Package 派生的大小写敏感 User-Agent 子串限制，禁止跨平台复用 key，staging key 不得复用于 production。
 3. **用户数据自持**：接 Clerk webhook（user.created / user.updated）同步用户基础信息到自己的 Postgres 用户表，业务数据只关联自己的表。
 4. **数据边界**：产业带、工厂等核心结构化地理数据放 NestJS + PostGIS 自有 schema；Payload 只管文章类内容，不存业务地理数据。
 5. **Expo 版本**：锁定 Obytes Starter 的 Expo SDK 与 MapLibre RN 的版本组合，升级前先在 dev build 验证。
