@@ -2,9 +2,40 @@ import type { ReactNode } from "react";
 
 jest.mock("@chinasupply/api-client", () => ({
   configureApiClient: jest.fn(),
+  getGetMapClusterBoundariesQueryKey: jest.fn(() => [
+    "/api/v1/map/clusters/boundaries",
+  ]),
+  getGetMapFactoriesQueryKey: jest.fn(() => ["/api/v1/map/factories"]),
+  useGetMapClusterBoundaries: jest.fn(() => ({
+    data: undefined,
+    isError: false,
+    isPending: false,
+    refetch: jest.fn(),
+  })),
+  useGetMapClusterPoints: jest.fn(() => ({
+    data: undefined,
+    isError: false,
+    isPending: false,
+    refetch: jest.fn(),
+  })),
+  useGetMapFactories: jest.fn(() => ({
+    data: undefined,
+    isError: false,
+    isPending: false,
+    refetch: jest.fn(),
+  })),
   useGetHealthLive: jest.fn(() => ({
     isError: false,
     isPending: true,
+  })),
+}));
+
+jest.mock("@chinasupply/config/map/style", () => ({
+  BASEMAP_LABEL_ANCHOR_LAYER_ID: "Ferry labels",
+  createChinaSupplyMapStyle: jest.fn(() => ({
+    layers: [],
+    sources: {},
+    version: 8,
   })),
 }));
 
