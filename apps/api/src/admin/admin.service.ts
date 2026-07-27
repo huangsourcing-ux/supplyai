@@ -508,7 +508,10 @@ export class AdminService {
               : input.sourceName,
           sourceUrl:
             input.sourceUrl === undefined ? current.sourceUrl : input.sourceUrl,
+          lastVerifiedAt: null,
           verified: false,
+          verifiedAt: null,
+          verifiedBy: null,
           ...searchText,
           updatedAt: new Date(),
         })
@@ -536,7 +539,10 @@ export class AdminService {
       .set({
         lastVerifiedAt: now,
         verified: true,
-        verifiedAt: sql`coalesce(${factories.verifiedAt}, ${now})`,
+        verifiedAt: sql`case
+          when ${factories.verified} then coalesce(${factories.verifiedAt}, ${now})
+          else ${now}
+        end`,
         verifiedBy: adminUserId,
         updatedAt: now,
       })

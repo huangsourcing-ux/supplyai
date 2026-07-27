@@ -191,7 +191,7 @@ canonical draft；staging 中的相同内容变更只允许通过 `/ops`，不�
 | `nantong-sunshine-textile` | `nantong-jinkanghong-textile`   | Sunshine 精确官网地址没有名称匹配的公司/厂区 POI；Jinkanghong 官网工厂地域与名称匹配 POI 一致               |
 | `nantong-bestwin-textile`  | `nantong-nanshing-home-textile` | Bestwin 精确官网地址没有名称匹配的公司/厂区 POI；Nanshing 官网证明 30,000㎡ 厂房且名称匹配 POI 给出精确地址 |
 
-| slug                            | 制造/地址来源                                                                                                | Google Maps 对象与 WGS-84                                                                                                 |
+| slug                            | 制造/地址来源                                                                                                | Google Maps place 原始坐标（中国大陆，按 GCJ-02 候选处理）                                                                |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | `nantong-violet-home-textile`   | https://www.violet.com.cn/gsjs?_l=en；官网记录生产中心和产品，工业园地址由名称匹配地图对象交叉核对           | place `0x35b184edd3e99cb9:0xd70fe822e47dd124`，`Violet Home Textile Tech. Co.,Ltd.`，`[121.01587,31.9649]`                |
 | `nantong-luolai-lifestyle`      | https://static.cninfo.com.cn/finalpage/2024-08-20/1220911649.PDF；营业执照范围含生产销售，地址星湖大道1699号 | place `0x35b1818b2cb1e3cb:0xf3314c5d0d4268e8`，`Luolai Home Textile Co., Ltd. (Northeast Gate)`，`[120.918809,31.934472]` |
@@ -199,6 +199,24 @@ canonical draft；staging 中的相同内容变更只允许通过 `/ops`，不�
 | `nantong-jinkanghong-textile`   | https://en.kifro.com/；官网记录西亭镇自有工厂、数码印花全产业链和设计制造                                    | place `0x35b1990e9958c757:0xdaeecb40c89e0411`，`Nantong Jinkanghong Textile Co.,Ltd.`，`[121.02599,32.09873]`             |
 | `nantong-nanshing-home-textile` | https://www.nanshing.com.cn/；官网记录南通高新区 30,000㎡ 厂房、500+ 设备和研发设计生产                      | place `0x35b19a4a51824a85:0x3b199181a380a608`，`Jiangsu Nanxing Home Textile Limited Company`，`[121.0369299,32.0469352]` |
 
-Google Maps 对象为 WGS-84，未进行 GCJ-02/BD-09 转换。所有五个对象均须由独立
-复核人在卫星/地图视图中确认落在对应公司厂区，而不是道路、行政中心、门店或办公楼，
-之后才允许 ADM-5。
+### Nantong 坐标复查与 staging 处置（2026-07-27）
+
+使用 Google Earth 高分辨率卫星影像逐点比较当前入库值和 `packages/geo`
+`gcj02ToWgs84` 参考候选，并以 Microsoft Planetary Computer 中 WGS-84
+地理配准的 Sentinel-2 L2A 影像
+`S2B_MSIL2A_20260407T023549_R089_T51SUR_20260407T044802` 交叉核对。只有 pin
+明确压在厂房建筑轮廓上的候选才允许作为新 canonical 值；道路、大门、停车场、农田
+或水域均不通过。
+
+| slug                            | 旧值 → 新值/处置                                    | 修正原因与卫星影像结果                                                                                    |
+| ------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `nantong-luolai-lifestyle`      | `[120.918809,31.934472]` → 保持原值，unverified     | 当前点在跨水道路；转换候选 `[120.9145918,31.9366294]` 在星湖大道车道，均未压在南侧连续厂房屋面上          |
+| `nantong-xinyi-home-textile`    | `[120.9732048,32.0685104]` → 保持原值，unverified   | 当前点在南通兴东机场停车区；转换候选 `[120.9688606,32.0706056]` 在机场大道道路/绿化带，均非厂房轮廓       |
+| `nantong-violet-home-textile`   | `[121.01587,31.9649]` → 保持原值，unverified        | 当前点在农田/苗圃；转换候选 `[121.0113817,31.9668470]` 在两组工业建筑之间的道路，均未压在厂房屋面上       |
+| `nantong-jinkanghong-textile`   | `[121.02599,32.09873]` → `[121.0214538,32.1006772]` | Google Maps place 的 GCJ-02 值曾未转换；新值由 `gcj02ToWgs84` 生成，卫星 pin 压在连续蓝色厂房屋面西北边缘 |
+| `nantong-nanshing-home-textile` | `[121.0369299,32.0469352]` → 保持原值，unverified   | 当前点在通吕运河水面；转换候选 `[121.0323614,32.0488415]` 在江海大道车道/中央分隔带，均非厂房轮廓         |
+
+staging 内容只通过带 Clerk Admin 鉴权的 `/ops` 修改：五家均已 unpublish 并恢复
+`unverified`，仅 Jinkanghong 写入新坐标；未运行 ADM-5，未重新 publish。完整逐条影像
+依据、状态与 MAP 缓存 purge 结果见
+[`2026-07-27-nantong-coordinate-remediation.md`](docs/operations/reviews/staging/2026-07-27-nantong-coordinate-remediation.md)。
