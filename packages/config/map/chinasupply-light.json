@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "ChinaSupply Streets v4 2D (official snapshot)",
+  "name": "Streets",
   "sources": {
     "maptiler_attribution": {
       "attribution": "<a href=\"https://www.maptiler.com/copyright/\" target=\"_blank\">&copy; MapTiler</a> <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>",
@@ -1510,13 +1510,13 @@
       "type": "fill",
       "source": "maptiler_planet_v4",
       "source-layer": "building",
-      "minzoom": 15,
+      "minzoom": 12,
       "layout": {
         "visibility": "visible"
       },
       "paint": {
         "fill-color": "hsl(30, 6%, 73%)",
-        "fill-opacity": 0.22,
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0.2, 13, 0.3],
         "fill-outline-color": {
           "base": 1,
           "stops": [
@@ -6807,7 +6807,7 @@
       "layout": {
         "symbol-z-order": "viewport-y",
         "text-anchor": "center",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Italic", "Noto Sans Italic"],
         "text-letter-spacing": 0.1,
         "text-max-angle": 45,
@@ -7085,7 +7085,7 @@
           500
         ],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-angle": 180,
         "text-pitch-alignment": "viewport",
@@ -8749,7 +8749,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Italic", "Noto Sans Italic"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -8812,7 +8812,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -8964,7 +8964,7 @@
         "icon-size": ["interpolate", ["linear"], ["zoom"], 12, 0.8, 22, 1.2],
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-justify": "left",
         "text-max-width": 8,
@@ -9147,7 +9147,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -9258,7 +9258,7 @@
         "icon-size": ["interpolate", ["linear"], ["zoom"], 18, 1, 22, 1.4],
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -9461,7 +9461,7 @@
             false
           ],
           "",
-          ["coalesce", ["get", "name:en"], ["get", "name"]]
+          ["get", "name"]
         ],
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
@@ -9627,7 +9627,7 @@
         ],
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Medium", "Noto Sans Medium"],
         "text-line-height": 1,
         "text-max-width": 8,
@@ -9719,7 +9719,7 @@
           3
         ],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 10,
         "text-offset": [0, 0.8],
@@ -9911,7 +9911,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-letter-spacing": 0,
         "text-max-width": 8,
@@ -10033,7 +10033,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -10209,7 +10209,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 10,
         "text-offset": [0, 1],
@@ -10345,7 +10345,7 @@
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "symbol-z-order": "auto",
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": [
           "case",
           ["any", ["==", ["get", "class"], "memorial"]],
@@ -10494,7 +10494,7 @@
         "icon-image": "park",
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -10563,7 +10563,7 @@
         "icon-size": 1,
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -10697,7 +10697,7 @@
         ],
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": [
           "case",
           [
@@ -10913,7 +10913,7 @@
         "icon-size": ["interpolate", ["linear"], ["zoom"], 18, 1, 22, 1.4],
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-max-width": 8,
         "text-offset": [0, 0.8],
@@ -10979,7 +10979,7 @@
         "symbol-spacing": ["step", ["zoom"], 250, 20, 600],
         "text-allow-overlap": false,
         "text-anchor": "center",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-ignore-placement": false,
         "text-justify": "center",
@@ -11041,7 +11041,7 @@
       "layout": {
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "center",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": [
           "match",
           ["get", "class"],
@@ -11251,7 +11251,7 @@
         ],
         "symbol-sort-key": ["coalesce", ["to-number", ["get", "rank"]], 9999],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"], ""],
+        "text-field": ["coalesce", ["get", "name"], ""],
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-line-height": 1,
         "text-max-width": 5,
@@ -11320,7 +11320,7 @@
         "icon-image": "aerialway",
         "icon-size": ["interpolate", ["linear"], ["zoom"], 13, 0.8, 22, 1.4],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-size": [
           "interpolate",
@@ -11405,7 +11405,7 @@
         "icon-offset": [0, 2],
         "icon-size": 1,
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-size": [
           "interpolate",
@@ -11496,7 +11496,7 @@
         ],
         "symbol-sort-key": ["coalesce", ["to-number", ["get", "rank"]], 9999],
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"], ""],
+        "text-field": ["coalesce", ["get", "name"], ""],
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-line-height": 1,
         "text-max-width": 8,
@@ -11650,7 +11650,7 @@
         ],
         "symbol-z-order": "auto",
         "text-anchor": "top",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"], ""],
+        "text-field": ["coalesce", ["get", "name"], ""],
         "text-font": ["Roboto Medium", "Noto Sans Regular"],
         "text-line-height": 1,
         "text-max-width": 8,
@@ -11761,7 +11761,7 @@
         ],
         "symbol-sort-key": ["to-number", ["get", "rank"]],
         "text-anchor": "center",
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name}",
         "text-font": ["Roboto Regular", "Noto Sans Regular"],
         "text-letter-spacing": [
           "match",
@@ -11832,7 +11832,7 @@
       "maxzoom": 11,
       "layout": {
         "symbol-sort-key": ["get", "admin_level"],
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": ["coalesce", ["get", "name"], ["get", "name:en"]],
         "text-font": ["Roboto Condensed Medium", "Noto Sans Medium"],
         "text-letter-spacing": 0.1,
         "text-max-width": 8,
@@ -11887,7 +11887,7 @@
       "maxzoom": 9,
       "layout": {
         "symbol-sort-key": ["case", ["has", "iso3166"], 1, 2],
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": ["coalesce", ["get", "name"], ["get", "name:en"]],
         "text-font": ["Roboto Condensed Medium", "Noto Sans Medium"],
         "text-letter-spacing": 0.1,
         "text-max-width": 8,
@@ -12152,7 +12152,7 @@
           ["zoom"],
           ["get", "abbrev"],
           4,
-          ["coalesce", ["get", "name:en"], ["get", "name"]]
+          ["coalesce", ["get", "name"], ["get", "name:en"]]
         ],
         "text-font": ["Roboto Condensed Medium", "Noto Sans Medium"],
         "text-letter-spacing": 0.1,
@@ -12260,14 +12260,7 @@
           ["zoom"],
           ["coalesce", ["get", "iata"], ["get", "icao"], ""],
           12,
-          [
-            "coalesce",
-            ["get", "name:en"],
-            ["get", "name"],
-            ["get", "iata"],
-            ["get", "icao"],
-            ""
-          ]
+          ["coalesce", ["get", "name"], ["get", "iata"], ["get", "icao"], ""]
         ],
         "text-font": ["Roboto Medium", "Noto Sans Regular"],
         "text-line-height": 1.2,
@@ -12721,7 +12714,7 @@
       "source-layer": "continent_label",
       "maxzoom": 2,
       "layout": {
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-field": "{name:en}",
         "text-font": ["Roboto Bold", "Noto Sans Bold"],
         "text-justify": "center",
         "text-size": {
@@ -12985,7 +12978,7 @@
     },
     "chinasupply:owner": "packages/config",
     "chinasupply:purpose": "Shared Web and mobile product basemap",
-    "chinasupply:profile": "official-streets-v4-complete-2d",
+    "chinasupply:profile": "official-streets-v4-visual-parity-2d",
     "chinasupply:schema": "maptiler-planet-v4",
     "chinasupply:upstream": "https://api.maptiler.com/maps/streets-v4/style.json",
     "chinasupply:retrievedAt": "2026-07-27",
@@ -13008,7 +13001,7 @@
   ],
   "bearing": 0,
   "pitch": 0,
-  "center": [104, 36],
-  "zoom": 3,
+  "center": [0, 0],
+  "zoom": 1,
   "id": "streets-v4"
 }

@@ -79,7 +79,7 @@ packages/
 - MAP-2 边界简化容差固定为：zoom `<10` 使用 `0.01°`，zoom `10–11` 使用 `0.002°`，zoom `≥12` 返回原始精度。
 - 导航目标所需坐标系不得凭经验写死。F-6 的实现被 M0-T9 真机验证门阻塞；验证完成后只在 `packages/geo/navigation` 的纯函数和测试夹具中固化结论。
 - 导航发布前必须由人工在真机验证落点误差小于 50m；代理不能用模拟器或单测替代该结论。
-- Web 和 App 使用同一份自行维护、基于 Planet v4 schema 的 Streets v4 2D MapLibre style JSON，只引用 MapTiler 瓦片、glyph 与 sprite 资源；不要直接依赖可能漂移的托管样式。内置 Streets v4 的 `GET /maps/streets-v4/style.json` 是 MapTiler 公开文档化的 Maps API，不得再把网页编辑器的 Flex-only custom-style 下载权益误解为该读取端点的套餐门禁；允许用有效受限 key 一次性下载官方样式，但必须在写盘前去除 key、记录上游摘要并经人工审查后检入，运行时仍禁止请求托管 `style.json`。底图保留完整道路、交通、POI 与街道细节，英文名优先并以当地名称 fallback；建筑只允许 zoom ≥15 的淡化 2D footprint，禁止 `fill-extrusion` 与非零初始 pitch。产业带 fill 放在首个底图 symbol layer 之前，边界线、产业带点、工厂点和聚合点放在底图标签之上。MapTiler key 分别按 Web 域名、iOS Bundle ID 和 Android Package 限制。
+- Web 和 App 使用同一份自行维护、基于 Planet v4 schema 的 Streets v4 2D MapLibre style JSON，只引用 MapTiler 瓦片、glyph 与 sprite 资源；不要直接依赖可能漂移的托管样式。内置 Streets v4 的 `GET /maps/streets-v4/style.json` 是 MapTiler 公开文档化的 Maps API，不得再把网页编辑器的 Flex-only custom-style 下载权益误解为该读取端点的套餐门禁；允许用有效受限 key 一次性下载官方样式，但必须在写盘前去除 key、记录上游摘要并经人工审查后检入，运行时仍禁止请求托管 `style.json`。除把唯一的 `Building 3D` 替换为平面建筑外，底图标签表达式、配色、线宽、过滤条件、图层顺序与默认相机必须保持取得的官方快照原值；官方 `Building` 在 zoom 12–15 的 2D 样式原样保留，并在 zoom ≥15 延续同款 2D footprint。禁止 `fill-extrusion` 与非零初始 pitch；密钥占位符、来源元数据和 3D→2D 转换是仅有的允许差异。产业带 fill 放在首个底图 symbol layer 之前，边界线、产业带点、工厂点和聚合点放在底图标签之上。MapTiler key 分别按 Web 域名、iOS Bundle ID 和 Android Package 限制。
 
 ### 6.2 数据与 Schema 所有权
 
