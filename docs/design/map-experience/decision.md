@@ -6,7 +6,7 @@
 
 ## PR
 
-- Draft PR：待创建后补入
+- Draft PR：<https://github.com/huangsourcing-ux/supplyai/pull/65>
 - 审阅入口：[README](README.md)
 - 方向比较：[comparison.md](comparison.md)
 
