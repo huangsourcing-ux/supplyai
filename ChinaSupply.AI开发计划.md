@@ -128,7 +128,7 @@ chinasupply/
 - [x] **M3-T4 收藏与账户 API 接线**：A-8（含 cursor）/A-9/A-10。
 - [x] **M3-T5 收藏页与账户页**：F-5.1/5.2、F-8.3；React Query 失效策略。
 - [ ] **M3-T6 Web Consent**：PostHog Consent banner（F-11.3）；packages/analytics 接线，拒绝则全量 no-op；staging 即生效。
-- [ ] **M3-T7 /privacy 与 /terms 上线**：使用 M0-T0 交付的法律文案（F-11.1），正式 URL 固定，供 M4 App 直接打开（/about 仍留 M5）。
+- [x] **M3-T7 /privacy 与 /terms 上线**：使用 M0-T0 交付的法律文案（F-11.1），正式 URL 固定，供 M4 App 直接打开（/about 仍留 M5）。**2026-07-26 Owner 明确批准提交 `41d2033` 的精确英文正文；PR #58 合并为 `09f8325` 后，main CI、CMS/Core migration、Staging Release Gate 与 Vercel canonical staging 部署全部成功，`/privacy`、`/terms`、注册链接和 Consent Privacy 入口真实 smoke 通过。production、`/about` 与 sitemap 仍分别留给 M5-T9/M5-T7。**
 - [ ] **M3-T8 e2e**：webhook 重放幂等、删除账户全流程、收藏幂等、favorites cursor 排序。
 
 **M3 出口**：收藏→取消→删除账户全通；webhook 重放无脏数据；未同意时零埋点请求。

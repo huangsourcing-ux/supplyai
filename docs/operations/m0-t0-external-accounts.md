@@ -34,13 +34,13 @@ M0-T0 must remain unchecked in `ChinaSupply.AI开发计划.md` until every requi
 | Android package        | `ai.chinasupply.app`                          | Proposed candidate awaiting human confirmation; **not reserved** because Play Console enrollment is deferred. Recheck availability before store registration.                         |
 | Expo owner             | `huangsourcing`                               | Confirmed by authenticated EAS CLI.                                                                                                                                                   |
 | Custom URL scheme      | `chinasupply`                                 | Proposed candidate awaiting human confirmation for M5-T10 callback verification; V1 does not implement Universal Links/App Links.                                                     |
-| Privacy contact        | `huang.sourcing@gmail.com`                    | Owner designated this existing address as the public legal/privacy contact on 2026-07-26. M3-T7 uses it in the draft legal pages; no delivery smoke was performed by this task.       |
+| Privacy contact        | `huang.sourcing@gmail.com`                    | Owner designated this existing address as the public legal/privacy contact on 2026-07-26. M3-T7 publishes it on the approved staging legal pages; no delivery smoke was performed.    |
 | App icon placeholder   | `apps/mobile/assets/app-icon-placeholder.png` | Generated 1024×1024 RGB PNG placeholder. Replace with the final reviewed brand asset before store submission.                                                                         |
 
 ## Google OAuth and legal prerequisites
 
 - The Clerk Development application's Google connection was enabled for sign-up and sign-in during M3-T1 using Clerk's shared Development credentials. No custom Google OAuth credential is stored in the repository; production/custom credential provisioning remains a separate release concern.
-- M3-T7 contains an agent-drafted `/privacy` and `/terms` implementation using the Owner-confirmed company identity and policy choices. The exact English copy is not approved legal advice: Owner approval in the task PR and canonical staging evidence are both still required before merge/deploy and before M3-T7 may be checked. See `docs/operations/m3-t7-legal-pages.md`.
+- M3-T7's exact English `/privacy` and `/terms` copy was reviewed and explicitly approved by the Owner for commit `41d2033`, then merged through PR #58. Canonical staging deployment `dpl_8KnMsdcVHuTd7kUWvq2oG8HcN1Ls` and the public, registration, metadata, company disclosure, reciprocal-link, and Consent entry smokes passed on 2026-07-26. See `docs/operations/m3-t7-legal-pages.md`; production review and deployment remain M5.
 - Apple Developer Program and Google Play Console enrollment are intentionally deferred by the user. This conflicts with the development plan's schedule warning that they should start in M0 because review can be slow; the deferral is recorded here without marking the accounts complete.
 
 ## Locally installed account tools

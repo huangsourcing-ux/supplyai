@@ -1,6 +1,6 @@
 # M3-T7 legal pages release record
 
-> Status: **Draft implementation — Owner legal approval and canonical staging verification pending**
+> Status: **Approved and verified on canonical staging**
 >
 > Last updated: 2026-07-26
 >
@@ -11,7 +11,7 @@
 | Environment        | Privacy Policy                           | Terms of Use                           | State                                                 |
 | ------------------ | ---------------------------------------- | -------------------------------------- | ----------------------------------------------------- |
 | Local / PR fixture | `/privacy`                               | `/terms`                               | Automated verification in M3-T7                       |
-| Canonical staging  | `https://staging.chinasupply.ai/privacy` | `https://staging.chinasupply.ai/terms` | Pending merge and staging release gate                |
+| Canonical staging  | `https://staging.chinasupply.ai/privacy` | `https://staging.chinasupply.ai/terms` | Approved copy deployed and verified on 2026-07-26     |
 | Future production  | `https://www.chinasupply.ai/privacy`     | `https://www.chinasupply.ai/terms`     | Reserved for M5-T9; not accessed or deployed by M3-T7 |
 
 The path suffixes are fixed public interfaces for M4 Preview and later production cutover. They do not use environment-specific slugs or redirects.
@@ -47,25 +47,32 @@ Agent drafting does not replace Owner or lawyer review.
 
 ## Human approval gate
 
-- [ ] Owner has reviewed the exact English text in the M3-T7 PR and explicitly approved it in a PR comment.
-- [ ] Any requested legal edits are committed to the same PR and re-approved.
-- [ ] CI Gate is green for the exact approved commit.
+- [x] Owner reviewed the exact English text and stated “已审阅，批准，请继续” on 2026-07-26. The approval of commit `41d203328e3fddac09e6629ac5e91791e7994cd7` is preserved in [PR #58's approval record](https://github.com/huangsourcing-ux/supplyai/pull/58#issuecomment-5086252123).
+- [x] No legal-copy change was made after the approved commit; PR #58 retained the same head SHA through merge.
+- [x] PR #58's CI Gate, lint/typecheck/unit, Build, API e2e, Web Playwright, and Vercel Preview all succeeded for the approved commit.
 
-Until all three statements are true, the PR must remain Draft, must not be merged or deployed, and M3-T7 must remain unchecked. M3-T6 status is independent and must not change in this task.
+The approval gate was satisfied before PR #58 was marked ready and merged. M3-T6 status is independent and was not changed by this task.
 
 ## Canonical staging acceptance evidence
 
-- [ ] The approved PR is merged only after the Owner gate above.
-- [ ] The `main` staging release gate and Vercel deployment complete successfully.
-- [ ] `https://staging.chinasupply.ai/privacy` returns HTTP 200 without an authentication redirect and has the approved title, last-updated date, company disclosure, contact, section links, Terms link, and map return link.
-- [ ] `https://staging.chinasupply.ai/terms` returns HTTP 200 without an authentication redirect and has the approved title, last-updated date, company disclosure, contact, section links, Privacy link, `£100` term, and map return link.
-- [ ] The canonical staging `/sign-in` page links to both fixed legal routes.
-- [ ] The Consent banner/settings Privacy link is verified on canonical staging.
+- [x] Approved PR #58 merged to `main` as `09f8325048446e78f77b586fa571275b2a009809` after the Owner gate above.
+- [x] Exact-commit [main CI run 30228435413](https://github.com/huangsourcing-ux/supplyai/actions/runs/30228435413) passed CI Gate, CMS migration, Core migration, and Staging Release Gate. Vercel deployment `dpl_8KnMsdcVHuTd7kUWvq2oG8HcN1Ls` reached `READY` with Production target and aliases including `staging.chinasupply.ai`.
+- [x] `https://staging.chinasupply.ai/privacy` returned HTTP 200 without a `Location` header and had `Privacy Policy | ChinaSupply.AI`, the approved update date, company disclosure, contact, section links, Terms link, and map return link.
+- [x] `https://staging.chinasupply.ai/terms` returned HTTP 200 without a `Location` header and had `Terms of Use | ChinaSupply.AI`, the approved update date, company disclosure, contact, section links, Privacy link, `£100` term, and map return link.
+- [x] Canonical staging `/sign-in` returned HTTP 200 and exposed one `/terms` link and one `/privacy` link; Playwright verified both link labels and hrefs.
+- [x] A clean Chromium context verified that both the first-visit Consent banner and reopened Analytics settings expose `Read the Privacy Policy` with `href=/privacy`.
 
-Planned command after an approved merge:
+Commands and results recorded on 2026-07-26 (America/New_York):
 
 ```bash
 PLAYWRIGHT_STAGING_BASE_URL=https://staging.chinasupply.ai pnpm test:web:e2e:staging -- legal-pages.spec.ts
+# 4/4 passed: the three legal/registration cases plus the existing staging map smoke selected by the repository script
+
+curl -D <headers> -o <body> https://staging.chinasupply.ai/privacy
+# HTTP/2 200; no Location; exact Privacy title, company, and email present
+
+curl -D <headers> -o <body> https://staging.chinasupply.ai/terms
+# HTTP/2 200; no Location; exact Terms title, company, and email present
 ```
 
-No staging result is claimed in the implementation PR. A same-task acceptance commit/PR must replace this pending section with the actual date, deployed commit, commands, HTTP results, and Playwright result before M3-T7 is checked.
+No production deployment or production URL smoke was performed. Production remains reserved for M5-T9; `/about` and sitemap remain M5-T7.
