@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, {
   createContext,
@@ -18,6 +19,7 @@ import {
   isAnalyticsEligiblePath,
 } from "@/analytics/analytics-consent";
 import { loadPostHogAdapter } from "@/analytics/posthog-adapter";
+import { PUBLIC_PRIVACY_PATH } from "@/legal/legal-routes";
 
 import styles from "./analytics-consent.module.css";
 
@@ -29,6 +31,7 @@ export interface AnalyticsConsentLabels {
   close: string;
   deniedStatus: string;
   description: string;
+  privacyLink: string;
   reject: string;
   title: string;
 }
@@ -151,6 +154,9 @@ export function AnalyticsConsentProvider({
               {labels.title}
             </h2>
             <p>{labels.description}</p>
+            <p className={styles.policy}>
+              <Link href={PUBLIC_PRIVACY_PATH}>{labels.privacyLink}</Link>
+            </p>
             {status === null ? null : (
               <p aria-live="polite" className={styles.status}>
                 {status}

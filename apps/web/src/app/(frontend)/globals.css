@@ -987,3 +987,23 @@ h1 {
   gap: 2rem;
   justify-items: center;
 }
+
+.legal-notice {
+  width: min(100%, 26rem);
+  margin: -0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.legal-notice a {
+  color: var(--accent);
+  text-underline-offset: 0.18em;
+}
+
+.legal-notice a:focus-visible {
+  border-radius: 0.15rem;
+  outline: 3px solid rgba(94, 228, 173, 0.52);
+  outline-offset: 2px;
+}

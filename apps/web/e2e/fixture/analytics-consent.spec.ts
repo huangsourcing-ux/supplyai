@@ -12,6 +12,9 @@ test("keeps PostHog unloaded before consent and after a persisted rejection", as
   const panel = page.getByRole("region", { name: CONSENT_PANEL_TITLE });
   await expect(panel).toBeVisible();
   await expect(
+    panel.getByRole("link", { name: "Read the Privacy Policy" }),
+  ).toHaveAttribute("href", "/privacy");
+  await expect(
     page.getByRole("button", { exact: true, name: "Analytics" }),
   ).toHaveAttribute("aria-expanded", "true");
   expect(fixedMapResources.postHogRequests).toHaveLength(0);

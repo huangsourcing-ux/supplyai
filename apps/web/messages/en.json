@@ -6,7 +6,8 @@
   "Authentication": {
     "signInEyebrow": "Buyer account",
     "signInTitle": "Save suppliers for later",
-    "signInDescription": "Sign in or create an account with email or Google. You will return to where you left off."
+    "signInDescription": "Sign in or create an account with email or Google. You will return to where you left off.",
+    "legalNotice": "By creating an account, you agree to the <terms>Terms of Use</terms> and acknowledge the <privacy>Privacy Policy</privacy>."
   },
   "Navigation": {
     "brand": "ChinaSupply.AI",
@@ -22,7 +23,8 @@
     "reject": "Reject analytics",
     "close": "Close analytics settings",
     "allowedStatus": "Anonymous analytics are currently allowed.",
-    "deniedStatus": "Analytics are currently disabled."
+    "deniedStatus": "Analytics are currently disabled.",
+    "privacyLink": "Read the Privacy Policy"
   },
   "Home": {
     "title": "China industrial clusters"
@@ -319,6 +321,283 @@
     "metadata": {
       "title": "Account | ChinaSupply.AI",
       "description": "Manage your ChinaSupply.AI buyer account."
+    }
+  },
+  "Legal": {
+    "shared": {
+      "backToMap": "Back to the map",
+      "lastUpdated": "Last updated:",
+      "effectiveDate": "July 26, 2026",
+      "onThisPage": "On this page",
+      "company": {
+        "heading": "Company and contact details",
+        "name": "HUANG SOURCING LTD",
+        "numberLabel": "Company No.",
+        "number": "17241958",
+        "registration": "Registered in England and Wales",
+        "address": "61 Bridge Street, Kington, United Kingdom, HR5 3DJ",
+        "emailLabel": "Email",
+        "email": "huang.sourcing@gmail.com",
+        "record": "View the Companies House record"
+      }
+    },
+    "privacy": {
+      "eyebrow": "Privacy and data protection",
+      "title": "Privacy Policy",
+      "introduction": "This policy explains how ChinaSupply.AI collects, uses, shares, and retains personal information when business buyers browse the directory, use maps and search, create an account, or save suppliers.",
+      "metadata": {
+        "title": "Privacy Policy | ChinaSupply.AI",
+        "description": "Learn how ChinaSupply.AI handles account, directory, search, map, analytics, and technical information."
+      },
+      "related": {
+        "text": "Rules for using the service are in our",
+        "label": "Terms of Use"
+      },
+      "sections": {
+        "controller": {
+          "title": "1. Controller and scope",
+          "paragraph1": "HUANG SOURCING LTD is the controller responsible for personal information processed through ChinaSupply.AI. ChinaSupply.AI is a business sourcing directory operated by HUANG SOURCING LTD.",
+          "paragraph2": "This policy applies to the ChinaSupply.AI website, buyer accounts, saved suppliers, maps, search, analytics choices, and related communications. It also explains how we handle business contact information shown in public factory profiles."
+        },
+        "information": {
+          "title": "2. Information we process",
+          "paragraph1": "The information we process depends on how you use ChinaSupply.AI and whether you create an account or allow analytics.",
+          "items": {
+            "account": "Account information: your Clerk user identifier, email address, name when available, language preference, account status, and account timestamps.",
+            "favorites": "Saved supplier information: the industrial clusters and factories you save, together with the time each favorite was created.",
+            "usage": "Service activity: search queries and result counts, pages and supplier records viewed, contact or navigation method selected, and map area, category, and zoom level.",
+            "technical": "Technical and security information: IP address, request metadata, browser or device information, diagnostic details, error reports, and signals used to protect the service and enforce rate limits.",
+            "analytics": "Analytics information: your consent choice and, only after you allow analytics, a browser or device identifier and the limited manual events described below.",
+            "communications": "Communications: the sender, recipient, date, subject, message content, and attachments when you email us.",
+            "directory": "Business directory information: factory or business names, locations, business contact details, products, certifications, source references, and verification records. Some business contact information may identify an individual acting in a professional capacity."
+          }
+        },
+        "sources": {
+          "title": "3. Where information comes from",
+          "paragraph1": "We obtain information from the following sources:",
+          "items": {
+            "you": "Directly from you when you create or update an account, save suppliers, change analytics choices, search, or contact us.",
+            "automatic": "Automatically from your browser, device, network, and interactions with the service.",
+            "providers": "From service providers, including Clerk account and authentication events.",
+            "public": "From factory or business websites, public records, public business listings, maps, source documents, and manual verification research used to build and maintain the directory."
+          }
+        },
+        "uses": {
+          "title": "4. How we use information",
+          "paragraph1": "We use personal information only for the purposes described here or for a compatible purpose permitted by law.",
+          "items": {
+            "deliver": "Provide search, maps, supplier profiles, navigation links, and the public business directory.",
+            "accounts": "Create and secure accounts, remember language preferences, manage saved suppliers, and carry out account deletion requests.",
+            "security": "Authenticate users, prevent abuse, enforce rate limits, investigate incidents, debug failures, and protect users and the service.",
+            "improve": "Understand and improve service use through consent-based, limited analytics.",
+            "communicate": "Respond to questions, privacy requests, correction requests, and service communications.",
+            "directory": "Research, verify, publish, correct, and maintain business directory records for the benefit of business buyers.",
+            "legal": "Comply with law, protect legal rights, resolve disputes, and establish or defend legal claims."
+          }
+        },
+        "bases": {
+          "title": "5. Lawful bases",
+          "paragraph1": "Where UK or EEA data protection law applies, we rely on the lawful bases that fit each processing purpose:",
+          "items": {
+            "contract": "Contract: to provide the account, favorites, and other service features you request under our Terms of Use.",
+            "interests": "Legitimate interests: to operate and secure a useful B2B sourcing directory, maintain accurate business records, respond to users, prevent misuse, and improve service reliability. We consider the interests and rights of the people affected before relying on this basis.",
+            "consent": "Consent: to load PostHog and collect optional analytics after you choose Allow analytics. You may withdraw this choice at any time.",
+            "obligation": "Legal obligation and legal claims: where processing is needed to comply with law or establish, exercise, or defend legal rights."
+          }
+        },
+        "analytics": {
+          "title": "6. Cookies, local storage, and analytics",
+          "paragraph1": "ChinaSupply.AI uses browser storage and similar technologies for authentication, security, your analytics preference, and optional analytics. Blocking essential storage may prevent account features from working.",
+          "paragraph2": "PostHog does not load while your choice is unknown or denied. After consent, ChinaSupply.AI sends only named manual events: searches, supplier page views, factory contact clicks, navigation clicks, and map movements. Search text is checked for email and phone patterns and limited to 100 characters; map movement is limited to one event every 10 seconds. Autocapture, session recording, heatmaps, performance capture, surveys, and automatic page views are disabled, and browser Do Not Track is respected.",
+          "items": {
+            "essential": "Clerk may use cookies or browser storage needed for sign-in, session security, and account features.",
+            "preference": "ChinaSupply.AI stores your analytics choice locally so it persists across visits. You can reopen Analytics from the public navigation and change that choice.",
+            "posthog": "After consent, PostHog stores analytics identifiers in local storage and receives the limited events described above."
+          }
+        },
+        "sharing": {
+          "title": "7. Sharing and service providers",
+          "paragraph1": "We disclose information only as needed to operate ChinaSupply.AI, follow your instructions, protect the service, or comply with law. The recipient categories currently include:",
+          "paragraph2": "We do not sell personal information, share it for cross-context behavioral advertising, or give buyer account information to factories for supplier marketing. Service providers may process information only for the services they provide to us and under their applicable terms.",
+          "items": {
+            "clerk": "Clerk for authentication, account management, and account deletion.",
+            "hosting": "Vercel for the Web application; Railway for the API, database, and Redis; and Cloudflare for edge delivery, security, and media storage.",
+            "maps": "MapTiler for map tiles and resources, and mapping or navigation providers when you choose to open their services.",
+            "monitoring": "PostHog for consent-based analytics and Sentry for error and reliability monitoring with default personal-information capture disabled.",
+            "email": "Email infrastructure, including Google email services, when you communicate with the published contact address.",
+            "authorities": "Courts, regulators, public authorities, professional advisers, or a successor organisation where disclosure is required or permitted by law."
+          }
+        },
+        "transfers": {
+          "title": "8. International transfers",
+          "paragraph1": "HUANG SOURCING LTD is established in the United Kingdom, while ChinaSupply.AI serves international users and uses providers that may process information in the United States, China, the EEA, the United Kingdom, and other locations where they or their subprocessors operate.",
+          "paragraph2": "Where data protection law restricts an international transfer, we use an available legal mechanism appropriate to the transfer, such as adequacy regulations or approved contractual safeguards, and consider supplementary security measures where required. You may contact us for more information about safeguards relevant to your information."
+        },
+        "retention": {
+          "title": "9. Retention and account deletion",
+          "paragraph1": "We keep personal information only for as long as needed for the purpose collected, service integrity, security, dispute resolution, legal claims, and legal obligations. Retention therefore varies by record:",
+          "items": {
+            "account": "Active account data is kept while the account is open and needed to provide account features.",
+            "favorites": "Favorites remain until you remove them or delete the account. Account deletion permanently removes saved suppliers.",
+            "deleted": "Account deletion requests deletion of the Clerk sign-in and disables the local user. A disabled local record, which may include the Clerk identifier, email, name, locale, and timestamps, and a minimal webhook receipt may be retained where needed to prevent replay or inconsistent reactivation, maintain system integrity, resolve disputes, or meet legal obligations. We delete or anonymize those fields when they are no longer necessary.",
+            "operational": "Security, rate-limit, diagnostic, and communication records are kept for the period reasonably needed to investigate incidents, operate the service, answer the communication, or protect legal rights.",
+            "consent": "Your analytics choice remains in your browser until you change it, clear browser storage, or the stored preference is replaced. Analytics retained by PostHog follows our configured retention and operational needs."
+          }
+        },
+        "directory": {
+          "title": "10. Business directory information",
+          "paragraph1": "ChinaSupply.AI publishes business information to help professional buyers discover Chinese industrial clusters and factories. We use official and public sources, preserve source references, and apply a review process before publishing verified records. Public availability does not remove data protection rights when business information identifies a living person.",
+          "paragraph2": "A business, representative, or affected person may ask us to correct, update, or remove inaccurate personal information from a directory record. We may request evidence of identity, authority, or the accurate business facts before making a change."
+        },
+        "rights": {
+          "title": "11. Your rights and choices",
+          "paragraph1": "Depending on where you live and the law that applies, you may have some or all of the following rights. These rights are not absolute, and lawful exceptions may apply.",
+          "paragraph2": "Residents of California and other US states may also have rights to know, correct, delete, or obtain a copy of covered information and to opt out of sale, sharing, targeted advertising, or certain profiling where those laws apply. ChinaSupply.AI does not sell personal information or use it for targeted advertising. We will not discriminate against you for exercising an applicable privacy right.",
+          "paragraph3": "Contact us to exercise a right. We may verify your identity and authority before acting. You may also complain to your local data protection authority; in the United Kingdom, this is the <ico>Information Commissioner's Office</ico>.",
+          "items": {
+            "access": "Ask whether we process your information and request access to it.",
+            "correct": "Ask us to correct inaccurate or incomplete information.",
+            "delete": "Ask us to erase information in circumstances provided by law.",
+            "restrict": "Ask us to restrict processing or object to processing based on legitimate interests.",
+            "portability": "Request portable account information where the right applies.",
+            "withdraw": "Withdraw analytics consent at any time without affecting earlier lawful processing.",
+            "complain": "Complain to an applicable data protection authority."
+          }
+        },
+        "automated": {
+          "title": "12. Automated decisions, advertising, and sales",
+          "paragraph1": "ChinaSupply.AI does not use personal information to make solely automated decisions that produce legal or similarly significant effects. Search ranking, map display, and directory filters help users find content but do not make legal decisions about individuals.",
+          "paragraph2": "We do not operate third-party advertising, sell personal information, or share it for cross-context behavioral advertising."
+        },
+        "children": {
+          "title": "13. Children",
+          "paragraph1": "ChinaSupply.AI is a B2B service for adults acting in a business or professional capacity. It is not directed to anyone under 18, and people under 18 must not create an account or provide personal information to the service. Contact us if you believe a child has provided information."
+        },
+        "security": {
+          "title": "14. Security",
+          "paragraph1": "We use administrative, technical, and organisational safeguards designed for the nature of the information and service, including managed authentication, restricted environment credentials, encrypted connections, access controls, rate limiting, and monitoring.",
+          "paragraph2": "No online system is completely secure. You are responsible for protecting your sign-in methods and notifying us if you suspect unauthorised account access."
+        },
+        "external": {
+          "title": "15. External services and links",
+          "paragraph1": "Supplier websites, map providers, navigation apps, source references, and other third-party services have their own privacy practices. When you follow a third-party link, that provider receives information according to its policies and your settings. This policy does not control third-party services."
+        },
+        "changes": {
+          "title": "16. Changes and contact",
+          "paragraph1": "We may update this policy when the service, providers, or legal requirements change. We will publish the revised policy here, change the last-updated date, and provide additional notice when required by law.",
+          "paragraph2": "Email huang.sourcing@gmail.com for privacy rights, directory corrections, questions, or concerns. Written correspondence may also be sent to the registered office shown below."
+        }
+      }
+    },
+    "terms": {
+      "eyebrow": "Service rules",
+      "title": "Terms of Use",
+      "introduction": "These Terms govern access to ChinaSupply.AI, a free informational directory that helps professional buyers discover Chinese industrial clusters and factories.",
+      "metadata": {
+        "title": "Terms of Use | ChinaSupply.AI",
+        "description": "Read the rules, limitations, and responsibilities that apply when using ChinaSupply.AI."
+      },
+      "related": {
+        "text": "How we handle personal information is explained in our",
+        "label": "Privacy Policy"
+      },
+      "sections": {
+        "agreement": {
+          "title": "1. Agreement and operator",
+          "paragraph1": "ChinaSupply.AI is operated by HUANG SOURCING LTD. By accessing or using the service, or by creating an account, you agree to these Terms of Use. If you do not agree, do not use the service.",
+          "paragraph2": "These Terms apply only to ChinaSupply.AI. They do not create a contract for paid sourcing, inspection, consulting, logistics, or other professional services."
+        },
+        "accounts": {
+          "title": "2. Eligibility and accounts",
+          "paragraph1": "You must be at least 18 years old and use ChinaSupply.AI in a business or professional capacity. If you act for an organisation, you confirm that you have authority to bind that organisation to these Terms.",
+          "paragraph2": "Public directory browsing does not require an account. An account is required for saved suppliers and other private account features.",
+          "items": {
+            "accurate": "Provide accurate account information and keep it current.",
+            "security": "Protect your email account, authentication methods, devices, and sessions from unauthorised use.",
+            "responsibility": "You are responsible for activity carried out through your account and must notify us promptly of suspected misuse."
+          }
+        },
+        "directory": {
+          "title": "3. An informational directory only",
+          "paragraph1": "ChinaSupply.AI provides search, maps, source references, business profiles, and navigation links for general business information. HUANG SOURCING LTD is not a supplier, buyer, marketplace, broker, payment intermediary, certification body, laboratory, customs adviser, law firm, or party to a transaction arranged after using the directory.",
+          "paragraph2": "A listing does not create an endorsement, agency, partnership, guarantee, or recommendation. Factory and cluster information may be incomplete, become outdated, or contain errors despite reasonable review."
+        },
+        "verified": {
+          "title": "4. What Verified means",
+          "paragraph1": "A Verified label means that, at the stated review time, ChinaSupply.AI completed the verification checks defined by its then-current data review process using the sources and evidence available. It is a point-in-time directory status, not a certification or warranty.",
+          "paragraph2": "Verified does not guarantee identity beyond the reviewed evidence, ownership, solvency, capacity, product quality, regulatory compliance, intellectual-property rights, future conduct, contract performance, delivery, or the result of any order. Records can be corrected, unverified, unpublished, or removed when evidence changes."
+        },
+        "decisions": {
+          "title": "5. Your sourcing decisions",
+          "paragraph1": "You remain responsible for independent due diligence and every commercial decision, including:",
+          "items": {
+            "identity": "Confirming the supplier's current legal identity, authority, ownership, facilities, financial condition, and references.",
+            "contract": "Negotiating written specifications, samples, inspections, warranties, remedies, delivery terms, and enforceable contracts.",
+            "compliance": "Obtaining professional advice and checking product safety, laboratory testing, certification, customs, sanctions, intellectual property, import, tax, and destination-market requirements.",
+            "payment": "Choosing payment protections and deciding whether or when to pay, order, manufacture, ship, or accept goods."
+          }
+        },
+        "use": {
+          "title": "6. Acceptable use",
+          "paragraph1": "You may use ChinaSupply.AI for lawful internal business research. You must not:",
+          "items": {
+            "unlawful": "Use the service or directory information for unlawful, fraudulent, harmful, discriminatory, or rights-infringing activity.",
+            "impersonation": "Impersonate another person or organisation, misrepresent authority, or submit false correction or ownership claims.",
+            "security": "Probe, disrupt, damage, overload, reverse engineer, introduce malicious code, or attempt unauthorised access to the service or another account.",
+            "scraping": "Use bots, scraping, harvesting, or bulk access to bypass technical controls, rate limits, access restrictions, or documented interfaces.",
+            "republish": "Republish, resell, or build a competing database from substantial parts of ChinaSupply.AI except where applicable law expressly permits it."
+          }
+        },
+        "thirdParty": {
+          "title": "7. Third-party services and links",
+          "paragraph1": "ChinaSupply.AI links to supplier websites, source materials, maps, and navigation services operated by third parties. Those services may change, fail, use different coordinates, collect information, or apply their own terms and policies.",
+          "paragraph2": "We do not control third-party content, availability, routes, directions, transactions, security, or privacy practices. Opening or relying on a third-party service is your decision and risk."
+        },
+        "intellectualProperty": {
+          "title": "8. Intellectual property",
+          "paragraph1": "ChinaSupply.AI's software, design, branding, original writing, graphics, and selection and arrangement of directory content are owned by or licensed to HUANG SOURCING LTD and are protected by applicable law. These Terms give you a limited, revocable, non-exclusive right to use the service for its intended purpose.",
+          "paragraph2": "Business names, trademarks, factual information, source materials, maps, images, and other third-party content remain subject to the rights of their respective owners. A directory reference does not grant you rights to use a third party's intellectual property."
+        },
+        "availability": {
+          "title": "9. Availability and changes",
+          "paragraph1": "We may maintain, change, correct, add, suspend, or discontinue any part of ChinaSupply.AI. We do not promise uninterrupted access, permanent storage of favorites, continued publication of a listing, or availability in every country, browser, or device.",
+          "paragraph2": "We may correct or remove content without notice when it is inaccurate, outdated, unlawful, unsafe, disputed, or no longer supported by adequate sources."
+        },
+        "termination": {
+          "title": "10. Suspension and termination",
+          "paragraph1": "You may stop using ChinaSupply.AI or delete your account at any time. Account deletion removes the sign-in and saved suppliers as described in the Privacy Policy.",
+          "paragraph2": "We may restrict, suspend, or terminate access when reasonably necessary to protect the service or others, investigate misuse, enforce these Terms, comply with law, or respond to security or operational risk. Provisions that by their nature should survive termination will continue to apply."
+        },
+        "disclaimers": {
+          "title": "11. Disclaimers",
+          "paragraph1": "To the fullest extent permitted by law, ChinaSupply.AI and all directory content are provided as is and as available. HUANG SOURCING LTD disclaims implied warranties and conditions, including accuracy, completeness, satisfactory quality, fitness for a particular purpose, non-infringement, and results from use.",
+          "paragraph2": "Nothing on ChinaSupply.AI is legal, financial, tax, customs, compliance, engineering, laboratory, product-safety, investment, or other professional advice. Obtain advice appropriate to your transaction and destination market."
+        },
+        "liability": {
+          "title": "12. Limitation of liability",
+          "paragraph1": "Nothing in these Terms excludes or limits liability for fraud or fraudulent misrepresentation, death or personal injury caused by negligence, or any liability that applicable law does not allow to be excluded or limited.",
+          "paragraph2": "Subject to that rule and to the fullest extent permitted by law, HUANG SOURCING LTD is not liable for indirect, incidental, special, exemplary, punitive, or consequential loss, or for loss of profit, revenue, business, opportunity, goodwill, anticipated savings, data, goods, payments, or contracts arising from or related to ChinaSupply.AI, a supplier, a listing, a third-party service, or a sourcing decision.",
+          "paragraph3": "Subject to the exclusions above, HUANG SOURCING LTD's total aggregate liability arising from or relating to ChinaSupply.AI or these Terms will not exceed £100."
+        },
+        "paid": {
+          "title": "13. Separate paid services",
+          "paragraph1": "Paid sourcing, supplier verification, quality-control inspection, sample handling, shipment preparation, or other services offered through huangsourcing.com are separate from ChinaSupply.AI. A paid service is governed by its confirmed quote, scope, booking terms, and any other agreement for that service, not by these Terms alone."
+        },
+        "privacy": {
+          "title": "14. Privacy",
+          "paragraph1": "Our <privacy>Privacy Policy</privacy> explains how we process personal information, including account deletion, optional analytics, business directory contacts, international transfers, and privacy rights."
+        },
+        "law": {
+          "title": "15. Governing law and courts",
+          "paragraph1": "These Terms and any non-contractual dispute arising from or related to them or ChinaSupply.AI are governed by the laws of England and Wales, without applying rules that would select another jurisdiction's law.",
+          "paragraph2": "The courts of England and Wales have exclusive jurisdiction, except to the extent mandatory law gives you a right to bring a claim elsewhere. These Terms do not require arbitration."
+        },
+        "changes": {
+          "title": "16. Changes and contact",
+          "paragraph1": "We may update these Terms when ChinaSupply.AI or applicable requirements change. Revised Terms apply from the date published here. If a material change requires additional notice or consent, we will provide it as required by law.",
+          "paragraph2": "Email huang.sourcing@gmail.com with questions about these Terms. Written correspondence may also be sent to the registered office shown below."
+        }
+      }
     }
   },
   "Operations": {
