@@ -159,16 +159,23 @@ industrial park, field, or water body does not pass.
 
 ## Owner attestation and remaining gate
 
-- [ ] Owner reviewed the five exact coordinate comparisons and the strengthened
+- Owner statement recorded in the Codex task on 2026-07-27: `签署通过`.
+- Attestation scope: accept Jinkanghong's corrected roof-level coordinate and
+  the evidence package; reject both reviewed candidates for Luolai, Xinyi,
+  Violet, and Nanshing, which remain ineligible for verification until new
+  traceable roof-level evidence is supplied.
+
+- [x] Owner reviewed the five exact coordinate comparisons and the strengthened
       SOP.
-- [ ] Owner accepted Jinkanghong's corrected roof-level coordinate.
-- [ ] Owner supplied new roof-level evidence for Luolai, Xinyi, Violet, and
-      Nanshing, or explicitly rejected those records.
+- [x] Owner accepted Jinkanghong's corrected roof-level coordinate.
+- [x] Owner rejected the reviewed candidates for Luolai, Xinyi, Violet, and
+      Nanshing; those records remain `Draft + Unverified` pending new evidence.
 - [ ] ADM-5 wrote new `verifiedAt`, `lastVerifiedAt`, and `verifiedBy` for each
       accepted record.
 - [ ] Accepted records were republished through `/ops`, with MAP purge and
       public API convergence rechecked.
 
-Until those boxes are supported by an explicit Owner statement, all five
-records remain `Draft + Unverified`. No completion checkbox in the development
-plan may be changed.
+Jinkanghong may now proceed to ADM-5 and republication after the audit-field fix
+is deployed to staging. The other four records remain `Draft + Unverified`. No
+completion checkbox in the development plan may be changed until the remaining
+operational boxes are supported by postflight evidence.
