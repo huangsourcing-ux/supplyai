@@ -41,6 +41,11 @@ NativeWind. Do not track the Obytes `master` branch.
 `newArchEnabled` is explicitly `true`. MapLibre React Native v11 only supports
 New Architecture, so disabling it is not an available fallback.
 
+Clerk Expo's checked-in config plugin is required in every prebuild. It raises
+the generated iOS deployment target to Clerk iOS SDK's minimum of iOS 17 and
+registers the native Swift Package Manager dependencies; omitting it leaves a
+clean iOS prebuild without a valid `ClerkExpo` pod target.
+
 The application uses these provisional identities:
 
 | Environment | iOS Bundle ID / Android package | URL scheme            |
@@ -167,6 +172,27 @@ M0-T5 is complete at the approved compatibility-spike boundary. This evidence
 does not satisfy the M0 physical-device gate, app-store signing or identifier
 reservation, user OAuth/redirect/account pages, or the MapTiler-backed product
 map. Those remain human gates or later task scope.
+
+## M4-T1 product-map simulator evidence
+
+The MapTiler-backed product map was validated on 2026-07-27 with the preview
+environment's real platform-restricted keys and
+`https://api-staging.chinasupply.ai/api/v1`:
+
+| Platform | Native build                                                                               | Runtime evidence                                                                                                                                                                                                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Xcode `26.6`; `ChinaSupplyAIStaging` Debug; iPhone 17 Pro Simulator on iOS `26.5`          | Clean prebuild and CocoaPods install succeeded after restoring the required Clerk Expo plugin; cached native rebuild completed in 24.9 seconds. Basemap/attribution, MAP-1 card, zoom-10 factory cluster expansion, MAP-3 card, close, forced detail error and successful Retry passed. |
+| Android  | Emulator `36.6.11`; `diaoyouji_api_36`; Android/API `36`; `ChinaSupplyAIStaging` Debug APK | Gradle completed 548 tasks and installed the APK. Basemap/attribution, MAP-1 card, zoom-10 factory cluster expansion, MAP-3 card, close, offline detail error and successful Retry passed.                                                                                              |
+
+The iOS accessibility snapshots exposed Close and Retry as enabled controls,
+kept the detail CTA out of actionable targets while disabled, and retained the
+attribution text. Android UIAutomator reported the same enabled/disabled states.
+Both runtimes completed the interactions without a native crash. Intermittent
+MapTiler tile/glyph timeouts and existing shared-style compatibility warnings
+were recoverable and did not prevent data layers or interaction completion.
+No EAS build, deployment, external write, or analytics network adapter was
+triggered. Physical-device and production-key validation remain later release
+gates and are not implied by this simulator evidence.
 
 ## Upgrade policy
 

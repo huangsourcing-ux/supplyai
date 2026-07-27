@@ -77,6 +77,7 @@ export function createMobileExpoConfig(
       "expo-localization",
       "expo-router",
       "@maplibre/maplibre-react-native",
+      "@clerk/expo",
       sentry.organization && sentry.project
         ? [
             "@sentry/react-native/expo",

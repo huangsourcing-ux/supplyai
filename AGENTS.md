@@ -25,7 +25,7 @@ ChinaSupply.AI 面向海外 B 端买家，V1 核心路径是：搜索产品 → 
 
 V1 明确不做：站内询盘/聊天、AI 采购助手、工厂对比、多工厂考察路线规划、第三方服务市场、支付/会员、展会模块、用户生成内容。P1/P2 只保留路线图，不得因“顺手”而实现。
 
-当前计划起点仍是 `M4-T1b`；M0-M3 工程任务已收口，M4-T0 已产出 F-1/F-11.2/N-1/N-6 的地图体验诊断和两套方向稿，Owner 在同一 PR 明确选择 `Keep baseline`；M4-T1a 已完成 App 共享底图、MAP-1/2/3 数据源、zoom 分层、防抖/abort、错误重试与 attribution。M4-T1b 的聚合、卡片、truncated 与共享 `map_moved` facade 接线已有代码和自动化覆盖，但因当前没有可用的已启动 iOS Simulator/Android Emulator，尚未完成真实受限平台 key + canonical staging 双端交互 smoke，M4-T1b 与父项 M4-T1 必须保持未勾选。详情 CTA 在 M4-T2b/T2c 原生路由落地前保持禁用；Mobile 真实 PostHog adapter + Consent 必须另行批准并先修订开发计划，不得夹带。Owner 另行要求把与官方 Streets v4 差异过大的手工底图更正为去密钥后的官方样式快照，该工作已按 M2-T9 独立修复交付。M0-T0 中 Apple Developer、Google Play Console 与商店标识保留等人工前置仍未完成，不得伪造或勾选；外部账号、真机测试、数据录入和人工验收仍属于人工前置或人工门禁。
+当前计划起点是 `M4-T2a`；M0-M3 工程任务已收口，M4-T0 已产出 F-1/F-11.2/N-1/N-6 的地图体验诊断和两套方向稿，Owner 在同一 PR 明确选择 `Keep baseline`；M4-T1 已完成 App 共享底图、MAP-1/2/3 数据源、zoom 分层、防抖/abort、聚合放大、产业带/工厂卡片、truncated、错误重试、attribution 与共享 `map_moved` facade 接线，并使用真实受限 iOS/Android MapTiler key + canonical staging API 完成双端 Simulator/Emulator 交互 smoke。详情 CTA 在 M4-T2b/T2c 原生路由落地前保持禁用；Mobile 真实 PostHog adapter + Consent 必须另行批准并先修订开发计划，不得夹带。Owner 另行要求把与官方 Streets v4 差异过大的手工底图更正为去密钥后的官方样式快照，该工作已按 M2-T9 独立修复交付。M0-T0 中 Apple Developer、Google Play Console 与商店标识保留等人工前置仍未完成，不得伪造或勾选；外部账号、物理真机测试、数据录入和人工验收仍属于人工前置或人工门禁。
 
 ## 3. 工作方式
 

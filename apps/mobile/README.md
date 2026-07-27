@@ -19,6 +19,14 @@ call the shared consent-aware analytics facade, which owns the ten-second
 analytics consent, so the facade remains a network no-op. A real Mobile adapter
 and consent flow require a separately approved development-plan revision.
 
+M4-T1 was validated against the canonical staging API with the preview
+environment's platform-restricted MapTiler keys on an iPhone 17 Pro Simulator
+(iOS 26.5) and the `diaoyouji_api_36` Android Emulator (API 36). Both platforms
+passed basemap/attribution, cluster expansion, cluster and factory cards,
+close, error/Retry recovery, disabled CTA accessibility, and crash-free smoke.
+This is simulator coverage; physical-device and production-key gates remain
+separate release work.
+
 Search, registration, OAuth, account management, and logout UI remain in later
 M4 task packages.
 
@@ -41,6 +49,10 @@ and iOS/Android export-bundle checks. Native Preview builds are submitted from
 this package directory by the root wrapper, so Expo discovers the monorepo root
 and installs the pnpm workspace without a non-existent `workingDirectory`
 property or custom Metro `watchFolders`.
+
+Clean native prebuilds require the checked-in `@clerk/expo` config plugin. It
+sets Clerk's iOS 17 minimum and registers the Clerk Swift Package dependencies;
+removing it makes the generated iOS CocoaPods integration invalid.
 
 The M0-T5c evidence build is the Android arm64-v8a Preview APK
 `cf218fc6-750c-4d7c-804b-5082d52e650d`. It was installed without Metro on the
