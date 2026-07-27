@@ -201,7 +201,7 @@ function authorization(userId: string) {
   return { authorization: `Bearer token-${userId}` };
 }
 
-describe.sequential("M3-T4 account and favorites API e2e", () => {
+describe.sequential("M3-T8 favorites and account regression e2e", () => {
   let app: NestFastifyApplication;
   let pool: Pool;
   let postgres: StartedTestContainer;

@@ -16,8 +16,12 @@ import {
   type StartedTestContainer,
   Wait,
 } from "testcontainers";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
+import {
+  CLERK_USER_DELETER,
+  type ClerkUserDeleter,
+} from "../src/account/clerk-user-deleter.js";
 import { AppModule } from "../src/app.module.js";
 import {
   CLERK_TOKEN_VERIFIER,
@@ -42,6 +46,7 @@ const credentials = {
 };
 const signingKey = Buffer.from("chinasupply-webhook-e2e-signing-key");
 const signingSecret = `whsec_${signingKey.toString("base64")}`;
+const accountDeletionUserId = "user_account_deletion_e2e";
 const userId = "user_webhook_e2e";
 
 @Controller("auth-probe")
@@ -140,12 +145,13 @@ function signedHeaders(
   };
 }
 
-describe.sequential("Clerk webhook API e2e", () => {
+describe.sequential("M3-T8 account lifecycle and webhook e2e", () => {
   let app: NestFastifyApplication;
   let pool: Pool;
   let postgres: StartedTestContainer;
   let redis: StartedTestContainer;
   const previousEnvironment = { ...process.env };
+  const deleteClerkUser = vi.fn<ClerkUserDeleter>(async () => undefined);
 
   beforeAll(async () => {
     [postgres, redis] = await Promise.all([
@@ -197,6 +203,8 @@ describe.sequential("Clerk webhook API e2e", () => {
     })
       .overrideProvider(CLERK_TOKEN_VERIFIER)
       .useValue(tokenVerifier)
+      .overrideProvider(CLERK_USER_DELETER)
+      .useValue(deleteClerkUser)
       .compile();
     const adapter = new FastifyAdapter({ trustProxy: false });
     registerEdgeProxy(adapter.getInstance(), { appEnvironment: "local" });
@@ -372,6 +380,104 @@ describe.sequential("Clerk webhook API e2e", () => {
         name: "Grace Hopper",
       },
     ]);
+  });
+
+  it("completes DELETE /me through the deletion webhook and blocks the old JWT", async () => {
+    await pool.query(
+      `insert into users (id, email, name)
+       values ($1, 'delete-flow@example.test', 'Delete Flow')`,
+      [accountDeletionUserId],
+    );
+    await pool.query(
+      `insert into favorites (id, user_id, target_type, target_id)
+       values ('888888888888888888888', $1, 'factory', '999999999999999999999')`,
+      [accountDeletionUserId],
+    );
+
+    const requested = await app.inject({
+      headers: { authorization: `Bearer token-${accountDeletionUserId}` },
+      method: "DELETE",
+      url: "/api/v1/me",
+    });
+    expect(requested.statusCode).toBe(200);
+    expect(requested.json()).toEqual({
+      data: { deletionRequested: true },
+      error: null,
+      meta: {},
+    });
+    expect(deleteClerkUser).toHaveBeenCalledOnce();
+    expect(deleteClerkUser).toHaveBeenCalledWith(accountDeletionUserId);
+
+    const beforeWebhook = await pool.query<{
+      deleted_at: Date | null;
+      favorite_count: number;
+    }>(
+      `select u.deleted_at, count(f.id)::integer as favorite_count
+       from users u
+       left join favorites f on f.user_id = u.id
+       where u.id = $1
+       group by u.id`,
+      [accountDeletionUserId],
+    );
+    expect(beforeWebhook.rows[0]).toMatchObject({
+      deleted_at: null,
+      favorite_count: 1,
+    });
+
+    const messageId = "msg_account_deletion_flow";
+    const payload = JSON.stringify(deletedEvent(accountDeletionUserId));
+    const webhookRequest = {
+      headers: signedHeaders(messageId, payload),
+      method: "POST" as const,
+      payload,
+      url: "/api/v1/webhooks/clerk",
+    };
+    const processed = await app.inject(webhookRequest);
+    expect(processed.statusCode).toBe(200);
+    expect(processed.json()).toEqual({
+      data: { duplicate: false, processed: true },
+      error: null,
+      meta: {},
+    });
+
+    const replay = await app.inject(webhookRequest);
+    expect(replay.statusCode).toBe(200);
+    expect(replay.json()).toEqual({
+      data: { duplicate: true, processed: false },
+      error: null,
+      meta: {},
+    });
+
+    const afterWebhook = await pool.query<{
+      deleted_at: Date | null;
+      event_count: number;
+      favorite_count: number;
+    }>(
+      `select u.deleted_at,
+              count(distinct f.id)::integer as favorite_count,
+              count(distinct e.id)::integer as event_count
+       from users u
+       left join favorites f on f.user_id = u.id
+       left join webhook_events e on e.id = $2
+       where u.id = $1
+       group by u.id`,
+      [accountDeletionUserId, messageId],
+    );
+    expect(afterWebhook.rows[0]?.deleted_at).toBeInstanceOf(Date);
+    expect(afterWebhook.rows[0]?.favorite_count).toBe(0);
+    expect(afterWebhook.rows[0]?.event_count).toBe(1);
+
+    const blocked = await app.inject({
+      headers: { authorization: `Bearer token-${accountDeletionUserId}` },
+      method: "GET",
+      url: "/api/v1/favorites",
+    });
+    expect(blocked.statusCode).toBe(401);
+    expect(blocked.json()).toMatchObject({
+      data: null,
+      error: { code: "UNAUTHORIZED" },
+      meta: null,
+    });
   });
 
   it("soft-deletes the user, hard-deletes favorites, and never resurrects", async () => {
