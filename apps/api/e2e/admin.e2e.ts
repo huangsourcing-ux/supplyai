@@ -410,6 +410,32 @@ describe.sequential("admin API e2e", () => {
     expect(verifiedAgain.statusCode).toBe(200);
     expect(verifiedAgain.json().data.verifiedAt).toBe(firstVerifiedAt);
 
+    const staleVerifiedAt = "2026-01-01T00:00:00.000Z";
+    await pool.query(
+      `update factories
+       set verified = false,
+           verified_at = $2,
+           last_verified_at = $2
+       where id = $1`,
+      [ids.factory, staleVerifiedAt],
+    );
+
+    const reverifiedAfterLegacyInvalidation = await app.inject({
+      headers: adminHeaders,
+      method: "POST",
+      url: `/api/v1/admin/factories/${ids.factory}/verify`,
+    });
+    expect(reverifiedAfterLegacyInvalidation.statusCode).toBe(200);
+    expect(reverifiedAfterLegacyInvalidation.json().data.verifiedAt).not.toBe(
+      staleVerifiedAt,
+    );
+    expect(reverifiedAfterLegacyInvalidation.json().data.lastVerifiedAt).toBe(
+      reverifiedAfterLegacyInvalidation.json().data.verifiedAt,
+    );
+    expect(reverifiedAfterLegacyInvalidation.json().data.verifiedBy).toBe(
+      "user_admin_reviewer",
+    );
+
     const updated = await app.inject({
       headers: adminHeaders,
       method: "PATCH",
@@ -421,10 +447,10 @@ describe.sequential("admin API e2e", () => {
     });
     expect(updated.statusCode).toBe(200);
     expect(updated.json().data).toMatchObject({
-      lastVerifiedAt: expect.any(String),
+      lastVerifiedAt: null,
       verified: false,
-      verifiedAt: firstVerifiedAt,
-      verifiedBy: "user_admin_reviewer",
+      verifiedAt: null,
+      verifiedBy: null,
     });
     const searchText = await pool.query<{ search_text_en: string }>(
       `select search_text_en from factories where id = $1`,
@@ -432,6 +458,23 @@ describe.sequential("admin API e2e", () => {
     );
     expect(searchText.rows[0]?.search_text_en).toContain(
       "Reviewed Lighting Factory Smart LED bulbs Lighting lamps",
+    );
+
+    const reverified = await app.inject({
+      headers: adminHeaders,
+      method: "POST",
+      url: `/api/v1/admin/factories/${ids.factory}/verify`,
+    });
+    expect(reverified.statusCode).toBe(200);
+    expect(reverified.json().data).toMatchObject({
+      lastVerifiedAt: expect.any(String),
+      verified: true,
+      verifiedAt: expect.any(String),
+      verifiedBy: "user_admin_reviewer",
+    });
+    expect(reverified.json().data.verifiedAt).not.toBe(firstVerifiedAt);
+    expect(reverified.json().data.lastVerifiedAt).toBe(
+      reverified.json().data.verifiedAt,
     );
   });
 
