@@ -14,8 +14,9 @@ independent Owner attestation.
 - Initial state: all five records were `Published + Verified`.
 - Evidence accessed at (UTC): 2026-07-27.
 - Postflight recorded at (UTC): 2026-07-27T04:39:07Z.
-- Owner attestation: **pending**. No ADM-5 verification or republication was
-  performed.
+- Owner attestation recorded at (UTC): 2026-07-27.
+- Final ADM-5/publication postflight recorded at (UTC):
+  2026-07-27T05:16:06Z.
 
 ## Imagery method
 
@@ -141,7 +142,7 @@ industrial park, field, or water body does not pass.
   or temporary mutation script was used.
 - Every unpublish action completed before the corresponding save. Each status
   transition therefore purged the MAP cache through ADM-4.
-- Final `/ops` list state:
+- Pre-attestation containment state in `/ops`:
   - `nantong-luolai-lifestyle`: `Draft + Unverified`
   - `nantong-xinyi-home-textile`: `Draft + Unverified`
   - `nantong-violet-home-textile`: `Draft + Unverified`
@@ -157,6 +158,32 @@ industrial park, field, or water body does not pass.
   `CF-Cache-Status: MISS`, and the identical second request had
   `CF-Cache-Status: HIT`.
 
+## Owner-signed finalization
+
+- PR #63 was merged as `ddc5c3d17e91b344544b91229084dc724213c26e`
+  after its CI Gate passed. Main CI run `30238836667`, CMS migration, core
+  migration, and Staging Release Gate all passed.
+- Railway API deployment `300ee622-5c3f-4fe1-a84b-80fbd121f217` and Worker
+  deployment `144341c6-5d3f-4d34-b5cc-20ddcb2f60fe` both reached `SUCCESS` on
+  the exact merge commit before ADM-5.
+- Through the authenticated staging `/ops` session, Owner attestation was
+  applied only to Jinkanghong. ADM-5 wrote:
+  - `verifiedAt = 2026-07-27T05:13:42.340Z`
+  - `lastVerifiedAt = 2026-07-27T05:13:42.340Z`
+  - `verifiedBy = user_3Gr8DpJw59xwHVz70XQ2VCm6yma`
+- Jinkanghong was then published through `/ops`; its final state is
+  `Published + Verified` at `[121.0214538,32.1006772]`.
+- Luolai, Xinyi, Violet, and Nanshing were not verified or published. Their
+  final state remains `Draft + Unverified`.
+- Public postflight:
+  - Jinkanghong detail returned HTTP 200, `verified=true`, the corrected
+    coordinate, and the new matching verification timestamps.
+  - The Nantong cluster factory list returned exactly Jinkanghong.
+  - The other four factory detail routes returned HTTP 404.
+  - MAP-3 returned exactly one Jinkanghong feature at the corrected coordinate
+    with `meta.truncated=false`; the first request had `CF-Cache-Status: MISS`
+    and the identical second request had `CF-Cache-Status: HIT` with `age: 24`.
+
 ## Owner attestation and remaining gate
 
 - Owner statement recorded in the Codex task on 2026-07-27: `签署通过`.
@@ -170,12 +197,12 @@ industrial park, field, or water body does not pass.
 - [x] Owner accepted Jinkanghong's corrected roof-level coordinate.
 - [x] Owner rejected the reviewed candidates for Luolai, Xinyi, Violet, and
       Nanshing; those records remain `Draft + Unverified` pending new evidence.
-- [ ] ADM-5 wrote new `verifiedAt`, `lastVerifiedAt`, and `verifiedBy` for each
+- [x] ADM-5 wrote new `verifiedAt`, `lastVerifiedAt`, and `verifiedBy` for each
       accepted record.
-- [ ] Accepted records were republished through `/ops`, with MAP purge and
+- [x] Accepted records were republished through `/ops`, with MAP purge and
       public API convergence rechecked.
 
-Jinkanghong may now proceed to ADM-5 and republication after the audit-field fix
-is deployed to staging. The other four records remain `Draft + Unverified`. No
-completion checkbox in the development plan may be changed until the remaining
-operational boxes are supported by postflight evidence.
+The signed remediation is complete for Jinkanghong. The other four records
+remain `Draft + Unverified` until new traceable roof-level evidence is supplied;
+this is the required safe outcome, not a waived check. No development-plan
+checkbox was changed because this remediation is not a numbered plan task.

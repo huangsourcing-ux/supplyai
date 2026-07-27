@@ -217,6 +217,8 @@ canonical draft；staging 中的相同内容变更只允许通过 `/ops`，不�
 | `nantong-nanshing-home-textile` | `[121.0369299,32.0469352]` → 保持原值，unverified   | 当前点在通吕运河水面；转换候选 `[121.0323614,32.0488415]` 在江海大道车道/中央分隔带，均非厂房轮廓         |
 
 staging 内容只通过带 Clerk Admin 鉴权的 `/ops` 修改：五家均已 unpublish 并恢复
-`unverified`，仅 Jinkanghong 写入新坐标；未运行 ADM-5，未重新 publish。完整逐条影像
-依据、状态与 MAP 缓存 purge 结果见
+`unverified`，仅 Jinkanghong 写入新坐标。Owner 于 2026-07-27 签署后，只有
+Jinkanghong 通过 ADM-5 写入新的核验审计字段并重新 publish；Luolai、Xinyi、Violet
+与 Nanshing 因两个已审候选均未压在厂房屋面，继续保持 `Draft + Unverified`。完整逐条
+影像依据、状态与 MAP 缓存 purge 结果见
 [`2026-07-27-nantong-coordinate-remediation.md`](docs/operations/reviews/staging/2026-07-27-nantong-coordinate-remediation.md)。
