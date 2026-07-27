@@ -2,7 +2,7 @@ import { useAuth } from "@clerk/expo";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import MapSpikeScreen from "../map-spike/map-spike-screen";
+import AppMapScreen from "../map/app-map-screen";
 import { workspaceCompatibility } from "../../lib/workspace-compatibility";
 import SignInScreen from "./sign-in-screen";
 
@@ -27,7 +27,7 @@ export default function AuthGate() {
     );
   }
 
-  return isSignedIn ? <MapSpikeScreen /> : <SignInScreen />;
+  return isSignedIn ? <AppMapScreen /> : <SignInScreen />;
 }
 
 const styles = StyleSheet.create({

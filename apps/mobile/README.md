@@ -3,11 +3,12 @@
 This directory contains the Expo Development Build application established from
 Obytes Starter v9.0.0 during M0-T5.
 
-The signed-out shell provides the M0-T5c email/password and device-trust code
-flow through Clerk Expo. Signed-in sessions continue to the offline MapLibre
-compatibility spike from M0-T5b. Registration, OAuth, redirect handling,
-account management, logout UI, and the production map remain outside this
-milestone.
+The root route is the public industrial map. It uses the generated workspace API
+client and the shared checked-in Streets v4 style to load MAP-1 cluster points,
+MAP-2 boundaries at zoom 8 and above, and MAP-3 factory points at zoom 10 and
+above. Viewport requests are debounced for 500ms and canceled when movement
+starts. Factory clustering, selection cards, search, registration, OAuth,
+account management, and logout UI remain in later M4 task packages.
 
 Clerk tokens are stored in a dedicated encrypted MMKV instance. Its randomly
 generated encryption key is persisted with Expo SecureStore and is never placed
@@ -36,10 +37,11 @@ and process-level cold session restoration all passed. The Preview ABI limit is
 only for this staging compatibility artifact; production ABI and signing policy
 remain a later release concern.
 
-The mobile runtime imports TypeScript source directly from
-`@chinasupply/schemas`, `@chinasupply/geo`, and `@chinasupply/i18n` using
-`workspace:*`. The startup compatibility module executes all three imports so a
-local Metro/export or EAS resolution failure cannot be hidden by type erasure.
+The mobile runtime imports workspace packages through `workspace:*`. The
+startup compatibility module executes the shared schema, geo, and i18n imports,
+while the map route also consumes `@chinasupply/api-client` and
+`@chinasupply/config/map/style`, so local Metro/export or EAS resolution
+failures cannot be hidden by type erasure.
 
 M0-T7 initializes Sentry before the Expo Router root layout and wraps the root
 component for render failures. Its Expo plugin and Metro configuration upload

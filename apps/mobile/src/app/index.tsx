@@ -1,1 +1,1 @@
-export { default } from "../features/auth/auth-gate";
+export { default } from "../features/map/app-map-screen";

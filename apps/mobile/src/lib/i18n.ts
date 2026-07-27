@@ -38,21 +38,15 @@ export const resources = {
         loading: "Checking API liveness…",
         ready: "API liveness check passed",
       },
-      mapSpike: {
+      map: {
+        ariaLabel: "China industrial cluster and factory map",
         attribution: "© MapTiler · © OpenStreetMap contributors",
-        eyebrow: "MapLibre compatibility spike",
-        legend: {
-          cluster: "Cluster",
-          point: "Point",
-          polygon: "Polygon",
-          title: "Fixture layers",
-        },
+        retry: "Retry",
         status: {
-          error: "Map failed to load",
-          loading: "Loading offline map…",
-          ready: "Offline map ready",
+          "data-error": "Map data could not be loaded.",
+          loading: "Loading map data…",
+          "map-error": "Map could not be loaded.",
         },
-        title: "Yiwu offline map fixture",
       },
       sentrySmoke: {
         button: "Send Mobile Sentry test exception",
