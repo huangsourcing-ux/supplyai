@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "task": "M4-T0",
+  "canonical": {
+    "url": "https://staging.chinasupply.ai/",
+    "deploymentUrl": "https://chinasupply-web-staging-qasjlj348-huangsourcing-2373s-projects.vercel.app",
+    "deploymentId": "dpl_9TVpeE8Y1RN7MvgMez8mtTMNuUnm",
+    "gitCommit": "25f01d01a02f3707dd73a8e1134f1c3a925adc83",
+    "publicCounts": {
+      "clusters": 2,
+      "factories": 6
+    }
+  },
+  "fixture": {
+    "path": "fixtures/dense-map.fixture.json",
+    "seed": 20260727,
+    "counts": {
+      "clusters": 30,
+      "factories": 200
+    },
+    "injection": "Temporary browser interception of MAP-1/MAP-2/MAP-3 GET responses only; no staging writes."
+  },
+  "viewports": {
+    "desktop": {
+      "width": 1440,
+      "height": 900
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "scenarios": {
+    "nationwide": {
+      "description": "Initial China extent",
+      "zoom": 3
+    },
+    "city": {
+      "description": "Dongguan industrial-cluster search selection",
+      "zoom": 9
+    },
+    "street": {
+      "description": "Dongguan Amperex factory search selection",
+      "zoom": 13
+    }
+  },
+  "notes": [
+    "Raw captures are unannotated and retain visible MapTiler and OpenStreetMap attribution.",
+    "The browser capture surface returned JPEG bytes; files were normalized to PNG without resizing before final hashing. capturedAt is the normalized artifact write time.",
+    "Consent-open captures exist only for the canonical baseline street scene, as required.",
+    "Dense captures use the canonical UI, map style and MapLibre clustering behavior; only MAP-* GET payloads were fulfilled from the local design fixture.",
+    "Dense city and street frames preserve the required search term and zoom but dismiss the selection card so the full injected boundary and clustering density remains visible; canonical card and Consent overlap are documented in the baseline frames."
+  ],
+  "files": [
+    {
+      "path": "assets/baseline/desktop/city-z9.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "city",
+      "zoom": 9,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:05.641Z",
+      "bytes": 825160,
+      "sha256": "a20a2df93e5d368f05a0de7d279a0c7d7d53eeba7b95b04cffa6da4ede7d3582"
+    },
+    {
+      "path": "assets/baseline/desktop/nationwide.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "nationwide",
+      "zoom": 3,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:05.725Z",
+      "bytes": 585882,
+      "sha256": "bbb798bf7ca372b0a9025c869fc4f5e5f29383694cc94c2157d7e61f9ec7f390"
+    },
+    {
+      "path": "assets/baseline/desktop/street-z13-consent.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "street",
+      "zoom": 13,
+      "consentOpen": true,
+      "capturedAt": "2026-07-27T06:45:05.819Z",
+      "bytes": 1328675,
+      "sha256": "666177573d89b9762ccf3cf15bcf53c6b48ac5ec1f564e095d8b5cd3bd1e9fe9"
+    },
+    {
+      "path": "assets/baseline/desktop/street-z13.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "street",
+      "zoom": 13,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:05.917Z",
+      "bytes": 1383118,
+      "sha256": "0c52753edb8a0e7e0bdaa4c2e528c1002bcc546ca668c3990665b30dd7828dfa"
+    },
+    {
+      "path": "assets/baseline/mobile/city-z9.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "city",
+      "zoom": 9,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:05.946Z",
+      "bytes": 344511,
+      "sha256": "63d8be3d1119159a9bf9c552e9a7119281bca4237572e8f473670fdef1bb1b9b"
+    },
+    {
+      "path": "assets/baseline/mobile/nationwide.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "nationwide",
+      "zoom": 3,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:05.971Z",
+      "bytes": 207189,
+      "sha256": "364680ed2060e633d67aeed4e24965a839f615f5afb088dee4e5fa10e90052e9"
+    },
+    {
+      "path": "assets/baseline/mobile/street-z13-consent.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "street",
+      "zoom": 13,
+      "consentOpen": true,
+      "capturedAt": "2026-07-27T06:45:05.997Z",
+      "bytes": 296370,
+      "sha256": "19278555e9edb5ee49a1b7d270960336000deb5a0a78464f7b13cccfb49cc601"
+    },
+    {
+      "path": "assets/baseline/mobile/street-z13.png",
+      "state": "baseline",
+      "sourceMode": "canonical staging read-only",
+      "dataCounts": {
+        "clusters": 2,
+        "factories": 6
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "street",
+      "zoom": 13,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.023Z",
+      "bytes": 281111,
+      "sha256": "6be20016c0f22037664836f3a20b0eb6febf658f3505d154de7594cfd797c22f"
+    },
+    {
+      "path": "assets/dense/desktop/city-z9.png",
+      "state": "dense",
+      "sourceMode": "canonical staging shell with local MAP-* GET fixture",
+      "dataCounts": {
+        "clusters": 30,
+        "factories": 200
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "city",
+      "zoom": 9,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.118Z",
+      "bytes": 1000243,
+      "sha256": "3aa3b8fa1ff7037c0328abc19716c348d280b5703b410e423e5bf08a0a726e9e"
+    },
+    {
+      "path": "assets/dense/desktop/nationwide.png",
+      "state": "dense",
+      "sourceMode": "canonical staging shell with local MAP-* GET fixture",
+      "dataCounts": {
+        "clusters": 30,
+        "factories": 200
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "nationwide",
+      "zoom": 3,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.201Z",
+      "bytes": 608605,
+      "sha256": "f65373da45419ac5a483863613322d17fa1903e5bfde1effbe2cb2459bb52f00"
+    },
+    {
+      "path": "assets/dense/desktop/street-z13.png",
+      "state": "dense",
+      "sourceMode": "canonical staging shell with local MAP-* GET fixture",
+      "dataCounts": {
+        "clusters": 30,
+        "factories": 200
+      },
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "scene": "street",
+      "zoom": 13,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.298Z",
+      "bytes": 1531535,
+      "sha256": "43bb3d355fea36ef57f3b6c238bcdfab8b8af08a2f53368594813cb3797e03cc"
+    },
+    {
+      "path": "assets/dense/mobile/city-z9.png",
+      "state": "dense",
+      "sourceMode": "canonical staging shell with local MAP-* GET fixture",
+      "dataCounts": {
+        "clusters": 30,
+        "factories": 200
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "city",
+      "zoom": 9,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.336Z",
+      "bytes": 554242,
+      "sha256": "1615a21d561a40d633b357050b0ba38c28135bb11cd28ff5dd3aa1122e1a2418"
+    },
+    {
+      "path": "assets/dense/mobile/nationwide.png",
+      "state": "dense",
+      "sourceMode": "canonical staging shell with local MAP-* GET fixture",
+      "dataCounts": {
+        "clusters": 30,
+        "factories": 200
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "nationwide",
+      "zoom": 3,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.363Z",
+      "bytes": 220036,
+      "sha256": "317829ad56199eb969d795cb4667854da64f9a2313cdd4a43760fe4665ac32d5"
+    },
+    {
+      "path": "assets/dense/mobile/street-z13.png",
+      "state": "dense",
+      "sourceMode": "canonical staging shell with local MAP-* GET fixture",
+      "dataCounts": {
+        "clusters": 30,
+        "factories": 200
+      },
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "scene": "street",
+      "zoom": 13,
+      "consentOpen": false,
+      "capturedAt": "2026-07-27T06:45:06.393Z",
+      "bytes": 450376,
+      "sha256": "1b186b0e3110f2882a8fe223bb51d77b43d6ce5612902095991b570248e05e63"
+    }
+  ]
+}
