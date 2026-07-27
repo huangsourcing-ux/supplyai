@@ -127,7 +127,7 @@ chinasupply/
 - [x] **M3-T3 用户回填**：一次性 `clerk:sync-users` 命令，回填 M0-M2 期间产生的测试用户（或明确清空重建）。**2026-07-26 在 PR #54 的 CI Gate 通过后，从精确提交 `541ee9a` 对 staging 执行 insert-only 回填：首次 fetched=4/inserted=4/existing=0，复跑 fetched=4/inserted=0/existing=4；聚合核对确认 4 个 Clerk 用户均为 active、邮箱/姓名一致、审核管理员已回填，原有 2 个 tombstone 保持不变。**
 - [x] **M3-T4 收藏与账户 API 接线**：A-8（含 cursor）/A-9/A-10。
 - [x] **M3-T5 收藏页与账户页**：F-5.1/5.2、F-8.3；React Query 失效策略。
-- [ ] **M3-T6 Web Consent**：PostHog Consent banner（F-11.3）；packages/analytics 接线，拒绝则全量 no-op；staging 即生效。
+- [x] **M3-T6 Web Consent**：PostHog Consent banner（F-11.3）；packages/analytics 接线，拒绝则全量 no-op；staging 即生效。**2026-07-26 在精确提交 `4e15af6` 的成功 CI 与 canonical Vercel staging 部署上完成真实验收：unknown/denied/revoked 均为零 PostHog 请求，grant 会话的五类单次事件与 2 次 `map_moved` 计数准确，搜索邮箱/电话已脱敏，10 秒节流和排除路由零首次加载均通过，且无自动事件。**
 - [x] **M3-T7 /privacy 与 /terms 上线**：使用 M0-T0 交付的法律文案（F-11.1），正式 URL 固定，供 M4 App 直接打开（/about 仍留 M5）。**2026-07-26 Owner 明确批准提交 `41d2033` 的精确英文正文；PR #58 合并为 `09f8325` 后，main CI、CMS/Core migration、Staging Release Gate 与 Vercel canonical staging 部署全部成功，`/privacy`、`/terms`、注册链接和 Consent Privacy 入口真实 smoke 通过。production、`/about` 与 sitemap 仍分别留给 M5-T9/M5-T7。**
 - [ ] **M3-T8 e2e**：webhook 重放幂等、删除账户全流程、收藏幂等、favorites cursor 排序。
 
