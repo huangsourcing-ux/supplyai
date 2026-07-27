@@ -1,8 +1,8 @@
 # M4-T0 Owner 决策记录
 
-> 状态：**Awaiting Owner selection**
-> M4-T0：**未完成 / 不勾选**
-> M4-T1：**Blocked / 不启动**
+> 状态：**Owner selected / Ready for implementation**
+> M4-T0：**完成 / 可勾选**
+> M4-T1：**Unblocked**
 
 ## PR
 
@@ -12,24 +12,16 @@
 
 ## 决策字段
 
-| 字段        | 记录                                                    |
-| ----------- | ------------------------------------------------------- |
-| Owner       | 待定                                                    |
-| 日期        | 待定                                                    |
-| 选择        | 待定（`Direction A` / `Direction B` / `Keep baseline`） |
-| PR 评论链接 | 待定                                                    |
-| Owner 原文  | 待定                                                    |
+| 字段        | 记录                                                                           |
+| ----------- | ------------------------------------------------------------------------------ |
+| Owner       | `huangsourcing-ux`                                                             |
+| 日期        | 2026-07-27                                                                     |
+| 选择        | `Keep baseline`                                                                |
+| PR 评论链接 | <https://github.com/huangsourcing-ux/supplyai/pull/65#issuecomment-5088337289> |
+| Owner 原文  | `Keep baseline`                                                                |
 
 ## 允许进入 M4-T1 的明确结论
 
-**当前结论：不允许进入 M4-T1。**
+**当前结论：允许进入 M4-T1。**
 
-只有同时满足以下条件，才可把本结论改为允许：
-
-1. Owner 在同一 Draft PR 中明确回复 `Direction A`、`Direction B` 或 `Keep baseline`。
-2. 选择原文、Owner、日期和对应 PR 评论链接原样记录到本文件。
-3. 如果提出混合方案，先补成可视化 `Direction C`，然后由 Owner 重新明确选择；实现者不得自行拼接。
-4. 本 PR 的 fixture、截图、manifest、诊断、两套方向稿、比较表和检查全部通过。
-5. 选择记录完成后，才在同一 PR 中勾选 `ChinaSupply.AI开发计划.md` 的 M4-T0、向 `开发日志.md` 追加 2026-07-27 记录，并将 PR 从 Draft 转为 Ready。
-
-在上述条件全部满足之前，M4-T0 保持未勾选，`开发日志.md` 不追加完成记录，M4-T1 保持未开始。
+Owner 选择保留现有 F-1 业务图层、浮层和交互基线，未选择 Direction A/B 的视觉改造。Owner 同时在 Codex 任务中指出当前手工底图与官方 Streets v4 差异过大，要求下载官方 `streets-v4/style.json` 并更新共享地图。该要求不改变本次 `Keep baseline` 的 F-1 方向选择；共享 style 修正必须在后续独立的 M2-T9 修复 PR 中完成，不混入 M4-T0。

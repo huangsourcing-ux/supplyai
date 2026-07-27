@@ -1,10 +1,10 @@
 # M4-T0 地图体验诊断与方向冻结
 
-> 状态：**Draft / 等待 Owner 选择**
+> 状态：**Complete / Owner selected `Keep baseline`**
 > 范围：F-1.1～F-1.7、F-11.2、N-1、N-6
 > Canonical：`https://staging.chinasupply.ai/`
 > 基线数据：2 个公开产业带、6 家公开工厂
-> 结论门禁：Owner 未选择 `Direction A`、`Direction B` 或 `Keep baseline`，因此 M4-T0 保持未勾选，M4-T1 不得启动。
+> 结论门禁：Owner 已选择 `Keep baseline`，选择原文和 PR 链接已记录，M4-T1 可启动。
 
 ## 审阅入口
 
@@ -76,12 +76,10 @@
 
 密集态 city/street 原图保留规定的搜索词与 zoom，但关闭选择卡片，以完整暴露 boundary 和 factory cluster 密度；卡片与 Consent 的真实重叠关系以 canonical baseline 原图为准。
 
-## Owner 门禁
+## Owner 门禁（已通过）
 
-Owner 必须在 Draft PR 中明确回复以下三者之一：
+Owner 已在 Draft PR 中明确回复：
 
-- `Direction A`
-- `Direction B`
 - `Keep baseline`
 
-如果 Owner 要求混合方案，必须先补成可视化 `Direction C`，再由 Owner 明确选择；实现者不得自行拼接。选择原文、Owner、日期和 PR 评论链接记录到 [decision.md](decision.md) 后，才允许勾选 M4-T0、追加开发日志并将同一 PR 转为 Ready。
+该决定保留当前业务图层、浮层和交互基线。官方 Streets v4 底图快照的修正按 Owner 后续指令在独立 M2-T9 修复中实施，不属于 M4-T0 代码范围。完整选择原文、Owner、日期和 PR 评论链接见 [decision.md](decision.md)。
