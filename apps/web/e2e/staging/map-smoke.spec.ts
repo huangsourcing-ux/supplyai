@@ -191,3 +191,83 @@ test("loads Planet v4 resources and captures China, cluster, and factory map sce
     contentType: "image/png",
   });
 });
+
+test("starts glyphs early and serves a repeated overview from persistent cache", async ({
+  page,
+}, testInfo) => {
+  const glyphResponses: string[] = [];
+  const captureGlyphResponse = (response: Response) => {
+    const url = new URL(response.url());
+    if (
+      url.hostname === "api.maptiler.com" &&
+      url.pathname.startsWith("/fonts/")
+    ) {
+      glyphResponses.push(`${url.origin}${url.pathname}`);
+    }
+  };
+  page.on("response", captureGlyphResponse);
+
+  await page.goto("/");
+  await expect(page.locator(".maplibregl-canvas")).toBeVisible();
+  await expect(page.getByText("Loading industrial clusters…")).toBeHidden();
+  await expect.poll(() => glyphResponses.length).toBeGreaterThan(0);
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const cacheName = (await caches.keys()).find((name) =>
+          name.startsWith("chinasupply-map-glyphs-"),
+        );
+        if (cacheName === undefined) return 0;
+        return (await (await caches.open(cacheName)).keys()).length;
+      }),
+    )
+    .toBeGreaterThan(0);
+
+  const coldReadyAt = await page.evaluate(() => performance.now());
+  const coldGlyphTimings = await page.evaluate(() =>
+    performance
+      .getEntriesByType("resource")
+      .filter((entry) => entry.name.includes("api.maptiler.com/fonts/"))
+      .map((entry) => {
+        const resource = entry as PerformanceResourceTiming;
+        const url = new URL(entry.name);
+        return {
+          duration: Math.round(resource.duration),
+          responseEnd: Math.round(resource.responseEnd),
+          startTime: Math.round(resource.startTime),
+          transferSize: resource.transferSize,
+          url: `${url.origin}${url.pathname}`,
+        };
+      }),
+  );
+  const coldGlyphRequestCount = glyphResponses.length;
+  glyphResponses.length = 0;
+
+  await page.reload();
+  await expect(page.locator(".maplibregl-canvas")).toBeVisible();
+  await expect(page.getByText("Loading industrial clusters…")).toBeHidden();
+  await page.waitForTimeout(500);
+  const warmReadyAt = await page.evaluate(() => performance.now());
+
+  expect(glyphResponses).toHaveLength(0);
+  await testInfo.attach("maptiler-glyph-cache-performance.json", {
+    body: Buffer.from(
+      JSON.stringify(
+        {
+          cold: {
+            glyphRequestCount: coldGlyphRequestCount,
+            glyphTimings: coldGlyphTimings,
+            readyAt: Math.round(coldReadyAt),
+          },
+          warm: {
+            glyphRequestCount: glyphResponses.length,
+            readyAt: Math.round(warmReadyAt),
+          },
+        },
+        null,
+        2,
+      ),
+    ),
+    contentType: "application/json",
+  });
+});

@@ -52,6 +52,7 @@ import {
   hasRenderableMapSize,
   observeRenderableMapContainer,
 } from "./map-container-size";
+import { createMapGlyphRuntime, MAP_GLYPH_PROTOCOL } from "./map-glyph-cache";
 import {
   MapStatus,
   type MapStatusKind,
@@ -280,8 +281,22 @@ export function IndustrialMap({
       }
       mapInitializationStarted = true;
 
+      let style: StyleSpecification;
+      let glyphRuntime: ReturnType<typeof createMapGlyphRuntime>;
+      try {
+        const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "";
+        style = createChinaSupplyMapStyle(
+          mapTilerKey,
+        ) as unknown as StyleSpecification;
+        glyphRuntime = createMapGlyphRuntime({ mapTilerKey, style });
+        void glyphRuntime.prewarm(4);
+      } catch {
+        setMapLoadState("error");
+        return;
+      }
+
       void import("maplibre-gl")
-        .then(({ Map, NavigationControl, setWorkerUrl }) => {
+        .then(({ Map, NavigationControl, addProtocol, setWorkerUrl }) => {
           if (disposed) return;
           if (!hasRenderableMapSize(container)) {
             mapInitializationStarted = false;
@@ -289,9 +304,7 @@ export function IndustrialMap({
           }
 
           setWorkerUrl(MAPLIBRE_WORKER_URL);
-          const style = createChinaSupplyMapStyle(
-            process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
-          ) as unknown as StyleSpecification;
+          addProtocol(MAP_GLYPH_PROTOCOL, glyphRuntime.protocolHandler);
           const map = new Map({
             attributionControl: false,
             bounds: CHINA_BOUNDS,
@@ -304,6 +317,7 @@ export function IndustrialMap({
             style,
             // The app-owned observer also guards initial zero-size layouts.
             trackResize: false,
+            transformRequest: glyphRuntime.transformRequest,
           });
 
           activeMap = map;

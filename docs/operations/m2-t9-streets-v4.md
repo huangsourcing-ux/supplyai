@@ -53,3 +53,14 @@ Free 仅用于官方允许的开发/staging 测试评估。M5-T9 在 commercial 
 ## 2026-07-27 官方视觉一致性修订
 
 Owner 明确确认撤销“统一英文优先”和“建筑仅 zoom ≥15”两项正规化：标签完全恢复官方 Streets v4 表达式；官方 `Building` 的 zoom 12–15 参数原样恢复，并仅删除 `maxzoom: 15` 使同款平面 footprint 在 z15+ 接替 extrusion。除运行时密钥占位符、ChinaSupply 来源元数据以及这一 3D→2D 转换外，不允许其他底图视觉差异。
+
+## 2026-07-27 Web glyph 加载性能修复
+
+实测问题不在样式解析或地图渲染，而在官方 Streets v4 的多字体 glyph 请求：一次复访中首批 glyph 到约 `2,094ms` 才发起，最后地图资源到 `5,159ms` 才完成，且浏览器没有形成可依赖的跨访问持久缓存。本修复保持共享 `chinasupply-light.json`、全部官方 `text-font` 表达式、字重、碰撞布局与 CJK local ideograph 行为不变，只调整 Web 的 glyph 传输时机与缓存：
+
+- 三个 Web 地图入口在创建官方样式后、动态加载 MapLibre 的同时开始预热。全国、产业带详情和工厂详情分别按初始 zoom `4`、`10`、`14` 从当前样式动态提取 `6`、`9`、`8` 个可能字体栈，只预取 `0-255.pbf`；其他 Unicode range 仍由 MapLibre 首次需要时按需加载。
+- MapLibre 仅把 `api.maptiler.com/fonts/**/{range}.pbf` 的 Glyph 请求转换为无 key 的 `chinasupply-glyph://` 内部协议。协议处理器返回原始 MapTiler PBF 字节，瓦片、sprite、业务 API 及其他请求不经过该路径。
+- 同一路径的模块级 Promise 合并并发；Cache Storage 保留 30 天，最多 96 项并按插入顺序淘汰。缓存名绑定官方快照 SHA，快照换代时清理旧版 glyph cache；自定义 URL、Cache Storage key、错误与测试记录都不包含 MapTiler key。
+- Cache Storage 不可用或读写失败时回退到 MapTiler `force-cache` 请求；预热失败由 `allSettled` 隔离，不阻断地图初始化，失败请求清除并发记录后可由正式 glyph 加载重试。不新增 Service Worker、同源代理、Cloudflare Worker、自托管字体或环境变量。
+
+固定资源 Playwright 已验证冷访问预热请求早于首个 vector tile，并在同一浏览器上下文 reload 后保持远端 glyph 请求为 `0`。合并并完成 canonical staging 部署后，仍须在相同美国网络条件下记录真实附件并复核：首次 glyph 发起 `<500ms`、暖访问远端 glyph 请求 `0`、最后地图资源完成 `≤2.5s`；该复核不得用本地 fixture 或 Preview 域替代。

@@ -35,6 +35,14 @@ async function waitForReadyMap(page: Page) {
   return canvas;
 }
 
+async function expectMapAttribution(page: Page) {
+  const attribution = page.getByRole("complementary", {
+    name: "Map data attribution",
+  });
+  await expect(attribution).toContainText("© MapTiler");
+  await expect(attribution).toContainText("© OpenStreetMap contributors");
+}
+
 async function chooseSearchResult(page: Page, name: string) {
   const search = page.getByRole("combobox", { name: SEARCH_LABEL });
   await search.fill("Dongguan");
@@ -61,12 +69,7 @@ test("loads a deterministic map, opens a MAP-1 point, retries A-2, and enters cl
   await page.goto("/");
   const canvas = await waitForReadyMap(page);
 
-  await expect(
-    page.getByRole("complementary", { name: "Map data attribution" }),
-  ).toContainText("© MapTiler");
-  await expect(
-    page.getByRole("complementary", { name: "Map data attribution" }),
-  ).toContainText("© OpenStreetMap contributors");
+  await expectMapAttribution(page);
   await expect
     .poll(() => fixedMapResources.tileRequests.length)
     .toBeGreaterThan(0);
@@ -99,10 +102,61 @@ test("loads a deterministic map, opens a MAP-1 point, retries A-2, and enters cl
   await expect(
     page.getByRole("heading", { level: 1, name: CLUSTER_NAME }),
   ).toBeVisible();
+  await expect(page.locator(".maplibregl-canvas")).toBeVisible();
+  await expectMapAttribution(page);
   await expect(
     page.getByRole("heading", { name: "Factories in this cluster" }),
   ).toBeVisible();
   await expect(page.getByText(FACTORY_NAME)).toBeVisible();
+});
+
+test("prewarms active glyphs before tiles and reuses them after reload", async ({
+  fixedMapResources,
+  page,
+}) => {
+  await page.goto("/");
+  await waitForReadyMap(page);
+
+  await expect.poll(() => fixedMapResources.glyphRequests.length).toBe(6);
+  expect(
+    fixedMapResources.glyphRequests.every((url) => url.endsWith("/0-255.pbf")),
+  ).toBe(true);
+  expect(new Set(fixedMapResources.glyphRequests).size).toBe(6);
+
+  await expect
+    .poll(() =>
+      fixedMapResources.resourceRequests.some(({ kind }) => kind === "tile"),
+    )
+    .toBe(true);
+
+  const firstGlyph = fixedMapResources.resourceRequests.find(
+    ({ kind }) => kind === "glyph",
+  );
+  const firstTile = fixedMapResources.resourceRequests.find(
+    ({ kind }) => kind === "tile",
+  );
+  expect(firstGlyph).toBeDefined();
+  expect(firstTile).toBeDefined();
+  expect(firstGlyph!.sequence).toBeLessThan(firstTile!.sequence);
+
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const cacheName = (await caches.keys()).find((name) =>
+          name.startsWith("chinasupply-map-glyphs-"),
+        );
+        if (cacheName === undefined) return 0;
+        return (await (await caches.open(cacheName)).keys()).length;
+      }),
+    )
+    .toBe(6);
+
+  const coldGlyphRequestCount = fixedMapResources.glyphRequests.length;
+  await page.reload();
+  await waitForReadyMap(page);
+  await page.waitForTimeout(250);
+
+  expect(fixedMapResources.glyphRequests).toHaveLength(coldGlyphRequestCount);
 });
 
 test("debounces rapid category changes and sends only the final MAP request", async ({
@@ -240,6 +294,8 @@ test("shows truncated state after a factory flyTo and completes the factory deta
   await expect(
     page.getByRole("heading", { level: 1, name: FACTORY_NAME }),
   ).toBeVisible();
+  await expect(page.locator(".maplibregl-canvas")).toBeVisible();
+  await expectMapAttribution(page);
   await expect(
     page.getByRole("heading", { name: "Factory information" }),
   ).toBeVisible();

@@ -13,6 +13,10 @@ import {
   hasRenderableMapSize,
   observeRenderableMapContainer,
 } from "../../map/map-container-size";
+import {
+  createMapGlyphRuntime,
+  MAP_GLYPH_PROTOCOL,
+} from "../../map/map-glyph-cache";
 import { MapStatus } from "../../map/map-status";
 
 import styles from "./factory-detail.module.css";
@@ -55,8 +59,22 @@ export function FactoryLocationMap({
       }
       initializationStarted = true;
 
+      let style: StyleSpecification;
+      let glyphRuntime: ReturnType<typeof createMapGlyphRuntime>;
+      try {
+        const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "";
+        style = createChinaSupplyMapStyle(
+          mapTilerKey,
+        ) as unknown as StyleSpecification;
+        glyphRuntime = createMapGlyphRuntime({ mapTilerKey, style });
+        void glyphRuntime.prewarm(14);
+      } catch {
+        setState("error");
+        return;
+      }
+
       void import("maplibre-gl")
-        .then(({ Map, setWorkerUrl }) => {
+        .then(({ Map, addProtocol, setWorkerUrl }) => {
           if (disposed) return;
           if (!hasRenderableMapSize(container)) {
             initializationStarted = false;
@@ -64,16 +82,16 @@ export function FactoryLocationMap({
           }
 
           setWorkerUrl(MAPLIBRE_WORKER_URL);
+          addProtocol(MAP_GLYPH_PROTOCOL, glyphRuntime.protocolHandler);
           const map = new Map({
             attributionControl: false,
             center: location.coordinates,
             container,
             interactive: false,
             pitch: 0,
-            style: createChinaSupplyMapStyle(
-              process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "",
-            ) as unknown as StyleSpecification,
+            style,
             trackResize: false,
+            transformRequest: glyphRuntime.transformRequest,
             zoom: 14,
           });
 
