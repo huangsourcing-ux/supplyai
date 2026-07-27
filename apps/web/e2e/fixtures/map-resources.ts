@@ -73,9 +73,15 @@ const logoSvg = `
 
 export interface FixedMapResources {
   assertNoUnexpectedExternalRequests: () => void;
+  glyphRequests: string[];
   postHogRequests: Array<{
     method: string;
     postData: string | null;
+    url: string;
+  }>;
+  resourceRequests: Array<{
+    kind: "glyph" | "tile";
+    sequence: number;
     url: string;
   }>;
   tileRequests: string[];
@@ -85,8 +91,11 @@ export async function installFixedMapResources(
   context: BrowserContext,
 ): Promise<FixedMapResources> {
   const unexpectedExternalRequests: string[] = [];
+  const glyphRequests: string[] = [];
   const postHogRequests: FixedMapResources["postHogRequests"] = [];
+  const resourceRequests: FixedMapResources["resourceRequests"] = [];
   const tileRequests: string[] = [];
+  let requestSequence = 0;
 
   await context.route("**/*", async (route) => {
     const url = new URL(route.request().url());
@@ -126,6 +135,12 @@ export async function installFixedMapResources(
 
     if (url.hostname === FIXTURE_TILE_HOST) {
       tileRequests.push(url.href);
+      resourceRequests.push({
+        kind: "tile",
+        sequence: requestSequence,
+        url: url.href,
+      });
+      requestSequence += 1;
       await route.fulfill({
         body: EMPTY_VECTOR_TILE,
         contentType: "application/x-protobuf",
@@ -144,6 +159,14 @@ export async function installFixedMapResources(
     }
 
     if (url.hostname === MAPTILER_HOST && url.pathname.startsWith("/fonts/")) {
+      const safeUrl = `${url.origin}${url.pathname}`;
+      glyphRequests.push(safeUrl);
+      resourceRequests.push({
+        kind: "glyph",
+        sequence: requestSequence,
+        url: safeUrl,
+      });
+      requestSequence += 1;
       await route.fulfill({
         body: EMPTY_VECTOR_TILE,
         contentType: "application/x-protobuf",
@@ -199,7 +222,9 @@ export async function installFixedMapResources(
         );
       }
     },
+    glyphRequests,
     postHogRequests,
+    resourceRequests,
     tileRequests,
   };
 }
