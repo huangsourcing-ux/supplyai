@@ -96,7 +96,11 @@ describe("App map data sources", () => {
   });
 
   it("waits 500ms before requesting zoom-gated MAP-2 and MAP-3 data", () => {
-    jest.useFakeTimers();
+    jest.useFakeTimers({
+      // React Native's scheduler needs real microtask primitives. Faking them
+      // makes Jest spin during teardown on Linux runners.
+      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
+    });
     renderMap();
 
     fireEvent.press(screen.getByTestId("maplibre-region-did-change"));
