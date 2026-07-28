@@ -63,9 +63,15 @@ jest.mock("@chinasupply/api-client", () => ({
 jest.mock("@chinasupply/analytics", () => ({
   analytics: {
     trackClusterViewed: jest.fn(),
+    trackFactoryContactClicked: jest.fn(),
+    trackFactoryViewed: jest.fn(),
     trackMapMoved: jest.fn(),
     trackSearchPerformed: jest.fn(),
   },
+}));
+
+jest.mock("expo-clipboard", () => ({
+  setStringAsync: jest.fn(async () => undefined),
 }));
 
 jest.mock("expo-router", () => ({

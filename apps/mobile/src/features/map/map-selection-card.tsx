@@ -253,16 +253,12 @@ export function MapSelectionCard({
       onRetry={() => {
         void activeQuery.refetch();
       }}
-      onViewDetails={
-        isCluster
-          ? () => {
-              router.push({
-                pathname: "/clusters/[slug]",
-                params: { slug: selection.slug },
-              } as unknown as Href);
-            }
-          : undefined
-      }
+      onViewDetails={() => {
+        router.push({
+          pathname: isCluster ? "/clusters/[slug]" : "/factories/[slug]",
+          params: { slug: selection.slug },
+        } as unknown as Href);
+      }}
       selection={selection}
     />
   );

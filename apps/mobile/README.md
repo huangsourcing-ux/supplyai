@@ -10,7 +10,8 @@ above. MAP-3 points use native MapLibre clustering with cluster expansion on
 press. MAP-1 points, MAP-2 boundaries, and unclustered MAP-3 points open a
 bottom card that renders the lightweight map identity immediately and fills in
 the image and main products through A-2/A-5. Industrial-cluster cards now route
-to `/clusters/[slug]`; factory detail remains visibly disabled until M4-T2c.
+to `/clusters/[slug]`; factory cards route to `/factories/[slug]` from both the
+map and the cluster factory list.
 
 Viewport requests are debounced for 500ms and canceled when movement starts.
 The first camera position is excluded from analytics; later settled movements
@@ -64,6 +65,30 @@ stats, and the largest has five factories. Therefore real-data Markdown and a
 second A-3 cursor page remain an acceptance blocker even though their unit
 coverage passes. M4-T2b stays unchecked until those two staging paths are
 smoked with approved published data.
+
+The M4-T2c factory-detail implementation loads A-5 through the generated client
+and supports direct `/factories/[slug]` deep links. It renders verification and
+source metadata, an optional paged image gallery, only the available factory
+facts, a read-only zoom-14 WGS-84 point map, bilingual address copy, safe
+Website/Email/Phone/WeChat actions, and a related-factory rail. Loading, 404,
+service, copy, external-link, and map failures remain recoverable. Navigation
+providers are deliberately disabled placeholders until M4-T5; save remains an
+M4-T3b concern. One `factory_viewed` and each contact action use the shared
+analytics facade, which remains a network no-op without Mobile consent and an
+adapter.
+
+On the iPhone 17 Pro / iOS 26.5 Simulator and `diaoyouji_api_36` / API 36
+Emulator, preview platform-restricted keys plus the canonical staging API
+passed direct deep linking, map and cluster-list entry routing, A-5 rendering,
+the Streets v4 point map and attribution, Website handoff, related-factory
+routing, return handling, and crash-free interaction. Android additionally
+proved English address copy feedback and an offline service failure followed by
+a successful Retry after network restoration. Canonical staging currently has
+six published factories: all are verified, none has images, certifications,
+MOQ, establishment year, employee scale, Email, Phone, or WeChat, and Website
+is the only contact method. Five return related factories. Those missing
+real-data variants remain the acceptance blocker, so M4-T2c stays unchecked
+despite fixed-fixture unit coverage.
 
 Clerk tokens are stored in a dedicated encrypted MMKV instance. Its randomly
 generated encryption key is persisted with Expo SecureStore and is never placed

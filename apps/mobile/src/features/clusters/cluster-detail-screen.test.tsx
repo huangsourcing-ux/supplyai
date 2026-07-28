@@ -109,6 +109,7 @@ function renderLoaded(
       isInitialFactoriesError={false}
       isInitialFactoriesLoading={false}
       onBack={jest.fn()}
+      onFactoryDetails={jest.fn()}
       onFetchNextPage={jest.fn()}
       onRetryFactories={jest.fn()}
       {...overrides}
@@ -117,8 +118,9 @@ function renderLoaded(
 }
 
 describe("mobile cluster detail presentation", () => {
-  it("renders every F-2.1 section and keeps future actions disabled", () => {
-    renderLoaded();
+  it("renders every F-2.1 section and enables factory detail navigation", () => {
+    const onFactoryDetails = jest.fn();
+    renderLoaded({ onFactoryDetails });
 
     expect(screen.getByText(cluster.name)).toBeOnTheScreen();
     expect(screen.getByText("Yiwu, China")).toBeOnTheScreen();
@@ -130,9 +132,12 @@ describe("mobile cluster detail presentation", () => {
     expect(screen.getByText(factory.name)).toBeOnTheScreen();
     expect(screen.getByText("Verified")).toBeOnTheScreen();
     expect(screen.getByTestId("cluster-save-placeholder")).toBeDisabled();
-    expect(
-      screen.getByTestId("cluster-factory-details-yiwu-bright-goods"),
-    ).toBeDisabled();
+    const details = screen.getByTestId(
+      "cluster-factory-details-yiwu-bright-goods",
+    );
+    expect(details).toBeEnabled();
+    fireEvent.press(details);
+    expect(onFactoryDetails).toHaveBeenCalledWith("yiwu-bright-goods");
     expect(
       screen.getByText("© MapTiler · © OpenStreetMap contributors"),
     ).toBeOnTheScreen();
@@ -202,6 +207,7 @@ describe("mobile cluster detail presentation", () => {
         isInitialFactoriesError={false}
         isInitialFactoriesLoading={false}
         onBack={jest.fn()}
+        onFactoryDetails={jest.fn()}
         onFetchNextPage={retry}
         onRetryFactories={jest.fn()}
       />,
@@ -260,6 +266,7 @@ describe("mobile cluster detail route", () => {
     jest.mocked(useLocalSearchParams).mockReturnValue({
       slug: "yiwu-small-commodities",
     });
+    const push = jest.fn();
     jest.mocked(useRouter).mockReturnValue({
       back: jest.fn(),
       canDismiss: jest.fn(() => false),
@@ -269,7 +276,7 @@ describe("mobile cluster detail route", () => {
       dismissTo: jest.fn(),
       navigate: jest.fn(),
       prefetch: jest.fn(),
-      push: jest.fn(),
+      push,
       reload: jest.fn(),
       replace: jest.fn(),
       setParams: jest.fn(),
@@ -307,6 +314,13 @@ describe("mobile cluster detail route", () => {
     });
     await waitFor(() => {
       expect(screen.getByText(factory.name)).toBeOnTheScreen();
+    });
+    fireEvent.press(
+      screen.getByTestId("cluster-factory-details-yiwu-bright-goods"),
+    );
+    expect(push).toHaveBeenCalledWith({
+      params: { slug: "yiwu-bright-goods" },
+      pathname: "/factories/[slug]",
     });
     unmount();
     queryClient.clear();

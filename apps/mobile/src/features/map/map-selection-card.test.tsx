@@ -65,7 +65,8 @@ describe("mobile map selection card", () => {
     expect(onViewDetails).toHaveBeenCalledTimes(1);
   });
 
-  it("renders A-5 image and products while keeping the future native CTA disabled", () => {
+  it("renders A-5 image and products with the factory detail CTA enabled", () => {
+    const onViewDetails = jest.fn();
     render(
       <MapSelectionCardView
         detail={{
@@ -80,6 +81,7 @@ describe("mobile map selection card", () => {
         })}
         onClose={jest.fn()}
         onRetry={jest.fn()}
+        onViewDetails={onViewDetails}
         selection={factorySelection}
       />,
     );
@@ -90,7 +92,9 @@ describe("mobile map selection card", () => {
     expect(screen.getByTestId("map-card-image")).toHaveProp("source", {
       uri: "https://media.example.test/factories/bright/cover.webp",
     });
-    expect(screen.getByTestId("map-card-details-cta")).toBeDisabled();
+    expect(screen.getByTestId("map-card-details-cta")).toBeEnabled();
+    fireEvent.press(screen.getByTestId("map-card-details-cta"));
+    expect(onViewDetails).toHaveBeenCalledTimes(1);
   });
 
   it("preserves the selection and exposes retry when detail loading fails", () => {
@@ -139,6 +143,34 @@ describe("mobile map selection card", () => {
     expect(push).toHaveBeenCalledWith({
       params: { slug: "yiwu-small-commodities" },
       pathname: "/clusters/[slug]",
+    });
+  });
+
+  it("pushes the factory slug through the Expo Router container", () => {
+    const push = jest.fn();
+    jest.mocked(useRouter).mockReturnValue({
+      back: jest.fn(),
+      canDismiss: jest.fn(() => false),
+      canGoBack: jest.fn(() => true),
+      dismiss: jest.fn(),
+      dismissAll: jest.fn(),
+      dismissTo: jest.fn(),
+      navigate: jest.fn(),
+      prefetch: jest.fn(),
+      push,
+      reload: jest.fn(),
+      replace: jest.fn(),
+      setParams: jest.fn(),
+    });
+
+    render(
+      <MapSelectionCard onClose={jest.fn()} selection={factorySelection} />,
+    );
+
+    fireEvent.press(screen.getByTestId("map-card-details-cta"));
+    expect(push).toHaveBeenCalledWith({
+      params: { slug: "yiwu-bright-goods" },
+      pathname: "/factories/[slug]",
     });
   });
 });
