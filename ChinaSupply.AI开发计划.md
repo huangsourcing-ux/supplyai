@@ -1,11 +1,12 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.2** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T2b/T2c 真实数据 smoke** ｜ 日期：2026-07-28
+> 版本：**v1.3** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T3a** ｜ 日期：2026-07-28
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.4 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
 > v1.1 变更：新增 API Client 生成链路（Orval）；数据导入提前至 M1、最小 /ops 提前至 M2；Redis/Worker 与环境策略进入 M0；移动兼容 Spike 扩充；CI 触发分级；超大任务包拆小；补 Maestro/k6 测试层；工期修正为 12-14 周。终审修正：M0-T0 外部前置清单；Clerk 基础鉴权入 M0；App 账户页补全（M4-T3a）；privacy/terms 前移 M3；新增 Production Cutover 与商店发布（M5-T9~T11）；删除超出 PRD 的导入 UI/批量图片/告警（移 P1）；Admin 无硬删除 + 上传校验链；数据核验 SOP。
 > v1.2 变更：经 Owner 批准，在 M4-T1 前新增 M4-T0 地图体验诊断与方向稿门禁；先在全国/城市/街道三个缩放层级明确底图、业务图层与浮层交互问题，待 Owner 选定方向后再实现。未修改 PRD V1 功能范围。
+> v1.3 变更：经 Owner 批准，将 M4-T2b/T2c 的验收口径收敛为双端 canonical staging 主路径 smoke + 固定 fixture/自动化分支覆盖；真实图片受 ADM-6 时序约束，联系方式与 21+ 同产业带真实数据属于 M5 数据增强后的回归，不再阻塞 M4。现状核查确认 Admin 业务 controller 仅有 GET/PATCH/verify/publish/unpublish，没有 Create/Upload 写入端点；M1 import 可新增 `draft + unverified`，但不能替代 `/ops` 审核留痕。Unverified 继续由 fixture 验收，不为测试长期发布未核验工厂。未修改 PRD V1 功能范围或 API wire contract。
 
 ---
 
@@ -143,8 +144,8 @@ chinasupply/
   - [x] **M4-T1a App 地图数据源与图层**：共享 Streets v4 2D style；MAP-1/2/3 生成客户端数据源；zoom 8/10 分层；500ms 防抖、abort、错误重试与 attribution。
   - [x] **M4-T1b App 聚合、卡片与交互**：工厂聚合与放大、MAP-1/MAP-3 选择、底部卡片补全、truncated 提示、`map_moved` 节流及交互验收。**已使用 preview 环境的真实 iOS/Android 受限 MapTiler key 与 canonical staging API，在 iPhone 17 Pro Simulator（iOS 26.5）和 `diaoyouji_api_36` Android Emulator（API 36）完成底图/attribution、聚合放大、产业带/工厂卡片、关闭、失败/Retry 与无崩溃 smoke。详情 CTA 在 M4-T2b/T2c 原生路由落地前保持可见禁用态；Mobile 真实 PostHog adapter + Consent 不得夹带，须另行批准并先修订本计划。**
 - [x] **M4-T2a App 搜索**：完成 F-3.1～F-3.6 RN 实现，并补齐 F-1.6 一级类目 chips；100 字符输入上限、trim + 2 字符门槛、300ms 搜索防抖、三组结果/空态热门类目/错误重试、500ms 类目 MAP 筛选防抖与旧请求取消、二级精确筛选态、产业带 zoom 9/工厂 zoom 13 定位及即时卡片均已落地。**已使用 preview 环境真实平台受限 MapTiler key 与 canonical staging API，在 iPhone 17 Pro Simulator（iOS 26.5）和 `diaoyouji_api_36` Android Emulator（API 36）完成 `led`、`socks`、`sofa`、`家具`、无结果、失败/Retry、一级/二级类目筛选、产业带/工厂定位与卡片、attribution 及无原生崩溃 smoke；A-6 四组 warm 请求均 `<500ms`，101 字符直接请求返回 400。Mobile analytics 继续经共享 facade 且网络 no-op；未接入 PostHog adapter/Consent、详情路由、Maestro 依赖、生产密钥或部署。**
-- [ ] **M4-T2b App 产业带详情**：F-2 RN 实现。**`/clusters/[slug]`、A-2/A-3、静态 boundary/centroid 小地图、安全 Markdown、工厂 cursor 列表、完整失败/重试态、禁用收藏占位和 `cluster_viewed` facade 已实现；preview 平台受限 key + canonical staging API 的 iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 已通过地图卡片进入、直接深链、boundary/attribution、5 家工厂滚动、工厂 CTA 禁用、返回地图及无崩溃主路径。当前 canonical staging 仅有 2 个 published 产业带，二者 `description/stats` 均为空且最大 `factoryCount=5`，无法完成真实 Markdown 与 A-3 第二页 cursor smoke；按本任务门禁保持未勾选，待经既有审核流程补足可验收 published 数据并完成双端复验后方可收口。未修改 staging 数据。**
-- [ ] **M4-T2c App 工厂详情**：F-4 RN 实现。**已实现 Expo Router `/factories/[slug]`、A-5 完整状态、图片轮播/可选信息、共享 Streets v4 点位小地图、双语地址复制、安全联系方式、relatedFactories 路由与完整 Retry；地图工厂卡片和产业带工厂列表 CTA 均已启用。preview 平台受限 key + canonical staging API 的 iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 已通过直接深链、A-5、地图/attribution、Website、related 跳转、返回与无崩溃主路径；Android 另通过地址复制反馈及断网失败→恢复后 Retry。当前 canonical staging 仅 6 家 published 工厂，全部 verified，均无图片/认证/MOQ/成立年份/员工规模/Email/Phone/WeChat，仅 Website 联系方式，5 家有 relatedFactories；因缺失的真实数据分支仅由固定 fixture 覆盖，按门禁保持未勾选，待经既有审核流程补足 published 数据并完成双端复验后方可收口。未修改 staging 数据；F-6 真实导航仍留给 M4-T5。**
+- [x] **M4-T2b App 产业带详情**：F-2 RN 实现。**`/clusters/[slug]`、A-2/A-3、静态 boundary/centroid 小地图、安全 Markdown、工厂 cursor 列表、完整失败/重试态、禁用收藏占位和 `cluster_viewed` facade 已实现；preview 平台受限 key + canonical staging API 的 iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 已通过地图卡片进入、直接深链、boundary/attribution、5 家工厂滚动、返回地图及无崩溃主路径。Markdown、stats、cursor 合并/去重与分页失败由固定 fixture/自动化覆盖。canonical staging 当前没有 description/stats 且单带最多 5 家工厂；真实 Markdown 与 21+ 数据回归按 v1.3 移至 M5 且不阻塞本项，不为触发 cursor 人为扭曲审核数据。未修改 staging 数据。**
+- [x] **M4-T2c App 工厂详情**：F-4 RN 实现。**已实现 Expo Router `/factories/[slug]`、A-5 完整状态、图片轮播/可选信息、共享 Streets v4 点位小地图、双语地址复制、安全联系方式、relatedFactories 路由与完整 Retry；地图工厂卡片和产业带工厂列表 CTA 均已启用。preview 平台受限 key + canonical staging API 的 iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 已通过直接深链、A-5、地图/attribution、Website、related 跳转、返回与无崩溃主路径；Android 另通过地址复制反馈及断网失败→恢复后 Retry。图片零/单/多、Unverified、可选信息、Email/Phone/WeChat 与失败态由固定 fixture/自动化覆盖；真实图片必须等待 M5-T1 ADM-6，审核联系方式与双端拨号器复验移至 M5-T2。不会为验收长期发布 unverified 工厂；F-6 真实导航仍留给 M4-T5。未修改 staging 数据。**
 - [ ] **M4-T3a App 认证与账户页**：Clerk Expo；Account tab 覆盖 F-8.3 全部——邮箱展示、locale（PATCH /me）、登出、删除账户（DELETE /me）；删除/登出后清理本地 token 与缓存。
 - [ ] **M4-T3b App 收藏**：Saved tab、收藏/取消、未登录空状态。
 - [ ] **M4-T4 Explore tab**：F-10.1。
@@ -159,14 +160,14 @@ chinasupply/
 
 ## M5 内容、数据增强与上线加固（预计 2 周）
 
-- [ ] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。
-- [ ] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）
+- [ ] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。验收须以获授权真实图片完成 presign→PUT→HEAD→PATCH→A-5 CDN URL 全链路，不得用 fixture 冒充上传链。
+- [ ] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）M5-T1 完成后，通过 `/ops` 对含获授权图片及经 SOP 审核 Phone/Email/WeChat 的 staging 工厂完成预览、verify、publish，并复跑 M4-T2c 图片/联系方式分支；Phone 另由人工在 iOS/Android 验证系统拨号器接收规范化号码。
 - [ ] **M5-T3 搜索列联动**：类目的 name/aliases 修改后触发 BullMQ `regenerate:search-text` 更新关联产业带与工厂（PRD 3.8）；publish/unpublish 的 MAP purge 已由 M2-T6 前置交付。
 - [ ] **M5-T4 Payload 文章**：F-7.1 + `/guides`（F-10.2）+ 文章内产业带卡片。
 - [ ] **M5-T5 导入增强**：`geocode:factories`（高德 + 转换 + verified=false）。（批量图片与任务监控告警超出 PRD，移入 P1。）
 - [ ] **M5-T6 备份**：F-9.3 每日加密 pg_dump → R2、30 天保留；**恢复演练一次并记录**。
 - [ ] **M5-T7 静态页与 SEO**：创建 /about；在 production **复核**已上线的 /privacy、/terms（M3-T7）与地图 attribution（M2/M4 已实现，勿重写）；sitemap；空状态/骨架屏与 SEO 核查（F-10.4 / N-2）。
-- [ ] **M5-T8 性能与加固**：k6 复测（真实数据量）对照 N-1；限流复核；生产环境变量与密钥审计。
+- [ ] **M5-T8 性能与加固**：k6 复测（真实数据量）对照 N-1；限流复核；生产环境变量与密钥审计。若经审核的 canonical staging 自然形成同一产业带 21+ 家 published 工厂，则追加 M4-T2b 第二页 cursor 双端回归；若没有，不得为测试伪造/错配真实数据，API cursor e2e 与 Mobile 固定 fixture 仍是强制门禁，该真实数据回归不阻塞本项或上线。
 - [ ] **M5-T8a 生产内容迁移（上线数据来源，唯一实质缺口的补齐项）**：数据三分类贯穿全程——测试/合成、真实未验证、已验证可迁移（curated）。staging 中 synthetic/test 数据使用独立 namespace（slug 前缀或标记），永不导出；以干净 CSV/JSON 为 canonical dataset，只导出 **verified 且 curated** 的 clusters/factories；生成导出 manifest（记录数、slug、校验和、R2 objectKey）；被引用图片复制到 production bucket/prefix；导入 production 保持 draft，production admin 核对 manifest + 抽样后 publish；导入后校验记录数、对象存在性与校验和；Payload articles/media 单独制定导入或生产重录方案。
 - [ ] **M5-T9 Production Cutover**：先将 MapTiler 升级为 Flex 并确认商业授权，创建按正式 Web 域名、iOS Bundle ID、Android Package 分别限制的三只 production key，设置账单上限/告警并验证 Planet v4 TileJSON、PBF、glyph、sprite；Free 与 staging key 不得进入 commercial production。随后创建/核对生产 DB、Redis、R2、Clerk Production、Cloudflare；生产 migration dry-run；上线前备份；部署 API/Worker/Web；production smoke test；验证 staging 数据未流入 production；记录回滚命令与上一版本。
 - [ ] **M5-T10 App Production Release**：EAS Production Build + EAS Submit；App Store / Google Play 审核；分阶段发布或手动发布；验证商店链接、Clerk OAuth callback 与自定义 URL Scheme。（**V1 不做 Universal/App Links，移入 P1**，降低商店发布风险。）

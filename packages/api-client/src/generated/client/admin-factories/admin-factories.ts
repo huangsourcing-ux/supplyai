@@ -21,8 +21,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   CreateAdminFactory200,
   CreateAdminFactoryBody,
@@ -78,8 +76,8 @@ export const getGetAdminFactoriesUrl = (params?: GetAdminFactoriesParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/admin/factories?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/admin/factories`;
+    ? `/api/v1/admin/factories?${stringifiedParams}`
+    : `/api/v1/admin/factories`;
 };
 
 /**
@@ -98,10 +96,7 @@ export const getAdminFactories = async (
 export const getGetAdminFactoriesQueryKey = (
   params?: GetAdminFactoriesParams,
 ) => {
-  return [
-    `${getApiOrigin()}/api/v1/admin/factories`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/admin/factories`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetAdminFactoriesQueryOptions = <
@@ -248,7 +243,7 @@ export function useGetAdminFactories<
 }
 
 export const getCreateAdminFactoryUrl = () => {
-  return `${getApiOrigin()}/api/v1/admin/factories`;
+  return `/api/v1/admin/factories`;
 };
 
 /**
@@ -340,7 +335,7 @@ export const useCreateAdminFactory = <
   );
 };
 export const getGetAdminFactoryUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/factories/${id}`;
+  return `/api/v1/admin/factories/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -357,7 +352,7 @@ export const getAdminFactory = async (
 };
 
 export const getGetAdminFactoryQueryKey = (id: string) => {
-  return [`${getApiOrigin()}/api/v1/admin/factories/${id}`] as const;
+  return [`/api/v1/admin/factories/${id}`] as const;
 };
 
 export const getGetAdminFactoryQueryOptions = <
@@ -508,7 +503,7 @@ export function useGetAdminFactory<
 }
 
 export const getUpdateAdminFactoryUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/factories/${id}`;
+  return `/api/v1/admin/factories/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -601,7 +596,7 @@ export const useUpdateAdminFactory = <
   );
 };
 export const getPublishAdminFactoryUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/factories/${id}/publish`;
+  return `/api/v1/admin/factories/${encodeURIComponent(String(id))}/publish`;
 };
 
 /**
@@ -691,7 +686,7 @@ export const usePublishAdminFactory = <
   );
 };
 export const getUnpublishAdminFactoryUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/factories/${id}/unpublish`;
+  return `/api/v1/admin/factories/${encodeURIComponent(String(id))}/unpublish`;
 };
 
 /**
@@ -781,7 +776,7 @@ export const useUnpublishAdminFactory = <
   );
 };
 export const getVerifyAdminFactoryUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/factories/${id}/verify`;
+  return `/api/v1/admin/factories/${encodeURIComponent(String(id))}/verify`;
 };
 
 /**

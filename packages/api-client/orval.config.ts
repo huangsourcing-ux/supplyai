@@ -6,15 +6,6 @@ export default defineConfig({
       target: "../../apps/api/openapi.json",
     },
     output: {
-      baseUrl: {
-        imports: [
-          {
-            importPath: "../../runtime",
-            name: "getApiOrigin",
-          },
-        ],
-        runtime: "getApiOrigin()",
-      },
       clean: true,
       client: "react-query",
       formatter: "prettier",
@@ -46,6 +37,7 @@ export default defineConfig({
       schemas: "./src/generated/models",
       target: "./src/generated/client",
       tagsSplitDeduplication: true,
+      urlEncodeParameters: true,
     },
   },
 });

@@ -29,7 +29,7 @@ configureApiClient({
 export const getFactoryPageData = cache(
   async (slug: string): Promise<GetFactory200 | null> => {
     try {
-      return await getFactory(encodeURIComponent(slug), revalidatedRequest);
+      return await getFactory(slug, revalidatedRequest);
     } catch (error) {
       if (isMissingFactoryResponse(error)) return null;
       throw error;

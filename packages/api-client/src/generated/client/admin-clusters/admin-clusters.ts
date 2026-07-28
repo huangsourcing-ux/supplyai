@@ -21,8 +21,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   CreateAdminCluster200,
   CreateAdminClusterBody,
@@ -76,8 +74,8 @@ export const getGetAdminClustersUrl = (params?: GetAdminClustersParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/admin/clusters?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/admin/clusters`;
+    ? `/api/v1/admin/clusters?${stringifiedParams}`
+    : `/api/v1/admin/clusters`;
 };
 
 /**
@@ -96,10 +94,7 @@ export const getAdminClusters = async (
 export const getGetAdminClustersQueryKey = (
   params?: GetAdminClustersParams,
 ) => {
-  return [
-    `${getApiOrigin()}/api/v1/admin/clusters`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/admin/clusters`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetAdminClustersQueryOptions = <
@@ -246,7 +241,7 @@ export function useGetAdminClusters<
 }
 
 export const getCreateAdminClusterUrl = () => {
-  return `${getApiOrigin()}/api/v1/admin/clusters`;
+  return `/api/v1/admin/clusters`;
 };
 
 /**
@@ -338,7 +333,7 @@ export const useCreateAdminCluster = <
   );
 };
 export const getGetAdminClusterUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/clusters/${id}`;
+  return `/api/v1/admin/clusters/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -355,7 +350,7 @@ export const getAdminCluster = async (
 };
 
 export const getGetAdminClusterQueryKey = (id: string) => {
-  return [`${getApiOrigin()}/api/v1/admin/clusters/${id}`] as const;
+  return [`/api/v1/admin/clusters/${id}`] as const;
 };
 
 export const getGetAdminClusterQueryOptions = <
@@ -506,7 +501,7 @@ export function useGetAdminCluster<
 }
 
 export const getUpdateAdminClusterUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/clusters/${id}`;
+  return `/api/v1/admin/clusters/${encodeURIComponent(String(id))}`;
 };
 
 /**
@@ -599,7 +594,7 @@ export const useUpdateAdminCluster = <
   );
 };
 export const getPublishAdminClusterUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/clusters/${id}/publish`;
+  return `/api/v1/admin/clusters/${encodeURIComponent(String(id))}/publish`;
 };
 
 /**
@@ -689,7 +684,7 @@ export const usePublishAdminCluster = <
   );
 };
 export const getUnpublishAdminClusterUrl = (id: string) => {
-  return `${getApiOrigin()}/api/v1/admin/clusters/${id}/unpublish`;
+  return `/api/v1/admin/clusters/${encodeURIComponent(String(id))}/unpublish`;
 };
 
 /**

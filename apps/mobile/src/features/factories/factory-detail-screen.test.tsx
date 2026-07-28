@@ -281,7 +281,7 @@ describe("mobile factory contact actions", () => {
       2,
       "mailto:sales%40bright.example.test",
     );
-    expect(openUrl).toHaveBeenNthCalledWith(3, "tel:%2B86%20579%201234%205678");
+    expect(openUrl).toHaveBeenNthCalledWith(3, "tel:+8657912345678");
     for (const method of ["website", "email", "phone", "wechat"] as const) {
       expect(analytics.trackFactoryContactClicked).toHaveBeenCalledWith({
         factoryId: factory.id,
@@ -331,6 +331,24 @@ describe("mobile factory contact actions", () => {
         screen.getByText("This action could not be completed. Try again."),
       ).toBeOnTheScreen();
     });
+  });
+
+  it("keeps invalid telephone values non-actionable and untracked", () => {
+    const openUrl = jest.spyOn(Linking, "openURL");
+    openUrl.mockClear();
+    jest.mocked(analytics.trackFactoryContactClicked).mockClear();
+    render(
+      <FactoryContactActions
+        contact={{ phone: "+86 579 1234 5678;123" }}
+        factoryId={factory.id}
+        slug={factory.slug}
+      />,
+    );
+
+    expect(screen.queryByTestId("factory-contact-phone")).toBeNull();
+    expect(screen.getByText("+86 579 1234 5678;123")).toBeOnTheScreen();
+    expect(openUrl).not.toHaveBeenCalled();
+    expect(analytics.trackFactoryContactClicked).not.toHaveBeenCalled();
   });
 });
 

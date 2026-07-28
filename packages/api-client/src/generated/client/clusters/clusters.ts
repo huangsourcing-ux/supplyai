@@ -18,8 +18,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   GetCluster200,
   GetClusterDefault,
@@ -66,8 +64,8 @@ export const getGetClustersUrl = (params?: GetClustersParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/clusters?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/clusters`;
+    ? `/api/v1/clusters?${stringifiedParams}`
+    : `/api/v1/clusters`;
 };
 
 /**
@@ -84,10 +82,7 @@ export const getClusters = async (
 };
 
 export const getGetClustersQueryKey = (params?: GetClustersParams) => {
-  return [
-    `${getApiOrigin()}/api/v1/clusters`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/clusters`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetClustersQueryOptions = <
@@ -213,7 +208,7 @@ export function useGetClusters<
 }
 
 export const getGetClusterUrl = (slug: string) => {
-  return `${getApiOrigin()}/api/v1/clusters/${slug}`;
+  return `/api/v1/clusters/${encodeURIComponent(String(slug))}`;
 };
 
 /**
@@ -230,7 +225,7 @@ export const getCluster = async (
 };
 
 export const getGetClusterQueryKey = (slug: string) => {
-  return [`${getApiOrigin()}/api/v1/clusters/${slug}`] as const;
+  return [`/api/v1/clusters/${slug}`] as const;
 };
 
 export const getGetClusterQueryOptions = <
@@ -375,8 +370,8 @@ export const getGetClusterFactoriesUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/clusters/${slug}/factories?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/clusters/${slug}/factories`;
+    ? `/api/v1/clusters/${encodeURIComponent(String(slug))}/factories?${stringifiedParams}`
+    : `/api/v1/clusters/${encodeURIComponent(String(slug))}/factories`;
 };
 
 /**
@@ -401,7 +396,7 @@ export const getGetClusterFactoriesQueryKey = (
   params?: GetClusterFactoriesParams,
 ) => {
   return [
-    `${getApiOrigin()}/api/v1/clusters/${slug}/factories`,
+    `/api/v1/clusters/${slug}/factories`,
     ...(params ? [params] : []),
   ] as const;
 };

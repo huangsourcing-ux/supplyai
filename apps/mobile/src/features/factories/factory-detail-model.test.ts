@@ -1,10 +1,7 @@
 import {
-  buildEmailUrl,
-  buildPhoneUrl,
   formatVerificationMonth,
   hasFactoryContact,
   normalizeFactorySlug,
-  safeHttpUrl,
 } from "./factory-detail-model";
 
 describe("factory detail model", () => {
@@ -28,29 +25,11 @@ describe("factory detail model", () => {
     expect(formatVerificationMonth(null)).toBeNull();
   });
 
-  it("accepts only HTTP(S) external URLs", () => {
-    expect(safeHttpUrl("https://factory.example.test/source")).toBe(
-      "https://factory.example.test/source",
-    );
-    expect(safeHttpUrl("http://factory.example.test")).toBe(
-      "http://factory.example.test/",
-    );
-    expect(safeHttpUrl("javascript:alert(1)")).toBeNull();
-    expect(safeHttpUrl("not a url")).toBeNull();
-    expect(safeHttpUrl(null)).toBeNull();
-  });
-
-  it("detects usable contact fields and creates platform URLs", () => {
+  it("detects usable contact fields", () => {
     expect(hasFactoryContact(null)).toBe(false);
     expect(hasFactoryContact({})).toBe(false);
     expect(hasFactoryContact({ website: "https://factory.example.test" })).toBe(
       true,
-    );
-    expect(buildEmailUrl("sales@example.test")).toBe(
-      "mailto:sales%40example.test",
-    );
-    expect(buildPhoneUrl("+86 769 1234 5678")).toBe(
-      "tel:%2B86%20769%201234%205678",
     );
   });
 });

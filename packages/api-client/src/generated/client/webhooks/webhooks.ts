@@ -13,8 +13,6 @@ import type {
   UseMutationResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   HandleClerkWebhook200,
   HandleClerkWebhookBody,
@@ -27,7 +25,7 @@ import type { ErrorType } from "../../../fetcher";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export const getHandleClerkWebhookUrl = () => {
-  return `${getApiOrigin()}/api/v1/webhooks/clerk`;
+  return `/api/v1/webhooks/clerk`;
 };
 
 /**

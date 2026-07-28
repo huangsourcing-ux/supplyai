@@ -1,3 +1,5 @@
+import { getApiOrigin } from "./runtime";
+
 export type ApiClientError<TError = unknown> = Error & {
   info?: TError;
   status?: number;
@@ -9,7 +11,8 @@ export async function apiFetch<TData, TError = unknown>(
   url: string,
   options: RequestInit,
 ): Promise<TData> {
-  const response = await fetch(url, options);
+  const requestUrl = url.startsWith("/") ? `${getApiOrigin()}${url}` : url;
+  const response = await fetch(requestUrl, options);
   const body = [204, 205, 304].includes(response.status)
     ? null
     : await response.text();

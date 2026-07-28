@@ -34,7 +34,7 @@ configureApiClient({
 export const getClusterPageData = cache(
   async (slug: string): Promise<GetCluster200 | null> => {
     try {
-      return await getCluster(encodeURIComponent(slug), revalidatedRequest);
+      return await getCluster(slug, revalidatedRequest);
     } catch (error) {
       if (isMissingClusterResponse(error)) return null;
       throw error;
@@ -46,7 +46,7 @@ export const getClusterFactoryFirstPage = cache(
   async (slug: string): Promise<GetClusterFactories200 | null> => {
     try {
       return await getClusterFactories(
-        encodeURIComponent(slug),
+        slug,
         { limit: CLUSTER_FACTORY_PAGE_SIZE },
         revalidatedRequest,
       );

@@ -2,7 +2,13 @@ import { createServer } from "node:http";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { configureApiClient, getHealthLive } from "../src/index.js";
+import {
+  configureApiClient,
+  getDeleteFavoriteUrl,
+  getFactory,
+  getGetFactoryUrl,
+  getHealthLive,
+} from "../src/index.js";
 
 const servers: ReturnType<typeof createServer>[] = [];
 
@@ -36,6 +42,15 @@ async function listen(
 }
 
 describe("generated fetch client", () => {
+  it("encodes every path parameter as one URL segment", () => {
+    expect(getGetFactoryUrl("factory/with?query#fragment%")).toBe(
+      "/api/v1/factories/factory%2Fwith%3Fquery%23fragment%25",
+    );
+    expect(getDeleteFavoriteUrl("factory", "id/with?query#fragment%")).toBe(
+      "/api/v1/favorites/factory/id%2Fwith%3Fquery%23fragment%25",
+    );
+  });
+
   it("calls the configured health URL and returns its envelope", async () => {
     let requestedUrl: string | undefined;
     const origin = await listen((request, response) => {
@@ -57,6 +72,22 @@ describe("generated fetch client", () => {
       meta: {},
     });
     expect(requestedUrl).toBe("/health/live");
+  });
+
+  it("prefixes encoded generated paths with the configured deployment origin", async () => {
+    let requestedUrl: string | undefined;
+    const origin = await listen((request, response) => {
+      requestedUrl = request.url;
+      response.setHeader("content-type", "application/json");
+      response.end(JSON.stringify({ data: null, error: null, meta: {} }));
+    });
+    configureApiClient({ baseUrl: `${origin}/backend/api/v1` });
+
+    await getFactory("factory/with?query#fragment%");
+
+    expect(requestedUrl).toBe(
+      "/backend/api/v1/factories/factory%2Fwith%3Fquery%23fragment%25",
+    );
   });
 
   it("throws an error carrying status and parsed details for non-2xx", async () => {

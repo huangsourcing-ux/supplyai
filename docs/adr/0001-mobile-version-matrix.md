@@ -233,9 +233,11 @@ The canonical staging inventory contains two published clusters. Both return
 factories, below the 20-item page size. Optional-block hiding was observed on
 both platforms, while safe Markdown rendering and cursor-page merge/deduplication
 passed unit tests. Real-data Markdown and a second A-3 cursor page could not be
-smoked without changing staging content, so M4-T2b remains unchecked under its
-approved acceptance gate. Published verification data must be added through the
-existing Admin API and `/ops` review flow before the final dual-platform smoke.
+smoked without changing staging content. Under the Owner-approved development
+plan v1.3 acceptance, the real canonical main path plus fixed fixture coverage
+closes M4-T2b. A 21+ real-data cursor regression is opportunistic in M5 only
+when reviewed data naturally supports it; staging data must not be distorted to
+manufacture a second page.
 
 ## M4-T2c factory-detail simulator evidence
 
@@ -257,9 +259,11 @@ offer Website as their only contact method; none exposes Email, Phone, or
 WeChat. Five return non-empty `relatedFactories`. Fixed A-5 fixtures cover the
 missing image cardinalities, unverified state, optional facts, all four contact
 actions, safe URLs, copy failure, and map failure/Retry, but those fixtures do
-not satisfy the approved real-data smoke gate. M4-T2c therefore remains
-unchecked until approved published data covers the missing variants and the
-dual-platform smoke is repeated.
+satisfy the Owner-approved development plan v1.3 branch acceptance together
+with the canonical main-path smoke, closing M4-T2c. Real media cannot be
+accepted before M5-T1 delivers ADM-6; reviewed optional contacts, media, and
+dual-platform Phone dialer handoff move to M5-T2. Unverified remains a fixture
+branch rather than a reason to keep a deliberately unverified factory public.
 
 ## Upgrade policy
 

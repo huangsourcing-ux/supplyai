@@ -21,8 +21,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   CreateFavorite200,
   CreateFavoriteBody,
@@ -69,8 +67,8 @@ export const getGetFavoritesUrl = (params?: GetFavoritesParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/favorites?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/favorites`;
+    ? `/api/v1/favorites?${stringifiedParams}`
+    : `/api/v1/favorites`;
 };
 
 /**
@@ -87,10 +85,7 @@ export const getFavorites = async (
 };
 
 export const getGetFavoritesQueryKey = (params?: GetFavoritesParams) => {
-  return [
-    `${getApiOrigin()}/api/v1/favorites`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/favorites`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetFavoritesQueryOptions = <
@@ -216,7 +211,7 @@ export function useGetFavorites<
 }
 
 export const getCreateFavoriteUrl = () => {
-  return `${getApiOrigin()}/api/v1/favorites`;
+  return `/api/v1/favorites`;
 };
 
 /**
@@ -307,7 +302,7 @@ export const getDeleteFavoriteUrl = (
   targetType: "factory" | "cluster",
   targetId: string,
 ) => {
-  return `${getApiOrigin()}/api/v1/favorites/${targetType}/${targetId}`;
+  return `/api/v1/favorites/${encodeURIComponent(String(targetType))}/${encodeURIComponent(String(targetId))}`;
 };
 
 /**

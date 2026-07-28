@@ -13,8 +13,6 @@ import type {
   UseMutationResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   DeleteMe200,
   DeleteMeDefault,
@@ -29,7 +27,7 @@ import type { ErrorType } from "../../../fetcher";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export const getUpdateMeUrl = () => {
-  return `${getApiOrigin()}/api/v1/me`;
+  return `/api/v1/me`;
 };
 
 /**
@@ -117,7 +115,7 @@ export const useUpdateMe = <
   return useMutation(getUpdateMeMutationOptions(options), queryClient);
 };
 export const getDeleteMeUrl = () => {
-  return `${getApiOrigin()}/api/v1/me`;
+  return `/api/v1/me`;
 };
 
 /**

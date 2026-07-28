@@ -18,8 +18,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type { Search200, SearchDefault, SearchParams } from "../../models";
 
 import { apiFetch } from "../../../fetcher";
@@ -57,8 +55,8 @@ export const getSearchUrl = (params: SearchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/search?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/search`;
+    ? `/api/v1/search?${stringifiedParams}`
+    : `/api/v1/search`;
 };
 
 /**
@@ -75,10 +73,7 @@ export const search = async (
 };
 
 export const getSearchQueryKey = (params?: SearchParams) => {
-  return [
-    `${getApiOrigin()}/api/v1/search`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/search`, ...(params ? [params] : [])] as const;
 };
 
 export const getSearchQueryOptions = <

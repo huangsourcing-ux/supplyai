@@ -13,8 +13,6 @@ import type {
   UseMutationResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   CreateUploadPresign200,
   CreateUploadPresignBody,
@@ -27,7 +25,7 @@ import type { ErrorType } from "../../../fetcher";
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export const getCreateUploadPresignUrl = () => {
-  return `${getApiOrigin()}/api/v1/admin/uploads/presign`;
+  return `/api/v1/admin/uploads/presign`;
 };
 
 /**
