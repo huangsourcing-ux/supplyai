@@ -19,6 +19,18 @@ call the shared consent-aware analytics facade, which owns the ten-second
 analytics consent, so the facade remains a network no-op. A real Mobile adapter
 and consent flow require a separately approved development-plan revision.
 
+The native search control trims input, caps it at 100 characters, waits for two
+characters, and debounces A-6 requests for 300ms. Results are grouped into
+categories, industrial clusters, and factories, with loading, Retry, and empty
+states; an empty result offers the first five A-7 root categories. The permanent
+single-row category chips include All categories. Root filters show selection,
+while a category returned at a deeper level keeps its exact slug in a removable
+chip. Category changes cancel old MAP requests, clear stale map/card/truncation
+state immediately, and apply the final slug after 500ms. Category results reset
+to China; cluster and factory results fly to zoom 9 and 13 respectively and open
+the existing card immediately. Search analytics uses the shared facade once per
+successful response and therefore remains a network no-op on Mobile.
+
 M4-T1 was validated against the canonical staging API with the preview
 environment's platform-restricted MapTiler keys on an iPhone 17 Pro Simulator
 (iOS 26.5) and the `diaoyouji_api_36` Android Emulator (API 36). Both platforms
@@ -27,8 +39,12 @@ close, error/Retry recovery, disabled CTA accessibility, and crash-free smoke.
 This is simulator coverage; physical-device and production-key gates remain
 separate release work.
 
-Search, registration, OAuth, account management, and logout UI remain in later
-M4 task packages.
+M4-T2a search was validated on the same iOS and Android simulator matrix with
+the preview platform-restricted keys and canonical staging API. Both platforms
+passed `led`, `socks`, `sofa`, `家具`, no-result popular categories, search
+failure/Retry recovery, category MAP filtering, cluster/factory positioning and
+cards, attribution, and crash-free interaction. Registration, OAuth, account
+management, and logout UI remain in later M4 task packages.
 
 Clerk tokens are stored in a dedicated encrypted MMKV instance. Its randomly
 generated encryption key is persisted with Expo SecureStore and is never placed
