@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { type Href, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 import { useGetCluster, useGetFactory } from "@chinasupply/api-client";
@@ -41,14 +42,18 @@ export function MapSelectionCardView({
   labels,
   onClose,
   onRetry,
+  onViewDetails,
   selection,
 }: Readonly<{
   detail: MapSelectionDetailState;
   labels: MapSelectionCardLabels;
   onClose: () => void;
   onRetry: () => void;
+  onViewDetails?: () => void;
   selection: SelectedMapFeature;
 }>) {
+  const detailsEnabled = onViewDetails !== undefined;
+
   return (
     <View
       accessibilityLabel={`${labels.entityType}: ${selection.name}`}
@@ -164,13 +169,21 @@ export function MapSelectionCardView({
 
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ disabled: true }}
-            disabled
-            style={styles.disabledCta}
+            accessibilityState={{ disabled: !detailsEnabled }}
+            disabled={!detailsEnabled}
+            onPress={onViewDetails}
+            style={detailsEnabled ? styles.cta : styles.disabledCta}
             testID="map-card-details-cta"
           >
-            <Text style={styles.disabledCtaText}>{labels.viewDetails}</Text>
-            <Text aria-hidden style={styles.disabledCtaText}>
+            <Text
+              style={detailsEnabled ? styles.ctaText : styles.disabledCtaText}
+            >
+              {labels.viewDetails}
+            </Text>
+            <Text
+              aria-hidden
+              style={detailsEnabled ? styles.ctaText : styles.disabledCtaText}
+            >
               →
             </Text>
           </Pressable>
@@ -188,6 +201,7 @@ export function MapSelectionCard({
   selection: SelectedMapFeature;
 }>) {
   const { t } = useTranslation();
+  const router = useRouter();
   const isCluster = selection.kind === "cluster";
   const clusterQuery = useGetCluster(isCluster ? selection.slug : "", {
     query: { enabled: isCluster },
@@ -239,6 +253,16 @@ export function MapSelectionCard({
       onRetry={() => {
         void activeQuery.refetch();
       }}
+      onViewDetails={
+        isCluster
+          ? () => {
+              router.push({
+                pathname: "/clusters/[slug]",
+                params: { slug: selection.slug },
+              } as unknown as Href);
+            }
+          : undefined
+      }
       selection={selection}
     />
   );
@@ -302,6 +326,22 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     paddingHorizontal: 20,
     paddingTop: 18,
+  },
+  cta: {
+    alignItems: "center",
+    backgroundColor: "#0F766E",
+    borderRadius: 11,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 18,
+    minHeight: 44,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  ctaText: {
+    color: "#F8FAFC",
+    fontSize: 14,
+    fontWeight: "700",
   },
   disabledCta: {
     alignItems: "center",

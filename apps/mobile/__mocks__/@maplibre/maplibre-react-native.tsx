@@ -24,7 +24,7 @@ type MapMockProps = {
 
 type SourceMockProps = {
   children?: ReactNode;
-  data?: GeoJSON.FeatureCollection;
+  data?: GeoJSON.Feature | GeoJSON.FeatureCollection;
   id?: string;
   onPress?: (event: {
     nativeEvent: { features: GeoJSON.Feature[] };
@@ -150,12 +150,18 @@ export const GeoJSONSource = forwardRef(function GeoJSONSourceMock(
 
   const standardFeatures =
     id === "industrial-factories" ? [factoryFeature] : [clusterFeature];
+  const featureCount =
+    data === undefined
+      ? 0
+      : data.type === "FeatureCollection"
+        ? data.features.length
+        : 1;
 
   return (
     <View testID={`maplibre-source-${id}`}>
       {children}
       <View
-        accessibilityValue={{ text: String(data?.features.length ?? 0) }}
+        accessibilityValue={{ text: String(featureCount) }}
         testID={`maplibre-source-data-${id}`}
       />
       <Pressable
