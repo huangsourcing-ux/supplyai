@@ -5,7 +5,16 @@ jest.mock("@chinasupply/api-client", () => ({
   getGetMapClusterBoundariesQueryKey: jest.fn(() => [
     "/api/v1/map/clusters/boundaries",
   ]),
+  getGetMapClusterPointsQueryKey: jest.fn(() => [
+    "/api/v1/map/clusters/points",
+  ]),
   getGetMapFactoriesQueryKey: jest.fn(() => ["/api/v1/map/factories"]),
+  useGetCategories: jest.fn(() => ({
+    data: undefined,
+    isError: false,
+    isPending: false,
+    refetch: jest.fn(),
+  })),
   useGetCluster: jest.fn(() => ({
     data: undefined,
     isError: false,
@@ -36,6 +45,14 @@ jest.mock("@chinasupply/api-client", () => ({
     isPending: false,
     refetch: jest.fn(),
   })),
+  useSearch: jest.fn(() => ({
+    data: undefined,
+    dataUpdatedAt: 0,
+    isError: false,
+    isPending: false,
+    isSuccess: false,
+    refetch: jest.fn(),
+  })),
   useGetHealthLive: jest.fn(() => ({
     isError: false,
     isPending: true,
@@ -45,6 +62,7 @@ jest.mock("@chinasupply/api-client", () => ({
 jest.mock("@chinasupply/analytics", () => ({
   analytics: {
     trackMapMoved: jest.fn(),
+    trackSearchPerformed: jest.fn(),
   },
 }));
 

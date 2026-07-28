@@ -24,6 +24,7 @@ type MapMockProps = {
 
 type SourceMockProps = {
   children?: ReactNode;
+  data?: GeoJSON.FeatureCollection;
   id?: string;
   onPress?: (event: {
     nativeEvent: { features: GeoJSON.Feature[] };
@@ -76,6 +77,8 @@ const factoryClusterFeature = {
 } as const;
 
 export const cameraEaseToMock = jest.fn();
+export const cameraFitBoundsMock = jest.fn();
+export const cameraFlyToMock = jest.fn();
 export const clusterExpansionZoomMock = jest.fn(async () => 13);
 
 function pressEvent(features: GeoJSON.Feature[]) {
@@ -129,12 +132,16 @@ export function Map({
 }
 
 export const Camera = forwardRef(function CameraMock(_, ref) {
-  useImperativeHandle(ref, () => ({ easeTo: cameraEaseToMock }));
+  useImperativeHandle(ref, () => ({
+    easeTo: cameraEaseToMock,
+    fitBounds: cameraFitBoundsMock,
+    flyTo: cameraFlyToMock,
+  }));
   return <View testID="maplibre-camera" />;
 });
 
 export const GeoJSONSource = forwardRef(function GeoJSONSourceMock(
-  { children, id, onPress }: SourceMockProps,
+  { children, data, id, onPress }: SourceMockProps,
   ref,
 ) {
   useImperativeHandle(ref, () => ({
@@ -147,6 +154,10 @@ export const GeoJSONSource = forwardRef(function GeoJSONSourceMock(
   return (
     <View testID={`maplibre-source-${id}`}>
       {children}
+      <View
+        accessibilityValue={{ text: String(data?.features.length ?? 0) }}
+        testID={`maplibre-source-data-${id}`}
+      />
       <Pressable
         onPress={() =>
           onPress?.(

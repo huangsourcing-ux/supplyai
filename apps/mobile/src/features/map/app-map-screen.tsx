@@ -25,6 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { analytics } from "@chinasupply/analytics";
 import {
   getGetMapClusterBoundariesQueryKey,
+  getGetMapClusterPointsQueryKey,
   getGetMapFactoriesQueryKey,
   useGetMapClusterBoundaries,
   useGetMapClusterPoints,
@@ -53,6 +54,15 @@ import {
   type SelectedMapFeature,
 } from "./map-selection";
 import { MapSelectionCard } from "./map-selection-card";
+import { MapSearch, type MapSearchRef } from "./map-search";
+import {
+  addMapCategoryParam,
+  createDebouncedCategoryFilterUpdater,
+  createMapCategoryParams,
+  resolveMapSearchAction,
+  type MapCategory,
+  type MapSearchChoice,
+} from "./map-search-model";
 import {
   CLUSTER_BOUNDARY_MIN_ZOOM,
   FACTORY_POINT_MIN_ZOOM,
@@ -80,10 +90,19 @@ export default function AppMapScreen() {
   const factorySourceRef = useRef<GeoJSONSourceRef>(null);
   const hasInitialViewportRef = useRef(false);
   const movementPendingRef = useRef(false);
+  const appliedCategorySlugRef = useRef<string | null>(null);
+  const searchRef = useRef<MapSearchRef>(null);
   const [mapAttempt, setMapAttempt] = useState(0);
   const [mapLoadState, setMapLoadState] = useState<MapLoadState>("loading");
   const [selectedFeature, setSelectedFeature] =
     useState<SelectedMapFeature | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<MapCategory | null>(
+    null,
+  );
+  const [appliedCategory, setAppliedCategory] = useState<MapCategory | null>(
+    null,
+  );
+  const [categoryIsSettling, setCategoryIsSettling] = useState(false);
   const [viewport, setViewport] = useState<MapViewport | null>(null);
   const [viewportIsSettling, setViewportIsSettling] = useState(true);
   const viewportUpdaterRef = useRef<DebouncedViewportUpdater | null>(null);
@@ -100,7 +119,7 @@ export default function AppMapScreen() {
         if (shouldTrackMovement) {
           analytics.trackMapMoved({
             bbox: nextViewport.bbox,
-            categorySlug: null,
+            categorySlug: appliedCategorySlugRef.current,
             zoom: nextViewport.zoom,
           });
         }
@@ -117,35 +136,76 @@ export default function AppMapScreen() {
   }, [mapAttempt]);
 
   const boundariesEnabled =
+    !categoryIsSettling &&
     !viewportIsSettling &&
     viewport !== null &&
     viewport.zoom >= CLUSTER_BOUNDARY_MIN_ZOOM;
   const factoriesEnabled =
+    !categoryIsSettling &&
     !viewportIsSettling &&
     viewport !== null &&
     viewport.zoom >= FACTORY_POINT_MIN_ZOOM;
+  const categorySlug = appliedCategory?.slug;
 
-  const clusterPointsQuery = useGetMapClusterPoints();
+  const clusterPointsQuery = useGetMapClusterPoints(
+    createMapCategoryParams(categorySlug),
+    {
+      query: {
+        enabled: !categoryIsSettling,
+      },
+    },
+  );
   const clusterBoundariesQuery = useGetMapClusterBoundaries(
-    viewport ?? DISABLED_BOUNDARY_PARAMS,
+    addMapCategoryParam(viewport ?? DISABLED_BOUNDARY_PARAMS, categorySlug),
     {
       query: {
         enabled: boundariesEnabled,
-        placeholderData: keepPreviousData,
+        placeholderData: (previousData, previousQuery) => {
+          const previousParams = previousQuery?.queryKey[1];
+          const previousCategory =
+            typeof previousParams === "object" &&
+            previousParams !== null &&
+            "category" in previousParams &&
+            typeof previousParams.category === "string"
+              ? previousParams.category
+              : undefined;
+
+          return previousCategory === categorySlug
+            ? keepPreviousData(previousData)
+            : undefined;
+        },
       },
     },
   );
   const factoryPointsQuery = useGetMapFactories(
-    viewport === null ? DISABLED_FACTORY_PARAMS : { bbox: viewport.bbox },
+    addMapCategoryParam(
+      viewport === null ? DISABLED_FACTORY_PARAMS : { bbox: viewport.bbox },
+      categorySlug,
+    ),
     {
       query: {
         enabled: factoriesEnabled,
-        placeholderData: keepPreviousData,
+        placeholderData: (previousData, previousQuery) => {
+          const previousParams = previousQuery?.queryKey[1];
+          const previousCategory =
+            typeof previousParams === "object" &&
+            previousParams !== null &&
+            "category" in previousParams &&
+            typeof previousParams.category === "string"
+              ? previousParams.category
+              : undefined;
+
+          return previousCategory === categorySlug
+            ? keepPreviousData(previousData)
+            : undefined;
+        },
       },
     },
   );
 
-  const clusterPoints = clusterPointsQuery.data?.data ?? EMPTY_CLUSTER_POINTS;
+  const clusterPoints = categoryIsSettling
+    ? EMPTY_CLUSTER_POINTS
+    : (clusterPointsQuery.data?.data ?? EMPTY_CLUSTER_POINTS);
   const clusterBoundaries = boundariesEnabled
     ? (clusterBoundariesQuery.data?.data ?? EMPTY_CLUSTER_BOUNDARIES)
     : EMPTY_CLUSTER_BOUNDARIES;
@@ -158,8 +218,38 @@ export default function AppMapScreen() {
     return () => updater?.cancel();
   }, []);
 
+  useEffect(() => {
+    if (!categoryIsSettling) return;
+
+    const updater = createDebouncedCategoryFilterUpdater((category) => {
+      setAppliedCategory(category);
+      setCategoryIsSettling(false);
+    });
+    updater.schedule(selectedCategory);
+
+    return () => updater.cancel();
+  }, [categoryIsSettling, selectedCategory]);
+
+  useEffect(() => {
+    appliedCategorySlugRef.current = categorySlug ?? null;
+  }, [categorySlug]);
+
   const cancelViewportQueries = useCallback(() => {
     void Promise.all([
+      queryClient.cancelQueries({
+        queryKey: getGetMapClusterBoundariesQueryKey(),
+      }),
+      queryClient.cancelQueries({
+        queryKey: getGetMapFactoriesQueryKey(),
+      }),
+    ]);
+  }, [queryClient]);
+
+  const cancelMapDataQueries = useCallback(() => {
+    void Promise.all([
+      queryClient.cancelQueries({
+        queryKey: getGetMapClusterPointsQueryKey(),
+      }),
       queryClient.cancelQueries({
         queryKey: getGetMapClusterBoundariesQueryKey(),
       }),
@@ -210,6 +300,7 @@ export default function AppMapScreen() {
     (boundariesEnabled && clusterBoundariesQuery.isError) ||
     (factoriesEnabled && factoryPointsQuery.isError);
   const hasPendingData =
+    categoryIsSettling ||
     clusterPointsQuery.isPending ||
     (boundariesEnabled && clusterBoundariesQuery.isPending) ||
     (factoriesEnabled && factoryPointsQuery.isPending);
@@ -226,6 +317,7 @@ export default function AppMapScreen() {
   const handleFeaturePress = useCallback(
     (event: NativeSyntheticEvent<PressEventWithFeatures>) => {
       event.stopPropagation();
+      searchRef.current?.dismiss();
       const target = resolveMapPressTarget(event.nativeEvent.features);
 
       if (target.kind === "selection") {
@@ -251,8 +343,47 @@ export default function AppMapScreen() {
     [],
   );
 
+  const chooseCategory = (category: MapCategory | null, resetView = true) => {
+    if (
+      selectedCategory?.slug === category?.slug &&
+      selectedCategory?.name === category?.name
+    ) {
+      return;
+    }
+
+    cancelMapDataQueries();
+    setSelectedCategory(category);
+    setSelectedFeature(null);
+    setCategoryIsSettling(true);
+    if (resetView) {
+      cameraRef.current?.fitBounds([...CHINA_BOUNDS], {
+        duration: 700,
+        padding: { bottom: 48, left: 24, right: 24, top: 48 },
+      });
+    }
+  };
+
+  const chooseSearchResult = (choice: MapSearchChoice) => {
+    const action = resolveMapSearchAction(choice);
+
+    if (action.kind === "category") {
+      chooseCategory(action.category);
+      return;
+    }
+
+    if (selectedCategory !== null) chooseCategory(null, false);
+    setSelectedFeature(action.selection);
+    cameraRef.current?.flyTo({
+      center: action.center,
+      duration: 700,
+      zoom: action.zoom,
+    });
+  };
+
   const factoriesAreTruncated =
-    factoriesEnabled && factoryPointsQuery.data?.meta.truncated === true;
+    factoriesEnabled &&
+    !factoryPointsQuery.isPlaceholderData &&
+    factoryPointsQuery.data?.meta.truncated === true;
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -263,13 +394,16 @@ export default function AppMapScreen() {
             accessibilityLabel={t("map.ariaLabel")}
             attribution={false}
             compass
-            compassPosition={{ right: 12, top: 12 }}
+            compassPosition={{ right: 12, top: 122 }}
             key={mapAttempt}
             logo={false}
             mapStyle={mapStyle}
             onDidFailLoadingMap={() => setMapLoadState("error")}
             onDidFinishLoadingMap={() => setMapLoadState("ready")}
-            onPress={() => setSelectedFeature(null)}
+            onPress={() => {
+              searchRef.current?.dismiss();
+              setSelectedFeature(null);
+            }}
             onRegionDidChange={handleRegionDidChange}
             onRegionWillChange={handleRegionWillChange}
             scaleBar={false}
@@ -316,6 +450,15 @@ export default function AppMapScreen() {
             </GeoJSONSource>
           </Map>
         )}
+
+        <View style={styles.searchControls}>
+          <MapSearch
+            activeCategory={selectedCategory}
+            onChoose={chooseSearchResult}
+            onChooseCategory={chooseCategory}
+            ref={searchRef}
+          />
+        </View>
 
         {statusKind === null ? null : (
           <View
@@ -414,16 +557,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8FAFC",
     flex: 1,
   },
+  searchControls: {
+    left: 14,
+    position: "absolute",
+    right: 14,
+    top: 14,
+    zIndex: 10,
+  },
   status: {
     alignItems: "center",
     borderRadius: 999,
     flexDirection: "row",
     left: 14,
-    maxWidth: "85%",
+    maxWidth: "72%",
     paddingHorizontal: 12,
     paddingVertical: 9,
     position: "absolute",
-    top: 14,
+    top: 122,
   },
   statusError: {
     backgroundColor: "rgba(254, 226, 226, 0.96)",
@@ -453,7 +603,7 @@ const styles = StyleSheet.create({
     bottom: 34,
   },
   truncationNoticeTop: {
-    top: 66,
+    top: 122,
   },
   truncationText: {
     color: "#7C2D12",

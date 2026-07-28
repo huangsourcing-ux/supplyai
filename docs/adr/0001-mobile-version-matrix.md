@@ -194,6 +194,27 @@ No EAS build, deployment, external write, or analytics network adapter was
 triggered. Physical-device and production-key validation remain later release
 gates and are not implied by this simulator evidence.
 
+## M4-T2a App-search simulator evidence
+
+App search was validated on 2026-07-27 using the M4-T1 native builds, the
+preview environment's real platform-restricted MapTiler keys, and the canonical
+staging API. Runtime-only fault injection was limited to A-6, then removed; it
+did not change the application, dependencies, generated client, or repository.
+
+| Platform | Search evidence                                                                                                                                                                                                                                                                                                                    |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | iPhone 17 Pro Simulator / iOS 26.5 passed `led`, `socks`, `sofa`, `家具`, all three result groups, empty-state popular categories, root and exact child category filtering, zoom-9 cluster and zoom-13 factory positioning with immediate cards, forced A-6 failure and successful Retry, attribution, and crash-free interaction. |
+| Android  | `diaoyouji_api_36` / API 36 passed the same query, result, category, positioning, card, failure/Retry, attribution, and crash-free paths. Unicode input was injected with a temporary emulator-only IME, which was restored to Gboard and uninstalled after evidence capture.                                                      |
+
+Persistent-connection A-6 warm requests completed in `239.1/234.4ms` for
+`led`, `235.7/230.7ms` for `socks`, `229.2/212.9ms` for `sofa`, and
+`218.5/212.8ms` for `家具`; every warm sample was below 500ms. A direct
+101-character query returned HTTP 400. The analytics facade remained a network
+no-op, detail CTAs remained disabled, and no EAS build, canonical staging or
+production deployment, production credential, PostHog adapter, Consent flow,
+or permanent Maestro dependency was introduced. The PR's automatic Vercel
+Preview completed successfully.
+
 ## Upgrade policy
 
 M0-T5 validated the simulator and Preview matrix. V1 therefore permits only security
