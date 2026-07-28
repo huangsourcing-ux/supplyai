@@ -6,32 +6,80 @@ export const resources = {
   en: {
     translation: {
       ...sharedEnglishResources,
+      account: {
+        delete: {
+          action: "Delete account",
+          cancel: "Cancel",
+          confirm:
+            "Delete your account and all saved factories? This cannot be undone.",
+          description:
+            "Permanently remove your buyer account and saved factories.",
+          error: "Your account could not be deleted. Please try again.",
+          pending: "Deleting account…",
+          title: "Delete account",
+        },
+        description: "Manage your buyer identity and account preferences.",
+        emailFallback: "Email unavailable",
+        emailLabel: "Email address",
+        eyebrow: "Buyer account",
+        language: {
+          description: "ChinaSupply.AI currently supports English.",
+          english: "English",
+          error: "Your language preference could not be saved. Try again.",
+          label: "Language",
+          save: "Save language",
+          saved: "Language preference saved.",
+          saving: "Saving…",
+          title: "Language preference",
+        },
+        loading: "Loading your account…",
+        signOut: "Sign out",
+        signingOut: "Signing out…",
+        title: "Account",
+      },
       auth: {
         code: {
-          description: "Enter the verification code for this device.",
+          changeEmail: "Use a different email",
+          description: "Enter the verification code sent to your email.",
           label: "Verification code",
-          submit: "Verify and continue",
-          title: "Verify this device",
+          placeholder: "6-digit code",
+          submit: "Verify code",
+          title: "Check your email",
         },
         error: {
           generic:
-            "Sign in could not be completed. Check your details and try again.",
+            "Authentication could not be completed. Check your details and try again.",
+          google: "Google sign-in could not be completed. Please try again.",
           unsupported:
-            "This sign-in requires a method that is not available in this compatibility build.",
+            "This account requires an authentication method that is not available in the app.",
         },
         eyebrow: "Secure buyer access",
         email: {
           label: "Email address",
           placeholder: "buyer@example.com",
         },
-        loading: "Loading secure sign in…",
-        password: {
-          label: "Password",
-          placeholder: "Enter your password",
+        google: {
+          continue: "Continue with Google",
         },
-        submit: "Sign in",
-        submitting: "Signing in…",
-        title: "Sign in to ChinaSupply.AI",
+        loading: "Loading secure sign in…",
+        mfa: {
+          description:
+            "Enter the additional email code required by this account.",
+          title: "Additional verification",
+        },
+        signIn: {
+          description: "We will email you a one-time verification code.",
+          submit: "Email me a code",
+          switch: "New to ChinaSupply.AI? Create an account",
+          title: "Sign in to ChinaSupply.AI",
+        },
+        signUp: {
+          description: "Create an account with a verified email address.",
+          submit: "Create account",
+          switch: "Already have an account? Sign in",
+          title: "Create your buyer account",
+        },
+        submitting: "Please wait…",
       },
       apiHealth: {
         error: "API liveness check failed",
@@ -238,6 +286,10 @@ export const resources = {
         ready: "Sentry {{environment}} smoke test is ready.",
         sending: "Sending Sentry test exception…",
         sent: "Sentry {{environment}} event sent: {{eventId}}",
+      },
+      tabs: {
+        account: "Account",
+        map: "Map",
       },
     },
   },

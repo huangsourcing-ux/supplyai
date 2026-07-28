@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 jest.mock("@chinasupply/api-client", () => ({
   configureApiClient: jest.fn(),
+  deleteMe: jest.fn(),
   getClusterFactories: jest.fn(),
   getGetMapClusterBoundariesQueryKey: jest.fn(() => [
     "/api/v1/map/clusters/boundaries",
@@ -10,6 +11,7 @@ jest.mock("@chinasupply/api-client", () => ({
     "/api/v1/map/clusters/points",
   ]),
   getGetMapFactoriesQueryKey: jest.fn(() => ["/api/v1/map/factories"]),
+  updateMe: jest.fn(),
   useGetCategories: jest.fn(() => ({
     data: undefined,
     isError: false,
@@ -74,19 +76,31 @@ jest.mock("expo-clipboard", () => ({
   setStringAsync: jest.fn(async () => undefined),
 }));
 
-jest.mock("expo-router", () => ({
-  ErrorBoundary: undefined,
-  Stack: Object.assign(() => null, { Screen: () => null }),
-  useLocalSearchParams: jest.fn(() => ({
-    slug: "yiwu-small-commodities",
-  })),
-  useRouter: jest.fn(() => ({
-    back: jest.fn(),
-    canGoBack: jest.fn(() => true),
-    push: jest.fn(),
-    replace: jest.fn(),
-  })),
+jest.mock("expo-web-browser", () => ({
+  maybeCompleteAuthSession: jest.fn(() => ({ type: "success" })),
 }));
+
+jest.mock("expo-router", () => {
+  const Tabs = Object.assign(
+    jest.fn(({ children }: { children: ReactNode }) => children),
+    { Screen: jest.fn(() => null) },
+  );
+
+  return {
+    ErrorBoundary: undefined,
+    Stack: Object.assign(() => null, { Screen: () => null }),
+    Tabs,
+    useLocalSearchParams: jest.fn(() => ({
+      slug: "yiwu-small-commodities",
+    })),
+    useRouter: jest.fn(() => ({
+      back: jest.fn(),
+      canGoBack: jest.fn(() => true),
+      push: jest.fn(),
+      replace: jest.fn(),
+    })),
+  };
+});
 
 jest.mock("@chinasupply/config/map/style", () => ({
   BASEMAP_LABEL_ANCHOR_LAYER_ID: "Ferry labels",
@@ -129,20 +143,45 @@ jest.mock("expo-secure-store", () => ({
 jest.mock("@clerk/expo", () => {
   return {
     ClerkProvider: ({ children }: { children: ReactNode }) => children,
-    useAuth: jest.fn(() => ({ isLoaded: true, isSignedIn: false })),
+    useAuth: jest.fn(() => ({
+      getToken: jest.fn(async () => null),
+      isLoaded: true,
+      isSignedIn: false,
+    })),
+    useClerk: jest.fn(() => ({ signOut: jest.fn(async () => undefined) })),
     useSignIn: jest.fn(() => ({
       fetchStatus: "idle",
       signIn: {
+        create: jest.fn(async () => ({ error: null })),
+        emailCode: {
+          sendCode: jest.fn(async () => ({ error: null })),
+          verifyCode: jest.fn(async () => ({ error: null })),
+        },
         finalize: jest.fn(async () => ({ error: null })),
         mfa: {
           sendEmailCode: jest.fn(async () => ({ error: null })),
           verifyEmailCode: jest.fn(async () => ({ error: null })),
         },
-        password: jest.fn(async () => ({ error: null })),
+        reset: jest.fn(async () => ({ error: null })),
         status: "complete",
         supportedSecondFactors: [],
       },
     })),
+    useSignUp: jest.fn(() => ({
+      fetchStatus: "idle",
+      signUp: {
+        create: jest.fn(async () => ({ error: null })),
+        finalize: jest.fn(async () => ({ error: null })),
+        reset: jest.fn(async () => ({ error: null })),
+        status: "complete",
+        verifications: {
+          sendEmailCode: jest.fn(async () => ({ error: null })),
+          verifyEmailCode: jest.fn(async () => ({ error: null })),
+        },
+      },
+    })),
+    useSSO: jest.fn(() => ({ startSSOFlow: jest.fn() })),
+    useUser: jest.fn(() => ({ isLoaded: true, user: null })),
   };
 });
 

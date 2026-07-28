@@ -1,0 +1,34 @@
+import { Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
+
+export default function TabsLayout() {
+  const { t } = useTranslation();
+
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#0F766E",
+        tabBarInactiveTintColor: "#64748B",
+        tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          tabBarAccessibilityLabel: t("tabs.map"),
+          tabBarLabel: t("tabs.map"),
+          title: t("tabs.map"),
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          tabBarAccessibilityLabel: t("tabs.account"),
+          tabBarLabel: t("tabs.account"),
+          title: t("tabs.account"),
+        }}
+      />
+    </Tabs>
+  );
+}
