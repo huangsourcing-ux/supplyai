@@ -18,8 +18,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   GetFactories200,
   GetFactoriesDefault,
@@ -63,8 +61,8 @@ export const getGetFactoriesUrl = (params?: GetFactoriesParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/factories?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/factories`;
+    ? `/api/v1/factories?${stringifiedParams}`
+    : `/api/v1/factories`;
 };
 
 /**
@@ -81,10 +79,7 @@ export const getFactories = async (
 };
 
 export const getGetFactoriesQueryKey = (params?: GetFactoriesParams) => {
-  return [
-    `${getApiOrigin()}/api/v1/factories`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/factories`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetFactoriesQueryOptions = <
@@ -210,7 +205,7 @@ export function useGetFactories<
 }
 
 export const getGetFactoryUrl = (slug: string) => {
-  return `${getApiOrigin()}/api/v1/factories/${slug}`;
+  return `/api/v1/factories/${encodeURIComponent(String(slug))}`;
 };
 
 /**
@@ -227,7 +222,7 @@ export const getFactory = async (
 };
 
 export const getGetFactoryQueryKey = (slug: string) => {
-  return [`${getApiOrigin()}/api/v1/factories/${slug}`] as const;
+  return [`/api/v1/factories/${slug}`] as const;
 };
 
 export const getGetFactoryQueryOptions = <

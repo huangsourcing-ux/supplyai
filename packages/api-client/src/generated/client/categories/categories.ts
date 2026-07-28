@@ -18,8 +18,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type { GetCategories200, GetCategoriesDefault } from "../../models";
 
 import { apiFetch } from "../../../fetcher";
@@ -46,7 +44,7 @@ const withQueryKey = <T extends object, K>(
 };
 
 export const getGetCategoriesUrl = () => {
-  return `${getApiOrigin()}/api/v1/categories`;
+  return `/api/v1/categories`;
 };
 
 /**
@@ -62,7 +60,7 @@ export const getCategories = async (
 };
 
 export const getGetCategoriesQueryKey = () => {
-  return [`${getApiOrigin()}/api/v1/categories`] as const;
+  return [`/api/v1/categories`] as const;
 };
 
 export const getGetCategoriesQueryOptions = <

@@ -18,8 +18,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type { GetHealthLive200, GetHealthLiveDefault } from "../../models";
 
 import { apiFetch } from "../../../fetcher";
@@ -46,7 +44,7 @@ const withQueryKey = <T extends object, K>(
 };
 
 export const getGetHealthLiveUrl = () => {
-  return `${getApiOrigin()}/health/live`;
+  return `/health/live`;
 };
 
 /**
@@ -62,7 +60,7 @@ export const getHealthLive = async (
 };
 
 export const getGetHealthLiveQueryKey = () => {
-  return [`${getApiOrigin()}/health/live`] as const;
+  return [`/health/live`] as const;
 };
 
 export const getGetHealthLiveQueryOptions = <

@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { fromMarkdown } from "mdast-util-from-markdown";
 
+import { safeHttpUrl } from "../../lib/external-url";
+
 type MarkdownNode = {
   alt?: string | null;
   children?: MarkdownNode[];
@@ -19,19 +21,6 @@ type MarkdownNode = {
   url?: string;
   value?: string;
 };
-
-function safeHttpUrl(value: string | undefined): string | null {
-  if (value === undefined) return null;
-
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
-}
 
 function inlineChildren(node: MarkdownNode, path: string): ReactNode[] {
   return (node.children ?? []).map((child, index) =>

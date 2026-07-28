@@ -28,15 +28,17 @@ import {
 } from "@chinasupply/api-client";
 
 import {
-  buildEmailUrl,
-  buildPhoneUrl,
   FACTORY_DETAIL_STALE_TIME_MS,
   type FactoryContact,
   formatVerificationMonth,
   hasFactoryContact,
   normalizeFactorySlug,
-  safeHttpUrl,
 } from "./factory-detail-model";
+import {
+  buildEmailUrl,
+  buildPhoneUrl,
+  safeHttpUrl,
+} from "../../lib/external-url";
 import { FactoryLocationMap } from "./factory-location-map";
 
 function isNotFoundError(error: unknown): boolean {
@@ -259,6 +261,8 @@ export function FactoryContactActions({
   const { t } = useTranslation();
   const [status, setStatus] = useState<"copied" | "error" | "idle">("idle");
   const websiteUrl = safeHttpUrl(contact.website);
+  const phoneUrl =
+    contact.phone === undefined ? null : buildPhoneUrl(contact.phone);
 
   const openContact = async (method: FactoryContactMethod, url: string) => {
     analytics.trackFactoryContactClicked({ factoryId, method, slug });
@@ -335,15 +339,19 @@ export function FactoryContactActions({
           <Text style={styles.contactLabel}>
             {t("factoryDetail.contact.phone")}
           </Text>
-          <Pressable
-            accessibilityRole="link"
-            onPress={() => {
-              void openContact("phone", buildPhoneUrl(contact.phone!));
-            }}
-            testID="factory-contact-phone"
-          >
-            <Text style={styles.contactActionText}>{contact.phone}</Text>
-          </Pressable>
+          {phoneUrl === null ? (
+            <Text style={styles.contactValue}>{contact.phone}</Text>
+          ) : (
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => {
+                void openContact("phone", phoneUrl);
+              }}
+              testID="factory-contact-phone"
+            >
+              <Text style={styles.contactActionText}>{contact.phone}</Text>
+            </Pressable>
+          )}
         </View>
       )}
       {contact.wechat === undefined ? null : (

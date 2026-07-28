@@ -33,24 +33,3 @@ export function hasFactoryContact(
     )
   );
 }
-
-export function safeHttpUrl(value: string | null | undefined): string | null {
-  if (value === null || value === undefined) return null;
-
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
-}
-
-export function buildEmailUrl(value: string): string {
-  return `mailto:${encodeURIComponent(value)}`;
-}
-
-export function buildPhoneUrl(value: string): string {
-  return `tel:${encodeURIComponent(value)}`;
-}

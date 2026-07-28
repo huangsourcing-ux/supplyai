@@ -18,8 +18,6 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import { getApiOrigin } from "../../../runtime";
-
 import type {
   GetMapClusterBoundaries200,
   GetMapClusterBoundariesDefault,
@@ -69,8 +67,8 @@ export const getGetMapClusterPointsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/map/clusters/points?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/map/clusters/points`;
+    ? `/api/v1/map/clusters/points?${stringifiedParams}`
+    : `/api/v1/map/clusters/points`;
 };
 
 /**
@@ -89,10 +87,7 @@ export const getMapClusterPoints = async (
 export const getGetMapClusterPointsQueryKey = (
   params?: GetMapClusterPointsParams,
 ) => {
-  return [
-    `${getApiOrigin()}/api/v1/map/clusters/points`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/map/clusters/points`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetMapClusterPointsQueryOptions = <
@@ -254,8 +249,8 @@ export const getGetMapClusterBoundariesUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/map/clusters/boundaries?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/map/clusters/boundaries`;
+    ? `/api/v1/map/clusters/boundaries?${stringifiedParams}`
+    : `/api/v1/map/clusters/boundaries`;
 };
 
 /**
@@ -278,7 +273,7 @@ export const getGetMapClusterBoundariesQueryKey = (
   params?: GetMapClusterBoundariesParams,
 ) => {
   return [
-    `${getApiOrigin()}/api/v1/map/clusters/boundaries`,
+    `/api/v1/map/clusters/boundaries`,
     ...(params ? [params] : []),
   ] as const;
 };
@@ -440,8 +435,8 @@ export const getGetMapFactoriesUrl = (params: GetMapFactoriesParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${getApiOrigin()}/api/v1/map/factories?${stringifiedParams}`
-    : `${getApiOrigin()}/api/v1/map/factories`;
+    ? `/api/v1/map/factories?${stringifiedParams}`
+    : `/api/v1/map/factories`;
 };
 
 /**
@@ -458,10 +453,7 @@ export const getMapFactories = async (
 };
 
 export const getGetMapFactoriesQueryKey = (params?: GetMapFactoriesParams) => {
-  return [
-    `${getApiOrigin()}/api/v1/map/factories`,
-    ...(params ? [params] : []),
-  ] as const;
+  return [`/api/v1/map/factories`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetMapFactoriesQueryOptions = <
