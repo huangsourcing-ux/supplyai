@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { type Href, useLocalSearchParams, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef } from "react";
 import {
@@ -130,7 +130,11 @@ export function ClusterDetailState({
 
 export function ClusterFactoryCard({
   factory,
-}: Readonly<{ factory: GetClusterFactories200DataItem }>) {
+  onViewDetails,
+}: Readonly<{
+  factory: GetClusterFactories200DataItem;
+  onViewDetails: () => void;
+}>) {
   const { t } = useTranslation();
 
   return (
@@ -198,12 +202,11 @@ export function ClusterFactoryCard({
         </View>
         <Pressable
           accessibilityRole="button"
-          accessibilityState={{ disabled: true }}
-          disabled
-          style={styles.factoryDisabledAction}
+          onPress={onViewDetails}
+          style={styles.factoryAction}
           testID={`cluster-factory-details-${factory.slug}`}
         >
-          <Text style={styles.factoryDisabledActionText}>
+          <Text style={styles.factoryActionText}>
             {t("clusterDetail.factories.viewDetails")}
           </Text>
         </Pressable>
@@ -394,6 +397,7 @@ export function ClusterDetailLoaded({
   isInitialFactoriesError,
   isInitialFactoriesLoading,
   onBack,
+  onFactoryDetails,
   onFetchNextPage,
   onRetryFactories,
 }: Readonly<{
@@ -405,6 +409,7 @@ export function ClusterDetailLoaded({
   isInitialFactoriesError: boolean;
   isInitialFactoriesLoading: boolean;
   onBack: () => void;
+  onFactoryDetails: (slug: string) => void;
   onFetchNextPage: () => void;
   onRetryFactories: () => void;
 }>) {
@@ -458,7 +463,12 @@ export function ClusterDetailLoaded({
       onEndReached={fetchNextPage}
       onEndReachedThreshold={0.45}
       removeClippedSubviews={false}
-      renderItem={({ item }) => <ClusterFactoryCard factory={item} />}
+      renderItem={({ item }) => (
+        <ClusterFactoryCard
+          factory={item}
+          onViewDetails={() => onFactoryDetails(item.slug)}
+        />
+      )}
       showsVerticalScrollIndicator={false}
       testID="cluster-detail-list"
     />
@@ -543,6 +553,12 @@ export default function ClusterDetailScreen() {
           factoriesQuery.isPending && factoriesQuery.data === undefined
         }
         onBack={goBack}
+        onFactoryDetails={(factorySlug) => {
+          router.push({
+            pathname: "/factories/[slug]",
+            params: { slug: factorySlug },
+          } as unknown as Href);
+        }}
         onFetchNextPage={() => {
           void factoriesQuery.fetchNextPage();
         }}
@@ -613,17 +629,17 @@ const styles = StyleSheet.create({
   factoryContent: {
     padding: 16,
   },
-  factoryDisabledAction: {
+  factoryAction: {
     alignItems: "center",
-    backgroundColor: "#E2E8F0",
+    backgroundColor: "#0F766E",
     borderRadius: 9,
     marginTop: 14,
     minHeight: 40,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
-  factoryDisabledActionText: {
-    color: "#64748B",
+  factoryActionText: {
+    color: "#FFFFFF",
     fontSize: 12,
     fontWeight: "700",
   },

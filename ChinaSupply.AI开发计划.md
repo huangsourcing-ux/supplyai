@@ -1,6 +1,6 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.2** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T2b** ｜ 日期：2026-07-27
+> 版本：**v1.2** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T2b/T2c 真实数据 smoke** ｜ 日期：2026-07-28
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.4 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
@@ -144,7 +144,7 @@ chinasupply/
   - [x] **M4-T1b App 聚合、卡片与交互**：工厂聚合与放大、MAP-1/MAP-3 选择、底部卡片补全、truncated 提示、`map_moved` 节流及交互验收。**已使用 preview 环境的真实 iOS/Android 受限 MapTiler key 与 canonical staging API，在 iPhone 17 Pro Simulator（iOS 26.5）和 `diaoyouji_api_36` Android Emulator（API 36）完成底图/attribution、聚合放大、产业带/工厂卡片、关闭、失败/Retry 与无崩溃 smoke。详情 CTA 在 M4-T2b/T2c 原生路由落地前保持可见禁用态；Mobile 真实 PostHog adapter + Consent 不得夹带，须另行批准并先修订本计划。**
 - [x] **M4-T2a App 搜索**：完成 F-3.1～F-3.6 RN 实现，并补齐 F-1.6 一级类目 chips；100 字符输入上限、trim + 2 字符门槛、300ms 搜索防抖、三组结果/空态热门类目/错误重试、500ms 类目 MAP 筛选防抖与旧请求取消、二级精确筛选态、产业带 zoom 9/工厂 zoom 13 定位及即时卡片均已落地。**已使用 preview 环境真实平台受限 MapTiler key 与 canonical staging API，在 iPhone 17 Pro Simulator（iOS 26.5）和 `diaoyouji_api_36` Android Emulator（API 36）完成 `led`、`socks`、`sofa`、`家具`、无结果、失败/Retry、一级/二级类目筛选、产业带/工厂定位与卡片、attribution 及无原生崩溃 smoke；A-6 四组 warm 请求均 `<500ms`，101 字符直接请求返回 400。Mobile analytics 继续经共享 facade 且网络 no-op；未接入 PostHog adapter/Consent、详情路由、Maestro 依赖、生产密钥或部署。**
 - [ ] **M4-T2b App 产业带详情**：F-2 RN 实现。**`/clusters/[slug]`、A-2/A-3、静态 boundary/centroid 小地图、安全 Markdown、工厂 cursor 列表、完整失败/重试态、禁用收藏占位和 `cluster_viewed` facade 已实现；preview 平台受限 key + canonical staging API 的 iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 已通过地图卡片进入、直接深链、boundary/attribution、5 家工厂滚动、工厂 CTA 禁用、返回地图及无崩溃主路径。当前 canonical staging 仅有 2 个 published 产业带，二者 `description/stats` 均为空且最大 `factoryCount=5`，无法完成真实 Markdown 与 A-3 第二页 cursor smoke；按本任务门禁保持未勾选，待经既有审核流程补足可验收 published 数据并完成双端复验后方可收口。未修改 staging 数据。**
-- [ ] **M4-T2c App 工厂详情**：F-4 RN 实现。
+- [ ] **M4-T2c App 工厂详情**：F-4 RN 实现。**已实现 Expo Router `/factories/[slug]`、A-5 完整状态、图片轮播/可选信息、共享 Streets v4 点位小地图、双语地址复制、安全联系方式、relatedFactories 路由与完整 Retry；地图工厂卡片和产业带工厂列表 CTA 均已启用。preview 平台受限 key + canonical staging API 的 iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 已通过直接深链、A-5、地图/attribution、Website、related 跳转、返回与无崩溃主路径；Android 另通过地址复制反馈及断网失败→恢复后 Retry。当前 canonical staging 仅 6 家 published 工厂，全部 verified，均无图片/认证/MOQ/成立年份/员工规模/Email/Phone/WeChat，仅 Website 联系方式，5 家有 relatedFactories；因缺失的真实数据分支仅由固定 fixture 覆盖，按门禁保持未勾选，待经既有审核流程补足 published 数据并完成双端复验后方可收口。未修改 staging 数据；F-6 真实导航仍留给 M4-T5。**
 - [ ] **M4-T3a App 认证与账户页**：Clerk Expo；Account tab 覆盖 F-8.3 全部——邮箱展示、locale（PATCH /me）、登出、删除账户（DELETE /me）；删除/登出后清理本地 token 与缓存。
 - [ ] **M4-T3b App 收藏**：Saved tab、收藏/取消、未登录空状态。
 - [ ] **M4-T4 Explore tab**：F-10.1。

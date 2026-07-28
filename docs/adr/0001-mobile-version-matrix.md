@@ -33,6 +33,7 @@ NativeWind. Do not track the Obytes `master` branch.
 | Clerk Expo              | `4.0.1`                                               | Email/password and device-trust flow validated by the Android Preview artifact                  |
 | Expo SecureStore        | `15.0.8`                                              | Persists only the MMKV encryption key                                                           |
 | Expo Crypto             | `15.0.9`                                              | Generates the random 16-byte MMKV encryption key                                                |
+| Expo Clipboard          | `8.0.8`                                               | SDK 54-compatible address and WeChat copy support; native iOS/Android builds validated          |
 | MapLibre React Native   | `11.3.6`                                              | Installed and validated on iOS/Android simulators in M0-T5b                                     |
 | MapLibre Native iOS     | `6.26.0`                                              | Resolved by Swift Package Manager during the iOS M0-T5b build                                   |
 | MapLibre Native Android | `13.2.0`                                              | Declared by MapLibre RN 11.3.6 and resolved by the Android M0-T5b build                         |
@@ -235,6 +236,30 @@ passed unit tests. Real-data Markdown and a second A-3 cursor page could not be
 smoked without changing staging content, so M4-T2b remains unchecked under its
 approved acceptance gate. Published verification data must be added through the
 existing Admin API and `/ops` review flow before the final dual-platform smoke.
+
+## M4-T2c factory-detail simulator evidence
+
+The factory-detail implementation was exercised on 2026-07-28 with the preview
+environment's real platform-restricted MapTiler keys and
+`https://api-staging.chinasupply.ai/api/v1`. CocoaPods and Gradle both resolved
+Expo Clipboard `8.0.8`. The implementation adds no Mobile PostHog adapter,
+consent grant, Maestro dependency, EAS build, deployment, or production
+setting.
+
+| Platform | Native/runtime evidence                                                                                                                                                                                                                                                                                                                                                                        |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Xcode 26.6 built and installed `ChinaSupplyAIStaging` Debug from a fresh derived-data directory on the iPhone 17 Pro / iOS 26.5 Simulator. Direct `/factories/[slug]` deep linking, A-5 identity/facts, the zoom-14 point map and MapTiler/OSM attribution, Website handoff, a related-factory route, disabled iOS navigation placeholders, and return handling passed without a native crash. |
+| Android  | Gradle built and installed the staging Debug APK on `diaoyouji_api_36` / API 36. The same detail/map/attribution/Website/related paths passed; Android also confirmed English address copy feedback, Android-only navigation placeholders, and an offline service error whose Retry succeeded after network restoration. Logcat contained no fatal exception for the staging app.              |
+
+Canonical staging exposes six published factories. All are verified, all omit
+images, certifications, MOQ, establishment year, and employee scale, and all
+offer Website as their only contact method; none exposes Email, Phone, or
+WeChat. Five return non-empty `relatedFactories`. Fixed A-5 fixtures cover the
+missing image cardinalities, unverified state, optional facts, all four contact
+actions, safe URLs, copy failure, and map failure/Retry, but those fixtures do
+not satisfy the approved real-data smoke gate. M4-T2c therefore remains
+unchecked until approved published data covers the missing variants and the
+dual-platform smoke is repeated.
 
 ## Upgrade policy
 
