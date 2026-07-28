@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 jest.mock("@chinasupply/api-client", () => ({
   configureApiClient: jest.fn(),
+  getClusterFactories: jest.fn(),
   getGetMapClusterBoundariesQueryKey: jest.fn(() => [
     "/api/v1/map/clusters/boundaries",
   ]),
@@ -61,9 +62,24 @@ jest.mock("@chinasupply/api-client", () => ({
 
 jest.mock("@chinasupply/analytics", () => ({
   analytics: {
+    trackClusterViewed: jest.fn(),
     trackMapMoved: jest.fn(),
     trackSearchPerformed: jest.fn(),
   },
+}));
+
+jest.mock("expo-router", () => ({
+  ErrorBoundary: undefined,
+  Stack: Object.assign(() => null, { Screen: () => null }),
+  useLocalSearchParams: jest.fn(() => ({
+    slug: "yiwu-small-commodities",
+  })),
+  useRouter: jest.fn(() => ({
+    back: jest.fn(),
+    canGoBack: jest.fn(() => true),
+    push: jest.fn(),
+    replace: jest.fn(),
+  })),
 }));
 
 jest.mock("@chinasupply/config/map/style", () => ({

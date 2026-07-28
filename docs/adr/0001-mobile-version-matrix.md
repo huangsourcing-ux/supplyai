@@ -215,6 +215,27 @@ production deployment, production credential, PostHog adapter, Consent flow,
 or permanent Maestro dependency was introduced. The PR's automatic Vercel
 Preview completed successfully.
 
+## M4-T2b cluster-detail simulator evidence
+
+The cluster-detail implementation was exercised on 2026-07-27 with the preview
+environment's real platform-restricted MapTiler keys and
+`https://api-staging.chinasupply.ai/api/v1`. The implementation adds no Mobile
+PostHog adapter, consent grant, EAS build, deployment, or production setting.
+
+| Platform | Native/runtime evidence                                                                                                                                                                                                                                                                                                                                        |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Xcode 26.6 built and launched `ChinaSupplyAIStaging` Debug on the iPhone 17 Pro / iOS 26.5 Simulator in 18.0 seconds. Map search → cluster card → `/clusters/[slug]`, boundary fitting, MapTiler/OSM attribution, disabled save and factory actions, all five factories, return-to-map, and a system-confirmed direct deep link passed without a native crash. |
+| Android  | Gradle assembled and installed the staging Debug APK on `diaoyouji_api_36` / API 36 (`548` tasks, 22 seconds). The same map-card, detail, boundary/attribution, five-factory scrolling, disabled-action, return, and direct deep-link paths passed without a native crash.                                                                                     |
+
+The canonical staging inventory contains two published clusters. Both return
+`description: null` and `stats: null`; the larger A-3 collection has five
+factories, below the 20-item page size. Optional-block hiding was observed on
+both platforms, while safe Markdown rendering and cursor-page merge/deduplication
+passed unit tests. Real-data Markdown and a second A-3 cursor page could not be
+smoked without changing staging content, so M4-T2b remains unchecked under its
+approved acceptance gate. Published verification data must be added through the
+existing Admin API and `/ops` review flow before the final dual-platform smoke.
+
 ## Upgrade policy
 
 M0-T5 validated the simulator and Preview matrix. V1 therefore permits only security

@@ -9,8 +9,8 @@ MAP-2 boundaries at zoom 8 and above, and MAP-3 factory points at zoom 10 and
 above. MAP-3 points use native MapLibre clustering with cluster expansion on
 press. MAP-1 points, MAP-2 boundaries, and unclustered MAP-3 points open a
 bottom card that renders the lightweight map identity immediately and fills in
-the image and main products through A-2/A-5. The detail CTA remains visibly
-disabled until the native detail routes land in M4-T2b/T2c.
+the image and main products through A-2/A-5. Industrial-cluster cards now route
+to `/clusters/[slug]`; factory detail remains visibly disabled until M4-T2c.
 
 Viewport requests are debounced for 500ms and canceled when movement starts.
 The first camera position is excluded from analytics; later settled movements
@@ -45,6 +45,25 @@ passed `led`, `socks`, `sofa`, `家具`, no-result popular categories, search
 failure/Retry recovery, category MAP filtering, cluster/factory positioning and
 cards, attribution, and crash-free interaction. Registration, OAuth, account
 management, and logout UI remain in later M4 task packages.
+
+The M4-T2b cluster-detail implementation uses A-2 and cursor-based A-3 through
+the generated API client. A single `FlatList` renders the identity, disabled
+save placeholder, static boundary/centroid map, optional stats and Markdown,
+and deduplicated factory pages. Markdown ignores raw HTML and permits only
+HTTP(S) links and images. Loading, 404, service, empty-list, initial-page,
+next-page, and map failures each expose an appropriate retry or return action.
+The shared analytics facade receives one `cluster_viewed` call after A-2
+succeeds and remains a network no-op without Mobile consent and an adapter.
+
+On the existing iOS 26.5 Simulator and Android API 36 Emulator, the preview
+platform-restricted keys and canonical staging API passed map-card entry,
+direct deep linking, boundary fitting, attribution, five factory cards,
+disabled future actions, return-to-map, and crash-free interaction. Canonical
+staging currently has only two published clusters; both omit description and
+stats, and the largest has five factories. Therefore real-data Markdown and a
+second A-3 cursor page remain an acceptance blocker even though their unit
+coverage passes. M4-T2b stays unchecked until those two staging paths are
+smoked with approved published data.
 
 Clerk tokens are stored in a dedicated encrypted MMKV instance. Its randomly
 generated encryption key is persisted with Expo SecureStore and is never placed
