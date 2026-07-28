@@ -1,18 +1,22 @@
 import type { GetFactory200DataContact } from "@chinasupply/api-client";
 
-export const FACTORY_DETAIL_STALE_TIME_MS = 5 * 60 * 1000;
+export const FACTORY_DETAIL_STALE_TIME_MS = 15 * 60 * 1_000;
 
 export type FactoryContact = Exclude<GetFactory200DataContact, null>;
 
 export function normalizeFactorySlug(
-  value: string | string[] | undefined,
+  slug: string | string[] | undefined,
 ): string | null {
-  const slug = Array.isArray(value) ? value[0] : value;
-  const normalized = slug?.trim();
+  const normalized = Array.isArray(slug) ? slug[0] : slug;
+  if (
+    normalized === undefined ||
+    normalized.length > 160 ||
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(normalized)
+  ) {
+    return null;
+  }
 
-  return normalized === undefined || normalized.length === 0
-    ? null
-    : normalized;
+  return normalized;
 }
 
 export function formatVerificationMonth(value: string | null): string | null {

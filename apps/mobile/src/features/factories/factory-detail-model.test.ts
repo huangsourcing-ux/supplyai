@@ -8,14 +8,17 @@ import {
 } from "./factory-detail-model";
 
 describe("factory detail model", () => {
-  it("normalizes direct and array route params", () => {
-    expect(normalizeFactorySlug("  yiwu-bright-goods ")).toBe(
-      "yiwu-bright-goods",
-    );
+  it("accepts only one bounded lowercase slug from the route", () => {
+    expect(normalizeFactorySlug("yiwu-bright-goods")).toBe("yiwu-bright-goods");
     expect(normalizeFactorySlug(["dongguan-vivo-mobile", "ignored"])).toBe(
       "dongguan-vivo-mobile",
     );
-    expect(normalizeFactorySlug("  ")).toBeNull();
+    expect(normalizeFactorySlug("a".repeat(160))).toBe("a".repeat(160));
+    expect(normalizeFactorySlug("../../admin/factories")).toBeNull();
+    expect(normalizeFactorySlug("..%2F..%2Fadmin")).toBeNull();
+    expect(normalizeFactorySlug("Invalid Slug")).toBeNull();
+    expect(normalizeFactorySlug("a".repeat(161))).toBeNull();
+    expect(normalizeFactorySlug("  yiwu-bright-goods ")).toBeNull();
     expect(normalizeFactorySlug([])).toBeNull();
     expect(normalizeFactorySlug(undefined)).toBeNull();
   });

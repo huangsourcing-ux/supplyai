@@ -399,7 +399,7 @@ describe("mobile factory detail route", () => {
     expect(useGetFactory).toHaveBeenCalledWith("yiwu-bright-goods", {
       query: {
         enabled: true,
-        staleTime: 300_000,
+        staleTime: 900_000,
       },
     });
     await waitFor(() => {
@@ -419,6 +419,34 @@ describe("mobile factory detail route", () => {
 
     fireEvent.press(screen.getByTestId("factory-detail-back"));
     expect(replace).toHaveBeenCalledWith("/");
+  });
+
+  it("rejects traversal and overlong route slugs before A-5 can run", () => {
+    jest
+      .mocked(useLocalSearchParams)
+      .mockReturnValue({ slug: "../../admin/factories" });
+    jest.mocked(useRouter).mockReturnValue(routerMock());
+    jest.mocked(useGetFactory).mockReturnValue({
+      data: undefined,
+      error: null,
+      isError: false,
+      isPending: false,
+      refetch: jest.fn(),
+    } as unknown as ReturnType<typeof useGetFactory>);
+
+    const view = render(<FactoryDetailScreen />);
+    expect(useGetFactory).toHaveBeenLastCalledWith("", {
+      query: { enabled: false, staleTime: 900_000 },
+    });
+    expect(screen.getByText("This factory was not found")).toBeOnTheScreen();
+
+    jest
+      .mocked(useLocalSearchParams)
+      .mockReturnValue({ slug: "a".repeat(161) });
+    view.rerender(<FactoryDetailScreen />);
+    expect(useGetFactory).toHaveBeenLastCalledWith("", {
+      query: { enabled: false, staleTime: 900_000 },
+    });
   });
 
   it("maps A-5 404 and service failures to distinct states", () => {
