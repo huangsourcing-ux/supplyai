@@ -301,8 +301,8 @@ export default function SignInScreen() {
                   <Text style={styles.linkText}>
                     {t(
                       mode === "signIn"
-                        ? "auth.signUp.switch"
-                        : "auth.signIn.switch",
+                        ? "auth.signIn.switch"
+                        : "auth.signUp.switch",
                     )}
                   </Text>
                 </Pressable>

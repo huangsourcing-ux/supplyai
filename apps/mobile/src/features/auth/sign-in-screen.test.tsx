@@ -61,6 +61,20 @@ async function requestEmailCode(email = "buyer@example.com") {
 }
 
 describe("Clerk Expo passwordless authentication", () => {
+  it("shows the matching account-mode switch prompt", () => {
+    render(<SignInScreen />);
+
+    expect(
+      screen.getByText("New to ChinaSupply.AI? Create an account"),
+    ).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByTestId("auth-switch-mode"));
+
+    expect(
+      screen.getByText("Already have an account? Sign in"),
+    ).toBeOnTheScreen();
+  });
+
   it("sends and verifies an email sign-in code, then finalizes", async () => {
     const { signIn } = createAuthMocks();
     render(<SignInScreen />);
