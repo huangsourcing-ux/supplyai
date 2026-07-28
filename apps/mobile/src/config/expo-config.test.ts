@@ -15,6 +15,7 @@ describe("Expo application config", () => {
       "cac33d97-75d7-4975-899f-00d661bf979d",
     );
     expect(config.plugins).toContain("@maplibre/maplibre-react-native");
+    expect(config.plugins).toContain("@clerk/expo");
     expect(config.plugins).toContain("@sentry/react-native/expo");
     expect(config.ios?.buildNumber).toBe("1");
     expect(config.android?.versionCode).toBe(1);

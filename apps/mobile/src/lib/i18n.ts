@@ -41,12 +41,27 @@ export const resources = {
       map: {
         ariaLabel: "China industrial cluster and factory map",
         attribution: "© MapTiler · © OpenStreetMap contributors",
+        card: {
+          close: "Close details",
+          cluster: "Industrial cluster",
+          detailError: "Details could not be loaded.",
+          factory: "Factory",
+          factoryCount_one: "{{count}} factory",
+          factoryCount_other: "{{count}} factories",
+          loadingDetails: "Loading details",
+          mainProducts: "Main products",
+          unverified: "Unverified",
+          verified: "Verified",
+          viewClusterDetails: "View cluster details",
+          viewFactoryDetails: "View factory details",
+        },
         retry: "Retry",
         status: {
           "data-error": "Map data could not be loaded.",
           loading: "Loading map data…",
           "map-error": "Map could not be loaded.",
         },
+        truncated: "Zoom in to see all factories",
       },
       sentrySmoke: {
         button: "Send Mobile Sentry test exception",

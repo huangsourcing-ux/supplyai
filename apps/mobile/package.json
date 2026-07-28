@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.29.2",
+    "@chinasupply/analytics": "workspace:*",
     "@chinasupply/api-client": "workspace:*",
     "@chinasupply/config": "workspace:*",
     "@chinasupply/geo": "workspace:*",
