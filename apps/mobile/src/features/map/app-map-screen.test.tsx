@@ -198,11 +198,7 @@ describe("App map data sources", () => {
   });
 
   it("waits 500ms before requesting zoom-gated MAP-2 and MAP-3 data", () => {
-    jest.useFakeTimers({
-      // React Native's scheduler needs real microtask primitives. Faking them
-      // makes Jest spin during teardown on Linux runners.
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     renderMap();
 
     fireEvent.press(screen.getByTestId("maplibre-region-did-change"));
@@ -368,9 +364,7 @@ describe("App map data sources", () => {
   });
 
   it("shows the localized MAP-3 truncation notice after the zoom gate", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     jest.mocked(useGetMapFactories).mockReturnValue(
       createQueryResult({
         data: {
@@ -394,9 +388,7 @@ describe("App map data sources", () => {
   });
 
   it("skips the initial camera position and tracks later settled movement", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     renderMap();
 
     fireEvent.press(screen.getByTestId("maplibre-region-did-change"));
@@ -420,9 +412,7 @@ describe("App map data sources", () => {
   });
 
   it("enforces the input limit and waits exactly 300ms before searching", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     renderMap();
     const input = screen.getByTestId("map-search-input");
 
@@ -459,9 +449,7 @@ describe("App map data sources", () => {
   });
 
   it("renders grouped results, hides stale results, and tracks each response once", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     jest.mocked(useSearch).mockReturnValue(
       createQueryResult({
         data: { data: searchData, error: null, meta: {} },
@@ -498,9 +486,7 @@ describe("App map data sources", () => {
   });
 
   it("retries a failed search without disturbing category chips", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     const refetch = jest.fn();
     jest.mocked(useGetCategories).mockReturnValue(
       createQueryResult({
@@ -527,9 +513,7 @@ describe("App map data sources", () => {
   });
 
   it("clears stale map data and applies category to all MAP requests after 500ms", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     jest.mocked(useGetCategories).mockReturnValue(
       createQueryResult({
         data: { data: categories },
@@ -605,9 +589,7 @@ describe("App map data sources", () => {
   });
 
   it("flies to cluster and factory search results with immediate cards", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     jest.mocked(useSearch).mockReturnValue(
       createQueryResult({
         data: { data: searchData, error: null, meta: {} },
@@ -650,9 +632,7 @@ describe("App map data sources", () => {
   });
 
   it("keeps an exact child search result as a removable MAP filter", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     jest.mocked(useGetCategories).mockReturnValue(
       createQueryResult({
         data: { data: categories },
@@ -704,9 +684,7 @@ describe("App map data sources", () => {
   });
 
   it("tracks settled movement with the applied category slug", () => {
-    jest.useFakeTimers({
-      doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
-    });
+    jest.useFakeTimers();
     jest.mocked(useGetCategories).mockReturnValue(
       createQueryResult({
         data: { data: categories },

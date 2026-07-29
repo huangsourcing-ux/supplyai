@@ -26,6 +26,7 @@ jobs:
   changes:
     name: Detect mobile changes
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       mobile: ${{ steps.mobile.outputs.changed }}
     steps:
@@ -61,6 +62,9 @@ jobs:
   quality:
     name: Lint, typecheck, and unit tests
     runs-on: ubuntu-latest
+    # Healthy runs finish in about two minutes; this still leaves ample runner
+    # variance while failing a leaked five-minute Jest handle deterministically.
+    timeout-minutes: 6
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -94,6 +98,7 @@ jobs:
   build:
     name: Build Web and API
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       APP_ENV: local
       CLERK_SECRET_KEY: sk_test_ci_only_secret
@@ -143,6 +148,7 @@ jobs:
   api_e2e:
     name: API e2e
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -167,6 +173,7 @@ jobs:
   web_e2e:
     name: Web Playwright
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -208,6 +215,9 @@ jobs:
       - changes
     if: needs.changes.outputs.mobile == 'true'
     runs-on: ubuntu-latest
+    # The established job baseline is under three minutes. Six minutes catches
+    # a default React Query five-minute GC handle before it looks like success.
+    timeout-minutes: 6
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -247,6 +257,7 @@ jobs:
       - mobile
     if: always()
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Require all applicable checks
         env:
@@ -297,6 +308,7 @@ jobs:
       - migrate_core
     if: github.event_name == 'push' && always()
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Require CI and migration success
         env:
