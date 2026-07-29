@@ -335,7 +335,7 @@ failure, and empty categories. This evidence boundary closes F-10.1 while
 leaving M4-T5 navigation, M4-T6 Maestro, Mobile PostHog/Consent, EAS, and
 production unchanged at that checkpoint.
 
-## M4-T5 navigation code-stage evidence
+## M4-T5 navigation evidence and Owner closure
 
 M4-T5 now enables factory-detail navigation through the frozen M0-T9
 `buildNavUrl` contract. iOS exposes Google, Apple, Amap, and Baidu; Android
@@ -354,11 +354,13 @@ Geo fixture suite remains unchanged. Local Release configuration smoke on the
 iPhone 17 Pro / iOS 26.5 Simulator and `diaoyouji_api_36` / API 36 Emulator
 confirmed the platform-specific button sets, Apple/Google system handoff,
 absent-Amap HTTPS fallback, canonical OPPO coordinate, and return without App
-crash. Simulator/Emulator details and the still-pending F-6.4 Release
-physical-device matrix are recorded separately in
-`docs/operations/m4-t5-navigation-release-validation.md`; until the latter is
-complete, M4-T5 remains unchecked and this section is not compatibility or
-landing-accuracy evidence.
+crash. Simulator/Emulator details remain integration evidence only. On
+2026-07-29 the Owner separately confirmed that the complete F-6.4 Release
+physical-device matrix passed and every observed landing error was `<50m`, and
+explicitly approved checking M4-T5. The closeout is recorded in
+`docs/operations/m4-t5-navigation-release-validation.md`; per-device build,
+OS, map-App version, and measurement records were not supplied for repository
+transcription and have not been invented here.
 
 ## Upgrade policy
 

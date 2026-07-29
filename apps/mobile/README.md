@@ -181,12 +181,13 @@ without a fatal error. The fresh Android image stopped at Chrome's first-run
 terms screen; no terms were accepted and no Web page rendering is claimed.
 These local results are integration smoke, not F-6.4 landing evidence.
 
-F-6.4 remains open: the connected iPhone is currently offline and there is no
-Android physical device. M4-T5 must not be checked until the staging iOS
-Release build and Android EAS Preview Release APK complete the 13-row installed
-App/Web-fallback matrix in
-`docs/operations/m4-t5-navigation-release-validation.md`, with every observed
-destination less than 50 metres from the reviewed factory entrance.
+On 2026-07-29 the Owner explicitly confirmed completion of the full 13-row
+F-6.4 Release physical-device matrix and that every observed destination was
+less than 50 metres from the reviewed factory entrance. M4-T5 is therefore
+closed and the development-plan Next Action is M4-T6. The per-device build,
+OS, map-App version, and measurement records were not supplied for repository
+transcription; the closeout record preserves the Owner's acceptance without
+inventing those fields.
 
 ## Commands
 
