@@ -291,6 +291,26 @@ shared MapLibre style warnings and one recoverable Android React Host startup
 diagnostic were unrelated to authentication and did not prevent the tested
 lifecycle.
 
+## M4-T3b App-favorites simulator evidence
+
+M4-T3b was exercised on 2026-07-28 against the canonical staging API with the
+same disposable Clerk Development user on both platforms. No production
+configuration or canonical content was changed.
+
+| Platform | Native/runtime evidence                                                                                                                                                                                                                                                                                                                                             |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Xcode 26.6 built and launched `ChinaSupplyAIStaging` Debug on the iPhone 17 Pro / iOS 26.5 Simulator. Anonymous Saved opened standalone email authentication and returned automatically; cluster and factory details created favorites, both lists and detail routing rendered, and focus revalidation observed Android removals.                                   |
+| Android  | Gradle installed the current staging Debug APK on `diaoyouji_api_36` / API 36. The same account observed both iOS-created favorites, opened cluster details, rendered an injected request failure and recovered through Retry, removed both target types, and completed shared 401 session cleanup after account deletion; logcat contained no App fatal exception. |
+
+The smoke also verified the restricted platform MapTiler keys and existing map
+attribution on the surrounding routes. Fixed tests cover cursor page
+deduplication and boundaries, `target=null`, invalid return targets, idempotent
+POST cache upsert, optimistic DELETE rollback, per-user cache isolation,
+Bearer injection, focus revalidation, and 401 cleanup. Favorites were empty
+before the disposable account deletion request returned
+`deletionRequested: true`; both platforms then showed the signed-out Saved
+guidance. Temporary credentials and logs were not retained.
+
 ## Upgrade policy
 
 M0-T5 validated the simulator and Preview matrix. V1 therefore permits only security

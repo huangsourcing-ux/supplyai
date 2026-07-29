@@ -5,6 +5,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Linking } from "react-native";
 
@@ -119,6 +120,23 @@ function routerMock(overrides: Record<string, unknown> = {}) {
     setParams: jest.fn(),
     ...overrides,
   } as ReturnType<typeof useRouter>;
+}
+
+function renderFactoryRoute() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { gcTime: Infinity, retry: false } },
+  });
+  const route = () => (
+    <QueryClientProvider client={queryClient}>
+      <FactoryDetailScreen />
+    </QueryClientProvider>
+  );
+  const view = render(route());
+  return {
+    queryClient,
+    view,
+    rerender: () => view.rerender(route()),
+  };
 }
 
 describe("mobile factory detail presentation", () => {
@@ -412,7 +430,7 @@ describe("mobile factory detail route", () => {
       refetch: jest.fn(),
     } as unknown as ReturnType<typeof useGetFactory>);
 
-    const view = render(<FactoryDetailScreen />);
+    const { queryClient, rerender } = renderFactoryRoute();
 
     expect(useGetFactory).toHaveBeenCalledWith("yiwu-bright-goods", {
       query: {
@@ -426,8 +444,9 @@ describe("mobile factory detail route", () => {
         slug: factory.slug,
       });
     });
-    view.rerender(<FactoryDetailScreen />);
+    rerender();
     expect(analytics.trackFactoryViewed).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId("favorite-save-factory")).toBeOnTheScreen();
 
     fireEvent.press(screen.getByTestId("related-factory-yiwu-signal-works"));
     expect(push).toHaveBeenCalledWith({
@@ -437,6 +456,7 @@ describe("mobile factory detail route", () => {
 
     fireEvent.press(screen.getByTestId("factory-detail-back"));
     expect(replace).toHaveBeenCalledWith("/");
+    queryClient.clear();
   });
 
   it("rejects traversal and overlong route slugs before A-5 can run", () => {
@@ -452,7 +472,7 @@ describe("mobile factory detail route", () => {
       refetch: jest.fn(),
     } as unknown as ReturnType<typeof useGetFactory>);
 
-    const view = render(<FactoryDetailScreen />);
+    const { queryClient, rerender } = renderFactoryRoute();
     expect(useGetFactory).toHaveBeenLastCalledWith("", {
       query: { enabled: false, staleTime: 900_000 },
     });
@@ -461,10 +481,11 @@ describe("mobile factory detail route", () => {
     jest
       .mocked(useLocalSearchParams)
       .mockReturnValue({ slug: "a".repeat(161) });
-    view.rerender(<FactoryDetailScreen />);
+    rerender();
     expect(useGetFactory).toHaveBeenLastCalledWith("", {
       query: { enabled: false, staleTime: 900_000 },
     });
+    queryClient.clear();
   });
 
   it("maps A-5 404 and service failures to distinct states", () => {
@@ -480,7 +501,7 @@ describe("mobile factory detail route", () => {
       refetch: jest.fn(),
     } as unknown as ReturnType<typeof useGetFactory>);
 
-    const view = render(<FactoryDetailScreen />);
+    const { queryClient, rerender } = renderFactoryRoute();
     expect(screen.getByText("This factory was not found")).toBeOnTheScreen();
 
     jest.mocked(useGetFactory).mockReturnValue({
@@ -490,9 +511,10 @@ describe("mobile factory detail route", () => {
       isPending: false,
       refetch: jest.fn(),
     } as unknown as ReturnType<typeof useGetFactory>);
-    view.rerender(<FactoryDetailScreen />);
+    rerender();
     expect(
       screen.getByText("We could not load this factory"),
     ).toBeOnTheScreen();
+    queryClient.clear();
   });
 });

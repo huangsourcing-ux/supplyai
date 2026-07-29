@@ -1,7 +1,7 @@
 import * as Clipboard from "expo-clipboard";
 import { type Href, useLocalSearchParams, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -40,6 +40,7 @@ import {
   safeHttpUrl,
 } from "../../lib/external-url";
 import { FactoryLocationMap } from "./factory-location-map";
+import { FavoriteSaveAction } from "../favorites/favorite-save-action";
 
 function isNotFoundError(error: unknown): boolean {
   return (
@@ -492,10 +493,12 @@ export function RelatedFactoryCard({
 
 export function FactoryDetailLoaded({
   factory,
+  favoriteAction,
   onBack,
   onRelatedFactory,
 }: Readonly<{
   factory: GetFactory200Data;
+  favoriteAction?: ReactNode;
   onBack: () => void;
   onRelatedFactory: (slug: string) => void;
 }>) {
@@ -563,6 +566,7 @@ export function FactoryDetailLoaded({
             </View>
           )}
         </View>
+        {favoriteAction}
       </View>
 
       <FactoryImageCarousel images={factory.images} name={factory.name} />
@@ -754,6 +758,13 @@ export default function FactoryDetailScreen() {
     content = (
       <FactoryDetailLoaded
         factory={factory}
+        favoriteAction={
+          <FavoriteSaveAction
+            returnTo={`/factories/${factory.slug}`}
+            targetId={factory.id}
+            targetType="factory"
+          />
+        }
         onBack={goBack}
         onRelatedFactory={openRelatedFactory}
       />

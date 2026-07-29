@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { type Href, useLocalSearchParams, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useRef } from "react";
+import { type ReactNode, useCallback, useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -33,6 +33,7 @@ import {
   normalizeClusterSlug,
 } from "./cluster-detail-model";
 import { ClusterMarkdown } from "./cluster-markdown";
+import { FavoriteSaveAction } from "../favorites/favorite-save-action";
 
 function isNotFoundError(error: unknown): boolean {
   return (
@@ -217,9 +218,11 @@ export function ClusterFactoryCard({
 
 export function ClusterDetailHeader({
   cluster,
+  favoriteAction,
   onBack,
 }: Readonly<{
   cluster: GetCluster200Data;
+  favoriteAction?: ReactNode;
   onBack: () => void;
 }>) {
   const { t } = useTranslation();
@@ -240,24 +243,7 @@ export function ClusterDetailHeader({
           {t("clusterDetail.location", { city: cluster.region.name })}
         </Text>
         <Text style={styles.summary}>{cluster.summary}</Text>
-        <Pressable
-          accessibilityHint={t("clusterDetail.save.unavailable")}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: true }}
-          disabled
-          style={styles.savePlaceholder}
-          testID="cluster-save-placeholder"
-        >
-          <Text aria-hidden style={styles.saveIcon}>
-            ♡
-          </Text>
-          <Text style={styles.savePlaceholderText}>
-            {t("clusterDetail.save.action")}
-          </Text>
-        </Pressable>
-        <Text style={styles.saveHint}>
-          {t("clusterDetail.save.unavailable")}
-        </Text>
+        {favoriteAction}
       </View>
 
       <View style={styles.section}>
@@ -391,6 +377,7 @@ function FactoryListMessage({
 export function ClusterDetailLoaded({
   cluster,
   factories,
+  favoriteAction,
   hasNextPage,
   isFetchNextPageError,
   isFetchingNextPage,
@@ -403,6 +390,7 @@ export function ClusterDetailLoaded({
 }: Readonly<{
   cluster: GetCluster200Data;
   factories: GetClusterFactories200DataItem[];
+  favoriteAction?: ReactNode;
   hasNextPage: boolean;
   isFetchNextPageError: boolean;
   isFetchingNextPage: boolean;
@@ -455,7 +443,11 @@ export function ClusterDetailLoaded({
       }
       ListFooterComponent={footer}
       ListHeaderComponent={
-        <ClusterDetailHeader cluster={cluster} onBack={onBack} />
+        <ClusterDetailHeader
+          cluster={cluster}
+          favoriteAction={favoriteAction}
+          onBack={onBack}
+        />
       }
       contentContainerStyle={styles.listContent}
       data={factories}
@@ -543,6 +535,13 @@ export default function ClusterDetailScreen() {
       <ClusterDetailLoaded
         cluster={cluster}
         factories={factories}
+        favoriteAction={
+          <FavoriteSaveAction
+            returnTo={`/clusters/${cluster.slug}`}
+            targetId={cluster.id}
+            targetType="cluster"
+          />
+        }
         hasNextPage={factoriesQuery.hasNextPage}
         isFetchNextPageError={factoriesQuery.isFetchNextPageError}
         isFetchingNextPage={factoriesQuery.isFetchingNextPage}
@@ -807,33 +806,6 @@ const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: "#F8FAFC",
     flex: 1,
-  },
-  saveHint: {
-    color: "#64748B",
-    fontSize: 11,
-    lineHeight: 16,
-    marginTop: 7,
-  },
-  saveIcon: {
-    color: "#64748B",
-    fontSize: 20,
-    marginRight: 7,
-  },
-  savePlaceholder: {
-    alignItems: "center",
-    alignSelf: "flex-start",
-    backgroundColor: "#E2E8F0",
-    borderRadius: 10,
-    flexDirection: "row",
-    marginTop: 18,
-    minHeight: 44,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
-  savePlaceholderText: {
-    color: "#64748B",
-    fontSize: 14,
-    fontWeight: "800",
   },
   section: {
     borderBottomColor: "#E2E8F0",

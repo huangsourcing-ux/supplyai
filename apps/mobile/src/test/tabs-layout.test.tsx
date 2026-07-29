@@ -4,8 +4,8 @@ import { render } from "@testing-library/react-native";
 import "../lib/i18n";
 import TabsLayout from "../app/(tabs)/_layout";
 
-describe("M4-T3a mobile tabs", () => {
-  it("shows only Map and Account while later tabs remain out of scope", () => {
+describe("M4-T3b mobile tabs", () => {
+  it("shows Map, Saved, and Account while Explore remains out of scope", () => {
     render(<TabsLayout />);
 
     const options = jest
@@ -17,6 +17,10 @@ describe("M4-T3a mobile tabs", () => {
       expect.objectContaining({
         name: "index",
         options: expect.objectContaining({ tabBarLabel: "Map" }),
+      }),
+      expect.objectContaining({
+        name: "saved",
+        options: expect.objectContaining({ tabBarLabel: "Saved" }),
       }),
       expect.objectContaining({
         name: "account",

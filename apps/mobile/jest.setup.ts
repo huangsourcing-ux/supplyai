@@ -2,8 +2,11 @@ import type { ReactNode } from "react";
 
 jest.mock("@chinasupply/api-client", () => ({
   configureApiClient: jest.fn(),
+  createFavorite: jest.fn(),
+  deleteFavorite: jest.fn(),
   deleteMe: jest.fn(),
   getClusterFactories: jest.fn(),
+  getFavorites: jest.fn(),
   getGetMapClusterBoundariesQueryKey: jest.fn(() => [
     "/api/v1/map/clusters/boundaries",
   ]),
@@ -90,6 +93,7 @@ jest.mock("expo-router", () => {
     ErrorBoundary: undefined,
     Stack: Object.assign(() => null, { Screen: () => null }),
     Tabs,
+    useFocusEffect: jest.fn(),
     useLocalSearchParams: jest.fn(() => ({
       slug: "yiwu-small-commodities",
     })),
@@ -147,6 +151,7 @@ jest.mock("@clerk/expo", () => {
       getToken: jest.fn(async () => null),
       isLoaded: true,
       isSignedIn: false,
+      userId: null,
     })),
     useClerk: jest.fn(() => ({ signOut: jest.fn(async () => undefined) })),
     useSignIn: jest.fn(() => ({
