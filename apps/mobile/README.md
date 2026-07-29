@@ -137,6 +137,28 @@ revalidation, and post-deletion 401 cleanup without an App crash. The temporary
 favorites and disposable Clerk test account were removed; canonical content and
 production were unchanged.
 
+M4-T4 adds Explore between Map and Saved, fixing the tab order as Map → Explore
+→ Saved → Account. `/explore` consumes the generated A-7 client and renders the
+server-ordered root categories as a two-column, accessible color/icon grid.
+The nine current API icon names are mapped explicitly to Font Awesome 6, with a
+`shapes` fallback for null or future values. `/explore/[slug]` rejects malformed,
+unknown, and child-category slugs before A-1; valid roots request the exact slug
+in 20-item pages, pass opaque cursors unchanged, deduplicate page boundaries by
+cluster ID, and support automatic scrolling plus an explicit continuation
+fallback. Cluster cards route to the existing detail screen and preserve the
+Explore list when users return. Loading, empty, unavailable, initial-error, and
+continuation-error states all provide a useful next action.
+
+On 2026-07-29 the iPhone 17 Pro / iOS 26.5 Simulator and
+`diaoyouji_api_36` / API 36 Emulator used the restricted preview MapTiler keys
+and canonical staging API to pass the four-tab order, all nine category colors
+and icons, Electronics and Home Textiles lists, cluster-detail round trips, and
+the real Lighting empty state without an App crash. Android additionally passed
+a real airplane-mode service failure followed by network restoration and Retry.
+The iOS error and Retry branches and the unavailable second cursor page are
+covered by fixed automated fixtures; canonical staging data was not changed to
+manufacture pagination.
+
 ## Commands
 
 Run from the repository root:
