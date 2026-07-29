@@ -2,8 +2,30 @@ import { buildMobileEnvironment } from "./env";
 
 describe("mobile environment", () => {
   it("uses safe local defaults for static tooling", () => {
-    expect(buildMobileEnvironment({}).EXPO_PUBLIC_APP_ENV).toBe("local");
+    const environment = buildMobileEnvironment({});
+
+    expect(environment.EXPO_PUBLIC_APP_ENV).toBe("local");
+    expect(environment.EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED).toBe("false");
   });
+
+  it.each([undefined, "false"])(
+    "refuses a production build when native Apple sign-in is %s",
+    (appleSignInEnabled) => {
+      expect(() =>
+        buildMobileEnvironment({
+          EXPO_PUBLIC_APP_ENV: "production",
+          EXPO_PUBLIC_API_BASE_URL: "https://api.chinasupply.ai/api/v1",
+          EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED: appleSignInEnabled,
+          EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
+            "pk_live_cHJvZHVjdGlvbi5jbGVyay5hY2NvdW50cy5kZXYk",
+          EXPO_PUBLIC_MAPTILER_ANDROID_KEY: "android_actual_public_key",
+          EXPO_PUBLIC_MAPTILER_IOS_KEY: "ios_actual_public_key",
+          EXPO_PUBLIC_SENTRY_DSN:
+            "https://public@o1.ingest.sentry.io/123456789",
+        }),
+      ).toThrow(/EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED/);
+    },
+  );
 
   it("rejects private server variables", () => {
     expect(() =>

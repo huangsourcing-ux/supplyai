@@ -12,6 +12,8 @@ export function createExpoConfig({ config }: ConfigContext): ExpoConfig {
   const environment = buildMobileEnvironment({
     EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
     EXPO_PUBLIC_APP_ENV: process.env.EXPO_PUBLIC_APP_ENV,
+    EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED:
+      process.env.EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED,
     EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
     EXPO_PUBLIC_MAPTILER_IOS_KEY: process.env.EXPO_PUBLIC_MAPTILER_IOS_KEY,

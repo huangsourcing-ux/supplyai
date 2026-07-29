@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 
 import { useMobileProtectedApi } from "../../lib/mobile-protected-api";
 import SignInScreen from "../auth/sign-in-screen";
+import LegalLinks from "../legal/legal-links";
 
 export default function AccountScreen() {
   const { t } = useTranslation();
@@ -166,6 +167,8 @@ export default function AccountScreen() {
             </Text>
           </Pressable>
         </View>
+
+        <LegalLinks variant="account" />
 
         <View style={styles.dangerCard}>
           <Text style={styles.cardTitle}>{t("account.delete.title")}</Text>

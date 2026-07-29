@@ -204,7 +204,27 @@ Emulator both passed the complete flow against canonical staging on 2026-07-29.
 Aggregate read-only checks then confirmed every M4-T6 Clerk user absent, every
 core user retained only as a tombstone, zero favorites, and successful delete
 webhook receipts. Canonical content, EAS, CI, and production were unchanged.
-The development-plan Next Action is M4-T7.
+M4-T7 adds the offline store-compliance package. iOS uses Clerk's native Sign
+in with Apple whenever social login is enabled; Apple and Google are hidden
+together when `EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED` is not `true`, while Android
+continues to offer Google. Production configuration rejects a disabled Apple
+flag. Email verification remains available on both platforms. Successful Apple
+sessions use the existing auth completion/return path; cancellation is silent
+and failures remain localized.
+
+The login/registration card and signed-in Account page open environment-aware
+Privacy Policy and Terms of Use pages through the in-App browser with Retry.
+Local/Staging use `https://staging.chinasupply.ai`; Production uses
+`https://www.chinasupply.ai`. Expo config now owns the Apple entitlement,
+no-tracking App Privacy manifest, required-reason API declarations, Android
+permission removals, and disabled Android backup. The offline Apple/Google
+answer matrices and deletion URLs are in
+`docs/operations/m4-t7-store-compliance.md`.
+
+Apple Developer/Play Console access, final identifiers, Clerk/Apple console
+configuration, store-form entry, a real successful Apple session, and internal
+build distribution were not performed. They are M4-T8 gates, so the M4 exit
+remains blocked. The development-plan Next Action is M4-T8.
 
 ## Commands
 

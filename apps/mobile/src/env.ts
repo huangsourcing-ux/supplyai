@@ -3,6 +3,7 @@ import { parseMobileEnv } from "@chinasupply/config/env/mobile";
 const localDefaults = {
   EXPO_PUBLIC_APP_ENV: "local",
   EXPO_PUBLIC_API_BASE_URL: "http://localhost:3001/api/v1",
+  EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED: "false",
   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_replace_me",
   EXPO_PUBLIC_MAPTILER_IOS_KEY: "replace_me_ios",
   EXPO_PUBLIC_MAPTILER_ANDROID_KEY: "replace_me_android",
@@ -21,6 +22,7 @@ const requiredVariableNames = [
 const optionalVariableNames = [
   "EXPO_PUBLIC_MAPTILER_IOS_KEY",
   "EXPO_PUBLIC_MAPTILER_ANDROID_KEY",
+  "EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED",
   "EXPO_PUBLIC_SENTRY_DSN",
   "EXPO_PUBLIC_SENTRY_SMOKE_ENABLED",
   "EXPO_PUBLIC_POSTHOG_KEY",
@@ -60,6 +62,8 @@ export function buildMobileEnvironment(
 export const mobileEnvironment = buildMobileEnvironment({
   EXPO_PUBLIC_APP_ENV: process.env.EXPO_PUBLIC_APP_ENV,
   EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
+  EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED:
+    process.env.EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED,
   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
     process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
   EXPO_PUBLIC_MAPTILER_IOS_KEY: process.env.EXPO_PUBLIC_MAPTILER_IOS_KEY,

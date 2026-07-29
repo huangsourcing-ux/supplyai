@@ -16,9 +16,52 @@ describe("Expo application config", () => {
     );
     expect(config.plugins).toContain("@maplibre/maplibre-react-native");
     expect(config.plugins).toContain("@clerk/expo");
+    expect(config.plugins).toContain("expo-apple-authentication");
     expect(config.plugins).toContain("@sentry/react-native/expo");
     expect(config.ios?.buildNumber).toBe("1");
+    expect(config.ios?.usesAppleSignIn).toBe(true);
+    expect(config.ios?.privacyManifests?.NSPrivacyTracking).toBe(false);
+    expect(
+      config.ios?.privacyManifests?.NSPrivacyCollectedDataTypes?.map(
+        ({ NSPrivacyCollectedDataType }) => NSPrivacyCollectedDataType,
+      ),
+    ).toEqual([
+      "NSPrivacyCollectedDataTypeName",
+      "NSPrivacyCollectedDataTypeEmailAddress",
+      "NSPrivacyCollectedDataTypeUserID",
+      "NSPrivacyCollectedDataTypeSearchHistory",
+      "NSPrivacyCollectedDataTypeProductInteraction",
+      "NSPrivacyCollectedDataTypeCrashData",
+      "NSPrivacyCollectedDataTypePerformanceData",
+      "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+    ]);
+    expect(config.ios?.privacyManifests?.NSPrivacyAccessedAPITypes).toEqual([
+      {
+        NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategoryFileTimestamp",
+        NSPrivacyAccessedAPITypeReasons: ["C617.1", "0A2A.1", "3B52.1"],
+      },
+      {
+        NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategoryUserDefaults",
+        NSPrivacyAccessedAPITypeReasons: ["CA92.1"],
+      },
+      {
+        NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategoryDiskSpace",
+        NSPrivacyAccessedAPITypeReasons: ["E174.1", "85F4.1"],
+      },
+      {
+        NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategorySystemBootTime",
+        NSPrivacyAccessedAPITypeReasons: ["35F9.1"],
+      },
+    ]);
     expect(config.android?.versionCode).toBe(1);
+    expect(config.android?.allowBackup).toBe(false);
+    expect(config.android?.blockedPermissions).toEqual([
+      "android.permission.MANAGE_EXTERNAL_STORAGE",
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.SYSTEM_ALERT_WINDOW",
+      "android.permission.VIBRATE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+    ]);
     expect(config.plugins).toContainEqual([
       "expo-build-properties",
       {

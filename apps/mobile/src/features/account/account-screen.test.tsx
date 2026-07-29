@@ -92,6 +92,7 @@ describe("mobile Account tab", () => {
     renderAccount();
 
     expect(screen.getByText("Sign in to ChinaSupply.AI")).toBeOnTheScreen();
+    expect(screen.getByTestId("legal-links-notice")).toBeOnTheScreen();
     expect(screen.queryByText("Password")).toBeNull();
   });
 
@@ -102,6 +103,7 @@ describe("mobile Account tab", () => {
       "buyer@example.com",
     );
     expect(screen.getByText("English")).toBeOnTheScreen();
+    expect(screen.getByTestId("legal-links-account")).toBeOnTheScreen();
 
     fireEvent.press(screen.getByTestId("account-save-locale"));
 

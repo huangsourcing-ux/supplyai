@@ -38,6 +38,9 @@ export const resources = {
         title: "Account",
       },
       auth: {
+        apple: {
+          continue: "Continue with Apple",
+        },
         back: "Back",
         code: {
           changeEmail: "Use a different email",
@@ -50,6 +53,7 @@ export const resources = {
         error: {
           generic:
             "Authentication could not be completed. Check your details and try again.",
+          apple: "Apple sign-in could not be completed. Please try again.",
           google: "Google sign-in could not be completed. Please try again.",
           unsupported:
             "This account requires an authentication method that is not available in the app.",
@@ -81,6 +85,20 @@ export const resources = {
           title: "Create your buyer account",
         },
         submitting: "Please wait…",
+      },
+      legal: {
+        description: "Review the policies that apply when you use the app.",
+        notice: {
+          joiner: "and acknowledge the",
+          prefix: "By creating an account, you agree to the",
+          suffix: ".",
+        },
+        openError:
+          "This page could not be opened. Check your connection and try again.",
+        privacy: "Privacy Policy",
+        retry: "Retry",
+        terms: "Terms of Use",
+        title: "Legal",
       },
       explore: {
         category: {

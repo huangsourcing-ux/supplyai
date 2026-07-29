@@ -330,3 +330,23 @@ test("remote mobile environments require separate platform MapTiler keys", async
     /EXPO_PUBLIC_MAPTILER_ANDROID_KEY/,
   );
 });
+
+test("production mobile builds require native Apple sign-in", async () => {
+  const mobile = await readExample("apps/mobile/.env.example");
+
+  assert.throws(
+    () =>
+      parseMobileEnv({
+        ...mobile,
+        EXPO_PUBLIC_APP_ENV: "production",
+        EXPO_PUBLIC_API_BASE_URL: "https://api.chinasupply.ai/api/v1",
+        EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED: "false",
+        EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:
+          "pk_live_cHJvZHVjdGlvbi5jbGVyay5hY2NvdW50cy5kZXYk",
+        EXPO_PUBLIC_MAPTILER_IOS_KEY: "ios_production_public_key",
+        EXPO_PUBLIC_MAPTILER_ANDROID_KEY: "android_production_public_key",
+        EXPO_PUBLIC_SENTRY_DSN: "https://public@o1.ingest.sentry.io/123456789",
+      }),
+    /EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED/,
+  );
+});

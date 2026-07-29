@@ -30,6 +30,9 @@ export const mobileEnvSchema = z
   .object({
     EXPO_PUBLIC_APP_ENV: deploymentEnvironmentSchema,
     EXPO_PUBLIC_API_BASE_URL: networkUrlSchema,
+    EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED: z
+      .enum(["true", "false"])
+      .default("false"),
     EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(10),
     EXPO_PUBLIC_MAPTILER_IOS_KEY: z.string().min(8).optional(),
     EXPO_PUBLIC_MAPTILER_ANDROID_KEY: z.string().min(8).optional(),
@@ -41,6 +44,18 @@ export const mobileEnvSchema = z
     EXPO_PUBLIC_POSTHOG_HOST: networkUrlSchema.optional(),
   })
   .superRefine((environment, context) => {
+    if (
+      environment.EXPO_PUBLIC_APP_ENV === "production" &&
+      environment.EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED !== "true"
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED"],
+        message:
+          "must be true in production while Google sign-in is offered on iOS",
+      });
+    }
+
     if (environment.EXPO_PUBLIC_APP_ENV === "local") {
       return;
     }
