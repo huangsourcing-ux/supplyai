@@ -29,12 +29,14 @@ function databaseReturning(
 describe("UserAuthGuard", () => {
   it("attaches the active synchronized Clerk subject", async () => {
     const request = { headers: { authorization: "Bearer user-token" } };
+    const verify = vi.fn().mockResolvedValue({ sub: "user_active" });
     const guard = new UserAuthGuard(
-      vi.fn().mockResolvedValue({ sub: "user_active" }),
+      verify,
       databaseReturning([{ deletedAt: null, id: "user_active" }]),
     );
 
     await expect(guard.canActivate(contextFor(request))).resolves.toBe(true);
+    expect(verify).toHaveBeenCalledWith("user-token", "web-or-native");
     expect(request).toMatchObject({ userId: "user_active" });
   });
 

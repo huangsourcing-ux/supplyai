@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   AdminAuthGuard,
   getBearerToken,
+  hasAllowedUserAuthorizedParty,
   hasAdminRole,
 } from "../src/auth/admin-auth.guard.js";
 
@@ -33,6 +34,25 @@ describe("AdminAuthGuard", () => {
     expect(hasAdminRole({ publicMetadata: { role: "admin" } })).toBe(false);
     expect(hasAdminRole({ metadata: { role: "Admin" } })).toBe(false);
     expect(hasAdminRole({ metadata: null })).toBe(false);
+  });
+
+  it("accepts native user tokens without azp and only the configured web azp", () => {
+    const webOrigin = "https://staging.chinasupply.ai";
+
+    expect(hasAllowedUserAuthorizedParty({ sub: "native" }, webOrigin)).toBe(
+      true,
+    );
+    expect(
+      hasAllowedUserAuthorizedParty({ azp: webOrigin, sub: "web" }, webOrigin),
+    ).toBe(true);
+    expect(
+      hasAllowedUserAuthorizedParty(
+        { azp: "https://untrusted.example.com", sub: "web" },
+        webOrigin,
+      ),
+    ).toBe(false);
+    expect(hasAllowedUserAuthorizedParty({ azp: null }, webOrigin)).toBe(false);
+    expect(hasAllowedUserAuthorizedParty(null, webOrigin)).toBe(false);
   });
 
   it("attaches the verified Clerk subject", async () => {
