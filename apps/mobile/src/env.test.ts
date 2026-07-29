@@ -27,6 +27,16 @@ describe("mobile environment", () => {
     },
   );
 
+  it("refuses an incomplete production EAS environment instead of using local defaults", () => {
+    expect(() =>
+      buildMobileEnvironment({
+        EXPO_PUBLIC_APP_ENV: "production",
+      }),
+    ).toThrow(
+      /EXPO_PUBLIC_API_BASE_URL.*EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED.*EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY/,
+    );
+  });
+
   it("rejects private server variables", () => {
     expect(() =>
       buildMobileEnvironment({ DATABASE_URL: "postgresql://private" }),

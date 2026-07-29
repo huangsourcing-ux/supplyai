@@ -1,6 +1,6 @@
 # ChinaSupply.AI 产品需求文档（PRD）
 
-> 版本：**v1.4 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-24
+> 版本：**v1.5 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-29
 > 用途：供 AI 编码代理（Codex 等）直接执行开发。需求以可验收的结构化条目编写。
 > 技术栈：见《ChinaSupply.AI技术栈-最终冻结版.md》，本文档不重复选型讨论。
 > 优先级定义：P0 = V1 必须；P1 = V1 后第一批迭代；P2 = 路线图。
@@ -13,6 +13,8 @@
 > v1.3 变更摘要：冻结 MAP-2 的 PostGIS 边界简化容差——zoom `<10` 使用 `0.01°`，zoom `10–11` 使用 `0.002°`，zoom `≥12` 返回原始精度。未增加 V1 功能范围。
 >
 > v1.4 变更摘要：澄清 G-11 的 V1 缓存范围——搜索与 MAP-* 均按真实客户端 IP 限流，只有 MAP-* 按 4.4 使用 Cloudflare 1 小时响应缓存；搜索不缓存。未增加 V1 功能范围。
+>
+> v1.5 变更摘要：经 Owner 批准，将 Apple Developer/Google Play Console、正式移动标识符保留、Apple/Clerk 控制台配置、商店表单、真实 Apple 登录与 TestFlight/Play 内测包从 M4-T8 迁移到 M5-T9/M5-T10。M4-T8 只记录门禁迁移，不代表任何商店侧验收通过；M4 出口改为 App 功能、Maestro 与既有双端真机验收完成。Production 移动标识候选改为 `ai.chinasupply.mobile`，仍须在 M5-T9 实际保留。未增加 V1 功能范围。
 
 ---
 
@@ -402,7 +404,7 @@ CLI 上传 CSV/JSON → R2
 - F-11.1 `/privacy` 与 `/terms` 静态页，注册流程与 App 内可达
 - F-11.2 地图 attribution：MapTiler + © OpenStreetMap contributors，不得隐藏
 - F-11.3 PostHog：Web 端 Consent banner（拒绝则不加载）；埋点 query 脱敏见 F-3.6；`map_moved` 节流见 F-1.7
-- F-11.4 App Store / Play 隐私声明：M4-T7 完成代码、iOS App Privacy manifest、Android 权限加固及可离线录入的 Apple/Google 声明包；M4-T8 在外部账号和正式标识符具备后完成 Clerk/Apple 配置、商店控制台录入、真实 Apple 成功登录与内测包门禁；M5-T10 在 Production Submit 前复核最终二进制与商店声明一致。M4-T7 的离线完成不代表商店侧提交完成，且不解除 M4 出口的内测包阻塞
+- F-11.4 App Store / Play 隐私声明：M4-T7 完成代码、iOS App Privacy manifest、Android 权限加固及可离线录入的 Apple/Google 声明包；M4-T8 仅记录 Owner 批准的门禁迁移，不代表外部账号、标识符、控制台、真实登录或内测包验收通过。M5-T9 完成 Apple Developer/Google Play Console、正式标识符保留、Apple capability 与 Clerk Production/Native Application 配置；M5-T10 完成商店隐私/Data Safety/账户删除表单、真实 Apple 成功登录、TestFlight/Play 内测、最终二进制一致性复核与 Production Submit。M4-T7/M4-T8 的离线完成均不代表商店侧提交完成
 - F-11.5 API 限流见 G-11
 
 ---
@@ -436,8 +438,8 @@ CLI 上传 CSV/JSON → R2
 | M1   | 数据模型迁移 + 种子数据（≥10 产业带、≥50 工厂）+ 公开 API（A-1~A-7）+ MAP-*                       | API/MAP 全部可调，e2e 绿，cursor 一致性测试过        |
 | M2   | F-1 地图 + F-3 搜索 + F-2/F-4 详情页（Web 优先）                                                  | 核心路径走通                                         |
 | M3   | F-8 认证 + F-5 收藏 + A-8~A-11 + webhook 幂等                                                     | 跨端收藏一致；删除账户流程通                         |
-| M4   | App 补齐 M2 功能 + F-6 导航（真机验收）+ F-10 Explore + F-11.4 商店隐私声明                       | TestFlight/内测包发出                                |
-| M5   | F-7 `/ops` + Payload 文章 + F-9 导入管道 + **备份恢复演练** + N-2 SEO 收尾 + F-11 其余项          | 运营独立完成录入发布；恢复演练成功                   |
+| M4   | App 补齐 M2 功能 + F-6 导航（真机验收）+ F-10 Explore + F-11.4 离线商店声明包                    | App 功能与 Maestro 通过；双端核心路径和导航真机验收通过 |
+| M5   | F-7 `/ops` + Payload 文章 + F-9 导入管道 + **备份恢复演练** + N-2 SEO + 商店内测/正式发布          | 运营独立完成录入发布；恢复演练成功；内测与商店发布门禁通过 |
 
 ---
 

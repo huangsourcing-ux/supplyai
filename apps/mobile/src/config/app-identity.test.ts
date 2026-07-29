@@ -4,7 +4,7 @@ describe("mobile application identity", () => {
   it.each([
     ["local", "ai.chinasupply.app.local", "chinasupply.local"],
     ["staging", "ai.chinasupply.app.staging", "chinasupply.staging"],
-    ["production", "ai.chinasupply.app", "chinasupply"],
+    ["production", "ai.chinasupply.mobile", "chinasupply"],
   ] as const)(
     "uses the expected %s identifiers",
     (environment, expectedIdentifier, expectedScheme) => {

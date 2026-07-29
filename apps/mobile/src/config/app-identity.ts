@@ -21,8 +21,8 @@ const identities = {
     scheme: "chinasupply.staging",
   },
   production: {
-    androidPackage: "ai.chinasupply.app",
-    bundleIdentifier: "ai.chinasupply.app",
+    androidPackage: "ai.chinasupply.mobile",
+    bundleIdentifier: "ai.chinasupply.mobile",
     name: "ChinaSupply.AI",
     scheme: "chinasupply",
   },

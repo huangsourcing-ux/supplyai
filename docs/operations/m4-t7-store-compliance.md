@@ -1,6 +1,6 @@
 # M4-T7 store compliance package
 
-> Status: **Offline package complete; store-side work blocked on M4-T8**
+> Status: **Offline package complete; store-side work deferred to M5-T9/M5-T10**
 >
 > Last verified: 2026-07-29
 >
@@ -8,16 +8,16 @@
 
 ## Acceptance boundary
 
-The Owner approved M4-T7 as an offline compliance deliverable. The repository now contains the native privacy declarations, Android permission policy, legal entry points, Sign in with Apple implementation, environment guard, and store-answer matrices. The following external actions remain mandatory in M4-T8 and are **not complete**:
+The Owner approved M4-T7 as an offline compliance deliverable. The repository now contains the native privacy declarations, Android permission policy, legal entry points, Sign in with Apple implementation, environment guard, and store-answer matrices. M4-T8 subsequently recorded an Owner-approved schedule migration only. The following external actions remain mandatory and are **not complete**:
 
-- enroll in and access Apple Developer Program and Google Play Console;
-- reserve and confirm the production iOS Bundle ID and Android package name;
-- enable the Apple Sign in capability, create the Clerk Native Application, configure the Clerk Apple connection, and confirm production callback/identifier settings;
-- enter and submit App Privacy, Data Safety, and account-deletion answers in the store consoles;
-- complete a real successful Apple login and existing return-path flow on iOS;
-- create and distribute TestFlight and Google Play internal-test builds.
+- M5-T9: enroll in and access Apple Developer Program and Google Play Console;
+- M5-T9: reserve and confirm the Owner-selected `ai.chinasupply.mobile` production iOS Bundle ID and Android package; the retired `ai.chinasupply.app` candidate must not be used;
+- M5-T9: enable the Apple Sign in capability, create Clerk Production and its Native Application, configure the Clerk Apple connection, and confirm production callback/identifier settings;
+- M5-T10: enter and submit App Privacy, Data Safety, and account-deletion answers in the store consoles;
+- M5-T10: complete a real successful Apple login and existing return-path flow on an iOS physical device;
+- M5-T10: create and distribute TestFlight and Google Play internal-test builds, verify the installed binaries against this package, and only then continue to Production Submit.
 
-M0-T0, M4-T8, and the M4 exit therefore remain unchecked. Production submission in M5-T10 must compare the final binary with these answers again.
+Under the approved v1.5 plan, M0-T0 and M4-T8 are closed only as revised-scope and gate-migration records, and the M4 exit no longer claims internal distribution. No store-side item above is complete. M5-T9/M5-T10 must retain their unchecked state until the corresponding external evidence exists, and M5-T10 must compare the final binary with these answers again.
 
 ## Runtime and native controls
 
@@ -93,7 +93,7 @@ Expo introspection and a non-clean native prebuild on 2026-07-29 confirmed:
 - the generated iOS entitlement and `PrivacyInfo.xcprivacy` preserve those same values;
 - the Android release manifest preserves `INTERNET`, contains none of the five blocked permissions, and has `android:allowBackup=false`.
 
-An iOS 26.5 Simulator Release build and an Android API 36 Emulator release APK both opened the canonical staging Privacy Policy and Terms of Use before and after email login. The flows showed no application permission prompt and deleted their temporary Clerk accounts on completion. Android exposed Google but no Apple button. Because the Apple flag is intentionally disabled until M4-T8 configuration, no real Apple identity or successful Apple session was tested.
+An iOS 26.5 Simulator Release build and an Android API 36 Emulator release APK both opened the canonical staging Privacy Policy and Terms of Use before and after email login. The flows showed no application permission prompt and deleted their temporary Clerk accounts on completion. Android exposed Google but no Apple button. Because the Apple flag remains intentionally disabled until M5-T9 production configuration, no real Apple identity or successful Apple session was tested.
 
 The staging Privacy Policy and Terms of Use remain the Owner-approved M3-T7 pages. No store control panel, production identifier, production build, or real Apple identity was used to produce this evidence.
 
@@ -105,5 +105,7 @@ The staging Privacy Policy and Terms of Use remain the Owner-approved M3-T7 page
 - [Apple privacy manifest files](https://developer.apple.com/documentation/bundleresources/privacy-manifest-files)
 - [Expo Apple privacy manifests](https://docs.expo.dev/guides/apple-privacy/)
 - [Expo permissions](https://docs.expo.dev/guides/permissions/)
+- [Expo EAS Submit configuration](https://docs.expo.dev/submit/eas-json/)
+- [Expo app version management](https://docs.expo.dev/build-reference/app-versions/)
 - [Google Play Data Safety](https://support.google.com/googleplay/android-developer/answer/10787469)
 - [Google Play account deletion requirements](https://support.google.com/googleplay/android-developer/answer/13327111)

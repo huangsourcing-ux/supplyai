@@ -221,10 +221,17 @@ permission removals, and disabled Android backup. The offline Apple/Google
 answer matrices and deletion URLs are in
 `docs/operations/m4-t7-store-compliance.md`.
 
-Apple Developer/Play Console access, final identifiers, Clerk/Apple console
-configuration, store-form entry, a real successful Apple session, and internal
-build distribution were not performed. They are M4-T8 gates, so the M4 exit
-remains blocked. The development-plan Next Action is M4-T8.
+M4-T8 records the Owner-approved migration of every store-side gate to M5. The
+Production iOS Bundle ID and Android package candidate is now
+`ai.chinasupply.mobile`; it has not been reserved, while the URL scheme remains
+`chinasupply`. Apple Developer/Play Console access, final identifier
+confirmation, Clerk/Apple console configuration, store-form entry, a real
+successful Apple session, and internal build distribution were not performed.
+M5-T9 owns accounts, identifier reservation, Apple capability, and Clerk
+Production/Native Application configuration; M5-T10 owns store forms, real
+Apple login, TestFlight/Play internal testing, and Production Submit. The M4
+exit is closed only on the existing functionality, Maestro, and physical-device
+evidence, and the development-plan Next Action is M5-T1.
 
 ## Commands
 
@@ -289,4 +296,8 @@ smoke control is visible only when
 Production is intentionally dormant until Apple Developer and Google Play
 accounts, confirmed store identifiers, production EAS environment values,
 submission credentials, and the final reviewed icon exist. M0-T6 validates the
-workflow contract only; M5-T10 owns the real Production Build and Submit.
+workflow contract only; M5-T9 owns the account/identifier prerequisites and
+M5-T10 owns the real internal distribution and Production Build/Submit. The
+production profile pins `EXPO_PUBLIC_APP_ENV=production`, so missing production
+API, Clerk, Apple, MapTiler, or Sentry values fail existing configuration
+validation instead of silently falling back to the Local identity.
