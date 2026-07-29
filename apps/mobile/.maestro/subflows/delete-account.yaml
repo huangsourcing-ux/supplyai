@@ -1,0 +1,22 @@
+appId: ai.chinasupply.app.staging
+---
+- scrollUntilVisible:
+    element:
+      id: account-delete-start
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: account-delete-start
+- assertVisible:
+    id: account-delete-confirmation
+- scrollUntilVisible:
+    element:
+      id: account-delete-confirm
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: account-delete-confirm
+- extendedWaitUntil:
+    visible:
+      id: app-map-ready
+    timeout: 60000

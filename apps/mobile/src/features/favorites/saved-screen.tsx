@@ -76,6 +76,7 @@ function SavedState({
           accessibilityRole="button"
           onPress={onAction}
           style={styles.primaryButton}
+          testID={`saved-${kind}-action`}
         >
           <Text style={styles.primaryButtonText}>{action}</Text>
         </Pressable>

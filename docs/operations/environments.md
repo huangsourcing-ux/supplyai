@@ -199,6 +199,20 @@ sign-in, and A-10 deletion. Read-only checks confirmed the Clerk user absent,
 the core user retained as a deletion tombstone, zero favorites, and a successful
 recent `user.deleted` webhook without recording any email, token, or secret.
 
+M4-T6 keeps Maestro as a local external CLI and adds no GitHub-hosted or paid
+cloud job. Run `pnpm test:mobile:e2e -- --udid=<device-id>` against an installed
+staging build on each required simulator/emulator. The flow clears App state,
+uses a generated Clerk test email and official test OTP, exercises canonical
+search/detail/Saved/account paths, and attempts account deletion from
+`onFlowComplete` when a post-registration assertion fails. A signed iOS
+Simulator build is required because Clerk's encrypted token cache uses
+Keychain. The gate is not complete until both platform flows pass and a
+read-only aggregate check confirms Clerk absence, core tombstones, zero
+favorites, and successful `user.deleted` receipts. Delete local
+`.maestro-artifacts/` after every run and never retain test emails, tokens,
+screenshots, or raw logs as source or review evidence. This local gate does not
+modify canonical data, trigger EAS, or access production.
+
 M3-T2 adds the Clerk lifecycle endpoint at
 `https://api-staging.chinasupply.ai/api/v1/webhooks/clerk`. The Clerk
 Development endpoint must subscribe only to `user.created`, `user.updated`, and

@@ -388,7 +388,11 @@ export default function AppMapScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <StatusBar style="dark" />
-      <View style={styles.mapFrame}>
+      <View
+        accessibilityState={{ busy: statusKind === "loading" }}
+        style={styles.mapFrame}
+        testID={statusKind === null ? "app-map-ready" : "app-map-pending"}
+      >
         {mapStyle === null ? null : (
           <Map
             accessibilityLabel={t("map.ariaLabel")}

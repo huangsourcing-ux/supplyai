@@ -159,7 +159,7 @@ describe("mobile Saved tab", () => {
     expect(
       screen.getByText("Your saved suppliers will appear here"),
     ).toBeOnTheScreen();
-    fireEvent.press(screen.getByText("Sign in to view saved suppliers"));
+    fireEvent.press(screen.getByTestId("saved-signed-out-action"));
     expect(push).toHaveBeenCalledWith({
       params: { returnTo: "/saved" },
       pathname: "/sign-in",

@@ -184,10 +184,27 @@ These local results are integration smoke, not F-6.4 landing evidence.
 On 2026-07-29 the Owner explicitly confirmed completion of the full 13-row
 F-6.4 Release physical-device matrix and that every observed destination was
 less than 50 metres from the reviewed factory entrance. M4-T5 is therefore
-closed and the development-plan Next Action is M4-T6. The per-device build,
+closed. The per-device build,
 OS, map-App version, and measurement records were not supplied for repository
 transcription; the closeout record preserves the Owner's acceptance without
 inventing those fields.
+
+M4-T6 adds a staging-only Maestro journey under `.maestro/`. It clears App
+state, waits for both the base map and requested map data, verifies anonymous
+Saved guidance, searches the canonical Dongguan cluster, enters the canonical
+OPPO factory, signs up with a disposable Clerk test email, saves and removes
+both target types, checks the platform navigation-button set, signs out, signs
+back in, and deletes the account after the second confirmation. An
+`onFlowComplete` hook re-enters the account and deletes it when a failure occurs
+after registration. Exact OPPO WGS-84 navigation URLs remain unit assertions;
+Maestro does not infer them from an external map App's rewritten address bar.
+
+The iPhone 17 Pro / iOS 26.5 Simulator and `diaoyouji_api_36` / Android API 36
+Emulator both passed the complete flow against canonical staging on 2026-07-29.
+Aggregate read-only checks then confirmed every M4-T6 Clerk user absent, every
+core user retained only as a tombstone, zero favorites, and successful delete
+webhook receipts. Canonical content, EAS, CI, and production were unchanged.
+The development-plan Next Action is M4-T7.
 
 ## Commands
 
@@ -196,6 +213,7 @@ Run from the repository root:
 ```bash
 pnpm --filter @chinasupply/mobile start
 pnpm mobile:check
+pnpm test:mobile:e2e -- --udid=<device-id>
 pnpm mobile:eas:preview -- --non-interactive --wait
 ```
 
@@ -204,6 +222,17 @@ and iOS/Android export-bundle checks. Native Preview builds are submitted from
 this package directory by the root wrapper, so Expo discovers the monorepo root
 and installs the pnpm workspace without a non-existent `workingDirectory`
 property or custom Metro `watchFolders`.
+
+`test:mobile:e2e` requires the external `maestro` CLI and does not add Maestro
+to the App runtime. Install the current staging build on the selected simulator
+or emulator first and supply its exact UDID. iOS Simulator builds must be
+locally signed so Clerk's encrypted token cache can use Keychain; an unsigned
+`CODE_SIGNING_ALLOWED=NO` build is not a valid authentication test artifact.
+The flow uses canonical staging plus Clerk's documented test-email suffix and
+OTP. `.maestro-artifacts/` is ignored and must be deleted after each run; never
+commit or retain generated emails, tokens, screenshots, or raw Maestro logs.
+Only close the gate after Clerk absence, core tombstones, zero favorites, and
+successful delete webhooks have been confirmed through read-only checks.
 
 Clean native prebuilds require the checked-in `@clerk/expo` config plugin. It
 sets Clerk's iOS 17 minimum and registers the Clerk Swift Package dependencies;
