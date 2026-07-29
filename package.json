@@ -24,6 +24,7 @@
     "release:migrate:core": "node --env-file-if-exists=.env scripts/run-migrations.mjs core",
     "seed:real": "pnpm --filter @chinasupply/api seed:real",
     "test:e2e": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/geo build && pnpm --filter @chinasupply/api test:e2e",
+    "test:mobile:e2e": "node scripts/run-mobile-e2e.mjs",
     "test:web:e2e": "pnpm --filter @chinasupply/web test:e2e",
     "test:web:e2e:staging": "pnpm --filter @chinasupply/web test:e2e:staging",
     "test:load": "pnpm --filter @chinasupply/schemas build && pnpm --filter @chinasupply/api test:load",

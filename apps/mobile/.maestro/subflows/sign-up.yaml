@@ -1,0 +1,20 @@
+appId: ai.chinasupply.app.staging
+---
+- tapOn:
+    id: auth-switch-mode
+- tapOn:
+    id: auth-email
+- setClipboard: ${TEST_EMAIL}
+- pasteText
+- tapOn:
+    id: auth-submit
+- extendedWaitUntil:
+    visible:
+      id: auth-code
+    timeout: 30000
+- tapOn:
+    id: auth-code
+- inputText: "424242"
+- evalScript: ${output.accountMayExist = true}
+- tapOn:
+    id: auth-submit

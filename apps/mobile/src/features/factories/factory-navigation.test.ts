@@ -6,6 +6,9 @@ import {
 
 const destinationName = "Yiwu Bright Goods Factory";
 const position = [120.08, 29.31] as const;
+const canonicalOppoName =
+  "Guangdong OPPO Mobile Telecommunications Corp., Ltd.";
+const canonicalOppoPosition = [113.7771621452, 22.7707857278] as const;
 
 describe("mobile factory navigation options", () => {
   it("builds the approved provider order for each platform", () => {
@@ -59,6 +62,75 @@ describe("mobile factory navigation options", () => {
     expect(new URL(baidu.primaryUrl).searchParams.get("coord_type")).toBe(
       "wgs84",
     );
+  });
+
+  it("locks the complete canonical OPPO URLs used by the Maestro journey", () => {
+    expect(
+      buildMobileFactoryNavigationOptions(
+        canonicalOppoName,
+        canonicalOppoPosition,
+        "ios",
+      ),
+    ).toEqual([
+      {
+        fallbackUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=22.770786%2C113.777162&travelmode=driving",
+        primaryUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=22.770786%2C113.777162&travelmode=driving",
+        provider: "google",
+      },
+      {
+        fallbackUrl:
+          "https://maps.apple.com/?daddr=22.770786%2C113.777162&dirflg=d",
+        primaryUrl:
+          "https://maps.apple.com/?daddr=22.770786%2C113.777162&dirflg=d",
+        provider: "apple",
+      },
+      {
+        fallbackUrl:
+          "https://uri.amap.com/navigation?from=&to=113.777162%2C22.770786%2CGuangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&mode=car&policy=0&src=chinasupply.ai&callnative=0",
+        primaryUrl:
+          "iosamap://path?sourceApplication=ChinaSupply.AI&sid=&slat=&slon=&sname=&did=&dlat=22.770786&dlon=113.777162&dname=Guangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&dev=1&t=0",
+        provider: "amap",
+      },
+      {
+        fallbackUrl:
+          "http://api.map.baidu.com/marker?location=22.770786%2C113.777162&title=Guangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&content=Guangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&coord_type=wgs84&output=html&src=webapp.chinasupply.ai",
+        primaryUrl:
+          "baidumap://map/direction?origin=%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE&destination=name%3AGuangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.%7Clatlng%3A22.770786%2C113.777162&mode=driving&coord_type=wgs84&src=ios.chinasupply.ai",
+        provider: "baidu",
+      },
+    ]);
+
+    expect(
+      buildMobileFactoryNavigationOptions(
+        canonicalOppoName,
+        canonicalOppoPosition,
+        "android",
+      ),
+    ).toEqual([
+      {
+        fallbackUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=22.770786%2C113.777162&travelmode=driving",
+        primaryUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=22.770786%2C113.777162&travelmode=driving",
+        provider: "google",
+      },
+      {
+        fallbackUrl:
+          "https://uri.amap.com/navigation?from=&to=113.777162%2C22.770786%2CGuangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&mode=car&policy=0&src=chinasupply.ai&callnative=0",
+        primaryUrl:
+          "amapuri://route/plan/?sourceApplication=ChinaSupply.AI&sid=&slat=&slon=&sname=&did=&dlat=22.770786&dlon=113.777162&dname=Guangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&dev=1&t=0",
+        provider: "amap",
+      },
+      {
+        fallbackUrl:
+          "http://api.map.baidu.com/marker?location=22.770786%2C113.777162&title=Guangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&content=Guangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.&coord_type=wgs84&output=html&src=webapp.chinasupply.ai",
+        primaryUrl:
+          "baidumap://map/direction?origin=%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE&destination=name%3AGuangdong+OPPO+Mobile+Telecommunications+Corp.%2C+Ltd.%7Clatlng%3A22.770786%2C113.777162&mode=driving&coord_type=wgs84&src=andr.chinasupply.ai",
+        provider: "baidu",
+      },
+    ]);
   });
 });
 

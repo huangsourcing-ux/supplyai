@@ -1,0 +1,168 @@
+appId: ai.chinasupply.app.staging
+name: M4-T6 staging core journey
+tags:
+  - m4-t6
+  - staging
+onFlowComplete:
+  - runFlow:
+      when:
+        true: ${output.accountMayExist == true && output.accountDeleted != true}
+      file: subflows/cleanup-account.yaml
+      env:
+        TEST_EMAIL: ${output.testEmail}
+---
+- evalScript: ${output.accountMayExist = false}
+- evalScript: ${output.accountDeleted = false}
+- evalScript: ${output.testEmail = 'm4t6-' + maestro.platform + '-' + new Date().getTime() + '+clerk_test@example.com'}
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: app-map-ready
+    timeout: 60000
+
+# The public map and signed-out Saved state remain usable without an account.
+- tapOn: Saved
+- extendedWaitUntil:
+    visible:
+      id: saved-signed-out-action
+    timeout: 30000
+- tapOn: Map
+- assertVisible:
+    id: app-map-ready
+
+# Search the canonical cluster, open its card, and continue to native details.
+- runFlow:
+    file: subflows/search-canonical-target.yaml
+
+# Anonymous Save opens sign-up and returns to the same cluster.
+- tapOn:
+    id: favorite-save-cluster
+- extendedWaitUntil:
+    visible:
+      id: auth-email
+    timeout: 30000
+- runFlow:
+    file: subflows/sign-up.yaml
+    env:
+      TEST_EMAIL: ${output.testEmail}
+- extendedWaitUntil:
+    visible:
+      id: cluster-detail-list
+    timeout: 30000
+- tapOn:
+    id: favorite-save-cluster
+- extendedWaitUntil:
+    visible:
+      id: favorite-save-cluster
+      text: .*Saved.*
+    timeout: 30000
+
+# Continue from the cluster to the canonical OPPO factory and save it.
+- scrollUntilVisible:
+    element:
+      id: cluster-factory-details-dongguan-oppo-mobile
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: cluster-factory-details-dongguan-oppo-mobile
+- extendedWaitUntil:
+    visible:
+      id: factory-detail-scroll
+    timeout: 30000
+- tapOn:
+    id: favorite-save-factory
+- extendedWaitUntil:
+    visible:
+      id: favorite-save-factory
+      text: .*Saved.*
+    timeout: 30000
+
+# Maestro validates the platform button contract; unit tests own exact URLs.
+- scrollUntilVisible:
+    element:
+      id: factory-navigation-google
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: factory-navigation-google
+- assertVisible:
+    id: factory-navigation-amap
+- assertVisible:
+    id: factory-navigation-baidu
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible:
+          id: factory-navigation-apple
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertNotVisible:
+          id: factory-navigation-apple
+
+# Return to Tabs, verify both Saved sections, and remove both favorites.
+- openLink: chinasupply.staging://
+- extendedWaitUntil:
+    visible:
+      id: app-map-ready
+    timeout: 30000
+- tapOn: Saved
+- extendedWaitUntil:
+    visible: Guangdong OPPO Mobile Telecommunications Corp., Ltd.
+    timeout: 30000
+- tapOn:
+    id: favorite-remove-.*
+- extendedWaitUntil:
+    notVisible: Guangdong OPPO Mobile Telecommunications Corp., Ltd.
+    timeout: 30000
+- tapOn:
+    id: favorites-tab-cluster
+- extendedWaitUntil:
+    visible: Dongguan Electronic Information Cluster
+    timeout: 30000
+- tapOn:
+    id: favorite-remove-.*
+- extendedWaitUntil:
+    notVisible: Dongguan Electronic Information Cluster
+    timeout: 30000
+
+# Sign out, verify anonymous Saved, sign back in, then delete the account.
+- tapOn: Account
+- scrollUntilVisible:
+    element:
+      id: account-sign-out
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: account-sign-out
+- extendedWaitUntil:
+    visible:
+      id: app-map-ready
+    timeout: 30000
+- tapOn: Saved
+- extendedWaitUntil:
+    visible:
+      id: saved-signed-out-action
+    timeout: 30000
+- tapOn: Account
+- runFlow:
+    file: subflows/sign-in.yaml
+    env:
+      TEST_EMAIL: ${output.testEmail}
+- extendedWaitUntil:
+    visible:
+      id: account-email
+    timeout: 30000
+- runFlow:
+    file: subflows/delete-account.yaml
+- evalScript: ${output.accountDeleted = true}
+- assertVisible:
+    id: app-map-ready
+- tapOn: Saved
+- extendedWaitUntil:
+    visible:
+      id: saved-signed-out-action
+    timeout: 30000

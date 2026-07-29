@@ -1,6 +1,6 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.3** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T6** ｜ 日期：2026-07-29
+> 版本：**v1.3** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T7** ｜ 日期：2026-07-29
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.4 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
@@ -150,7 +150,7 @@ chinasupply/
 - [x] **M4-T3b App 收藏**：Saved tab、收藏/取消、未登录空状态。**完成 F-5.1～F-5.3、F-2.3，并复用 A-8 生成客户端：Tabs 顺序为 Map → Saved → Account；独立 `/sign-in` 仅允许 `/saved`、产业带详情和工厂详情回跳，登录/注册成功自动返回来源。收藏缓存以 `["favorites", clerkUserId]` 隔离，按 20 条不透明 cursor 分页去重，GET/POST/DELETE 均注入 Clerk Bearer；POST 幂等 upsert，DELETE 乐观移除、失败回滚、成功重验，401 走统一 session cleanup，Saved 重新聚焦时主动重验以同步另一设备变更。Factories 默认 tab 与 Industrial clusters tab 覆盖图片/占位、地区、产品、工厂认证、`target=null` 安全卡片、分页继续入口、首屏/续页失败与 Retry；详情页只负责收藏，取消统一在 Saved。iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 使用真实受限 MapTiler key + canonical staging API 完成匿名 Saved→邮箱登录自动回跳、两类详情收藏、双端同账户同步、列表详情、两类取消、断点失败→Retry、重新聚焦跨端同步为空及 401 cleanup；临时收藏和测试账户均已清理，未修改 canonical 内容或 production。自动化覆盖 cursor 去重/边界、不可公开目标、非法回跳、幂等创建、乐观删除/回滚、用户缓存隔离、Bearer 与 401。Next Action 推进到 M4-T4。**
 - [x] **M4-T4 Explore tab**：F-10.1。**Tabs 固定为 Map → Explore → Saved → Account；`/explore` 复用 A-7 按服务端顺序展示九个一级类目的双列 color/icon 网格，`/explore/[slug]` 仅接受一级类目并复用 A-1 以 `category=<exact slug>&limit=20` 做不透明 cursor 分页、跨页 ID 去重、自动续页与 Retry，产业带卡进入既有详情且返回恢复列表。加载、空态、非法/二级 slug、首屏/续页失败、图片/占位与 icon 回落均有自动化覆盖。iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 使用真实平台受限 key + canonical staging API 通过九类网格、Electronics/Home Textiles 非空列表、产业带详情往返、Lighting 真实空态及无 App 崩溃 smoke；Android 另通过飞行模式断网失败→恢复网络→Retry。canonical staging 无第二页，cursor 续页仅用固定 fixture 验收，未修改线上数据。Next Action 推进到 M4-T5。**
 - [x] **M4-T5 导航 Deep Link**：F-6.3 按 M0-T9 模板 + Web URL 回落 + 埋点；**人工真机验收落点 < 50m（F-6.4）**。**已启用 iOS Google/Apple/高德/百度与 Android Google/高德/百度按钮，直接复用 WGS-84 `buildNavUrl`，高德/百度 App URI 被拒后回落 Web，双重失败显示可恢复错误；每次点击只调用一次不含坐标的共享 `navigation_clicked` facade，Mobile 无 Consent/adapter 时仍为网络 no-op。平台集合、URL/回落/失败/埋点均有固定自动化覆盖。Owner 于 2026-07-29 明确确认已完成 F-6.4 的 13 项 Release 真机矩阵、所有路线规划终点误差均 `<50m`，并批准勾选本项；设备/系统、构建产物与地图 App 版本等逐项原始记录未随本次确认提交仓库，文档仅记录 Owner 验收结论而不补造字段。Next Action 推进到 M4-T6。**
-- [ ] **M4-T6 Maestro 测试**：启动→地图加载；搜索→产业带→工厂；登录/未登录 Saved；收藏与取消；登出流程 + 一次性 staging 用户的删除账户流程；导航按钮存在且 URL 正确（真机落点仍人工验收）。
+- [x] **M4-T6 Maestro 测试**：启动→地图加载；搜索→产业带→工厂；登录/未登录 Saved；收藏与取消；登出流程 + 一次性 staging 用户的删除账户流程；导航按钮存在且 URL 正确（真机落点仍人工验收）。**新增本地外部 Maestro CLI 主流程与认证、搜索、清理子流程，`app-map-ready` 仅在底图和当前 MAP 数据均完成时暴露；动态 Clerk 测试邮箱、官方测试码、登录回跳、两类收藏/取消、平台按钮集合、登出/重登/二次确认删除均纳入 canonical staging 路径，失败后的 `onFlowComplete` 负责删除已创建用户。iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / Android API 36 Emulator 在同一工作树完整跑绿；只读聚合核验确认全部 M4-T6 Clerk 用户已删除、core 均为 tombstone、favorites 为 0 且删除 webhook receipt 成功。canonical OPPO 名称、WGS-84 坐标及双平台完整 URL 继续由固定单测断言，未用外部地图 App 地址栏替代原始 URL。未修改 API/schema、canonical 内容、EAS、CI 或 production；Next Action 推进到 M4-T7。**
 - [ ] **M4-T7 商店合规**：App Store/Play 隐私声明（F-11.4）；App 内直接打开 M3-T7 已上线的 privacy/terms 正式 URL。
 - [ ] **M4-T8 内测发布**：tag 触发 EAS → TestFlight + Play 内测轨道。
 

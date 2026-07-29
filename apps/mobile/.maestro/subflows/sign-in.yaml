@@ -1,0 +1,26 @@
+appId: ai.chinasupply.app.staging
+---
+- tapOn:
+    id: auth-email
+- setClipboard: ${TEST_EMAIL}
+- pasteText
+- tapOn:
+    id: auth-submit
+- extendedWaitUntil:
+    visible:
+      id: auth-code
+    timeout: 30000
+- tapOn:
+    id: auth-code
+- inputText: "424242"
+- tapOn:
+    id: auth-submit
+- runFlow:
+    when:
+      visible: Additional verification
+    commands:
+      - tapOn:
+          id: auth-code
+      - inputText: "424242"
+      - tapOn:
+          id: auth-submit

@@ -1,0 +1,26 @@
+appId: ai.chinasupply.app.staging
+---
+# This hook runs only when the generated staging account may still exist.
+- openLink: chinasupply.staging://account
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: ^(account-email|auth-email)$
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: auth-email
+    commands:
+      - runFlow:
+          file: sign-in.yaml
+          env:
+            TEST_EMAIL: ${TEST_EMAIL}
+- extendedWaitUntil:
+    visible:
+      id: account-email
+    timeout: 30000
+- runFlow:
+    file: delete-account.yaml

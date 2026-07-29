@@ -167,6 +167,7 @@ describe("App map data sources", () => {
   it("renders the shared map, all three real sources, business layers, and attribution", () => {
     renderMap();
 
+    expect(screen.getByTestId("app-map-pending")).toBeOnTheScreen();
     expect(screen.getByTestId("app-map")).toBeOnTheScreen();
     expect(
       screen.getByTestId(`maplibre-source-${CLUSTER_POINTS_SOURCE_ID}`),
@@ -195,6 +196,9 @@ describe("App map data sources", () => {
     expect(
       screen.getByText("© MapTiler · © OpenStreetMap contributors"),
     ).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByTestId("maplibre-finish-rendering"));
+    expect(screen.getByTestId("app-map-ready")).toBeOnTheScreen();
   });
 
   it("waits 500ms before requesting zoom-gated MAP-2 and MAP-3 data", () => {

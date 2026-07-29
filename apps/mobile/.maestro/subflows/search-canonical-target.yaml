@@ -1,0 +1,38 @@
+appId: ai.chinasupply.app.staging
+---
+- tapOn:
+    id: map-search-input
+- inputText: Dongguan
+- extendedWaitUntil:
+    visible:
+      id: map-search-result-cluster-dongguan-electronic-information
+    timeout: 30000
+- tapOn:
+    id: map-search-result-cluster-dongguan-electronic-information
+- extendedWaitUntil:
+    visible:
+      id: map-selection-card
+    timeout: 30000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - hideKeyboard
+      - swipe:
+          start: 50%, 80%
+          end: 50%, 55%
+          duration: 500
+      - extendedWaitUntil:
+          visible: View cluster details.*
+          timeout: 30000
+      - tapOn: View cluster details.*
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: map-card-details-cta
+- extendedWaitUntil:
+    visible:
+      id: cluster-detail-list
+    timeout: 30000
