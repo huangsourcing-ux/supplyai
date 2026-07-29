@@ -71,10 +71,10 @@ source metadata, an optional paged image gallery, only the available factory
 facts, a read-only zoom-14 WGS-84 point map, bilingual address copy, safe
 Website/Email/Phone/WeChat actions, and a related-factory rail. Loading, 404,
 service, copy, external-link, and map failures remain recoverable. Navigation
-providers are deliberately disabled placeholders until M4-T5; save remains an
-M4-T3b concern. One `factory_viewed` and each contact action use the shared
-analytics facade, which remains a network no-op without Mobile consent and an
-adapter.
+providers were deliberately disabled placeholders at that checkpoint; save
+was still an M4-T3b concern. One `factory_viewed` and each contact action use
+the shared analytics facade, which remains a network no-op without Mobile
+consent and an adapter.
 
 On the iPhone 17 Pro / iOS 26.5 Simulator and `diaoyouji_api_36` / API 36
 Emulator, preview platform-restricted keys plus the canonical staging API
@@ -158,6 +158,35 @@ a real airplane-mode service failure followed by network restoration and Retry.
 The iOS error and Retry branches and the unavailable second cursor page are
 covered by fixed automated fixtures; canonical staging data was not changed to
 manufacture pagination.
+
+M4-T5 replaces the factory-detail navigation placeholders with the M0-T9
+approved Google, Apple (iOS only), Amap, and Baidu route-planning links. A-5
+WGS-84 coordinates pass unchanged to `@chinasupply/geo/navigation`. Apple and
+Google use their single HTTPS handoff; Amap and Baidu try their platform App URI
+and open the approved Web URL only if React Native rejects that handoff. The
+App does not query installation state, so no native scheme/package visibility
+configuration is added. Each press makes one coordinate-free
+`navigation_clicked` facade call, still a network no-op without Mobile consent
+and an adapter. Unit coverage includes both platforms, App success, Web
+fallback, duplicate-HTTPS prevention, double failure, and localized recovery.
+
+Local Preview smoke used the canonical `dongguan-oppo-mobile` A-5 response and
+Release configuration on iPhone 17 Pro / iOS 26.5 Simulator plus
+`diaoyouji_api_36` / API 36 Emulator. iOS exposed all four links, handed Apple
+Maps to route planning, and fell back from an absent Amap App URI to an OPPO
+destination on `amap.com`. Android exposed only Google/Amap/Baidu, handed the
+reviewed WGS-84 destination to installed Google Maps, and recorded an absent
+Amap URI followed by a successful HTTPS handoff. Both returned to the App
+without a fatal error. The fresh Android image stopped at Chrome's first-run
+terms screen; no terms were accepted and no Web page rendering is claimed.
+These local results are integration smoke, not F-6.4 landing evidence.
+
+F-6.4 remains open: the connected iPhone is currently offline and there is no
+Android physical device. M4-T5 must not be checked until the staging iOS
+Release build and Android EAS Preview Release APK complete the 13-row installed
+App/Web-fallback matrix in
+`docs/operations/m4-t5-navigation-release-validation.md`, with every observed
+destination less than 50 metres from the reviewed factory entrance.
 
 ## Commands
 

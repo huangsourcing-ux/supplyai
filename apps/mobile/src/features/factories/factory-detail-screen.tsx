@@ -35,6 +35,10 @@ import {
   normalizeFactorySlug,
 } from "./factory-detail-model";
 import {
+  buildMobileFactoryNavigationOptions,
+  openMobileFactoryNavigation,
+} from "./factory-navigation";
+import {
   buildEmailUrl,
   buildPhoneUrl,
   safeHttpUrl,
@@ -386,36 +390,73 @@ export function FactoryContactActions({
   );
 }
 
-function NavigationPlaceholder() {
+export function FactoryNavigationActions({
+  factoryId,
+  name,
+  position,
+  slug,
+}: Readonly<{
+  factoryId: string;
+  name: string;
+  position: readonly [number, number];
+  slug: string;
+}>) {
   const { t } = useTranslation();
-  const providers = [
-    { key: "google", label: t("factoryDetail.navigation.google") },
-    ...(Platform.OS === "ios"
-      ? [{ key: "apple", label: t("factoryDetail.navigation.apple") }]
-      : []),
-    { key: "amap", label: t("factoryDetail.navigation.amap") },
-    { key: "baidu", label: t("factoryDetail.navigation.baidu") },
-  ];
+  const [hasError, setHasError] = useState(false);
+  const platform = Platform.OS === "ios" ? "ios" : "android";
+  const options = buildMobileFactoryNavigationOptions(name, position, platform);
+
+  const openNavigation = async (
+    option: (typeof options)[number],
+  ): Promise<void> => {
+    analytics.trackNavigationClicked({
+      factoryId,
+      platform,
+      provider: option.provider,
+      slug,
+    });
+    setHasError(false);
+
+    try {
+      await openMobileFactoryNavigation(option, (url) => Linking.openURL(url));
+    } catch {
+      setHasError(true);
+    }
+  };
 
   return (
     <View>
       <View style={styles.navigationGrid}>
-        {providers.map((provider) => (
-          <Pressable
-            accessibilityHint={t("factoryDetail.navigation.unavailable")}
-            accessibilityRole="button"
-            accessibilityState={{ disabled: true }}
-            disabled
-            key={provider.key}
-            style={styles.navigationDisabled}
-            testID={`factory-navigation-${provider.key}`}
-          >
-            <Text style={styles.navigationDisabledText}>{provider.label}</Text>
-          </Pressable>
-        ))}
+        {options.map((option) => {
+          const label = t(`factoryDetail.navigation.${option.provider}`);
+
+          return (
+            <Pressable
+              accessibilityHint={t("factoryDetail.navigation.openHint", {
+                provider: label,
+              })}
+              accessibilityRole="link"
+              key={option.provider}
+              onPress={() => {
+                void openNavigation(option);
+              }}
+              style={styles.navigationButton}
+              testID={`factory-navigation-${option.provider}`}
+            >
+              <Text style={styles.navigationButtonText}>{label}</Text>
+              <Text aria-hidden style={styles.navigationButtonText}>
+                ↗
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
-      <Text style={styles.navigationHint}>
-        {t("factoryDetail.navigation.unavailable")}
+      <Text
+        accessibilityLiveRegion="polite"
+        style={styles.navigationStatus}
+        testID="factory-navigation-status"
+      >
+        {hasError ? t("factoryDetail.navigation.actionError") : ""}
       </Text>
     </View>
   );
@@ -673,7 +714,12 @@ export function FactoryDetailLoaded({
         <Text accessibilityRole="header" style={styles.sectionTitle}>
           {t("factoryDetail.navigation.heading")}
         </Text>
-        <NavigationPlaceholder />
+        <FactoryNavigationActions
+          factoryId={factory.id}
+          name={factory.name}
+          position={factory.location.coordinates}
+          slug={factory.slug}
+        />
       </View>
 
       {factory.relatedFactories.length === 0 ? null : (
@@ -976,18 +1022,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "center",
   },
-  navigationDisabled: {
+  navigationButton: {
     alignItems: "center",
-    backgroundColor: "#E2E8F0",
+    backgroundColor: "#2563EB",
     borderRadius: 10,
+    flexDirection: "row",
+    gap: 6,
     justifyContent: "center",
     minHeight: 44,
     paddingHorizontal: 12,
     paddingVertical: 11,
     width: "48%",
   },
-  navigationDisabledText: {
-    color: "#64748B",
+  navigationButtonText: {
+    color: "#FFFFFF",
     fontSize: 13,
     fontWeight: "800",
   },
@@ -996,11 +1044,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 10,
   },
-  navigationHint: {
-    color: "#64748B",
+  navigationStatus: {
+    color: "#B91C1C",
     fontSize: 12,
     lineHeight: 18,
     marginTop: 10,
+    minHeight: 18,
   },
   primaryButton: {
     backgroundColor: "#2563EB",

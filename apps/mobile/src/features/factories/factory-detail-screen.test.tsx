@@ -19,6 +19,7 @@ import FactoryDetailScreen, {
   FactoryDetailLoaded,
   FactoryDetailState,
   FactoryImageCarousel,
+  FactoryNavigationActions,
 } from "./factory-detail-screen";
 import { FactoryLocationMap } from "./factory-location-map";
 
@@ -104,6 +105,11 @@ const factory: GetFactory200Data = {
   verifiedAt: "2026-05-18T04:30:00Z",
 };
 
+afterEach(() => {
+  jest.restoreAllMocks();
+  jest.clearAllMocks();
+});
+
 function routerMock(overrides: Record<string, unknown> = {}) {
   return {
     back: jest.fn(),
@@ -140,7 +146,7 @@ function renderFactoryRoute() {
 }
 
 describe("mobile factory detail presentation", () => {
-  it("renders all F-4 sections and keeps navigation placeholders disabled", () => {
+  it("renders all F-4 sections and enables the iOS navigation providers", () => {
     const onRelatedFactory = jest.fn();
     render(
       <FactoryDetailLoaded
@@ -166,10 +172,10 @@ describe("mobile factory detail presentation", () => {
     expect(
       screen.getByText("© MapTiler · © OpenStreetMap contributors"),
     ).toBeOnTheScreen();
-    expect(screen.getByTestId("factory-navigation-google")).toBeDisabled();
-    expect(screen.getByTestId("factory-navigation-apple")).toBeDisabled();
-    expect(screen.getByTestId("factory-navigation-amap")).toBeDisabled();
-    expect(screen.getByTestId("factory-navigation-baidu")).toBeDisabled();
+    expect(screen.getByTestId("factory-navigation-google")).toBeEnabled();
+    expect(screen.getByTestId("factory-navigation-apple")).toBeEnabled();
+    expect(screen.getByTestId("factory-navigation-amap")).toBeEnabled();
+    expect(screen.getByTestId("factory-navigation-baidu")).toBeEnabled();
 
     fireEvent.press(screen.getByTestId("related-factory-yiwu-signal-works"));
     expect(onRelatedFactory).toHaveBeenCalledWith("yiwu-signal-works");
@@ -246,6 +252,97 @@ describe("mobile factory detail presentation", () => {
 
     expect(screen.getAllByText("Verified").length).toBeGreaterThan(0);
     expect(screen.queryByText(/Verified 20/)).toBeNull();
+  });
+});
+
+describe("mobile factory navigation actions", () => {
+  it("opens an HTTPS provider once and tracks one coordinate-free event", async () => {
+    const openUrl = jest.spyOn(Linking, "openURL").mockResolvedValue(undefined);
+    render(
+      <FactoryNavigationActions
+        factoryId={factory.id}
+        name={factory.name}
+        position={factory.location.coordinates}
+        slug={factory.slug}
+      />,
+    );
+
+    fireEvent.press(screen.getByTestId("factory-navigation-google"));
+
+    await waitFor(() => {
+      expect(openUrl).toHaveBeenCalledTimes(1);
+    });
+    expect(openUrl.mock.calls[0]?.[0]).toMatch(
+      /^https:\/\/www\.google\.com\/maps\/dir\//u,
+    );
+    expect(analytics.trackNavigationClicked).toHaveBeenCalledTimes(1);
+    expect(analytics.trackNavigationClicked).toHaveBeenCalledWith({
+      factoryId: factory.id,
+      platform: "ios",
+      provider: "google",
+      slug: factory.slug,
+    });
+    expect(
+      jest.mocked(analytics.trackNavigationClicked).mock.calls[0]?.[0],
+    ).not.toHaveProperty("coordinates");
+  });
+
+  it("falls back from an unavailable app URI without duplicating analytics", async () => {
+    const openUrl = jest
+      .spyOn(Linking, "openURL")
+      .mockRejectedValueOnce(new Error("Amap unavailable"))
+      .mockResolvedValueOnce(undefined);
+    render(
+      <FactoryNavigationActions
+        factoryId={factory.id}
+        name={factory.name}
+        position={factory.location.coordinates}
+        slug={factory.slug}
+      />,
+    );
+
+    fireEvent.press(screen.getByTestId("factory-navigation-amap"));
+
+    await waitFor(() => {
+      expect(openUrl).toHaveBeenCalledTimes(2);
+    });
+    expect(openUrl.mock.calls[0]?.[0]).toMatch(/^iosamap:\/\/path\?/u);
+    expect(openUrl.mock.calls[1]?.[0]).toMatch(
+      /^https:\/\/uri\.amap\.com\/navigation\?/u,
+    );
+    expect(analytics.trackNavigationClicked).toHaveBeenCalledTimes(1);
+    expect(analytics.trackNavigationClicked).toHaveBeenCalledWith({
+      factoryId: factory.id,
+      platform: "ios",
+      provider: "amap",
+      slug: factory.slug,
+    });
+    expect(screen.getByTestId("factory-navigation-status")).toHaveTextContent(
+      "",
+    );
+  });
+
+  it("shows a recoverable error when both app and web handoffs fail", async () => {
+    jest
+      .spyOn(Linking, "openURL")
+      .mockRejectedValue(new Error("handoff unavailable"));
+    render(
+      <FactoryNavigationActions
+        factoryId={factory.id}
+        name={factory.name}
+        position={factory.location.coordinates}
+        slug={factory.slug}
+      />,
+    );
+
+    fireEvent.press(screen.getByTestId("factory-navigation-baidu"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Navigation could not be opened. Try again."),
+      ).toBeOnTheScreen();
+    });
+    expect(analytics.trackNavigationClicked).toHaveBeenCalledTimes(1);
   });
 });
 
