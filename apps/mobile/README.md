@@ -116,6 +116,27 @@ passed. On 2026-07-28 the Owner explicitly approved this evidence boundary and
 closed M4-T3a after verifier-level `authorizedParties` tests and the strict
 Admin guard call-site assertion were added.
 
+M4-T3b adds Saved between Map and Account. Signed-out users and unsigned detail
+actions open the standalone `/sign-in` route; successful email sign-in or
+registration returns only to `/saved`, `/clusters/<slug>`, or
+`/factories/<slug>`, with every other `returnTo` value falling back to Saved.
+The user-scoped `['favorites', clerkUserId]` cache consumes the generated A-8
+client in 20-item cursor pages, deduplicates page edges, injects Clerk Bearer
+tokens, revalidates when Saved regains focus, and shares the existing 401
+session cleanup. Detail pages create favorites idempotently; Saved owns
+optimistic removal and rollback. Factories are shown first, Industrial clusters
+are switchable, and unavailable `target=null` entries remain removable without
+exposing unpublished content.
+
+On 2026-07-28 the iPhone 17 Pro / iOS 26.5 Simulator and
+`diaoyouji_api_36` / API 36 Emulator used the restricted preview MapTiler keys
+and canonical staging API to pass anonymous guidance → email login → automatic
+return, both detail save actions, both Saved lists, detail routing, cross-device
+sync, both removals, an injected service failure followed by Retry, focus
+revalidation, and post-deletion 401 cleanup without an App crash. The temporary
+favorites and disposable Clerk test account were removed; canonical content and
+production were unchanged.
+
 ## Commands
 
 Run from the repository root:

@@ -77,7 +77,8 @@ describe("Clerk Expo passwordless authentication", () => {
 
   it("sends and verifies an email sign-in code, then finalizes", async () => {
     const { signIn } = createAuthMocks();
-    render(<SignInScreen />);
+    const onComplete = jest.fn();
+    render(<SignInScreen onComplete={onComplete} />);
 
     await requestEmailCode();
     expect(signIn.create).toHaveBeenCalledWith({
@@ -95,12 +96,14 @@ describe("Clerk Expo passwordless authentication", () => {
       expect(signIn.finalize).toHaveBeenCalledWith({
         navigate: expect.any(Function),
       });
+      expect(onComplete).toHaveBeenCalledTimes(1);
     });
   });
 
   it("creates an English-locale user and verifies the sign-up email", async () => {
     const { signUp } = createAuthMocks();
-    render(<SignInScreen />);
+    const onComplete = jest.fn();
+    render(<SignInScreen onComplete={onComplete} />);
 
     fireEvent.press(screen.getByTestId("auth-switch-mode"));
     await requestEmailCode("new+clerk_test@example.com");
@@ -121,6 +124,7 @@ describe("Clerk Expo passwordless authentication", () => {
       expect(signUp.finalize).toHaveBeenCalledWith({
         navigate: expect.any(Function),
       });
+      expect(onComplete).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -153,12 +157,13 @@ describe("Clerk Expo passwordless authentication", () => {
   it("activates a Google OAuth session with the staging callback", async () => {
     const { startSSOFlow } = createAuthMocks();
     const setActive = jest.fn(async () => undefined);
+    const onComplete = jest.fn();
     startSSOFlow.mockResolvedValue({
       authSessionResult: { type: "success" },
       createdSessionId: "session_google",
       setActive,
     });
-    render(<SignInScreen />);
+    render(<SignInScreen onComplete={onComplete} />);
 
     fireEvent.press(screen.getByTestId("auth-google"));
 
@@ -168,7 +173,16 @@ describe("Clerk Expo passwordless authentication", () => {
         strategy: "oauth_google",
       });
       expect(setActive).toHaveBeenCalledWith({ session: "session_google" });
+      expect(onComplete).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it("renders an optional native back action for standalone auth", () => {
+    const onBack = jest.fn();
+    render(<SignInScreen onBack={onBack} />);
+
+    fireEvent.press(screen.getByTestId("auth-back"));
+    expect(onBack).toHaveBeenCalledTimes(1);
   });
 
   it("treats a canceled Google browser session as a no-op", async () => {

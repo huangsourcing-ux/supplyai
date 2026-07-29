@@ -24,7 +24,13 @@ const stayInCurrentApp = () => Promise.resolve();
 
 void WebBrowser.maybeCompleteAuthSession();
 
-export default function SignInScreen() {
+export default function SignInScreen({
+  onBack,
+  onComplete,
+}: Readonly<{
+  onBack?: () => void;
+  onComplete?: () => void | Promise<void>;
+}> = {}) {
   const { fetchStatus: signInFetchStatus, signIn } = useSignIn();
   const { fetchStatus: signUpFetchStatus, signUp } = useSignUp();
   const { startSSOFlow } = useSSO();
@@ -43,7 +49,11 @@ export default function SignInScreen() {
   const finalizeSignInOrRequestMfa = async () => {
     if (signIn.status === "complete") {
       const { error } = await signIn.finalize({ navigate: stayInCurrentApp });
-      if (error) setErrorKey("auth.error.generic");
+      if (error) {
+        setErrorKey("auth.error.generic");
+        return;
+      }
+      await onComplete?.();
       return;
     }
 
@@ -126,6 +136,7 @@ export default function SignInScreen() {
           navigate: stayInCurrentApp,
         });
         if (finalResult.error) throw finalResult.error;
+        await onComplete?.();
       }
     } catch {
       setErrorKey("auth.error.generic");
@@ -156,6 +167,7 @@ export default function SignInScreen() {
       }
 
       await result.setActive({ session: result.createdSessionId });
+      await onComplete?.();
     } catch {
       setErrorKey("auth.error.google");
     } finally {
@@ -196,6 +208,19 @@ export default function SignInScreen() {
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
+          {onBack === undefined ? null : (
+            <Pressable
+              accessibilityRole="button"
+              onPress={onBack}
+              style={styles.backButton}
+              testID="auth-back"
+            >
+              <Text aria-hidden style={styles.backArrow}>
+                ←
+              </Text>
+              <Text style={styles.backText}>{t("auth.back")}</Text>
+            </Pressable>
+          )}
           <View style={styles.card}>
             <Text style={styles.eyebrow}>{t("auth.eyebrow")}</Text>
             <Text style={styles.title}>
@@ -355,6 +380,16 @@ function SubmitButton({
 }
 
 const styles = StyleSheet.create({
+  backArrow: { color: "#0F766E", fontSize: 19, marginRight: 8 },
+  backButton: {
+    alignItems: "center",
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    minHeight: 44,
+    paddingHorizontal: 4,
+    paddingRight: 12,
+  },
+  backText: { color: "#0F766E", fontSize: 14, fontWeight: "800" },
   button: {
     alignItems: "center",
     backgroundColor: "#0F766E",

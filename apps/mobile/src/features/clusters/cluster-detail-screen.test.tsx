@@ -131,7 +131,7 @@ describe("mobile cluster detail presentation", () => {
     expect(screen.getByText("Global sourcing hub")).toBeOnTheScreen();
     expect(screen.getByText(factory.name)).toBeOnTheScreen();
     expect(screen.getByText("Verified")).toBeOnTheScreen();
-    expect(screen.getByTestId("cluster-save-placeholder")).toBeDisabled();
+    expect(screen.queryByTestId("cluster-save-placeholder")).toBeNull();
     const details = screen.getByTestId(
       "cluster-factory-details-yiwu-bright-goods",
     );
@@ -315,6 +315,7 @@ describe("mobile cluster detail route", () => {
     await waitFor(() => {
       expect(screen.getByText(factory.name)).toBeOnTheScreen();
     });
+    expect(screen.getByTestId("favorite-save-cluster")).toBeOnTheScreen();
     fireEvent.press(
       screen.getByTestId("cluster-factory-details-yiwu-bright-goods"),
     );

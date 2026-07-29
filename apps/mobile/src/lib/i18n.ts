@@ -38,6 +38,7 @@ export const resources = {
         title: "Account",
       },
       auth: {
+        back: "Back",
         code: {
           changeEmail: "Use a different email",
           description: "Enter the verification code sent to your email.",
@@ -133,10 +134,6 @@ export const resources = {
           title: "This industrial cluster was not found",
         },
         productsHeading: "Main products",
-        save: {
-          action: "Save cluster",
-          unavailable: "Sign-in and saving arrive in the next account update.",
-        },
         stats: {
           annualOutput: "Annual output",
           exportShare: "Export share",
@@ -225,6 +222,61 @@ export const resources = {
           verifiedMonth: "Verified {{month}}",
         },
       },
+      favorites: {
+        allLoaded: "All saved suppliers are shown.",
+        description:
+          "Keep industrial clusters and factories together for your sourcing research.",
+        empty: "You have no saved suppliers in this section yet.",
+        error: {
+          description:
+            "Your saved suppliers may be temporarily unavailable. Try the request again.",
+          retry: "Try again",
+          title: "We could not load your saved suppliers",
+        },
+        eyebrow: "Buyer shortlist",
+        imageAlt: "{{name}} supplier",
+        loadMore: "Load more saved suppliers",
+        loading: "Loading saved suppliers…",
+        loadingMore: "Loading more…",
+        moreMayMatch:
+          "More saved suppliers may match this section. Load the next page to continue.",
+        remove: "Remove",
+        removeError: "This saved supplier could not be removed. Try again.",
+        removeLabel: "Remove {{name}} from saved suppliers",
+        removed: "Removed from saved suppliers.",
+        removing: "Removing…",
+        save: {
+          action: "Save",
+          checking: "Checking your account…",
+          error: "This supplier could not be saved. Try again.",
+          retry: "Try again",
+          saved: "Saved",
+          saving: "Saving…",
+          signInHint: "Sign in to save this supplier and return here.",
+        },
+        signedOut: {
+          action: "Sign in to view saved suppliers",
+          description:
+            "Sign in to keep factories and industrial clusters available across devices.",
+          title: "Your saved suppliers will appear here",
+        },
+        tabs: {
+          clusters: "Industrial clusters",
+          factories: "Factories",
+        },
+        title: "Saved suppliers",
+        unavailable: {
+          description:
+            "This supplier is no longer publicly available. You can still remove it from your saved list.",
+          title: "Saved supplier unavailable",
+        },
+        verification: {
+          unverified: "Unverified",
+          verified: "Verified",
+        },
+        viewDetails: "View details",
+        viewDetailsLabel: "View details for {{name}}",
+      },
       map: {
         ariaLabel: "China industrial cluster and factory map",
         attribution: "© MapTiler · © OpenStreetMap contributors",
@@ -290,6 +342,7 @@ export const resources = {
       tabs: {
         account: "Account",
         map: "Map",
+        saved: "Saved",
       },
     },
   },
