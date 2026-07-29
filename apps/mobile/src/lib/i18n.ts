@@ -248,12 +248,14 @@ export const resources = {
           retry: "Retry",
         },
         navigation: {
+          actionError: "Navigation could not be opened. Try again.",
           amap: "Amap",
           apple: "Apple Maps",
           baidu: "Baidu Maps",
           google: "Google Maps",
           heading: "Navigate to factory",
-          unavailable: "Navigation links arrive in the navigation update.",
+          openHint:
+            "Opens route planning with {{provider}}. If the app is unavailable, a web page opens instead.",
         },
         notFound: {
           backToMap: "Browse the map",

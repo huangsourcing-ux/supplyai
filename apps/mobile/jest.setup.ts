@@ -74,6 +74,7 @@ jest.mock("@chinasupply/analytics", () => ({
     trackFactoryContactClicked: jest.fn(),
     trackFactoryViewed: jest.fn(),
     trackMapMoved: jest.fn(),
+    trackNavigationClicked: jest.fn(),
     trackSearchPerformed: jest.fn(),
   },
 }));

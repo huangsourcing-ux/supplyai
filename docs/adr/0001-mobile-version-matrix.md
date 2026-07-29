@@ -333,7 +333,32 @@ failure/Retry. Other fixtures cover malformed, unknown, and child-category
 slugs, null/unknown icon fallback, image and color-placeholder cards, first-page
 failure, and empty categories. This evidence boundary closes F-10.1 while
 leaving M4-T5 navigation, M4-T6 Maestro, Mobile PostHog/Consent, EAS, and
-production unchanged.
+production unchanged at that checkpoint.
+
+## M4-T5 navigation code-stage evidence
+
+M4-T5 now enables factory-detail navigation through the frozen M0-T9
+`buildNavUrl` contract. iOS exposes Google, Apple, Amap, and Baidu; Android
+exposes Google, Amap, and Baidu. The Mobile launcher opens Google/Apple HTTPS
+URLs once, tries Amap/Baidu App URIs before their Web fallbacks, and surfaces a
+localized recoverable error when neither handoff succeeds. It does not query
+installed packages or change generated native configuration. One
+coordinate-free `navigation_clicked` facade call occurs per press, while the
+existing Mobile no-consent/no-adapter boundary still prevents analytics network
+traffic.
+
+Fixed tests cover the platform sets, WGS-84 order, factory destination name,
+platform-specific templates, primary success, Web fallback, duplicate-HTTPS
+prevention, double failure, error UI, and analytics de-duplication. The existing
+Geo fixture suite remains unchanged. Local Release configuration smoke on the
+iPhone 17 Pro / iOS 26.5 Simulator and `diaoyouji_api_36` / API 36 Emulator
+confirmed the platform-specific button sets, Apple/Google system handoff,
+absent-Amap HTTPS fallback, canonical OPPO coordinate, and return without App
+crash. Simulator/Emulator details and the still-pending F-6.4 Release
+physical-device matrix are recorded separately in
+`docs/operations/m4-t5-navigation-release-validation.md`; until the latter is
+complete, M4-T5 remains unchecked and this section is not compatibility or
+landing-accuracy evidence.
 
 ## Upgrade policy
 
