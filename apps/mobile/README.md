@@ -110,9 +110,11 @@ existing-user sign-in → App deletion lifecycle against canonical staging.
 Read-only checks confirmed Clerk deletion, core tombstones, zero favorites, and
 successful delete webhooks without retaining emails or credentials. Both
 platforms also opened and cleanly canceled the real Google browser flow; unit
-tests cover Google success/cancel/failure, but real successful Google OAuth is
-still pending because no non-admin test identity is available. M4-T3a therefore
-remains open and its PR remains Draft.
+tests cover Google success/cancel/failure. Real successful Google OAuth was not
+run because no non-admin test identity was available and is not recorded as
+passed. On 2026-07-28 the Owner explicitly approved this evidence boundary and
+closed M4-T3a after verifier-level `authorizedParties` tests and the strict
+Admin guard call-site assertion were added.
 
 ## Commands
 

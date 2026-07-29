@@ -282,11 +282,14 @@ Clerk allowlist; no production configuration was created.
 Both native builds opened the real Google browser OAuth surface and returned
 cleanly on cancellation. Unit tests cover successful activation, cancellation,
 and failure, but no available non-admin Google test identity could complete a
-real successful Google session. This evidence therefore leaves M4-T3a open and
-the PR in Draft rather than treating the simulated success path as real OAuth
-acceptance. Existing shared MapLibre style warnings and one recoverable Android
-React Host startup diagnostic were unrelated to authentication and did not
-prevent the tested lifecycle.
+real successful Google session and does not treat the simulated success path as
+real OAuth acceptance. On 2026-07-28 the Owner explicitly approved this
+evidence boundary and authorized M4-T3a closeout after regression tests locked
+the Clerk SDK options for default and explicit `web-only` versus
+`web-or-native`, plus the Admin guard's omitted policy argument. Existing
+shared MapLibre style warnings and one recoverable Android React Host startup
+diagnostic were unrelated to authentication and did not prevent the tested
+lifecycle.
 
 ## Upgrade policy
 

@@ -1,13 +1,28 @@
+import { verifyToken } from "@clerk/backend";
 import type { ExecutionContext } from "@nestjs/common";
 import { ForbiddenException, UnauthorizedException } from "@nestjs/common";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   AdminAuthGuard,
+  createClerkTokenVerifier,
   getBearerToken,
   hasAllowedUserAuthorizedParty,
   hasAdminRole,
 } from "../src/auth/admin-auth.guard.js";
+import type { RuntimeConfig } from "../src/config/runtime-config.module.js";
+
+vi.mock("@clerk/backend", () => ({
+  verifyToken: vi.fn(),
+}));
+
+const clerkConfig = {
+  CLERK_SECRET_KEY: "test-clerk-secret",
+  WEB_ORIGIN: "https://staging.chinasupply.ai",
+} as RuntimeConfig;
+
+const verifyTokenMock = vi.mocked(verifyToken);
+type VerifiedClerkToken = Awaited<ReturnType<typeof verifyToken>>;
 
 function contextFor(request: {
   adminUserId?: string;
@@ -19,6 +34,48 @@ function contextFor(request: {
     }),
   } as unknown as ExecutionContext;
 }
+
+describe("createClerkTokenVerifier", () => {
+  beforeEach(() => {
+    verifyTokenMock.mockReset();
+  });
+
+  it("passes authorizedParties for the default and explicit web-only policy", async () => {
+    verifyTokenMock.mockResolvedValue({
+      sub: "web-user",
+    } as VerifiedClerkToken);
+    const verify = createClerkTokenVerifier(clerkConfig);
+
+    await verify("default-token");
+    await verify("explicit-token", "web-only");
+
+    const expectedOptions = {
+      authorizedParties: [clerkConfig.WEB_ORIGIN],
+      secretKey: clerkConfig.CLERK_SECRET_KEY,
+    };
+    expect(verifyTokenMock).toHaveBeenNthCalledWith(
+      1,
+      "default-token",
+      expectedOptions,
+    );
+    expect(verifyTokenMock).toHaveBeenNthCalledWith(
+      2,
+      "explicit-token",
+      expectedOptions,
+    );
+  });
+
+  it("omits authorizedParties for the web-or-native policy", async () => {
+    const claims = { sub: "native-user" } as VerifiedClerkToken;
+    verifyTokenMock.mockResolvedValue(claims);
+    const verify = createClerkTokenVerifier(clerkConfig);
+
+    await expect(verify("native-token", "web-or-native")).resolves.toBe(claims);
+    expect(verifyTokenMock).toHaveBeenCalledWith("native-token", {
+      secretKey: clerkConfig.CLERK_SECRET_KEY,
+    });
+  });
+});
 
 describe("AdminAuthGuard", () => {
   it("accepts only one strict bearer token", () => {
@@ -64,6 +121,7 @@ describe("AdminAuthGuard", () => {
     const guard = new AdminAuthGuard(verify);
 
     await expect(guard.canActivate(contextFor(request))).resolves.toBe(true);
+    expect(verify).toHaveBeenCalledWith("admin-token");
     expect(request).toMatchObject({ adminUserId: "user_admin" });
   });
 
