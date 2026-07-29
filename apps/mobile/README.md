@@ -44,8 +44,7 @@ M4-T2a search was validated on the same iOS and Android simulator matrix with
 the preview platform-restricted keys and canonical staging API. Both platforms
 passed `led`, `socks`, `sofa`, `家具`, no-result popular categories, search
 failure/Retry recovery, category MAP filtering, cluster/factory positioning and
-cards, attribution, and crash-free interaction. Registration, OAuth, account
-management, and logout UI remain in later M4 task packages.
+cards, attribution, and crash-free interaction.
 
 The M4-T2b cluster-detail implementation uses A-2 and cursor-based A-3 through
 the generated API client. A single `FlatList` renders the identity, disabled
@@ -90,9 +89,30 @@ is the only contact method. Five return related factories. Those missing
 real-data variants remain the acceptance blocker, so M4-T2c stays unchecked
 despite fixed-fixture unit coverage.
 
+M4-T3a moves the public Map into an Expo Router Tabs shell with only Map and
+Account visible. Email sign-up/sign-in and email MFA/client trust use Clerk
+verification codes; Google uses browser SSO with the exact staging callback
+`chinasupply.staging://sso-callback`. Account displays the primary email and the
+only supported locale, English. Saving calls A-9 with a Bearer token; sign-out,
+A-10 deletion, and protected-request 401 handling share the same session
+cleanup and return to the anonymous Map. Deletion requires an inline second
+confirmation and completes local cleanup even if Clerk sign-out then fails.
+
 Clerk tokens are stored in a dedicated encrypted MMKV instance. Its randomly
 generated encryption key is persisted with Expo SecureStore and is never placed
-in JavaScript configuration, EAS variables, or the repository.
+in JavaScript configuration, EAS variables, or the repository. Session cleanup
+clears the MMKV token and the complete React Query cache while retaining that
+non-token SecureStore encryption key.
+
+The iPhone 17 Pro / iOS 26.5 Simulator and `diaoyouji_api_36` / API 36 Emulator
+each passed a disposable email-code registration → locale save → sign-out →
+existing-user sign-in → App deletion lifecycle against canonical staging.
+Read-only checks confirmed Clerk deletion, core tombstones, zero favorites, and
+successful delete webhooks without retaining emails or credentials. Both
+platforms also opened and cleanly canceled the real Google browser flow; unit
+tests cover Google success/cancel/failure, but real successful Google OAuth is
+still pending because no non-admin test identity is available. M4-T3a therefore
+remains open and its PR remains Draft.
 
 ## Commands
 
