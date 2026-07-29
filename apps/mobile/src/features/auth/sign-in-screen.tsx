@@ -1,4 +1,10 @@
 import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
+import { useSignInWithApple } from "@clerk/expo/apple";
+import {
+  AppleAuthenticationButton,
+  AppleAuthenticationButtonStyle,
+  AppleAuthenticationButtonType,
+} from "expo-apple-authentication";
 import * as WebBrowser from "expo-web-browser";
 import { useState } from "react";
 import {
@@ -15,6 +21,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
+import { mobileEnvironment } from "../../env";
+import LegalLinks from "../legal/legal-links";
+
 export const STAGING_SSO_CALLBACK_URL = "chinasupply.staging://sso-callback";
 
 type AuthMode = "signIn" | "signUp";
@@ -22,29 +31,47 @@ type AuthStep = "email" | "emailCode" | "mfaCode";
 
 const stayInCurrentApp = () => Promise.resolve();
 
+export function getSocialAuthVisibility(
+  platform: typeof Platform.OS,
+  appleSignInEnabled: boolean,
+) {
+  return {
+    apple: platform === "ios" && appleSignInEnabled,
+    google: platform !== "ios" || appleSignInEnabled,
+  };
+}
+
 void WebBrowser.maybeCompleteAuthSession();
 
 export default function SignInScreen({
+  appleSignInEnabled = mobileEnvironment.EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED ===
+    "true",
   onBack,
   onComplete,
 }: Readonly<{
+  appleSignInEnabled?: boolean;
   onBack?: () => void;
   onComplete?: () => void | Promise<void>;
 }> = {}) {
   const { fetchStatus: signInFetchStatus, signIn } = useSignIn();
   const { fetchStatus: signUpFetchStatus, signUp } = useSignUp();
   const { startSSOFlow } = useSSO();
+  const { startAppleAuthenticationFlow } = useSignInWithApple();
   const { t } = useTranslation();
   const [mode, setMode] = useState<AuthMode>("signIn");
   const [step, setStep] = useState<AuthStep>("email");
   const [emailAddress, setEmailAddress] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isGooglePending, setIsGooglePending] = useState(false);
+  const [isApplePending, setIsApplePending] = useState(false);
   const [errorKey, setErrorKey] = useState<string>();
   const isSubmitting =
     signInFetchStatus === "fetching" ||
     signUpFetchStatus === "fetching" ||
+    isApplePending ||
     isGooglePending;
+  const { apple: shouldShowApple, google: shouldShowGoogle } =
+    getSocialAuthVisibility(Platform.OS, appleSignInEnabled);
 
   const finalizeSignInOrRequestMfa = async () => {
     if (signIn.status === "complete") {
@@ -175,6 +202,28 @@ export default function SignInScreen({
     }
   };
 
+  const continueWithApple = async () => {
+    setErrorKey(undefined);
+    setIsApplePending(true);
+
+    try {
+      const result = await startAppleAuthenticationFlow();
+
+      if (!result.createdSessionId) return;
+      if (!result.setActive) {
+        setErrorKey("auth.error.apple");
+        return;
+      }
+
+      await result.setActive({ session: result.createdSessionId });
+      await onComplete?.();
+    } catch {
+      setErrorKey("auth.error.apple");
+    } finally {
+      setIsApplePending(false);
+    }
+  };
+
   const changeMode = (nextMode: AuthMode) => {
     if (nextMode === mode) return;
     setMode(nextMode);
@@ -302,18 +351,42 @@ export default function SignInScreen({
               </Pressable>
             ) : (
               <>
-                <View style={styles.divider} />
-                <Pressable
-                  accessibilityRole="button"
-                  disabled={isSubmitting}
-                  onPress={() => void continueWithGoogle()}
-                  style={styles.googleButton}
-                  testID="auth-google"
-                >
-                  <Text style={styles.googleButtonText}>
-                    {t("auth.google.continue")}
-                  </Text>
-                </Pressable>
+                {shouldShowApple || shouldShowGoogle ? (
+                  <View style={styles.divider} />
+                ) : null}
+                {shouldShowApple ? (
+                  <AppleAuthenticationButton
+                    accessibilityLabel={t("auth.apple.continue")}
+                    accessibilityState={{ disabled: isSubmitting }}
+                    buttonStyle={AppleAuthenticationButtonStyle.BLACK}
+                    buttonType={AppleAuthenticationButtonType.CONTINUE}
+                    cornerRadius={12}
+                    onPress={() => {
+                      if (!isSubmitting) void continueWithApple();
+                    }}
+                    style={[
+                      styles.appleButton,
+                      isSubmitting && styles.appleButtonDisabled,
+                    ]}
+                    testID="auth-apple"
+                  />
+                ) : null}
+                {shouldShowGoogle ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    disabled={isSubmitting}
+                    onPress={() => void continueWithGoogle()}
+                    style={[
+                      styles.googleButton,
+                      shouldShowApple && styles.googleButtonAfterApple,
+                    ]}
+                    testID="auth-google"
+                  >
+                    <Text style={styles.googleButtonText}>
+                      {t("auth.google.continue")}
+                    </Text>
+                  </Pressable>
+                ) : null}
                 <Pressable
                   accessibilityRole="button"
                   disabled={isSubmitting}
@@ -339,6 +412,7 @@ export default function SignInScreen({
                 {t(errorKey)}
               </Text>
             ) : null}
+            <LegalLinks variant="notice" />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -380,6 +454,8 @@ function SubmitButton({
 }
 
 const styles = StyleSheet.create({
+  appleButton: { height: 50, width: "100%" },
+  appleButtonDisabled: { opacity: 0.5 },
   backArrow: { color: "#0F766E", fontSize: 19, marginRight: 8 },
   backButton: {
     alignItems: "center",
@@ -436,6 +512,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   googleButtonText: { color: "#0F172A", fontSize: 16, fontWeight: "700" },
+  googleButtonAfterApple: { marginTop: 12 },
   input: {
     backgroundColor: "#FFFFFF",
     borderColor: "#CBD5E1",

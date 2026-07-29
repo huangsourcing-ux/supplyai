@@ -1,12 +1,13 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.3** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T7** ｜ 日期：2026-07-29
+> 版本：**v1.4** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M4-T8** ｜ 日期：2026-07-29
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.4 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
 > v1.1 变更：新增 API Client 生成链路（Orval）；数据导入提前至 M1、最小 /ops 提前至 M2；Redis/Worker 与环境策略进入 M0；移动兼容 Spike 扩充；CI 触发分级；超大任务包拆小；补 Maestro/k6 测试层；工期修正为 12-14 周。终审修正：M0-T0 外部前置清单；Clerk 基础鉴权入 M0；App 账户页补全（M4-T3a）；privacy/terms 前移 M3；新增 Production Cutover 与商店发布（M5-T9~T11）；删除超出 PRD 的导入 UI/批量图片/告警（移 P1）；Admin 无硬删除 + 上传校验链；数据核验 SOP。
 > v1.2 变更：经 Owner 批准，在 M4-T1 前新增 M4-T0 地图体验诊断与方向稿门禁；先在全国/城市/街道三个缩放层级明确底图、业务图层与浮层交互问题，待 Owner 选定方向后再实现。未修改 PRD V1 功能范围。
 > v1.3 变更：经 Owner 批准，将 M4-T2b/T2c 的验收口径收敛为双端 canonical staging 主路径 smoke + 固定 fixture/自动化分支覆盖；真实图片受 ADM-6 时序约束，联系方式与 21+ 同产业带真实数据属于 M5 数据增强后的回归，不再阻塞 M4。现状核查确认 Admin 业务 controller 仅有 GET/PATCH/verify/publish/unpublish，没有 Create/Upload 写入端点；M1 import 可新增 `draft + unverified`，但不能替代 `/ops` 审核留痕。Unverified 继续由 fixture 验收，不为测试长期发布未核验工厂。未修改 PRD V1 功能范围或 API wire contract。
+> v1.4 变更：经 Owner 批准，M4-T7 以代码、原生隐私清单、权限加固、App 法律入口和离线商店声明包为完成定义；Apple Developer/Play Console 账号、正式 Bundle ID/package、Clerk/Apple 控制台配置、商店表单录入、真实 Apple 成功登录和内测包移入 M4-T8，Production Submit 前由 M5-T10 复核。依据 Apple Guideline 4.8，iOS 保留 Google 时同步提供原生 Sign in with Apple；能力未启用时 iOS 同时隐藏两种社交登录，Production 配置强制启用。M0-T0、M4-T8 与 M4 出口继续阻塞，M4-T3a 不回退。
 
 ---
 
@@ -151,8 +152,8 @@ chinasupply/
 - [x] **M4-T4 Explore tab**：F-10.1。**Tabs 固定为 Map → Explore → Saved → Account；`/explore` 复用 A-7 按服务端顺序展示九个一级类目的双列 color/icon 网格，`/explore/[slug]` 仅接受一级类目并复用 A-1 以 `category=<exact slug>&limit=20` 做不透明 cursor 分页、跨页 ID 去重、自动续页与 Retry，产业带卡进入既有详情且返回恢复列表。加载、空态、非法/二级 slug、首屏/续页失败、图片/占位与 icon 回落均有自动化覆盖。iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / API 36 Emulator 使用真实平台受限 key + canonical staging API 通过九类网格、Electronics/Home Textiles 非空列表、产业带详情往返、Lighting 真实空态及无 App 崩溃 smoke；Android 另通过飞行模式断网失败→恢复网络→Retry。canonical staging 无第二页，cursor 续页仅用固定 fixture 验收，未修改线上数据。Next Action 推进到 M4-T5。**
 - [x] **M4-T5 导航 Deep Link**：F-6.3 按 M0-T9 模板 + Web URL 回落 + 埋点；**人工真机验收落点 < 50m（F-6.4）**。**已启用 iOS Google/Apple/高德/百度与 Android Google/高德/百度按钮，直接复用 WGS-84 `buildNavUrl`，高德/百度 App URI 被拒后回落 Web，双重失败显示可恢复错误；每次点击只调用一次不含坐标的共享 `navigation_clicked` facade，Mobile 无 Consent/adapter 时仍为网络 no-op。平台集合、URL/回落/失败/埋点均有固定自动化覆盖。Owner 于 2026-07-29 明确确认已完成 F-6.4 的 13 项 Release 真机矩阵、所有路线规划终点误差均 `<50m`，并批准勾选本项；设备/系统、构建产物与地图 App 版本等逐项原始记录未随本次确认提交仓库，文档仅记录 Owner 验收结论而不补造字段。Next Action 推进到 M4-T6。**
 - [x] **M4-T6 Maestro 测试**：启动→地图加载；搜索→产业带→工厂；登录/未登录 Saved；收藏与取消；登出流程 + 一次性 staging 用户的删除账户流程；导航按钮存在且 URL 正确（真机落点仍人工验收）。**新增本地外部 Maestro CLI 主流程与认证、搜索、清理子流程，`app-map-ready` 仅在底图和当前 MAP 数据均完成时暴露；动态 Clerk 测试邮箱、官方测试码、登录回跳、两类收藏/取消、平台按钮集合、登出/重登/二次确认删除均纳入 canonical staging 路径，失败后的 `onFlowComplete` 负责删除已创建用户。iPhone 17 Pro / iOS 26.5 Simulator 与 `diaoyouji_api_36` / Android API 36 Emulator 在同一工作树完整跑绿；只读聚合核验确认全部 M4-T6 Clerk 用户已删除、core 均为 tombstone、favorites 为 0 且删除 webhook receipt 成功。canonical OPPO 名称、WGS-84 坐标及双平台完整 URL 继续由固定单测断言，未用外部地图 App 地址栏替代原始 URL。未修改 API/schema、canonical 内容、EAS、CI 或 production；Next Action 推进到 M4-T7。**
-- [ ] **M4-T7 商店合规**：App Store/Play 隐私声明（F-11.4）；App 内直接打开 M3-T7 已上线的 privacy/terms 正式 URL。
-- [ ] **M4-T8 内测发布**：tag 触发 EAS → TestFlight + Play 内测轨道。
+- [x] **M4-T7 商店合规（离线包）**：完成 F-8.1/F-11.1/F-11.4 的代码和离线声明包。iOS 接入 Clerk 原生 Sign in with Apple 并与 Google 同显同隐；`EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED` 在 Production 必须为 `true`。Local/Staging 与 Production 分别打开 canonical privacy/terms，登录前后 Account 均可达且失败可重试。Expo 配置固化 Apple entitlement、无追踪 App Privacy manifest 与依赖聚合出的 required-reason API 原因；Android 关闭备份并移除未使用的存储、悬浮窗和震动权限。`docs/operations/m4-t7-store-compliance.md` 给出 Apple/Google 可离线录入声明、删除路径和外部门禁。自动化覆盖 Apple 成功/取消/失败/回跳、平台显隐、法律 URL/浏览器失败、Production 环境拒绝关闭 Apple，以及原生配置。**本项勾选只代表离线交付完成；未使用 Apple Developer/Play Console，未保留正式标识符，未录入商店控制台，未完成真实 Apple 成功登录，也未发布内测包。Next Action 推进到 M4-T8。**
+- [ ] **M4-T8 内测发布与商店侧门禁**：先完成 Apple Developer/Google Play Console 账号、正式 Bundle ID/package 保留、Apple Sign in capability 与 Clerk Native Application/Apple connection 配置、商店隐私/Data Safety/账户删除表单录入；用真实 Apple 身份完成 iOS 成功登录和既有回跳验证。全部通过后再由 tag 触发 EAS → TestFlight + Play 内测轨道，并核对安装二进制与 M4-T7 离线声明一致。账号、标识符、控制台录入或真实 Apple 登录任一缺失均不得勾选。
 
 **M4 出口**：内测包发出；Maestro 套件绿；双端真机核心路径 + 导航实测通过。
 
@@ -170,7 +171,7 @@ chinasupply/
 - [ ] **M5-T8 性能与加固**：k6 复测（真实数据量）对照 N-1；限流复核；生产环境变量与密钥审计。若经审核的 canonical staging 自然形成同一产业带 21+ 家 published 工厂，则追加 M4-T2b 第二页 cursor 双端回归；若没有，不得为测试伪造/错配真实数据，API cursor e2e 与 Mobile 固定 fixture 仍是强制门禁，该真实数据回归不阻塞本项或上线。
 - [ ] **M5-T8a 生产内容迁移（上线数据来源，唯一实质缺口的补齐项）**：数据三分类贯穿全程——测试/合成、真实未验证、已验证可迁移（curated）。staging 中 synthetic/test 数据使用独立 namespace（slug 前缀或标记），永不导出；以干净 CSV/JSON 为 canonical dataset，只导出 **verified 且 curated** 的 clusters/factories；生成导出 manifest（记录数、slug、校验和、R2 objectKey）；被引用图片复制到 production bucket/prefix；导入 production 保持 draft，production admin 核对 manifest + 抽样后 publish；导入后校验记录数、对象存在性与校验和；Payload articles/media 单独制定导入或生产重录方案。
 - [ ] **M5-T9 Production Cutover**：先将 MapTiler 升级为 Flex 并确认商业授权，创建按正式 Web 域名、iOS Bundle ID、Android Package 分别限制的三只 production key，设置账单上限/告警并验证 Planet v4 TileJSON、PBF、glyph、sprite；Free 与 staging key 不得进入 commercial production。随后创建/核对生产 DB、Redis、R2、Clerk Production、Cloudflare；生产 migration dry-run；上线前备份；部署 API/Worker/Web；production smoke test；验证 staging 数据未流入 production；记录回滚命令与上一版本。
-- [ ] **M5-T10 App Production Release**：EAS Production Build + EAS Submit；App Store / Google Play 审核；分阶段发布或手动发布；验证商店链接、Clerk OAuth callback 与自定义 URL Scheme。（**V1 不做 Universal/App Links，移入 P1**，降低商店发布风险。）
+- [ ] **M5-T10 App Production Release**：复核 Production 最终二进制的数据收集、原生隐私清单、权限与 M4-T8 商店声明完全一致；EAS Production Build + EAS Submit；App Store / Google Play 审核；分阶段发布或手动发布；验证商店链接、Clerk OAuth callback 与自定义 URL Scheme。（**V1 不做 Universal/App Links，移入 P1**，降低商店发布风险。）
 - [ ] **M5-T11 Go/No-Go**：执行下节最终检查清单。
 
 ---

@@ -2,7 +2,7 @@
 
 > Status: **In progress**
 >
-> Last verified: 2026-07-27
+> Last verified: 2026-07-29
 >
 > Scope: account ownership, local CLI authentication, stable public identifiers, and human prerequisites only. No production deployment, paid-plan purchase, production migration, or secret material is recorded here.
 
@@ -40,6 +40,7 @@ M0-T0 must remain unchecked in `ChinaSupply.AI开发计划.md` until every requi
 ## Google OAuth and legal prerequisites
 
 - The Clerk Development application's Google connection was enabled for sign-up and sign-in during M3-T1 using Clerk's shared Development credentials. No custom Google OAuth credential is stored in the repository; production/custom credential provisioning remains a separate release concern.
+- Because the iOS App retains Google sign-in, PRD F-8.1 now requires native Sign in with Apple under Apple Guideline 4.8. M4-T7 includes the code, entitlement, environment guard, and offline declaration package only. M4-T8 still requires the Apple account, confirmed Bundle ID, Apple capability, Clerk Native Application/Apple connection, real successful Apple session, store-console entry, and internal-test build. None is recorded as complete here.
 - M3-T7's exact English `/privacy` and `/terms` copy was reviewed and explicitly approved by the Owner for commit `41d2033`, then merged through PR #58. Canonical staging deployment `dpl_8KnMsdcVHuTd7kUWvq2oG8HcN1Ls` and the public, registration, metadata, company disclosure, reciprocal-link, and Consent entry smokes passed on 2026-07-26. See `docs/operations/m3-t7-legal-pages.md`; production review and deployment remain M5.
 - Apple Developer Program and Google Play Console enrollment are intentionally deferred by the user. This conflicts with the development plan's schedule warning that they should start in M0 because review can be slow; the deferral is recorded here without marking the accounts complete.
 

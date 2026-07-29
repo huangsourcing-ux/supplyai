@@ -1,4 +1,5 @@
 import { useSignIn, useSignUp, useSSO } from "@clerk/expo";
+import { useSignInWithApple } from "@clerk/expo/apple";
 import {
   fireEvent,
   render,
@@ -7,7 +8,10 @@ import {
 } from "@testing-library/react-native";
 
 import "../../lib/i18n";
-import SignInScreen, { STAGING_SSO_CALLBACK_URL } from "./sign-in-screen";
+import SignInScreen, {
+  getSocialAuthVisibility,
+  STAGING_SSO_CALLBACK_URL,
+} from "./sign-in-screen";
 
 function createAuthMocks(
   signInStatus:
@@ -40,6 +44,7 @@ function createAuthMocks(
     },
   };
   const startSSOFlow = jest.fn();
+  const startAppleAuthenticationFlow = jest.fn();
 
   jest.mocked(useSignIn).mockReturnValue({
     fetchStatus: "idle",
@@ -50,8 +55,11 @@ function createAuthMocks(
     signUp,
   } as unknown as ReturnType<typeof useSignUp>);
   jest.mocked(useSSO).mockReturnValue({ startSSOFlow });
+  jest.mocked(useSignInWithApple).mockReturnValue({
+    startAppleAuthenticationFlow,
+  });
 
-  return { signIn, signUp, startSSOFlow };
+  return { signIn, signUp, startAppleAuthenticationFlow, startSSOFlow };
 }
 
 async function requestEmailCode(email = "buyer@example.com") {
@@ -61,6 +69,36 @@ async function requestEmailCode(email = "buyer@example.com") {
 }
 
 describe("Clerk Expo passwordless authentication", () => {
+  it("applies the Apple/Google visibility policy on each platform", () => {
+    expect(getSocialAuthVisibility("ios", false)).toEqual({
+      apple: false,
+      google: false,
+    });
+    expect(getSocialAuthVisibility("ios", true)).toEqual({
+      apple: true,
+      google: true,
+    });
+    expect(getSocialAuthVisibility("android", false)).toEqual({
+      apple: false,
+      google: true,
+    });
+  });
+
+  it("hides both iOS social providers until Apple is enabled", () => {
+    render(<SignInScreen appleSignInEnabled={false} />);
+
+    expect(screen.queryByTestId("auth-apple")).toBeNull();
+    expect(screen.queryByTestId("auth-google")).toBeNull();
+    expect(screen.getByTestId("auth-email")).toBeOnTheScreen();
+  });
+
+  it("shows Apple and Google together when Apple is enabled on iOS", () => {
+    render(<SignInScreen appleSignInEnabled />);
+
+    expect(screen.getByTestId("auth-apple")).toBeOnTheScreen();
+    expect(screen.getByTestId("auth-google")).toBeOnTheScreen();
+  });
+
   it("shows the matching account-mode switch prompt", () => {
     render(<SignInScreen />);
 
@@ -78,7 +116,7 @@ describe("Clerk Expo passwordless authentication", () => {
   it("sends and verifies an email sign-in code, then finalizes", async () => {
     const { signIn } = createAuthMocks();
     const onComplete = jest.fn();
-    render(<SignInScreen onComplete={onComplete} />);
+    render(<SignInScreen appleSignInEnabled onComplete={onComplete} />);
 
     await requestEmailCode();
     expect(signIn.create).toHaveBeenCalledWith({
@@ -103,7 +141,7 @@ describe("Clerk Expo passwordless authentication", () => {
   it("creates an English-locale user and verifies the sign-up email", async () => {
     const { signUp } = createAuthMocks();
     const onComplete = jest.fn();
-    render(<SignInScreen onComplete={onComplete} />);
+    render(<SignInScreen appleSignInEnabled onComplete={onComplete} />);
 
     fireEvent.press(screen.getByTestId("auth-switch-mode"));
     await requestEmailCode("new+clerk_test@example.com");
@@ -163,7 +201,7 @@ describe("Clerk Expo passwordless authentication", () => {
       createdSessionId: "session_google",
       setActive,
     });
-    render(<SignInScreen onComplete={onComplete} />);
+    render(<SignInScreen appleSignInEnabled onComplete={onComplete} />);
 
     fireEvent.press(screen.getByTestId("auth-google"));
 
@@ -185,13 +223,67 @@ describe("Clerk Expo passwordless authentication", () => {
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
+  it("activates an Apple session and reuses the auth completion callback", async () => {
+    const { startAppleAuthenticationFlow } = createAuthMocks();
+    const setActive = jest.fn(async () => undefined);
+    const onComplete = jest.fn();
+    startAppleAuthenticationFlow.mockResolvedValue({
+      createdSessionId: "session_apple",
+      setActive,
+    });
+    render(<SignInScreen appleSignInEnabled onComplete={onComplete} />);
+
+    fireEvent.press(screen.getByTestId("auth-apple"));
+
+    await waitFor(() => {
+      expect(setActive).toHaveBeenCalledWith({ session: "session_apple" });
+      expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("treats a canceled Apple sheet as a no-op", async () => {
+    const { startAppleAuthenticationFlow } = createAuthMocks();
+    startAppleAuthenticationFlow.mockResolvedValue({
+      createdSessionId: null,
+    });
+    render(<SignInScreen appleSignInEnabled />);
+
+    fireEvent.press(screen.getByTestId("auth-apple"));
+
+    await waitFor(() =>
+      expect(startAppleAuthenticationFlow).toHaveBeenCalledTimes(1),
+    );
+    expect(
+      screen.queryByText(
+        "Apple sign-in could not be completed. Please try again.",
+      ),
+    ).toBeNull();
+  });
+
+  it("shows a localized Apple error without provider diagnostics", async () => {
+    const { startAppleAuthenticationFlow } = createAuthMocks();
+    startAppleAuthenticationFlow.mockRejectedValue(
+      new Error("private Apple provider diagnostic"),
+    );
+    render(<SignInScreen appleSignInEnabled />);
+
+    fireEvent.press(screen.getByTestId("auth-apple"));
+
+    expect(
+      await screen.findByText(
+        "Apple sign-in could not be completed. Please try again.",
+      ),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText("private Apple provider diagnostic")).toBeNull();
+  });
+
   it("treats a canceled Google browser session as a no-op", async () => {
     const { startSSOFlow } = createAuthMocks();
     startSSOFlow.mockResolvedValue({
       authSessionResult: { type: "cancel" },
       createdSessionId: null,
     });
-    render(<SignInScreen />);
+    render(<SignInScreen appleSignInEnabled />);
 
     fireEvent.press(screen.getByTestId("auth-google"));
 
@@ -208,7 +300,7 @@ describe("Clerk Expo passwordless authentication", () => {
     signIn.create.mockResolvedValueOnce({
       error: { longMessage: "private Clerk diagnostic" },
     } as never);
-    render(<SignInScreen />);
+    render(<SignInScreen appleSignInEnabled />);
 
     fireEvent.changeText(screen.getByTestId("auth-email"), "buyer@example.com");
     fireEvent.press(screen.getByTestId("auth-submit"));

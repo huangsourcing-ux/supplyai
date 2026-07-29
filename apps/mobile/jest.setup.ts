@@ -85,6 +85,14 @@ jest.mock("expo-clipboard", () => ({
 
 jest.mock("expo-web-browser", () => ({
   maybeCompleteAuthSession: jest.fn(() => ({ type: "success" })),
+  openBrowserAsync: jest.fn(async () => ({ type: "dismiss" })),
+  WebBrowserResultType: { DISMISS: "dismiss" },
+}));
+
+jest.mock("expo-apple-authentication", () => ({
+  AppleAuthenticationButton: "AppleAuthenticationButton",
+  AppleAuthenticationButtonStyle: { BLACK: "BLACK" },
+  AppleAuthenticationButtonType: { CONTINUE: "CONTINUE" },
 }));
 
 jest.mock("expo-router", () => {
@@ -193,6 +201,12 @@ jest.mock("@clerk/expo", () => {
     useUser: jest.fn(() => ({ isLoaded: true, user: null })),
   };
 });
+
+jest.mock("@clerk/expo/apple", () => ({
+  useSignInWithApple: jest.fn(() => ({
+    startAppleAuthenticationFlow: jest.fn(),
+  })),
+}));
 
 jest.mock("@sentry/react-native", () => ({
   captureException: jest.fn(() => "0123456789abcdef0123456789abcdef"),

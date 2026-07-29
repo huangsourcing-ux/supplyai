@@ -368,7 +368,7 @@ A-6 返回 `categories` / `clusters` / `factories` 三组、每组最多 5 项�
 
 ### F-8 认证与账户（P0）
 
-- F-8.1 Clerk：邮箱 + Google OAuth；App 端 `@clerk/clerk-expo`
+- F-8.1 Clerk：邮箱 + Google OAuth；App 端 `@clerk/clerk-expo`。iOS 若提供 Google 登录，必须依据 Apple App Review Guideline 4.8 同时提供原生 Sign in with Apple；Android/Web 保持 Google。Apple 能力未配置时，iOS 同时隐藏 Apple 与 Google，只保留邮箱验证码；Production App 不允许关闭 Apple 登录
 - F-8.2 Webhook（A-11）：raw body svix 验签；webhook_events 表幂等（重试安全）
 - F-8.3 账户页：邮箱、语言偏好（PATCH /me）、登出、删除账户（DELETE /me）
 - F-8.4 删除流程：DELETE /me → 调 Clerk 删除用户 → user.deleted webhook → users.deleted_at 写入（软删）+ favorites **硬删除**；已删除用户的 JWT 再访问 → 401 并前端登出
@@ -402,7 +402,7 @@ CLI 上传 CSV/JSON → R2
 - F-11.1 `/privacy` 与 `/terms` 静态页，注册流程与 App 内可达
 - F-11.2 地图 attribution：MapTiler + © OpenStreetMap contributors，不得隐藏
 - F-11.3 PostHog：Web 端 Consent banner（拒绝则不加载）；埋点 query 脱敏见 F-3.6；`map_moved` 节流见 F-1.7
-- F-11.4 App Store / Play 隐私声明：随 M4 出包时完成（不阻塞 M0-M3）
+- F-11.4 App Store / Play 隐私声明：M4-T7 完成代码、iOS App Privacy manifest、Android 权限加固及可离线录入的 Apple/Google 声明包；M4-T8 在外部账号和正式标识符具备后完成 Clerk/Apple 配置、商店控制台录入、真实 Apple 成功登录与内测包门禁；M5-T10 在 Production Submit 前复核最终二进制与商店声明一致。M4-T7 的离线完成不代表商店侧提交完成，且不解除 M4 出口的内测包阻塞
 - F-11.5 API 限流见 G-11
 
 ---
