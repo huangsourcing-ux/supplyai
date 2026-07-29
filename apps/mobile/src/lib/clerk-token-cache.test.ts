@@ -2,6 +2,7 @@ import { createEncryptedTokenCache } from "./clerk-token-cache";
 
 function createTestDependencies(savedKey: string | null = null) {
   const storage = {
+    clearAll: jest.fn(),
     getString: jest.fn(),
     remove: jest.fn(),
     set: jest.fn(),
@@ -50,5 +51,16 @@ describe("encrypted Clerk token cache", () => {
     const cache = createEncryptedTokenCache(dependencies);
 
     await expect(cache.getToken("missing")).resolves.toBeNull();
+  });
+
+  it("clears every encrypted MMKV token without deleting its SecureStore key", async () => {
+    const { dependencies, storage } =
+      createTestDependencies("existing-key-123");
+    const cache = createEncryptedTokenCache(dependencies);
+
+    await cache.clearAllTokens();
+
+    expect(storage.clearAll).toHaveBeenCalledTimes(1);
+    expect(dependencies.saveEncryptionKey).not.toHaveBeenCalled();
   });
 });

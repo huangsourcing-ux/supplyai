@@ -11,8 +11,12 @@ const KEY_ALPHABET =
 
 type TokenStorage = Pick<
   ReturnType<typeof createMMKV>,
-  "getString" | "remove" | "set"
+  "clearAll" | "getString" | "remove" | "set"
 >;
+
+export interface ManagedTokenCache extends TokenCache {
+  clearAllTokens: () => Promise<void>;
+}
 
 interface TokenCacheDependencies {
   createStorage: (encryptionKey: string) => TokenStorage;
@@ -45,7 +49,7 @@ function createEncryptionKey(randomBytes: Uint8Array): string {
 
 export function createEncryptedTokenCache(
   dependencies: TokenCacheDependencies = defaultDependencies,
-): TokenCache {
+): ManagedTokenCache {
   let storagePromise: Promise<TokenStorage> | undefined;
 
   const getStorage = () => {
@@ -64,6 +68,10 @@ export function createEncryptedTokenCache(
   };
 
   return {
+    async clearAllTokens() {
+      const storage = await getStorage();
+      storage.clearAll();
+    },
     async clearToken(key) {
       const storage = await getStorage();
       storage.remove(key);

@@ -123,19 +123,29 @@ The EAS Preview environment must contain:
 - the Mobile Sentry DSN, organization and project identifiers, plus the
   build-only Sentry auth token described in `docs/operations/sentry.md`
 
+M4-T3a fixes the staging native OAuth callback at
+`chinasupply.staging://sso-callback`. This exact URL is allowlisted only in the
+Clerk Development instance used by staging; production remains unconfigured
+until its separately approved release task. Email sign-up/sign-in uses Clerk
+verification codes, and Google uses the native browser SSO flow. Browser
+cancellation returns to the App without a user-facing error.
+
 Both MapTiler platform keys are required outside local development and may not
 be reused across platforms. MapLibre adds the matching restricted User-Agent
 only to `https://api.maptiler.com/` requests. Mobile PostHog remains inactive;
 M3-T6 configures only Web and does not add or load an analytics SDK in Mobile.
 Sentry is required by M0-T7 for every non-local Mobile build.
 
-The retained Development smoke user password is stored only in macOS Keychain
-under service `ai.chinasupply.clerk.mobile-smoke`. Neither the password nor
-Clerk session tokens belong in source, EAS variables, logs, fixtures, or task
-transcripts. Clerk tokens in the app use encrypted MMKV with the encryption key
-held by the device SecureStore. If a smoke credential is displayed by test
-automation, rotate it immediately in Clerk and overwrite the same Keychain
-item; do not preserve the exposed value in screenshots or build evidence.
+The legacy M0 compatibility-spike password may remain stored only in macOS
+Keychain under service `ai.chinasupply.clerk.mobile-smoke`; M4-T3a does not
+expose a password authentication path. Neither that legacy password nor Clerk
+session tokens belong in source, EAS variables, logs, fixtures, or task
+transcripts. Clerk tokens in the App use a dedicated encrypted MMKV instance,
+with only its random encryption key held by device SecureStore. Sign-out,
+account deletion, and protected-request 401 cleanup clear all React Query
+caches and the MMKV Clerk token while retaining the non-token SecureStore key.
+Do not preserve disposable email addresses or authentication material in
+screenshots or build evidence.
 
 ## API and Worker staging contract
 
@@ -173,6 +183,21 @@ must not be treated as the real production environment.
   the separate Worker logs.
 - Both services require the matching `SENTRY_DSN`; Railway's commit SHA forms
   their shared Sentry release.
+
+Ordinary user guards verify Clerk JWT signature, issuer, expiry, and the rest
+of Clerk's token contract before audience handling. Native App session tokens
+may omit `azp`; browser tokens must carry the exact approved Web origin, and a
+different or null `azp` is rejected. Admin and `/ops` guards retain the strict
+Web-origin authorized-party check and are not widened for native tokens. This
+policy does not change the API schema, OpenAPI document, or generated client.
+
+M4-T3a's staging-only API deployment `59b50dfa-f6e1-4e9a-a8fb-f8a5799d96e6`
+validated the native-token policy with a real Clerk Development session and a
+successful A-9 locale update. iOS and Android disposable email-code lifecycles
+then each completed App registration, locale save, sign-out, existing-user
+sign-in, and A-10 deletion. Read-only checks confirmed the Clerk user absent,
+the core user retained as a deletion tombstone, zero favorites, and a successful
+recent `user.deleted` webhook without recording any email, token, or secret.
 
 M3-T2 adds the Clerk lifecycle endpoint at
 `https://api-staging.chinasupply.ai/api/v1/webhooks/clerk`. The Clerk

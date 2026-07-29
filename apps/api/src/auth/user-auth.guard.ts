@@ -40,7 +40,7 @@ export class UserAuthGuard implements CanActivate {
 
     let claims: unknown;
     try {
-      claims = await this.verifyClerkToken(token);
+      claims = await this.verifyClerkToken(token, "web-or-native");
     } catch {
       throw new UnauthorizedException();
     }

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import "../lib/i18n";
-import AppMapScreen from "../app/index";
+import AppMapScreen from "../app/(tabs)/index";
 
 function renderAppMap() {
   const queryClient = new QueryClient({

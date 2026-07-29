@@ -30,7 +30,9 @@ NativeWind. Do not track the Obytes `master` branch.
 | Expo Router             | `6.0.24`                                              | Obytes v9 declares `~6.0.22`; locked to the SDK 54 patch required by Expo Doctor on 2026-07-22  |
 | NativeWind              | `4.2.6`                                               | Replaces Uniwind; verified by T5a static/export checks                                          |
 | Tailwind CSS            | `3.4.19`                                              | Locked for NativeWind v4                                                                        |
-| Clerk Expo              | `4.0.1`                                               | Email/password and device-trust flow validated by the Android Preview artifact                  |
+| Clerk Expo              | `4.0.1`                                               | Email-code sign-up/sign-in, email MFA/client trust, and Google browser SSO validated natively   |
+| Expo Auth Session       | `7.0.11`                                              | SDK 54-compatible native OAuth redirect support; iOS/Android builds validated                   |
+| Expo Web Browser        | `15.0.11`                                             | SDK 54-compatible Google browser SSO; open/cancel validated on iOS and Android                  |
 | Expo SecureStore        | `15.0.8`                                              | Persists only the MMKV encryption key                                                           |
 | Expo Crypto             | `15.0.9`                                              | Generates the random 16-byte MMKV encryption key                                                |
 | Expo Clipboard          | `8.0.8`                                               | SDK 54-compatible address and WeChat copy support; native iOS/Android builds validated          |
@@ -264,6 +266,30 @@ with the canonical main-path smoke, closing M4-T2c. Real media cannot be
 accepted before M5-T1 delivers ADM-6; reviewed optional contacts, media, and
 dual-platform Phone dialer handoff move to M5-T2. Unverified remains a fixture
 branch rather than a reason to keep a deliberately unverified factory public.
+
+## M4-T3a App-auth and account simulator evidence
+
+M4-T3a was exercised on 2026-07-28 with the Clerk Development instance, the
+canonical staging API, and the exact staging callback
+`chinasupply.staging://sso-callback`. The callback was added only to the staging
+Clerk allowlist; no production configuration was created.
+
+| Platform | Native/runtime evidence                                                                                                                                                                                                                                                                                                                                                                   |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Xcode 26.6 built and launched `ChinaSupplyAIStaging` Debug on the iPhone 17 Pro / iOS 26.5 Simulator. A disposable Clerk test-email flow passed registration, English locale save, sign-out, existing-user email-code sign-in, inline account-deletion confirmation, and return to the public Map. Clerk deletion, core tombstone, zero favorites, and the delete webhook were confirmed. |
+| Android  | Gradle completed 548 tasks and installed the staging Debug APK on `diaoyouji_api_36` / API 36 with Expo Web Browser 15.0.11 linked. The same disposable email lifecycle and deletion evidence passed after a cold emulator boot; logcat contained no App fatal exception.                                                                                                                 |
+
+Both native builds opened the real Google browser OAuth surface and returned
+cleanly on cancellation. Unit tests cover successful activation, cancellation,
+and failure, but no available non-admin Google test identity could complete a
+real successful Google session and does not treat the simulated success path as
+real OAuth acceptance. On 2026-07-28 the Owner explicitly approved this
+evidence boundary and authorized M4-T3a closeout after regression tests locked
+the Clerk SDK options for default and explicit `web-only` versus
+`web-or-native`, plus the Admin guard's omitted policy argument. Existing
+shared MapLibre style warnings and one recoverable Android React Host startup
+diagnostic were unrelated to authentication and did not prevent the tested
+lifecycle.
 
 ## Upgrade policy
 

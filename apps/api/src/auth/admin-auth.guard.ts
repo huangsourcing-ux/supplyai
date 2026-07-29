@@ -19,7 +19,12 @@ declare module "fastify" {
 
 export const CLERK_TOKEN_VERIFIER = Symbol("CLERK_TOKEN_VERIFIER");
 
-export type ClerkTokenVerifier = (token: string) => Promise<unknown>;
+export type ClerkTokenVerificationPolicy = "web-only" | "web-or-native";
+
+export type ClerkTokenVerifier = (
+  token: string,
+  policy?: ClerkTokenVerificationPolicy,
+) => Promise<unknown>;
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -56,18 +61,39 @@ export function getSubject(claims: unknown): string | null {
     : null;
 }
 
+export function hasAllowedUserAuthorizedParty(
+  claims: unknown,
+  webOrigin: string,
+): boolean {
+  if (!isRecord(claims)) return false;
+
+  // Clerk native session tokens omit azp; browser tokens must still match our web origin.
+  return claims.azp === undefined || claims.azp === webOrigin;
+}
+
 export function createClerkTokenVerifier(
   config: RuntimeConfig,
 ): ClerkTokenVerifier {
-  return async (token) => {
+  return async (token, policy = "web-only") => {
     if (config.CLERK_SECRET_KEY === undefined) {
       throw new Error("Clerk authentication is unavailable");
     }
 
-    return verifyToken(token, {
-      authorizedParties: [config.WEB_ORIGIN],
+    if (policy === "web-only") {
+      return verifyToken(token, {
+        authorizedParties: [config.WEB_ORIGIN],
+        secretKey: config.CLERK_SECRET_KEY,
+      });
+    }
+
+    const claims = await verifyToken(token, {
       secretKey: config.CLERK_SECRET_KEY,
     });
+    if (!hasAllowedUserAuthorizedParty(claims, config.WEB_ORIGIN)) {
+      throw new Error("Invalid Clerk authorized party");
+    }
+
+    return claims;
   };
 }
 
