@@ -5,6 +5,7 @@ jest.mock("@chinasupply/api-client", () => ({
   createFavorite: jest.fn(),
   deleteFavorite: jest.fn(),
   deleteMe: jest.fn(),
+  getClusters: jest.fn(),
   getClusterFactories: jest.fn(),
   getFavorites: jest.fn(),
   getGetMapClusterBoundariesQueryKey: jest.fn(() => [
@@ -64,6 +65,8 @@ jest.mock("@chinasupply/api-client", () => ({
     isPending: true,
   })),
 }));
+
+jest.mock("@expo/vector-icons/FontAwesome6");
 
 jest.mock("@chinasupply/analytics", () => ({
   analytics: {

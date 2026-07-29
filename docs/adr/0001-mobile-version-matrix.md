@@ -311,6 +311,30 @@ before the disposable account deletion request returned
 `deletionRequested: true`; both platforms then showed the signed-out Saved
 guidance. Temporary credentials and logs were not retained.
 
+## M4-T4 Explore simulator evidence
+
+M4-T4 was exercised on 2026-07-29 against the canonical staging API with the
+preview environment's platform-restricted MapTiler keys. The implementation
+directly pins `@expo/vector-icons@15.1.1` and its Expo SDK peer
+`expo-font~14.0.12`; Expo Doctor confirms the locked SDK 54 matrix. No API,
+schema, generated client, analytics adapter, deployment, or canonical content
+was changed.
+
+| Platform | Native/runtime evidence                                                                                                                                                                                                                                                                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| iOS      | Xcode 26.6 built and launched `ChinaSupplyAIStaging` Debug on the iPhone 17 Pro / iOS 26.5 Simulator in 21.2 seconds. Map → Explore → Saved → Account, the nine server-ordered category colors/icons, Electronics and Home Textiles A-1 results, Dongguan cluster-detail round trip, Lighting empty state, retained Explore stack, and return handling passed without a native crash.       |
+| Android  | Gradle completed 549 tasks and installed the staging Debug APK on `diaoyouji_api_36` / API 36 in 15 seconds. The same grid/list/detail/empty paths passed; Android additionally used real airplane mode to produce an uncached Furniture service error, restored connectivity, and reached the canonical empty state through Retry. Package-scoped logcat contained no App fatal exception. |
+
+The canonical inventory has no Explore category with more than 20 published
+clusters, so a real second A-1 page cannot be exercised without distorting
+reviewed data. Fixed tests pass the exact `nextCursor` into the generated A-1
+client, merge two pages, deduplicate a repeated ID, and cover continuation
+failure/Retry. Other fixtures cover malformed, unknown, and child-category
+slugs, null/unknown icon fallback, image and color-placeholder cards, first-page
+failure, and empty categories. This evidence boundary closes F-10.1 while
+leaving M4-T5 navigation, M4-T6 Maestro, Mobile PostHog/Consent, EAS, and
+production unchanged.
+
 ## Upgrade policy
 
 M0-T5 validated the simulator and Preview matrix. V1 therefore permits only security

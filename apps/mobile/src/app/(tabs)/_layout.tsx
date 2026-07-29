@@ -22,6 +22,14 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="explore"
+        options={{
+          tabBarAccessibilityLabel: t("tabs.explore"),
+          tabBarLabel: t("tabs.explore"),
+          title: t("tabs.explore"),
+        }}
+      />
+      <Tabs.Screen
         name="saved"
         options={{
           tabBarAccessibilityLabel: t("tabs.saved"),

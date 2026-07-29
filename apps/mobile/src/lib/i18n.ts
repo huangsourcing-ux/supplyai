@@ -82,6 +82,58 @@ export const resources = {
         },
         submitting: "Please wait…",
       },
+      explore: {
+        category: {
+          allLoaded: "All available industrial clusters are shown.",
+          back: "All categories",
+          description:
+            "Browse published industrial clusters in this supply category.",
+          empty: {
+            description:
+              "There are no published industrial clusters in {{name}} yet.",
+            title: "No published clusters yet",
+          },
+          eyebrow: "Supply category",
+          factoryCount_one: "{{count}} factory",
+          factoryCount_other: "{{count}} factories",
+          imageAlt: "{{name}} industrial cluster",
+          loadError: "More industrial clusters could not be loaded.",
+          loadMore: "Load more clusters",
+          loading: "Loading industrial clusters…",
+          loadingMore: "Loading more clusters…",
+          mainProducts: "Main products",
+          retry: "Try again",
+          serviceError: {
+            description:
+              "Industrial clusters may be temporarily unavailable. Try the request again.",
+            title: "We could not load this category",
+          },
+          title: "{{name}} industrial clusters",
+          unavailable: {
+            description:
+              "This category link is invalid or is not available in Explore.",
+            title: "This supply category was not found",
+          },
+          viewDetails: "View cluster details",
+          viewDetailsLabel: "View details for {{name}}",
+        },
+        description:
+          "Browse China's manufacturing strengths by product category.",
+        empty: {
+          description:
+            "Supply categories will appear here when they are available.",
+          title: "No supply categories are available yet",
+        },
+        error: {
+          description:
+            "Supply categories may be temporarily unavailable. Try the request again.",
+          retry: "Try again",
+          title: "We could not load supply categories",
+        },
+        loading: "Loading supply categories…",
+        openCategory: "Browse {{name}} industrial clusters",
+        title: "Explore supply categories",
+      },
       apiHealth: {
         error: "API liveness check failed",
         loading: "Checking API liveness…",
@@ -341,6 +393,7 @@ export const resources = {
       },
       tabs: {
         account: "Account",
+        explore: "Explore",
         map: "Map",
         saved: "Saved",
       },
