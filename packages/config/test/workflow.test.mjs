@@ -20,6 +20,7 @@ test("migration workflow is reusable only and never deploys applications", async
 
   assert.deepEqual(Object.keys(workflow.on), ["workflow_call"]);
   assert.ok(workflow.jobs.migrate.environment);
+  assert.equal(workflow.jobs.migrate["timeout-minutes"], 15);
   assert.match(source, /release:migrate:core/);
   assert.match(source, /release:migrate:cms/);
   assert.match(source, /PAYLOAD_SECRET:.*secrets\.PAYLOAD_SECRET/);
@@ -40,6 +41,20 @@ test("CI runs the frozen PR checks and gates staging on serial CMS and core migr
     "${{ github.event_name == 'pull_request' }}",
   );
   assert.doesNotMatch(source, /pull_request_target|workflow_dispatch/);
+
+  const expectedJobTimeouts = {
+    api_e2e: 10,
+    build: 10,
+    changes: 5,
+    ci_gate: 5,
+    mobile: 6,
+    quality: 6,
+    staging_release_gate: 5,
+    web_e2e: 10,
+  };
+  for (const [jobName, timeoutMinutes] of Object.entries(expectedJobTimeouts)) {
+    assert.equal(workflow.jobs[jobName]["timeout-minutes"], timeoutMinutes);
+  }
 
   assert.match(
     workflow.jobs.quality.steps.map((step) => step.run ?? "").join("\n"),

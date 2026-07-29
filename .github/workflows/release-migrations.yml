@@ -19,6 +19,7 @@ jobs:
   migrate:
     name: Migrate ${{ inputs.target }} (${{ inputs.deployment_environment }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment: ${{ inputs.deployment_environment }}
     concurrency:
       group: migrations-${{ inputs.deployment_environment }}-${{ inputs.target }}

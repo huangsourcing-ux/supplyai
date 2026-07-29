@@ -116,7 +116,7 @@ function configureAuth(signedIn: boolean) {
 function renderSaved() {
   const queryClient = new QueryClient({
     defaultOptions: {
-      mutations: { retry: false },
+      mutations: { gcTime: Infinity, retry: false },
       queries: { gcTime: Infinity, retry: false },
     },
   });

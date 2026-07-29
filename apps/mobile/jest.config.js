@@ -1,5 +1,10 @@
 module.exports = {
   preset: "jest-expo",
+  fakeTimers: {
+    // React Native's scheduler needs real task-queue primitives during
+    // teardown; faking them can leave Jest spinning on Linux runners.
+    doNotFake: ["nextTick", "queueMicrotask", "setImmediate"],
+  },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testMatch: ["**/?(*.)+(spec|test).ts?(x)"],
   moduleFileExtensions: ["js", "ts", "tsx"],

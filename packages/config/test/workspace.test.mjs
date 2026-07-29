@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const testDirectory = dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = resolve(testDirectory, "../../..");
+const require = createRequire(import.meta.url);
 
 const expectedDirectories = [
   "apps/api",
@@ -98,6 +100,18 @@ test("mobile pins the Sentry CLI required by the Gradle upload task", async () =
   );
 
   assert.equal(mobilePackage.devDependencies["@sentry/cli"], "2.58.0");
+});
+
+test("mobile fake timers preserve the React Native task queues", () => {
+  const mobileJestConfig = require(
+    resolve(workspaceRoot, "apps/mobile/jest.config.js"),
+  );
+
+  assert.deepEqual(mobileJestConfig.fakeTimers.doNotFake, [
+    "nextTick",
+    "queueMicrotask",
+    "setImmediate",
+  ]);
 });
 
 test("shared configuration exports loadable presets", async () => {
