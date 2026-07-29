@@ -2,9 +2,25 @@
 
 > Task: M4-T5 / PRD G-1, G-2, F-6.3, F-6.4, N-5
 >
-> Status: **Code complete; Release physical-device gate pending**
+> Status: **Complete; F-6.4 accepted by Owner**
 >
 > Date opened: 2026-07-29
+>
+> Date closed: 2026-07-29
+
+## Closure attestation
+
+On 2026-07-29 the Owner explicitly confirmed that they completed the full
+13-row Release physical-device matrix below, that each provider opened a
+destination-filled route-planning or approved equivalent Web view, and that
+every observed destination error was `<50m`. The Owner also explicitly directed
+that M4-T5 be checked. This statement is the acceptance evidence recorded by
+the repository.
+
+The Owner did not supply the per-device model/OS, Release artifact identifier,
+map-App version, measured distance, or external evidence reference for
+transcription in this closeout. Those fields are therefore marked as
+Owner-verified but not transcribed instead of being inferred or fabricated.
 
 ## Frozen contract
 
@@ -61,10 +77,10 @@ close any row below.
 
 ## Release artifacts
 
-| Platform | Required package                              | Artifact/build | Commit  | Status                       |
-| -------- | --------------------------------------------- | -------------- | ------- | ---------------------------- |
-| iOS      | Staging Release build installed without Metro | Pending        | Pending | Device currently offline     |
-| Android  | EAS Preview Release APK                       | Pending        | Pending | No physical device connected |
+| Platform | Required package                              | Artifact/build                     | Implementation commit | Status                |
+| -------- | --------------------------------------------- | ---------------------------------- | --------------------- | --------------------- |
+| iOS      | Staging Release build installed without Metro | Owner-verified; ID not transcribed | `61d298b`             | Pass (Owner attested) |
+| Android  | EAS Preview Release APK                       | Owner-verified; ID not transcribed | `61d298b`             | Pass (Owner attested) |
 
 Production Build/Submit, store tracks, production credentials, and production
 MapTiler keys are outside M4-T5 and must not be used for this gate.
@@ -86,15 +102,15 @@ measured error, reviewer/date, and evidence reference. Passing means the App
 opens a destination-filled route-planning view without forcing live navigation
 and the destination error is `<50m`.
 
-| ID         | Platform | Provider    | App version | Route planning | Error   | Evidence | Result  |
-| ---------- | -------- | ----------- | ----------- | -------------- | ------- | -------- | ------- |
-| IOS-APPLE  | iOS      | Apple Maps  | Pending     | Pending        | Pending | Pending  | Pending |
-| IOS-GOOGLE | iOS      | Google Maps | Pending     | Pending        | Pending | Pending  | Pending |
-| IOS-AMAP   | iOS      | Amap        | Pending     | Pending        | Pending | Pending  | Pending |
-| IOS-BAIDU  | iOS      | Baidu Maps  | Pending     | Pending        | Pending | Pending  | Pending |
-| AND-GOOGLE | Android  | Google Maps | Pending     | Pending        | Pending | Pending  | Pending |
-| AND-AMAP   | Android  | Amap        | Pending     | Pending        | Pending | Pending  | Pending |
-| AND-BAIDU  | Android  | Baidu Maps  | Pending     | Pending        | Pending | Pending  | Pending |
+| ID         | Platform | Provider    | App version                     | Route planning | Error                   | Evidence                      | Result                |
+| ---------- | -------- | ----------- | ------------------------------- | -------------- | ----------------------- | ----------------------------- | --------------------- |
+| IOS-APPLE  | iOS      | Apple Maps  | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| IOS-GOOGLE | iOS      | Google Maps | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| IOS-AMAP   | iOS      | Amap        | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| IOS-BAIDU  | iOS      | Baidu Maps  | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| AND-GOOGLE | Android  | Google Maps | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| AND-AMAP   | Android  | Amap        | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| AND-BAIDU  | Android  | Baidu Maps  | Owner-verified; not transcribed | Pass           | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
 
 ## Web-fallback matrix
 
@@ -103,23 +119,23 @@ disabling an installed third-party map App. Restore any changed device state
 afterward. Apple Maps has no separate removal case because its approved HTTPS
 URL is both the primary and fallback.
 
-| ID            | Platform | Provider unavailable | Web destination correct | Can continue planning | Error   | Evidence | Result  |
-| ------------- | -------- | -------------------- | ----------------------- | --------------------- | ------- | -------- | ------- |
-| FB-IOS-GOOGLE | iOS      | Google Maps          | Pending                 | Pending               | Pending | Pending  | Pending |
-| FB-IOS-AMAP   | iOS      | Amap                 | Pending                 | Pending               | Pending | Pending  | Pending |
-| FB-IOS-BAIDU  | iOS      | Baidu Maps           | Pending                 | Pending               | Pending | Pending  | Pending |
-| FB-AND-GOOGLE | Android  | Google Maps          | Pending                 | Pending               | Pending | Pending  | Pending |
-| FB-AND-AMAP   | Android  | Amap                 | Pending                 | Pending               | Pending | Pending  | Pending |
-| FB-AND-BAIDU  | Android  | Baidu Maps           | Pending                 | Pending               | Pending | Pending  | Pending |
+| ID            | Platform | Provider unavailable | Web destination correct | Can continue planning | Error                   | Evidence                      | Result                |
+| ------------- | -------- | -------------------- | ----------------------- | --------------------- | ----------------------- | ----------------------------- | --------------------- |
+| FB-IOS-GOOGLE | iOS      | Google Maps          | Pass                    | Pass                  | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| FB-IOS-AMAP   | iOS      | Amap                 | Pass                    | Pass                  | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| FB-IOS-BAIDU  | iOS      | Baidu Maps           | Pass                    | Pass                  | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| FB-AND-GOOGLE | Android  | Google Maps          | Pass                    | Pass                  | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| FB-AND-AMAP   | Android  | Amap                 | Pass                    | Pass                  | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
+| FB-AND-BAIDU  | Android  | Baidu Maps           | Pass                    | Pass                  | `<50m` (Owner attested) | Owner attestation, 2026-07-29 | Pass (Owner attested) |
 
 For Baidu, the approved Web result is the official marker page with the
 correct destination and a usable “到这去/导航” continuation.
 
-## Closure rule
+## Closure
 
-M4-T5 remains unchecked and its PR remains Draft until all 13 rows pass on the
-recorded Release artifacts with every measured error `<50m`. Simulator,
-Emulator, unit-test, or M0-T9 evidence must not be substituted for this gate.
-After the human result is recorded, append a new completion entry to
-`开发日志.md`, update the mobile version matrix, mark M4-T5 complete, and move
-the development-plan Next Action to M4-T6.
+The Owner's 2026-07-29 attestation closes all 13 rows with every destination
+error `<50m`. M4-T5 is checked, its closeout is delivered as a separate PR
+after the implementation PR, and the development-plan Next Action is M4-T6.
+The missing raw device/build/App-version details remain an evidence-recording
+limitation; they are not treated as an unfinished product gate after the
+Owner's explicit acceptance.
