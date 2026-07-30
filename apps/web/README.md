@@ -21,6 +21,7 @@ The local routes are:
   sign-up flow.
 - `http://localhost:3000/admin` — Payload Admin using the independent
   `cms_users` auth collection.
+- `http://localhost:3000/guides` — published English sourcing guides.
 - `http://localhost:3000/ops/sign-in` — Clerk sign-in for operations users.
 - `http://localhost:3000/ops` — requires the Clerk session claim
   `metadata.role = "admin"`.
@@ -87,7 +88,19 @@ pnpm release:migrate:cms
 pnpm --filter @chinasupply/web cms:migrate:status
 ```
 
-The M0-T3 Payload configuration contains only `cms-users`. Articles, media,
-R2 storage, and business tables remain out of scope. CMS email delivery also
-fails closed until a later task explicitly configures a provider, so Payload
-never writes password-reset messages or tokens to application logs.
+The CMS owner is limited to `cms-users`, `media`, `articles`, article versions,
+and Payload internal tables. The M5-T4 media collection uses Payload's direct
+S3-compatible client upload adapter against the public R2 media bucket. The
+browser first requests a five-minute signed PUT with its Payload session and a
+same-origin request; the R2 PUT itself carries no CMS cookie. Only JPEG, PNG,
+and WebP files from 1 byte through 10 MB are accepted. The server chooses an
+environment-owned `(<prefix>/)articles/media-<21-char-nanoid>.<ext>` key and
+HEAD-verifies the object before Media creation and again before Article
+publication. Set `R2_ENDPOINT` only for a local S3-compatible service; remote
+Cloudflare R2 derives its endpoint from `R2_ACCOUNT_ID`.
+
+Migration-only runs intentionally omit R2 credentials. The adapter is disabled
+there while `alwaysInsertFields` keeps the generated schema identical; Web
+runtime startup still requires the complete R2 configuration through the
+existing Web environment parser. CMS email delivery remains fail-closed, so
+Payload never writes password-reset messages or tokens to application logs.

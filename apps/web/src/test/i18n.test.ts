@@ -146,6 +146,14 @@ describe("Web internationalization contract", () => {
         saved: "Saved",
       },
     });
+    expect(messages.Guides).toMatchObject({
+      aiGenerated: "AI-generated illustration",
+      clusterCard: {
+        unavailable: "This industrial cluster is currently unavailable.",
+      },
+      empty: "No published guides are available yet.",
+      title: "Explore China's industrial clusters",
+    });
     expect(messages.Favorites).toMatchObject({
       remove: "Remove",
       tabs: {

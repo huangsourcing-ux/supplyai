@@ -6,7 +6,7 @@
 
 项目当前有三份已冻结/批准执行的文档：
 
-1. `ChinaSupply.AI产品PRD.md`：V1 需求的唯一事实源（v1.5 Frozen / Approved for Implementation）。产品范围、数据模型、API 契约、验收标准以它为准。
+1. `ChinaSupply.AI产品PRD.md`：V1 需求的唯一事实源（v1.6 Frozen / Approved for Implementation）。产品范围、数据模型、API 契约、验收标准以它为准。
 2. `ChinaSupply.AI技术栈-最终冻结版.md`：技术选型与关键架构约定的冻结来源。不得在任务中重新选型。
 3. `ChinaSupply.AI开发计划.md`：批准执行的任务顺序、任务包拆分、环境和 CI 策略。它决定“何时做”，实现细节仍以 PRD 为准。
 
@@ -25,7 +25,7 @@ ChinaSupply.AI 面向海外 B 端买家，V1 核心路径是：搜索产品 → 
 
 V1 明确不做：站内询盘/聊天、AI 采购助手、工厂对比、多工厂考察路线规划、第三方服务市场、支付/会员、展会模块、用户生成内容。P1/P2 只保留路线图，不得因“顺手”而实现。
 
-当前计划起点是 `M5-T4`。M0-M4 工程任务已按开发计划收口；M4-T8 只完成经 Owner 批准的商店门禁迁移，Apple Developer/Play Console、正式标识符保留、Apple/Clerk Production 配置仍在 M5-T9，商店表单、真实 Apple 成功登录、TestFlight/Play 内测与 Production Submit 仍在 M5-T10，不得反向宣称商店验收通过。M5-T1 已完成 ADM-1/3 Create、ADM-6 R2 上传链与 Admin 写限流加固，并完成 canonical staging 真实图片链验收。M5-T2 已完成 `/ops` draft 新建、WGS-84 MapLibre 选点和完整媒体管理；Owner 独立 SOP 确认后，仅通过 `/ops` 写入、verify、publish Jinkanghong/Yayu 联系方式，双端复跑图片、Phone/Email/WeChat、规范化 `tel:` 与复制分支。Owner 批准的 AI-generated illustration 已在 canonical `/ops` 完成 presign→credential-free PUT→PATCH/HEAD→verification reset→reviewer acknowledgement/Verify→`next/image` 预览→A-5/CDN；公开响应无 `objectKey`，CDN MIME、字节数及 SHA-256 与生成源一致，未创建 synthetic entity 或触及 production。M5-T3 已在 `seed:real` 的类目 upsert 路径完成 name/aliases 实际变化检测，并通过可复用的 BullMQ `regenerate:search-text` job 与共享 `buildSearchText` fan-out 重算关联产业带/工厂；未新增 Admin 类目接口、`/ops` UI、API wire 或数据库 schema。21+ 同产业带真实 cursor 只在 M5 数据自然满足时追加且不人为造数，Unverified 不要求长期发布样本。Mobile 真实 PostHog adapter + Consent 必须另行批准并先修订开发计划，不得夹带。外部账号、生产凭据、物理真机测试、数据录入和人工验收仍属于后续 M5 人工前置或人工门禁；未实际完成者不得伪造或勾选。
+当前计划起点是 `M5-T4`。M0-M4 工程任务已按开发计划收口；M4-T8 只完成经 Owner 批准的商店门禁迁移，Apple Developer/Play Console、正式标识符保留、Apple/Clerk Production 配置仍在 M5-T9，商店表单、真实 Apple 成功登录、TestFlight/Play 内测与 Production Submit 仍在 M5-T10，不得反向宣称商店验收通过。M5-T1 已完成 ADM-1/3 Create、ADM-6 R2 上传链与 Admin 写限流加固，并完成 canonical staging 真实图片链验收。M5-T2 已完成 `/ops` draft 新建、WGS-84 MapLibre 选点和完整媒体管理；Owner 独立 SOP 确认后，仅通过 `/ops` 写入、verify、publish Jinkanghong/Yayu 联系方式，双端复跑图片、Phone/Email/WeChat、规范化 `tel:` 与复制分支。Owner 批准的 AI-generated illustration 已在 canonical `/ops` 完成 presign→credential-free PUT→PATCH/HEAD→verification reset→reviewer acknowledgement/Verify→`next/image` 预览→A-5/CDN；公开响应无 `objectKey`，CDN MIME、字节数及 SHA-256 与生成源一致，未创建 synthetic entity 或触及 production。M5-T3 已在 `seed:real` 的类目 upsert 路径完成 name/aliases 实际变化检测，并通过可复用的 BullMQ `regenerate:search-text` job 与共享 `buildSearchText` fan-out 重算关联产业带/工厂；未新增 Admin 类目接口、`/ops` UI、API wire 或数据库 schema。M5-T4 实现阶段已冻结并落地 Payload `articles`/`media`、独立 R2 client upload、Lexical Cluster Card 与 `/guides` SSR/ISR；实现 PR 中保持 M5-T4 未勾选，只有合并、CMS/Core migration、exact-commit staging 部署和指定 canonical Payload 文章验收全部完成后，才能由独立收口 PR 勾选并推进 M5-T5。21+ 同产业带真实 cursor 只在 M5 数据自然满足时追加且不人为造数，Unverified 不要求长期发布样本。Mobile 真实 PostHog adapter + Consent 必须另行批准并先修订开发计划，不得夹带。外部账号、生产凭据、物理真机测试、数据录入和人工验收仍属于后续 M5 人工前置或人工门禁；未实际完成者不得伪造或勾选。
 
 ## 3. 工作方式
 
@@ -111,7 +111,8 @@ packages/
 - 公开读接口无需登录；用户写接口验证 Clerk JWT。普通用户原生 Clerk session token 可在签名、issuer、有效期等完整验证通过后缺少 `azp`；浏览器 token 的 `azp` 必须精确匹配批准的 Web origin，其他值拒绝。ADM-* 和 `/ops/**` 仍要求 Web `azp` 严格匹配，并验证 Clerk `publicMetadata` 中的 `admin` role。
 - Clerk webhook 必须使用 raw body 做 Svix 验签，并通过 `webhook_events` 去重。用户删除后软删 users、硬删 favorites，已删除用户再次访问返回 401。
 - 匿名搜索和地图接口分别按真实客户端 IP 限制为 60 req/min/IP；只有 MAP-* 使用 Cloudflare 1 小时响应缓存，搜索不缓存。写接口按用户限流。多实例限流使用 Redis store，429 返回 `RATE_LIMITED`。
-- R2 数据库字段只存 `objectKey`，完整 CDN URL 由 API 拼接。每个环境使用公开媒体 bucket 和私有操作 bucket（导入、报告、备份）；只有媒体 bucket 可绑定 CDN 自定义域名。上传使用服务端生成路径的短时预签名 URL，仅允许 JPEG/PNG/WebP 且声明不超过 10MB；上传后 HEAD 复验类型/大小，实体引用时再验证对象存在且属于当前环境。
+- R2 数据库字段只存 `objectKey`，完整 CDN URL 由服务端派生。每个环境使用公开媒体 bucket 和私有操作 bucket（导入、报告、备份）；只有媒体 bucket 可绑定 CDN 自定义域名。核心产业带/工厂媒体使用 ADM-6；Payload-owned media 使用独立的 Payload session + 同源/CSRF 预签名链。两条链均由服务端生成环境限定路径、有效期 5 分钟，只允许 JPEG/PNG/WebP、1 byte–10MB，PUT 后 HEAD 复验 key 归属、存在性、类型与实际大小；客户端不得指定任意 objectKey、multipart/server upload 或 paste URL。
+- Payload `articles` 的 Cluster Card 只持久化 21 位 cluster ID，不复制 slug/name，不创建 Payload 到核心表的 relationship/FK。文章 publish 时验证引用仍为 published；公开详情只用 MAP-1 的 published 数据渲染，引用失效或 MAP 暂时失败时显示 unavailable，不得泄露 draft 或拖垮整篇文章。
 - 不得硬删除产业带或工厂；使用 draft/published 状态，避免收藏、文章引用和溯源失效。
 - PostHog 必须经过 `packages/analytics`。Web 用户未同意时不加载且完全 no-op；搜索埋点先去除邮箱/电话模式并把 query 截断至 100 字符；`map_moved` 每 10 秒最多记录一次。
 - 地图必须始终显示 MapTiler 和 © OpenStreetMap contributors attribution。

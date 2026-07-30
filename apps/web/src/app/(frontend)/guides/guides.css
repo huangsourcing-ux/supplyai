@@ -1,0 +1,200 @@
+.guides-page,
+.guide-page {
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 7rem) 0 5rem;
+}
+
+.guides-hero,
+.guide-header {
+  max-width: 48rem;
+}
+
+.guides-hero > p,
+.guide-header > p {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.guides-hero h1,
+.guide-header h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.guides-hero > span,
+.guide-header time {
+  display: block;
+  margin-top: 1.25rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.guides-grid {
+  display: grid;
+  margin-top: 3rem;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+
+.guide-list-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: var(--panel);
+}
+
+.guide-list-card__image {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.guide-list-card__image img,
+.guide-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.guide-list-card__copy {
+  padding: 1.35rem;
+}
+
+.guide-list-card__copy time {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.guide-list-card__copy h2 {
+  margin: 0.55rem 0 0;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.guide-list-card__copy a {
+  text-decoration: none;
+}
+
+.guide-list-card__copy a:hover,
+.guide-header > a:hover {
+  color: var(--accent);
+}
+
+.guide-ai-label {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  color: #092018;
+  background: rgba(236, 253, 245, 0.92);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.guides-empty {
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px dashed var(--line);
+  border-radius: 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.guide-page > article {
+  max-width: 54rem;
+  margin: 0 auto;
+}
+
+.guide-header > a {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: var(--muted);
+}
+
+.guide-cover {
+  margin: 2.5rem 0 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1.4rem;
+  background: var(--panel);
+}
+
+.guide-cover figcaption {
+  padding: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.guide-body {
+  margin-top: 3rem;
+  color: #d9eee5;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.guide-body h2,
+.guide-body h3 {
+  margin: 2.5rem 0 0.8rem;
+  color: var(--foreground);
+  line-height: 1.2;
+}
+
+.guide-body a {
+  color: var(--accent);
+}
+
+.guide-cluster-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--cluster-color) 65%, transparent);
+  border-left: 0.35rem solid var(--cluster-color);
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--cluster-color) 12%, var(--panel));
+}
+
+.guide-cluster-card div,
+.guide-cluster-card span {
+  display: block;
+}
+
+.guide-cluster-card span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.guide-cluster-card--unavailable {
+  border-color: var(--line);
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.guides-empty-page {
+  max-width: 40rem;
+}
+
+.guides-empty-page a {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--accent);
+}
+
+@media (max-width: 40rem) {
+  .guide-cluster-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

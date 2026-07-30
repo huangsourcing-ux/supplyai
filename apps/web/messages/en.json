@@ -247,6 +247,39 @@
       "backToMap": "Back to the map"
     }
   },
+  "Guides": {
+    "eyebrow": "Sourcing guides",
+    "title": "Explore China's industrial clusters",
+    "description": "Practical editorial guidance for researching production regions and planning supplier visits.",
+    "empty": "No published guides are available yet.",
+    "readGuide": "Read guide",
+    "backToGuides": "Back to sourcing guides",
+    "published": "Published {date}",
+    "aiGenerated": "AI-generated illustration",
+    "clusterCard": {
+      "factoryCount": "{count, plural, one {# published factory} other {# published factories}}",
+      "viewCluster": "Explore cluster",
+      "unavailable": "This industrial cluster is currently unavailable."
+    },
+    "metadata": {
+      "descriptionFallback": "Explore China's industrial clusters with practical sourcing guidance from ChinaSupply.AI."
+    },
+    "notFound": {
+      "eyebrow": "Guide unavailable",
+      "title": "This sourcing guide was not found",
+      "description": "The link may be outdated, or the guide is not currently published.",
+      "back": "Browse published guides"
+    }
+  },
+  "Cms": {
+    "clusterPicker": {
+      "label": "Industrial cluster",
+      "loading": "Loading published clusters…",
+      "unavailable": "Published clusters unavailable",
+      "select": "Select a published cluster",
+      "validation": "Choose a published industrial cluster."
+    }
+  },
   "Favorites": {
     "eyebrow": "Buyer shortlist",
     "title": "Saved suppliers",

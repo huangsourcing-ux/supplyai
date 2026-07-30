@@ -61,6 +61,7 @@ export const webEnvSchema = z
     R2_MEDIA_BUCKET: z.string().min(3),
     R2_PREFIX: z.string(),
     R2_CDN_BASE_URL: networkUrlSchema,
+    R2_ENDPOINT: networkUrlSchema.optional(),
   })
   .superRefine((environment, context) => {
     if (environment.APP_ENV !== environment.NEXT_PUBLIC_APP_ENV) {
@@ -72,6 +73,17 @@ export const webEnvSchema = z
     }
 
     requireR2Prefix(environment.R2_PREFIX, environment.APP_ENV, context);
+
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.R2_ENDPOINT !== undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["R2_ENDPOINT"],
+        message: "may only override the Cloudflare endpoint locally",
+      });
+    }
 
     if (environment.APP_ENV === "local") {
       return;
