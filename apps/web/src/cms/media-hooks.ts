@@ -15,6 +15,26 @@ interface MediaRecord {
   prefix?: null | string;
 }
 
+function isApprovedClientUploadFile(file: {
+  clientUploadContext?: unknown;
+}): boolean {
+  const context = file.clientUploadContext;
+  if (
+    context === null ||
+    typeof context !== "object" ||
+    Array.isArray(context)
+  ) {
+    return false;
+  }
+
+  const fields = Object.keys(context);
+  return (
+    fields.length === 1 &&
+    fields[0] === "prefix" &&
+    (context as { prefix?: unknown }).prefix === getCmsMediaPrefix()
+  );
+}
+
 function requireUploadMetadata(data: MediaRecord): {
   filename: string;
   filesize: number;
@@ -63,9 +83,13 @@ export const mediaHooks: NonNullable<CollectionConfig["hooks"]> = {
   ],
   beforeOperation: [
     ({ args, operation, req }) => {
-      if ((operation === "create" || operation === "update") && req.file) {
+      if (
+        (operation === "create" || operation === "update") &&
+        req.file &&
+        !isApprovedClientUploadFile(req.file)
+      ) {
         throw new APIError(
-          "Multipart and server-side CMS uploads are not allowed",
+          "Binary multipart and server-side CMS uploads are not allowed",
           400,
         );
       }
