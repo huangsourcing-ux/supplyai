@@ -165,13 +165,19 @@ describe("Payload media lifecycle", () => {
         filename,
         filesize: 1234,
         mimeType: "image/webp",
-        prefix: "staging/articles",
+        prefix: "articles",
       },
       operation: "create",
       originalDoc: undefined,
+      req: {
+        file: {
+          clientUploadContext: { prefix: "staging/articles" },
+        },
+      },
     } as never);
     expect(created).toMatchObject({
       objectKey: `staging/articles/${filename}`,
+      prefix: "staging/articles",
     });
     await beforeChange({ data: created, operation: "create" } as never);
     expect(mocks.verifyMedia).toHaveBeenCalledOnce();
@@ -189,6 +195,20 @@ describe("Payload media lifecycle", () => {
         },
       } as never),
     ).toThrow(/immutable/);
+
+    expect(() =>
+      beforeValidate({
+        data: {
+          filename,
+          filesize: 1234,
+          mimeType: "image/webp",
+          prefix: "staging/articles",
+        },
+        operation: "create",
+        originalDoc: undefined,
+        req: {},
+      } as never),
+    ).toThrow(/client upload metadata/i);
   });
 
   it("allows signed client metadata but rejects server upload and referenced deletion", async () => {
