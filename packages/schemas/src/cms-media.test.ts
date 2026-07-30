@@ -10,15 +10,21 @@ describe("CMS media contracts", () => {
     expect(
       cmsMediaPresignRequestSchema.parse({
         collectionSlug: "media",
+        docPrefix: "articles",
         filename: "cover.webp",
         filesize: 1,
         mimeType: "image/webp",
       }),
-    ).toMatchObject({ collectionSlug: "media", filesize: 1 });
+    ).toMatchObject({
+      collectionSlug: "media",
+      docPrefix: "articles",
+      filesize: 1,
+    });
 
     expect(() =>
       cmsMediaPresignRequestSchema.parse({
         collectionSlug: "articles",
+        docPrefix: "articles",
         filename: "cover.webp",
         filesize: 1,
         mimeType: "image/webp",
@@ -27,9 +33,19 @@ describe("CMS media contracts", () => {
     expect(() =>
       cmsMediaPresignRequestSchema.parse({
         collectionSlug: "media",
+        docPrefix: "articles",
         filename: "cover.gif",
         filesize: 0,
         mimeType: "image/gif",
+      }),
+    ).toThrow();
+    expect(() =>
+      cmsMediaPresignRequestSchema.parse({
+        collectionSlug: "media",
+        docPrefix: "production/articles",
+        filename: "cover.webp",
+        filesize: 1,
+        mimeType: "image/webp",
       }),
     ).toThrow();
   });

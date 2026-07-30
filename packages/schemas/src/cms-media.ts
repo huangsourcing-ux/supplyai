@@ -8,7 +8,7 @@ import {
 
 export const cmsMediaPresignRequestSchema = z.strictObject({
   collectionSlug: z.literal("media"),
-  docPrefix: z.undefined().optional(),
+  docPrefix: z.literal("articles"),
   filename: z.string().trim().min(1).max(255),
   filesize: z.number().int().min(1).max(MAX_UPLOAD_BYTES),
   mimeType: mediaContentTypeSchema,
