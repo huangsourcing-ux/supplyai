@@ -97,7 +97,7 @@ export const mediaHooks: NonNullable<CollectionConfig["hooks"]> = {
     },
   ],
   beforeValidate: [
-    ({ data, operation, originalDoc }) => {
+    ({ data, operation, originalDoc, req }) => {
       if (!data) return data;
       const next = data as MediaRecord;
       const original = (originalDoc ?? {}) as MediaRecord;
@@ -118,6 +118,14 @@ export const mediaHooks: NonNullable<CollectionConfig["hooks"]> = {
         return next;
       }
 
+      if (!req.file || !isApprovedClientUploadFile(req.file)) {
+        throw new APIError("CMS client upload metadata is required", 400);
+      }
+
+      // Payload keeps the collection-level prefix in form data, while the
+      // official client upload handler returns the full environment-owned
+      // prefix on req.file.clientUploadContext after the signed PUT.
+      next.prefix = getCmsMediaPrefix();
       const upload = requireUploadMetadata(next);
       next.objectKey = upload.objectKey;
       return next;
