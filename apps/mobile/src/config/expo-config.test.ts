@@ -1,7 +1,19 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import {
   createMobileExpoConfig,
   resolveMobileSentryBuildConfig,
 } from "./expo-config";
+
+interface EasConfig {
+  build: {
+    production: {
+      env?: Record<string, string>;
+      environment?: string;
+    };
+  };
+}
 
 describe("Expo application config", () => {
   it("keeps New Architecture enabled and links the EAS project", () => {
@@ -137,5 +149,16 @@ describe("Expo application config", () => {
         },
       },
     ]);
+  });
+
+  it("pins the production EAS profile to the production app environment", () => {
+    const easConfig = JSON.parse(
+      readFileSync(join(__dirname, "../../eas.json"), "utf8"),
+    ) as EasConfig;
+
+    expect(easConfig.build.production.environment).toBe("production");
+    expect(easConfig.build.production.env).toEqual({
+      EXPO_PUBLIC_APP_ENV: "production",
+    });
   });
 });

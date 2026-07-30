@@ -22,7 +22,7 @@ describe("MapTiler request identity", () => {
 
   it.each([
     ["local", "ai.chinasupply.app.local"],
-    ["production", "ai.chinasupply.app"],
+    ["production", "ai.chinasupply.mobile"],
   ] as const)(
     "derives the %s identifiers from the canonical mobile identity",
     (environment, identifier) => {

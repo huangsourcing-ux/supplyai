@@ -55,12 +55,15 @@ The application uses these provisional identities:
 | ----------- | ------------------------------- | --------------------- |
 | Local       | `ai.chinasupply.app.local`      | `chinasupply.local`   |
 | Staging     | `ai.chinasupply.app.staging`    | `chinasupply.staging` |
-| Production  | `ai.chinasupply.app`            | `chinasupply`         |
+| Production  | `ai.chinasupply.mobile`         | `chinasupply`         |
 
-The identifiers are not reserved in Apple Developer or Google Play Console.
-They may be used for local and Preview validation, but availability must be
-rechecked before device signing or store registration. No EAS project ID is
-committed in M0-T5a. M0-T5c linked the staging candidate to EAS project
+The Production identifier is the Owner-selected candidate from M4-T8 and is not
+reserved in Apple Developer or Google Play Console. The earlier
+`ai.chinasupply.app` candidate is retired and must not be submitted. Local and
+Staging identities remain available for their existing validation roles;
+Production availability must be confirmed on both platforms in M5-T9 before
+signing credentials or store records are created. No EAS project ID is committed
+in M0-T5a. M0-T5c linked the staging candidate to EAS project
 `@huangsourcing/chinasupply-ai` with project ID
 `cac33d97-75d7-4975-899f-00d661bf979d`; this does not reserve either store
 identifier.

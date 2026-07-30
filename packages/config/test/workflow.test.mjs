@@ -216,6 +216,9 @@ test("EAS production build and submit profiles stay explicit", async () => {
 
   assert.deepEqual(easConfig.build.production, {
     environment: "production",
+    env: {
+      EXPO_PUBLIC_APP_ENV: "production",
+    },
     node: "22.23.1",
   });
   assert.deepEqual(easConfig.submit.production, {});
