@@ -191,15 +191,39 @@ describe("Payload media lifecycle", () => {
     ).toThrow(/immutable/);
   });
 
-  it("rejects multipart/server upload and deletion of referenced media", async () => {
+  it("allows signed client metadata but rejects server upload and referenced deletion", async () => {
     const beforeOperation = hookAt(mediaHooks.beforeOperation);
+    expect(
+      beforeOperation({
+        args: { data: "client upload" },
+        operation: "create",
+        req: {
+          file: {
+            clientUploadContext: { prefix: "staging/articles" },
+            name: "media-123456789012345678901.webp",
+          },
+        },
+      } as never),
+    ).toEqual({ data: "client upload" });
     expect(() =>
       beforeOperation({
         args: {},
         operation: "create",
-        req: { file: { filename: "bypass.webp" } },
+        req: { file: { name: "bypass.webp" } },
       } as never),
-    ).toThrow(/Multipart/);
+    ).toThrow(/multipart/i);
+    expect(() =>
+      beforeOperation({
+        args: {},
+        operation: "create",
+        req: {
+          file: {
+            clientUploadContext: { prefix: "production/articles" },
+            name: "bypass.webp",
+          },
+        },
+      } as never),
+    ).toThrow(/multipart/i);
 
     const beforeDelete = hookAt(mediaHooks.beforeDelete);
     await expect(
