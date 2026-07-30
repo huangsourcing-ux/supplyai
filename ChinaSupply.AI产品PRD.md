@@ -1,6 +1,6 @@
 # ChinaSupply.AI 产品需求文档（PRD）
 
-> 版本：**v1.5 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-29
+> 版本：**v1.6 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-30
 > 用途：供 AI 编码代理（Codex 等）直接执行开发。需求以可验收的结构化条目编写。
 > 技术栈：见《ChinaSupply.AI技术栈-最终冻结版.md》，本文档不重复选型讨论。
 > 优先级定义：P0 = V1 必须；P1 = V1 后第一批迭代；P2 = 路线图。
@@ -15,6 +15,8 @@
 > v1.4 变更摘要：澄清 G-11 的 V1 缓存范围——搜索与 MAP-* 均按真实客户端 IP 限流，只有 MAP-* 按 4.4 使用 Cloudflare 1 小时响应缓存；搜索不缓存。未增加 V1 功能范围。
 >
 > v1.5 变更摘要：经 Owner 批准，将 Apple Developer/Google Play Console、正式移动标识符保留、Apple/Clerk 控制台配置、商店表单、真实 Apple 登录与 TestFlight/Play 内测包从 M4-T8 迁移到 M5-T9/M5-T10。M4-T8 只记录门禁迁移，不代表任何商店侧验收通过；M4 出口改为 App 功能、Maestro 与既有双端真机验收完成。Production 移动标识候选改为 `ai.chinasupply.mobile`，仍须在 M5-T9 实际保留。未增加 V1 功能范围。
+>
+> v1.6 变更摘要：冻结 M5-T4 的 Payload 文章与 CMS 媒体契约。Payload-owned media 使用独立的已认证预签名上传链，ADM-6 继续只服务产业带/工厂媒体；两条链均执行服务端随机路径、5 分钟有效期、JPEG/PNG/WebP、1 byte–10MB、环境前缀、PUT 后 HEAD 复验与 CDN URL 派生。文章 Cluster Card 只持久化 21 位 cluster ID，不复制核心表字段、不创建 Payload relationship/FK；发布时验证引用仍为 published，运行时失效时显示 unavailable。未新增 `/api/v1`、Mobile、主导航、sitemap 或 `/about` 范围。
 
 ---
 
@@ -44,7 +46,7 @@
 | G-7  | 鉴权：公开读接口无需登录；用户写接口需 Clerk JWT；Admin 接口（ADM-*）需 Clerk JWT 且用户具有 `admin` role（Clerk publicMetadata）                                                                                                                            |
 | G-8  | 时间：数据库存 UTC `timestamptz`，前端本地化展示                                                                                                                                                                                                             |
 | G-9  | Schema 归属：**Drizzle/NestJS 是核心业务表唯一 Schema Owner**（regions、categories、clusters、factories、users、favorites、webhook_events）。Payload 只拥有并迁移自己的表（articles、media、cms_users）。Payload 的 migration 禁止触碰核心业务表             |
-| G-10 | 图片：R2 存储，数据库只存 `objectKey`（如 `factories/abc123/1.jpg`），完整 URL 由 API 层拼 CDN 域名生成。每个环境将公开媒体与导入报告/备份等私有操作对象放入不同 bucket；只有媒体 bucket 绑定 CDN 自定义域名。上传一律走预签名 URL（ADM-6） |
+| G-10 | 图片：R2 存储，数据库只存 `objectKey`，完整 URL 由服务端从 CDN 域名派生。每个环境将公开媒体与导入报告/备份等私有操作对象放入不同 bucket；只有媒体 bucket 绑定 CDN 自定义域名。核心产业带/工厂媒体使用 ADM-6；Payload-owned media 使用独立的 Payload session + 同源/CSRF 保护预签名链。两条链都必须由服务端生成环境限定路径，URL 有效期 5 分钟，只接受 JPEG/PNG/WebP、1 byte–10MB，并在 PUT 后以 R2 HEAD 复验 key 归属、存在性、MIME 与实际大小；客户端不得提交任意 objectKey、multipart/server upload 或 paste URL |
 | G-11 | 限流（P0）：匿名可访问的搜索与地图接口分别按真实客户端 IP 限制为 60 req/min/IP；只有 MAP-* 按 4.4 使用 Cloudflare 1 小时响应缓存，搜索不缓存。写接口按用户限流。返回 429 + `RATE_LIMITED` 错误码                                                            |
 
 ---
@@ -287,7 +289,7 @@ A-6 返回 `categories` / `clusters` / `factories` 三组、每组最多 5 项�
 - Cluster POST 必填 `slug,name,regionId,primaryCategoryId,categoryIds,centroid,summary,mainProducts`；可选/可空 `boundary,description,coverImageObjectKey,stats`。`categoryIds` 必须含 primaryCategoryId。
 - Factory POST 必填 `slug,name,regionId,categoryIds,address,location,mainProducts`；其余业务字段可选。PATCH 为相同字段的非空 partial。
 - 通用 PATCH 禁止客户端写 `status,publishedAt,verified,verifiedAt,lastVerifiedAt,verifiedBy`；这些只由 ADM-2/4/5 修改。
-- ADM-6 body 固定为 `{kind,entityId,fileName,contentType,contentLength}`；kind 为 `cluster-cover` / `factory-image`，类型仅 JPEG/PNG/WebP，声明大小为 1 byte–10MB。响应为 `{objectKey,uploadUrl,method:"PUT",headers:{"Content-Type"},expiresAt}`；URL 到期前按 bearer token 处理，上传后仍执行 G-10 的 HEAD 与引用复验。
+- ADM-6 body 固定为 `{kind,entityId,fileName,contentType,contentLength}`；kind 为 `cluster-cover` / `factory-image`，类型仅 JPEG/PNG/WebP，声明大小为 1 byte–10MB。响应为 `{objectKey,uploadUrl,method:"PUT",headers:{"Content-Type"},expiresAt}`；URL 到期前按 bearer token 处理，上传后仍执行 G-10 的 HEAD 与引用复验。ADM-6 只处理核心产业带/工厂媒体，不承载 Payload `media` 上传。
 
 **Clerk webhook：**A-11 对 raw body 完成 Svix 验签后，用 `type` 判别 `user.created` / `user.updated` / `user.deleted`，只校验同步 users 所需的 id、姓名和主邮箱字段；允许 Clerk 附加字段。Svix headers 单独校验，响应 `{processed,duplicate}`。
 
@@ -362,7 +364,7 @@ A-6 返回 `categories` / `clusters` / `factories` 三组、每组最多 5 项�
 
 **架构（G-9）**：Payload 只管理 articles / media / cms_users；产业带与工厂由 `/ops` 运营后台通过 Admin API（ADM-*）管理；Drizzle 是核心业务表唯一 Schema Owner。
 
-- F-7.1 Payload `articles`：title/slug/cover/body(richtext)/locale/关联 cluster id（存 id 引用，非 FK），路由 `/guides/[slug]`，SSR + SEO 同 F-2.2；文章内产业带引用渲染为卡片链接
+- F-7.1 Payload `articles`：`title`、唯一英文 `slug`、固定 `locale=en`、必填 `cover`、Lexical `body`、只读 `publishedAt`、timestamps 与 draft/version workflow。首次 publish 写入并保留 `publishedAt`；publish/unpublish/delete/slug 变化时 revalidate `/guides` 与新旧详情路径。正文 Cluster Card 只持久化 21 位 cluster ID，不复制 slug/name，不创建 Payload 到核心表的 relationship/FK；publish 时批量验证所有 ID 当前仍 published。`media` 要求英文 `alt`、`aiGenerated` 标记、只读唯一 `objectKey` 与上传元数据，被文章引用时禁止删除；上传遵守 G-10 的 Payload 专用链。`/guides` 与 `/guides/[slug]` 仅通过服务端 Local API 严格读取 `published + en`，SSR/ISR、SEO 同 F-2.2；详情正文每页只取一次 MAP-1 并按 ID 渲染卡片链接，后续 cluster unpublish 或 MAP 暂时失败时只显示本地化 unavailable，不泄露 draft，也不使文章失败。Payload REST `articles`/`media` 不向匿名用户开放
 - F-7.2 `/ops`（Next.js 路由组，admin role 可见）：clusters/factories 的列表、编辑表单（含地图选点组件写 centroid/location）、publish/unpublish、verify 操作、图片上传（ADM-6 预签名）。够用即可，不追求完善
 - F-7.3 发布动作触发 MAP-* 缓存失效
 

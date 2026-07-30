@@ -1,5 +1,6 @@
 export * from "./account-api.js";
 export * from "./admin-api.js";
+export * from "./cms-media.js";
 export * from "./core-data.js";
 export * from "./entities.js";
 export * from "./envelope.js";

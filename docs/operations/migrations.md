@@ -32,11 +32,16 @@ pnpm --filter @chinasupply/web cms:migrate:status
 pnpm --filter @chinasupply/web cms:migrate:create migration_name
 ```
 
-The CMS migration owns only `cms_users` and Payload internal tables. The core
-migration owns only the nine PRD core/association tables and uses the separate
+The CMS migration owns only `cms_users`, `media`, `articles`, `_articles_v`, and
+Payload internal tables/relations. The core migration owns only the nine PRD
+core/association tables and uses the separate
 `drizzle.__drizzle_migrations` journal. Neither owner may create, alter, or drop
 the other's tables. `push: false` is fixed in Payload configuration, and
-neither build nor application startup runs migrations.
+neither build nor application startup runs migrations. CMS migration-only
+configuration does not require or contact R2; the disabled adapter still
+inserts its schema fields through `alwaysInsertFields` so migrations match Web
+runtime configuration. The Payload CLI wrapper builds `@chinasupply/schemas`
+before loading the config, including in a clean migration-runner checkout.
 
 `.github/workflows/release-migrations.yml` is a reusable `workflow_call` workflow only. A deployment workflow must select one target, attach the matching GitHub Environment, and depend on a successful migration job before deploying that application. The CMS target obtains `DATABASE_URL` and `PAYLOAD_SECRET` from GitHub Environment secrets and `NEXT_PUBLIC_SITE_URL` from an Environment variable. It has no push, tag, manual, production, seed, or deploy trigger.
 

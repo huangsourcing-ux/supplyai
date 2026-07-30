@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const applicationDirectory = path.resolve(currentDirectory, "..");
+const workspaceDirectory = path.resolve(applicationDirectory, "../..");
 const localEnvironmentFile = path.join(applicationDirectory, ".env.local");
 
 if (existsSync(localEnvironmentFile)) {
@@ -13,18 +14,36 @@ if (existsSync(localEnvironmentFile)) {
 }
 
 const executable = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
-const result = spawnSync(
+const schemasBuild = spawnSync(
   executable,
-  ["exec", "payload", ...process.argv.slice(2)],
+  ["--filter", "@chinasupply/schemas", "build"],
   {
-    cwd: applicationDirectory,
+    cwd: workspaceDirectory,
     env: process.env,
     stdio: "inherit",
   },
 );
 
-if (result.error) {
-  throw result.error;
+if (schemasBuild.error) {
+  throw schemasBuild.error;
 }
 
-process.exitCode = result.status ?? 1;
+if (schemasBuild.status !== 0) {
+  process.exitCode = schemasBuild.status ?? 1;
+} else {
+  const result = spawnSync(
+    executable,
+    ["exec", "payload", ...process.argv.slice(2)],
+    {
+      cwd: applicationDirectory,
+      env: process.env,
+      stdio: "inherit",
+    },
+  );
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  process.exitCode = result.status ?? 1;
+}
