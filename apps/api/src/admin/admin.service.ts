@@ -1,5 +1,8 @@
 import {
   buildSearchText,
+  createAdminClusterBodySchema,
+  createAdminFactoryBodySchema,
+  createUploadPresignBodySchema,
   decodeCursor,
   encodeCursor,
   type GeoJsonMultiPolygon,
@@ -38,6 +41,7 @@ import {
   factoryCategories,
   regions,
 } from "../database/schema.js";
+import { MediaObjectStorageService } from "../media/media-object-storage.service.js";
 import { PublicMediaUrlService } from "../media/public-media-url.service.js";
 import {
   type AdminClusterListRow,
@@ -52,6 +56,9 @@ import {
 
 type GetAdminClustersQuery = z.output<typeof getAdminClustersQuerySchema>;
 type GetAdminFactoriesQuery = z.output<typeof getAdminFactoriesQuerySchema>;
+type CreateAdminClusterBody = z.output<typeof createAdminClusterBodySchema>;
+type CreateAdminFactoryBody = z.output<typeof createAdminFactoryBodySchema>;
+type CreateUploadPresignBody = z.output<typeof createUploadPresignBodySchema>;
 type UpdateAdminClusterBody = z.output<typeof updateAdminClusterBodySchema>;
 type UpdateAdminFactoryBody = z.output<typeof updateAdminFactoryBodySchema>;
 
@@ -114,6 +121,34 @@ function assertAllReferencesExist(
   }
 }
 
+function hasErrorCode(error: unknown, expectedCode: string): boolean {
+  let current = error;
+  for (let depth = 0; depth < 5; depth += 1) {
+    if (typeof current !== "object" || current === null) {
+      return false;
+    }
+
+    if ("code" in current && current.code === expectedCode) {
+      return true;
+    }
+
+    current = "cause" in current ? current.cause : undefined;
+  }
+
+  return false;
+}
+
+async function mapSlugConflict<T>(operation: () => Promise<T>): Promise<T> {
+  try {
+    return await operation();
+  } catch (error) {
+    if (hasErrorCode(error, "23505")) {
+      throw new BadRequestException("slug is already in use");
+    }
+    throw error;
+  }
+}
+
 const adminClusterSelection = {
   boundary: sql<GeoJsonMultiPolygon | null>`
     case
@@ -171,9 +206,220 @@ export class AdminService {
     @Inject(DatabaseService) private readonly database: DatabaseService,
     @Inject(PublicMediaUrlService)
     private readonly mediaUrls: PublicMediaUrlService,
+    @Inject(MediaObjectStorageService)
+    private readonly mediaObjects: MediaObjectStorageService,
     @Inject(MapCacheInvalidationService)
     private readonly mapCache: MapCacheInvalidationService,
   ) {}
+
+  async createCluster(input: CreateAdminClusterBody) {
+    if (input.coverImageObjectKey != null) {
+      throw new BadRequestException(
+        "Create the cluster before uploading its cover image",
+      );
+    }
+
+    const id = await mapSlugConflict(() =>
+      this.database.db.transaction(async (transaction) => {
+        const categoryRows = await transaction
+          .select({
+            aliases: categories.aliases,
+            id: categories.id,
+            name: categories.name,
+            parentId: categories.parentId,
+          })
+          .from(categories)
+          .where(inArray(categories.id, input.categoryIds));
+        assertAllReferencesExist(
+          input.categoryIds,
+          categoryRows.map((category) => category.id),
+          "categoryIds",
+        );
+
+        const primaryCategory = categoryRows.find(
+          (category) => category.id === input.primaryCategoryId,
+        );
+        if (primaryCategory === undefined) {
+          throw new BadRequestException(
+            "categoryIds must include primaryCategoryId",
+          );
+        }
+        if (primaryCategory.parentId !== null) {
+          throw new BadRequestException(
+            "primaryCategoryId must reference a root category",
+          );
+        }
+
+        const [region] = await transaction
+          .select({ id: regions.id })
+          .from(regions)
+          .where(eq(regions.id, input.regionId))
+          .limit(1);
+        if (region === undefined) {
+          throw new BadRequestException("regionId is unknown");
+        }
+
+        const orderedCategories = input.categoryIds.map((categoryId) => {
+          const category = categoryRows.find((row) => row.id === categoryId);
+          if (category === undefined) {
+            throw new BadRequestException("categoryIds is invalid");
+          }
+          return category;
+        });
+        const searchText = buildSearchText({
+          categories: orderedCategories,
+          kind: "cluster",
+          mainProducts: input.mainProducts,
+          name: input.name,
+          summary: input.summary,
+        });
+        const [created] = await transaction
+          .insert(clusters)
+          .values({
+            boundary: boundarySql(input.boundary ?? null),
+            centroid: input.centroid.coordinates,
+            coverImage: null,
+            description: input.description ?? null,
+            mainProducts: input.mainProducts,
+            name: input.name,
+            primaryCategoryId: input.primaryCategoryId,
+            regionId: input.regionId,
+            slug: input.slug,
+            stats: input.stats ?? null,
+            summary: input.summary,
+            ...searchText,
+          })
+          .returning({ id: clusters.id });
+        if (created === undefined) {
+          throw new Error("Cluster insert returned no row");
+        }
+
+        await transaction.insert(clusterCategories).values(
+          input.categoryIds.map((categoryId) => ({
+            categoryId,
+            clusterId: created.id,
+          })),
+        );
+        return created.id;
+      }),
+    );
+
+    return this.getCluster(id);
+  }
+
+  async createFactory(input: CreateAdminFactoryBody) {
+    if (input.images !== undefined && input.images.length > 0) {
+      throw new BadRequestException(
+        "Create the factory before uploading its images",
+      );
+    }
+
+    const id = await mapSlugConflict(() =>
+      this.database.db.transaction(async (transaction) => {
+        const categoryRows = await transaction
+          .select({
+            aliases: categories.aliases,
+            id: categories.id,
+            name: categories.name,
+          })
+          .from(categories)
+          .where(inArray(categories.id, input.categoryIds));
+        assertAllReferencesExist(
+          input.categoryIds,
+          categoryRows.map((category) => category.id),
+          "categoryIds",
+        );
+
+        const [region] = await transaction
+          .select({ id: regions.id })
+          .from(regions)
+          .where(eq(regions.id, input.regionId))
+          .limit(1);
+        if (region === undefined) {
+          throw new BadRequestException("regionId is unknown");
+        }
+
+        const clusterId = input.clusterId ?? null;
+        if (clusterId !== null) {
+          const [cluster] = await transaction
+            .select({ id: clusters.id })
+            .from(clusters)
+            .where(eq(clusters.id, clusterId))
+            .limit(1);
+          if (cluster === undefined) {
+            throw new BadRequestException("clusterId is unknown");
+          }
+        }
+
+        const orderedCategories = input.categoryIds.map((categoryId) => {
+          const category = categoryRows.find((row) => row.id === categoryId);
+          if (category === undefined) {
+            throw new BadRequestException("categoryIds is invalid");
+          }
+          return category;
+        });
+        const searchText = buildSearchText({
+          categories: orderedCategories,
+          kind: "factory",
+          mainProducts: input.mainProducts,
+          name: input.name,
+        });
+        const [created] = await transaction
+          .insert(factories)
+          .values({
+            address: input.address,
+            certifications: input.certifications ?? [],
+            clusterId,
+            contact: input.contact ?? null,
+            employeeRange: input.employeeRange ?? null,
+            establishedYear: input.establishedYear ?? null,
+            images: [],
+            location: input.location.coordinates,
+            locationGcj02: null,
+            mainProducts: input.mainProducts,
+            moq: input.moq ?? null,
+            name: input.name,
+            regionId: input.regionId,
+            slug: input.slug,
+            sourceName: input.sourceName ?? null,
+            sourceUrl: input.sourceUrl ?? null,
+            ...searchText,
+          })
+          .returning({ id: factories.id });
+        if (created === undefined) {
+          throw new Error("Factory insert returned no row");
+        }
+
+        await transaction.insert(factoryCategories).values(
+          input.categoryIds.map((categoryId) => ({
+            categoryId,
+            factoryId: created.id,
+          })),
+        );
+        return created.id;
+      }),
+    );
+
+    return this.getFactory(id);
+  }
+
+  async createUploadPresign(input: CreateUploadPresignBody) {
+    const table = input.kind === "cluster-cover" ? clusters : factories;
+    const [entity] = await this.database.db
+      .select({ id: table.id })
+      .from(table)
+      .where(eq(table.id, input.entityId))
+      .limit(1);
+    if (entity === undefined) {
+      throw new NotFoundException();
+    }
+
+    return this.mediaObjects.createPresignedUpload({
+      contentType: input.contentType,
+      entityId: input.entityId,
+      kind: input.kind,
+    });
+  }
 
   async listClusters(query: GetAdminClustersQuery) {
     const cursorCondition = adminCursorCondition(
@@ -233,111 +479,138 @@ export class AdminService {
   }
 
   async updateCluster(id: string, input: UpdateAdminClusterBody) {
-    await this.database.db.transaction(async (transaction) => {
-      const [current] = await transaction
-        .select(adminClusterSelection)
+    if (input.coverImageObjectKey != null) {
+      const [cluster] = await this.database.db
+        .select({ id: clusters.id })
         .from(clusters)
         .where(eq(clusters.id, id))
         .limit(1);
-      if (current === undefined) {
+      if (cluster === undefined) {
         throw new NotFoundException();
       }
+      await this.mediaObjects.assertValidReference({
+        entityId: id,
+        kind: "cluster-cover",
+        objectKey: input.coverImageObjectKey,
+      });
+    }
 
-      const currentCategoryRows = await transaction
-        .select({ id: clusterCategories.categoryId })
-        .from(clusterCategories)
-        .where(eq(clusterCategories.clusterId, id))
-        .orderBy(asc(clusterCategories.categoryId));
-      const categoryIds =
-        input.categoryIds ?? currentCategoryRows.map((row) => row.id);
-      const primaryCategoryId =
-        input.primaryCategoryId ?? current.primaryCategoryId;
-      if (!categoryIds.includes(primaryCategoryId)) {
-        throw new BadRequestException(
-          "categoryIds must include primaryCategoryId",
-        );
-      }
-
-      const categoryRows = await transaction
-        .select({
-          aliases: categories.aliases,
-          id: categories.id,
-          name: categories.name,
-        })
-        .from(categories)
-        .where(inArray(categories.id, categoryIds));
-      assertAllReferencesExist(
-        categoryIds,
-        categoryRows.map((category) => category.id),
-        "categoryIds",
-      );
-
-      const regionId = input.regionId ?? current.regionId;
-      const [region] = await transaction
-        .select({ id: regions.id })
-        .from(regions)
-        .where(eq(regions.id, regionId))
-        .limit(1);
-      if (region === undefined) {
-        throw new BadRequestException("regionId is unknown");
-      }
-
-      const name = input.name ?? current.name;
-      const mainProducts = input.mainProducts ?? current.mainProducts;
-      const summary = input.summary ?? current.summary;
-      const orderedCategories = categoryIds.map((categoryId) => {
-        const category = categoryRows.find((row) => row.id === categoryId);
-        if (category === undefined) {
-          throw new BadRequestException("categoryIds is invalid");
+    await mapSlugConflict(() =>
+      this.database.db.transaction(async (transaction) => {
+        const [current] = await transaction
+          .select(adminClusterSelection)
+          .from(clusters)
+          .where(eq(clusters.id, id))
+          .limit(1);
+        if (current === undefined) {
+          throw new NotFoundException();
         }
-        return category;
-      });
-      const searchText = buildSearchText({
-        categories: orderedCategories,
-        kind: "cluster",
-        mainProducts,
-        name,
-        summary,
-      });
-      const boundary =
-        input.boundary === undefined ? current.boundary : input.boundary;
 
-      await transaction
-        .update(clusters)
-        .set({
-          boundary: boundarySql(boundary),
-          centroid: input.centroid?.coordinates ?? current.centroid,
-          coverImage:
-            input.coverImageObjectKey === undefined
-              ? current.coverImage
-              : input.coverImageObjectKey,
-          description:
-            input.description === undefined
-              ? current.description
-              : input.description,
+        const currentCategoryRows = await transaction
+          .select({ id: clusterCategories.categoryId })
+          .from(clusterCategories)
+          .where(eq(clusterCategories.clusterId, id))
+          .orderBy(asc(clusterCategories.categoryId));
+        const categoryIds =
+          input.categoryIds ?? currentCategoryRows.map((row) => row.id);
+        const primaryCategoryId =
+          input.primaryCategoryId ?? current.primaryCategoryId;
+        if (!categoryIds.includes(primaryCategoryId)) {
+          throw new BadRequestException(
+            "categoryIds must include primaryCategoryId",
+          );
+        }
+
+        const categoryRows = await transaction
+          .select({
+            aliases: categories.aliases,
+            id: categories.id,
+            name: categories.name,
+            parentId: categories.parentId,
+          })
+          .from(categories)
+          .where(inArray(categories.id, categoryIds));
+        assertAllReferencesExist(
+          categoryIds,
+          categoryRows.map((category) => category.id),
+          "categoryIds",
+        );
+        const primaryCategory = categoryRows.find(
+          (category) => category.id === primaryCategoryId,
+        );
+        if (primaryCategory?.parentId !== null) {
+          throw new BadRequestException(
+            "primaryCategoryId must reference a root category",
+          );
+        }
+
+        const regionId = input.regionId ?? current.regionId;
+        const [region] = await transaction
+          .select({ id: regions.id })
+          .from(regions)
+          .where(eq(regions.id, regionId))
+          .limit(1);
+        if (region === undefined) {
+          throw new BadRequestException("regionId is unknown");
+        }
+
+        const name = input.name ?? current.name;
+        const mainProducts = input.mainProducts ?? current.mainProducts;
+        const summary = input.summary ?? current.summary;
+        const orderedCategories = categoryIds.map((categoryId) => {
+          const category = categoryRows.find((row) => row.id === categoryId);
+          if (category === undefined) {
+            throw new BadRequestException("categoryIds is invalid");
+          }
+          return category;
+        });
+        const searchText = buildSearchText({
+          categories: orderedCategories,
+          kind: "cluster",
           mainProducts,
           name,
-          primaryCategoryId,
-          regionId,
-          slug: input.slug ?? current.slug,
-          stats: input.stats === undefined ? current.stats : input.stats,
           summary,
-          ...searchText,
-          updatedAt: new Date(),
-        })
-        .where(eq(clusters.id, id));
+        });
+        const boundary =
+          input.boundary === undefined ? current.boundary : input.boundary;
 
-      if (input.categoryIds !== undefined) {
         await transaction
-          .delete(clusterCategories)
-          .where(eq(clusterCategories.clusterId, id));
-        await transaction
-          .insert(clusterCategories)
-          .values(
-            categoryIds.map((categoryId) => ({ categoryId, clusterId: id })),
-          );
-      }
-    });
+          .update(clusters)
+          .set({
+            boundary: boundarySql(boundary),
+            centroid: input.centroid?.coordinates ?? current.centroid,
+            coverImage:
+              input.coverImageObjectKey === undefined
+                ? current.coverImage
+                : input.coverImageObjectKey,
+            description:
+              input.description === undefined
+                ? current.description
+                : input.description,
+            mainProducts,
+            name,
+            primaryCategoryId,
+            regionId,
+            slug: input.slug ?? current.slug,
+            stats: input.stats === undefined ? current.stats : input.stats,
+            summary,
+            ...searchText,
+            updatedAt: new Date(),
+          })
+          .where(eq(clusters.id, id));
+
+        if (input.categoryIds !== undefined) {
+          await transaction
+            .delete(clusterCategories)
+            .where(eq(clusterCategories.clusterId, id));
+          await transaction
+            .insert(clusterCategories)
+            .values(
+              categoryIds.map((categoryId) => ({ categoryId, clusterId: id })),
+            );
+        }
+      }),
+    );
 
     return this.getCluster(id);
   }
@@ -408,126 +681,150 @@ export class AdminService {
   }
 
   async updateFactory(id: string, input: UpdateAdminFactoryBody) {
-    await this.database.db.transaction(async (transaction) => {
-      const [current] = await transaction
-        .select(adminFactorySelection)
+    if (input.images !== undefined && input.images.length > 0) {
+      const [factory] = await this.database.db
+        .select({ id: factories.id })
         .from(factories)
         .where(eq(factories.id, id))
         .limit(1);
-      if (current === undefined) {
+      if (factory === undefined) {
         throw new NotFoundException();
       }
 
-      const currentCategoryRows = await transaction
-        .select({ id: factoryCategories.categoryId })
-        .from(factoryCategories)
-        .where(eq(factoryCategories.factoryId, id))
-        .orderBy(asc(factoryCategories.categoryId));
-      const categoryIds =
-        input.categoryIds ?? currentCategoryRows.map((row) => row.id);
-      const categoryRows = await transaction
-        .select({
-          aliases: categories.aliases,
-          id: categories.id,
-          name: categories.name,
-        })
-        .from(categories)
-        .where(inArray(categories.id, categoryIds));
-      assertAllReferencesExist(
-        categoryIds,
-        categoryRows.map((category) => category.id),
-        "categoryIds",
-      );
-
-      const regionId = input.regionId ?? current.regionId;
-      const [region] = await transaction
-        .select({ id: regions.id })
-        .from(regions)
-        .where(eq(regions.id, regionId))
-        .limit(1);
-      if (region === undefined) {
-        throw new BadRequestException("regionId is unknown");
+      const objectKeys = new Set(input.images.map((image) => image.objectKey));
+      for (const objectKey of objectKeys) {
+        await this.mediaObjects.assertValidReference({
+          entityId: id,
+          kind: "factory-image",
+          objectKey,
+        });
       }
+    }
 
-      const clusterId =
-        input.clusterId === undefined ? current.clusterId : input.clusterId;
-      if (clusterId !== null) {
-        const [cluster] = await transaction
-          .select({ id: clusters.id })
-          .from(clusters)
-          .where(eq(clusters.id, clusterId))
+    await mapSlugConflict(() =>
+      this.database.db.transaction(async (transaction) => {
+        const [current] = await transaction
+          .select(adminFactorySelection)
+          .from(factories)
+          .where(eq(factories.id, id))
           .limit(1);
-        if (cluster === undefined) {
-          throw new BadRequestException("clusterId is unknown");
+        if (current === undefined) {
+          throw new NotFoundException();
         }
-      }
 
-      const name = input.name ?? current.name;
-      const mainProducts = input.mainProducts ?? current.mainProducts;
-      const orderedCategories = categoryIds.map((categoryId) => {
-        const category = categoryRows.find((row) => row.id === categoryId);
-        if (category === undefined) {
-          throw new BadRequestException("categoryIds is invalid");
+        const currentCategoryRows = await transaction
+          .select({ id: factoryCategories.categoryId })
+          .from(factoryCategories)
+          .where(eq(factoryCategories.factoryId, id))
+          .orderBy(asc(factoryCategories.categoryId));
+        const categoryIds =
+          input.categoryIds ?? currentCategoryRows.map((row) => row.id);
+        const categoryRows = await transaction
+          .select({
+            aliases: categories.aliases,
+            id: categories.id,
+            name: categories.name,
+          })
+          .from(categories)
+          .where(inArray(categories.id, categoryIds));
+        assertAllReferencesExist(
+          categoryIds,
+          categoryRows.map((category) => category.id),
+          "categoryIds",
+        );
+
+        const regionId = input.regionId ?? current.regionId;
+        const [region] = await transaction
+          .select({ id: regions.id })
+          .from(regions)
+          .where(eq(regions.id, regionId))
+          .limit(1);
+        if (region === undefined) {
+          throw new BadRequestException("regionId is unknown");
         }
-        return category;
-      });
-      const searchText = buildSearchText({
-        categories: orderedCategories,
-        kind: "factory",
-        mainProducts,
-        name,
-      });
 
-      await transaction
-        .update(factories)
-        .set({
-          address: input.address ?? current.address,
-          certifications: input.certifications ?? current.certifications,
-          clusterId,
-          contact:
-            input.contact === undefined ? current.contact : input.contact,
-          employeeRange:
-            input.employeeRange === undefined
-              ? current.employeeRange
-              : input.employeeRange,
-          establishedYear:
-            input.establishedYear === undefined
-              ? current.establishedYear
-              : input.establishedYear,
-          images: input.images ?? current.images,
-          location: input.location?.coordinates ?? current.location,
-          locationGcj02: input.location === undefined ? undefined : null,
+        const clusterId =
+          input.clusterId === undefined ? current.clusterId : input.clusterId;
+        if (clusterId !== null) {
+          const [cluster] = await transaction
+            .select({ id: clusters.id })
+            .from(clusters)
+            .where(eq(clusters.id, clusterId))
+            .limit(1);
+          if (cluster === undefined) {
+            throw new BadRequestException("clusterId is unknown");
+          }
+        }
+
+        const name = input.name ?? current.name;
+        const mainProducts = input.mainProducts ?? current.mainProducts;
+        const orderedCategories = categoryIds.map((categoryId) => {
+          const category = categoryRows.find((row) => row.id === categoryId);
+          if (category === undefined) {
+            throw new BadRequestException("categoryIds is invalid");
+          }
+          return category;
+        });
+        const searchText = buildSearchText({
+          categories: orderedCategories,
+          kind: "factory",
           mainProducts,
-          moq: input.moq === undefined ? current.moq : input.moq,
           name,
-          regionId,
-          slug: input.slug ?? current.slug,
-          sourceName:
-            input.sourceName === undefined
-              ? current.sourceName
-              : input.sourceName,
-          sourceUrl:
-            input.sourceUrl === undefined ? current.sourceUrl : input.sourceUrl,
-          lastVerifiedAt: null,
-          verified: false,
-          verifiedAt: null,
-          verifiedBy: null,
-          ...searchText,
-          updatedAt: new Date(),
-        })
-        .where(eq(factories.id, id));
+        });
 
-      if (input.categoryIds !== undefined) {
         await transaction
-          .delete(factoryCategories)
-          .where(eq(factoryCategories.factoryId, id));
-        await transaction
-          .insert(factoryCategories)
-          .values(
-            categoryIds.map((categoryId) => ({ categoryId, factoryId: id })),
-          );
-      }
-    });
+          .update(factories)
+          .set({
+            address: input.address ?? current.address,
+            certifications: input.certifications ?? current.certifications,
+            clusterId,
+            contact:
+              input.contact === undefined ? current.contact : input.contact,
+            employeeRange:
+              input.employeeRange === undefined
+                ? current.employeeRange
+                : input.employeeRange,
+            establishedYear:
+              input.establishedYear === undefined
+                ? current.establishedYear
+                : input.establishedYear,
+            images: input.images ?? current.images,
+            location: input.location?.coordinates ?? current.location,
+            locationGcj02: input.location === undefined ? undefined : null,
+            mainProducts,
+            moq: input.moq === undefined ? current.moq : input.moq,
+            name,
+            regionId,
+            slug: input.slug ?? current.slug,
+            sourceName:
+              input.sourceName === undefined
+                ? current.sourceName
+                : input.sourceName,
+            sourceUrl:
+              input.sourceUrl === undefined
+                ? current.sourceUrl
+                : input.sourceUrl,
+            lastVerifiedAt: null,
+            verified: false,
+            verifiedAt: null,
+            verifiedBy: null,
+            ...searchText,
+            updatedAt: new Date(),
+          })
+          .where(eq(factories.id, id));
+
+        if (input.categoryIds !== undefined) {
+          await transaction
+            .delete(factoryCategories)
+            .where(eq(factoryCategories.factoryId, id));
+          await transaction
+            .insert(factoryCategories)
+            .values(
+              categoryIds.map((categoryId) => ({ categoryId, factoryId: id })),
+            );
+        }
+      }),
+    );
 
     return this.getFactory(id);
   }

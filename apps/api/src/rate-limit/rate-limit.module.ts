@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ThrottlerModule } from "@nestjs/throttler";
 
+import { AdminThrottlerGuard } from "./admin-throttler.guard.js";
 import { ClientIpThrottlerGuard } from "./client-ip-throttler.guard.js";
 import { PUBLIC_READ_RATE_LIMIT } from "./rate-limit.constants.js";
 import { RateLimitStorageModule } from "./rate-limit-storage.module.js";
@@ -8,7 +9,12 @@ import { RedisThrottlerStorage } from "./redis-throttler-storage.js";
 import { UserThrottlerGuard } from "./user-throttler.guard.js";
 
 @Module({
-  exports: [ClientIpThrottlerGuard, RateLimitStorageModule, UserThrottlerGuard],
+  exports: [
+    AdminThrottlerGuard,
+    ClientIpThrottlerGuard,
+    RateLimitStorageModule,
+    UserThrottlerGuard,
+  ],
   imports: [
     RateLimitStorageModule,
     ThrottlerModule.forRootAsync({
@@ -20,6 +26,6 @@ import { UserThrottlerGuard } from "./user-throttler.guard.js";
       }),
     }),
   ],
-  providers: [ClientIpThrottlerGuard, UserThrottlerGuard],
+  providers: [AdminThrottlerGuard, ClientIpThrottlerGuard, UserThrottlerGuard],
 })
 export class RateLimitModule {}

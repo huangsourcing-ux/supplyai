@@ -419,7 +419,13 @@ describe.sequential("public catalog API", () => {
       DATABASE_URL: databaseUrl,
       PORT: "3001",
       REDIS_URL: redisUrl,
+      R2_ACCOUNT_ID: "local-minio-account",
+      R2_ACCESS_KEY_ID: "local-minio-access",
       R2_CDN_BASE_URL: mediaBaseUrl,
+      R2_ENDPOINT: "http://127.0.0.1:9000",
+      R2_MEDIA_BUCKET: "chinasupply-test-media",
+      R2_PREFIX: "dev",
+      R2_SECRET_ACCESS_KEY: "local-minio-secret",
       WEB_ORIGIN: "http://localhost:3000",
     });
 

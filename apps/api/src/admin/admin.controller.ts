@@ -1,4 +1,7 @@
 import {
+  createAdminClusterBodySchema,
+  createAdminFactoryBodySchema,
+  createUploadPresignBodySchema,
   getAdminClustersQuerySchema,
   getAdminFactoriesQuerySchema,
   updateAdminClusterBodySchema,
@@ -25,9 +28,13 @@ import type { z } from "zod";
 
 import { AdminAuthGuard } from "../auth/admin-auth.guard.js";
 import { getRouteContract } from "../openapi/route-contracts.js";
+import { AdminThrottlerGuard } from "../rate-limit/admin-throttler.guard.js";
 import { AdminService } from "./admin.service.js";
 
 const contracts = {
+  createCluster: getRouteContract("createAdminCluster"),
+  createFactory: getRouteContract("createAdminFactory"),
+  createUploadPresign: getRouteContract("createUploadPresign"),
   getCluster: getRouteContract("getAdminCluster"),
   getClusters: getRouteContract("getAdminClusters"),
   getFactories: getRouteContract("getAdminFactories"),
@@ -53,6 +60,9 @@ function requireDto(
 
 const GetAdminClustersQueryDto = contracts.getClusters.nestDtos.query;
 const GetAdminFactoriesQueryDto = contracts.getFactories.nestDtos.query;
+const CreateAdminClusterBodyDto = contracts.createCluster.nestDtos.body;
+const CreateAdminFactoryBodyDto = contracts.createFactory.nestDtos.body;
+const CreateUploadPresignBodyDto = contracts.createUploadPresign.nestDtos.body;
 const GetAdminClusterParamsDto = requireDto(
   contracts.getCluster.nestDtos.params,
   "getAdminCluster",
@@ -95,6 +105,9 @@ const VerifyAdminFactoryParamsDto = requireDto(
 if (
   GetAdminClustersQueryDto === undefined ||
   GetAdminFactoriesQueryDto === undefined ||
+  CreateAdminClusterBodyDto === undefined ||
+  CreateAdminFactoryBodyDto === undefined ||
+  CreateUploadPresignBodyDto === undefined ||
   UpdateAdminClusterBodyDto === undefined ||
   UpdateAdminFactoryBodyDto === undefined
 ) {
@@ -138,6 +151,16 @@ export class AdminClustersController {
     return this.admin.listClusters(query);
   }
 
+  @Post()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
+  create(
+    @Body(new ZodValidationPipe(CreateAdminClusterBodyDto))
+    body: z.output<typeof createAdminClusterBodySchema>,
+  ) {
+    return this.admin.createCluster(body);
+  }
+
   @Get(":id")
   get(
     @Param(new ZodValidationPipe(GetAdminClusterParamsDto))
@@ -147,6 +170,7 @@ export class AdminClustersController {
   }
 
   @Patch(":id")
+  @UseGuards(AdminThrottlerGuard)
   update(
     @Param(new ZodValidationPipe(UpdateAdminClusterParamsDto))
     params: IdParams,
@@ -158,6 +182,7 @@ export class AdminClustersController {
 
   @Post(":id/publish")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
   publish(
     @Param(new ZodValidationPipe(PublishAdminClusterParamsDto))
     params: IdParams,
@@ -168,6 +193,7 @@ export class AdminClustersController {
 
   @Post(":id/unpublish")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
   unpublish(
     @Param(new ZodValidationPipe(UnpublishAdminClusterParamsDto))
     params: IdParams,
@@ -190,6 +216,16 @@ export class AdminFactoriesController {
     return this.admin.listFactories(query);
   }
 
+  @Post()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
+  create(
+    @Body(new ZodValidationPipe(CreateAdminFactoryBodyDto))
+    body: z.output<typeof createAdminFactoryBodySchema>,
+  ) {
+    return this.admin.createFactory(body);
+  }
+
   @Get(":id")
   get(
     @Param(new ZodValidationPipe(GetAdminFactoryParamsDto))
@@ -199,6 +235,7 @@ export class AdminFactoriesController {
   }
 
   @Patch(":id")
+  @UseGuards(AdminThrottlerGuard)
   update(
     @Param(new ZodValidationPipe(UpdateAdminFactoryParamsDto))
     params: IdParams,
@@ -210,6 +247,7 @@ export class AdminFactoriesController {
 
   @Post(":id/verify")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
   verify(
     @Param(new ZodValidationPipe(VerifyAdminFactoryParamsDto))
     params: IdParams,
@@ -223,6 +261,7 @@ export class AdminFactoriesController {
 
   @Post(":id/publish")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
   publish(
     @Param(new ZodValidationPipe(PublishAdminFactoryParamsDto))
     params: IdParams,
@@ -233,11 +272,28 @@ export class AdminFactoriesController {
 
   @Post(":id/unpublish")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
   unpublish(
     @Param(new ZodValidationPipe(UnpublishAdminFactoryParamsDto))
     params: IdParams,
     @Req() request: FastifyRequest,
   ) {
     return this.admin.unpublishFactory(params.id, getRequestOrigin(request));
+  }
+}
+
+@Controller("admin/uploads")
+@UseGuards(AdminAuthGuard)
+export class AdminUploadsController {
+  constructor(@Inject(AdminService) private readonly admin: AdminService) {}
+
+  @Post("presign")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminThrottlerGuard)
+  createPresign(
+    @Body(new ZodValidationPipe(CreateUploadPresignBodyDto))
+    body: z.output<typeof createUploadPresignBodySchema>,
+  ) {
+    return this.admin.createUploadPresign(body);
   }
 }
