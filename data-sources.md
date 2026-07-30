@@ -119,7 +119,13 @@ SOP，批准保存、verify，并在状态规则允许时 publish。以下官方
 | `yiwu-yayu-textile`           | https://ywyayu.com/contact/7；https://ywyayu.com/aboutus.aspx?classid=15 | Phone `+86 17280940617`、Email `yayuexport@163.com`、WeChat `yayutextile`；纺织制造/出口及毛巾、毯子等产品证据 |
 
 写入后两条 A-5 公开记录均为 `published + verified`。Jinkanghong 保留既有获授权
-图片引用；M5-T2 浏览器上传链的独立素材授权、对象摘要与 CDN 复验记录见
+图片引用，并新增一张仅用于展示、明确标注为 AI-generated illustration 的家纺生产
+插图；该图不参与企业、厂区、制造能力、产品或 SOP 事实证明。canonical `/ops`
+上传得到 objectKey
+`staging/factories/7xkIy5So-yz4eUZodAVMj/image-rIajW0XCVXKcAnfkPoOf2.png`，
+CDN PNG 为 1448 × 1086、2697397 bytes，SHA-256
+`bb93082788c74adf638a39505a2c788625178f455e436039dc092a5bf2614504`，与生成源
+逐字节一致。完整浏览器链和非敏感 CDN 证据见
 [`2026-07-30-m5-t2-acceptance.md`](docs/operations/reviews/staging/2026-07-30-m5-t2-acceptance.md)。
 
 ## 合成测试数据

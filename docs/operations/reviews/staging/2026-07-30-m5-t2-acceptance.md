@@ -1,6 +1,6 @@
 # M5-T2 canonical staging acceptance
 
-Status: pending completion of the canonical browser upload.
+Status: complete.
 
 ## Release under review
 
@@ -86,9 +86,32 @@ review and the following generated asset only for gallery presentation:
 - Prompt constraints: modern home-textile production; no specific real facility,
   brand, logo, text, flag, watermark, or identifiable real person
 
-Pending browser reconnection: record the new object key (never the presigned
-URL), presign/PUT/PATCH/HEAD results, `/ops` preview, and A-5/CDN equality after
-the canonical upload succeeds.
+At 2026-07-30 03:36 EDT, the authenticated canonical `/ops` page selected the
+generated PNG through the native browser file picker and completed ADM-6
+presign, a credential-free R2 PUT, object HEAD validation, and the factory media
+PATCH. The presigned URL, Clerk token, cookie, and R2 credential were not
+recorded. Non-sensitive results:
+
+- objectKey:
+  `staging/factories/7xkIy5So-yz4eUZodAVMj/image-rIajW0XCVXKcAnfkPoOf2.png`
+- `/ops` appended the image with the intended English and Chinese alt text.
+- The media PATCH changed Jinkanghong from `published + verified` to
+  `published + unverified`, exposed the independent-review acknowledgement,
+  and the Owner's prior explicit SOP statement authorized acknowledgement and
+  Verify. The factory then returned to `published + verified`.
+- The `/ops` `next/image` preview completed with a natural rendered size of
+  256 × 192 and used the new CDN URL; the browser recorded zero console errors.
+  Existing Clerk-development-key and MapLibre missing-sprite warnings were not
+  upload failures.
+- Fresh anonymous A-5 returned HTTP 200, `verified: true`, both images and the
+  approved contact object. It exposed no `objectKey` field.
+- New CDN URL:
+  `https://cdn-staging.chinasupply.ai/staging/factories/7xkIy5So-yz4eUZodAVMj/image-rIajW0XCVXKcAnfkPoOf2.png`
+- CDN HEAD returned HTTP 200, `Content-Type: image/png`,
+  `Content-Length: 2697397`, and `Last-Modified: Thu, 30 Jul 2026 07:36:56 GMT`.
+- A fresh CDN GET was PNG 1448 × 1086 RGB, 2697397 bytes. Its SHA-256 was
+  `bb93082788c74adf638a39505a2c788625178f455e436039dc092a5bf2614504`,
+  byte-for-byte identical to the generated source.
 
 ## Mobile media and contact rerun
 
@@ -120,5 +143,7 @@ the canonical upload succeeds.
 
 ## Closure decision
 
-Do not check M5-T2 yet. The canonical browser upload remains the only open
-acceptance gate. No production operation was performed.
+All approved M5-T2 implementation and canonical staging gates are complete.
+The development-plan checkbox may be checked and Next Action may advance to
+M5-T3. No production operation, SQL/seed/import/temporary staging write, or
+synthetic staging entity was used.

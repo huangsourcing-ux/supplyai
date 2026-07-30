@@ -1,7 +1,6 @@
 # M5-T2 `/ops` enhancements and staging acceptance
 
-Status: implementation complete; canonical staging acceptance has one remaining
-authorized browser-upload gate.
+Status: implementation and canonical staging acceptance complete.
 
 ## Implemented scope
 
@@ -21,7 +20,7 @@ This implementation does not change public APIs, Zod schemas, OpenAPI, generated
 
 ## Canonical staging gate
 
-M5-T2 remains incomplete until the implementation PR is merged and deployed to canonical staging. The acceptance must then be recorded in a separate PR created from the resulting `main`.
+M5-T2 completion required the implementation PR to be merged and deployed to canonical staging, followed by a separate acceptance PR created from the resulting `main`.
 
 The acceptance PR must record all of the following without using SQL, seed data, fixtures, or temporary scripts:
 
@@ -46,5 +45,12 @@ Jinkanghong and Yayu are now `published + verified` with the approved contacts.
 On 2026-07-30 the Owner revised the image rule to make generated display imagery
 the default. The selected Jinkanghong image is therefore an Owner-approved,
 explicitly labeled AI illustration and is not used as manufacturing or SOP
-evidence. M5-T2 remains unchecked only until that file completes the real
-canonical browser upload and CDN checks.
+evidence.
+
+The canonical `/ops` browser completed presign → credential-free R2 PUT →
+PATCH/HEAD, appended bilingual alt text, displayed the image through
+`next/image`, reset Jinkanghong to unverified, and restored it to verified only
+after the approved reviewer acknowledgement. Anonymous A-5 and CDN HEAD/GET
+confirmed the public image, exact MIME/byte count/SHA-256 equality, and absence
+of public objectKey exposure. The complete non-sensitive evidence is in the
+linked staging review; M5-T2 is closed and Next Action is M5-T3.

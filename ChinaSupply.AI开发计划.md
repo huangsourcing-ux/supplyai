@@ -1,6 +1,6 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.6** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M5-T2** ｜ 日期：2026-07-30
+> 版本：**v1.6** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M5-T3** ｜ 日期：2026-07-30
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.5 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
@@ -164,7 +164,7 @@ chinasupply/
 ## M5 内容、数据增强与上线加固（预计 2 周）
 
 - [x] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。验收须以获授权真实图片完成 presign→PUT→HEAD→PATCH→A-5 CDN URL 全链路，不得用 fixture 冒充上传链。**实现 PR #84 已从 main commit `f272747b848f7c4aeaed4558a69eb4b436158bff` 通过 CI、CMS/Core migration、Staging Release Gate 与 Railway 部署；Owner 于 2026-07-29 直接提供并授权真实 JPEG，canonical staging 已完成 ADM-6 presign → PUT → PATCH/HEAD → `/ops` 重新 verify → A-5/CDN，公开响应无 `objectKey` 字段，CDN Content-Type/字节数及下载 SHA-256 均与源图一致。证据见 `docs/operations/m5-t1-admin-uploads.md`；Next Action 推进到 M5-T2。**
-- [ ] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）M5-T1 完成后，通过 `/ops` 对含 Owner 批准展示图及经 SOP 审核 Phone/Email/WeChat 的 staging 工厂完成预览、verify、publish，并复跑 M4-T2c 图片/联系方式分支；展示图可按 v1.6 使用明确标注、不承担事实证明的 AI 生成插图，Phone 另由人工在 iOS/Android 验证系统拨号器接收规范化号码。
+- [x] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）**实现 PR #86 已以 exact commit `5bebce485bb96a4a924f66dbd495d2bf102c225b` 合并并部署 canonical staging；已登录 `/ops` 通过新建入口、WGS-84 地图点击/拖拽与手工坐标七位小数同步、attribution 和完整媒体管理检查。Owner 独立 SOP 确认后，仅通过 `/ops` 写入并核验 Jinkanghong/Yayu 的 Phone/Email/WeChat；两条记录均为 `published + verified`。Owner 批准的 AI 展示图完成浏览器 presign → R2 PUT → PATCH/HEAD → 自动重置 verification → reviewer acknowledgement/Verify → `/ops` `next/image` 预览 → A-5/CDN；公开响应不含 objectKey，CDN MIME、字节数和 SHA-256 与源图一致。iOS Simulator 与 Android Emulator 已分别复跑图片、Phone/Email/WeChat、号码规范化和复制分支；iOS LaunchServices 收到两条精确 `tel:` URL（Simulator 无电话 handler），Android Google Dialer 实际收到并显示两条号码。未创建 synthetic staging 实体、未使用 SQL/seed/临时写脚本、未触及 production；证据见 `docs/operations/reviews/staging/2026-07-30-m5-t2-acceptance.md`。Next Action 推进到 M5-T3。**
 - [ ] **M5-T3 搜索列联动**：类目的 name/aliases 修改后触发 BullMQ `regenerate:search-text` 更新关联产业带与工厂（PRD 3.8）；publish/unpublish 的 MAP purge 已由 M2-T6 前置交付。
 - [ ] **M5-T4 Payload 文章**：F-7.1 + `/guides`（F-10.2）+ 文章内产业带卡片。
 - [ ] **M5-T5 导入增强**：`geocode:factories`（高德 + 转换 + verified=false）。（批量图片与任务监控告警超出 PRD，移入 P1。）
