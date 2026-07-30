@@ -1,6 +1,6 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.5** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M5-T1** ｜ 日期：2026-07-29
+> 版本：**v1.5** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M5-T2** ｜ 日期：2026-07-29
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.5 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
@@ -162,7 +162,7 @@ chinasupply/
 
 ## M5 内容、数据增强与上线加固（预计 2 周）
 
-- [ ] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。验收须以获授权真实图片完成 presign→PUT→HEAD→PATCH→A-5 CDN URL 全链路，不得用 fixture 冒充上传链。
+- [x] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。验收须以获授权真实图片完成 presign→PUT→HEAD→PATCH→A-5 CDN URL 全链路，不得用 fixture 冒充上传链。**实现 PR #84 已从 main commit `f272747b848f7c4aeaed4558a69eb4b436158bff` 通过 CI、CMS/Core migration、Staging Release Gate 与 Railway 部署；Owner 于 2026-07-29 直接提供并授权真实 JPEG，canonical staging 已完成 ADM-6 presign → PUT → PATCH/HEAD → `/ops` 重新 verify → A-5/CDN，公开响应无 `objectKey` 字段，CDN Content-Type/字节数及下载 SHA-256 均与源图一致。证据见 `docs/operations/m5-t1-admin-uploads.md`；Next Action 推进到 M5-T2。**
 - [ ] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）M5-T1 完成后，通过 `/ops` 对含获授权图片及经 SOP 审核 Phone/Email/WeChat 的 staging 工厂完成预览、verify、publish，并复跑 M4-T2c 图片/联系方式分支；Phone 另由人工在 iOS/Android 验证系统拨号器接收规范化号码。
 - [ ] **M5-T3 搜索列联动**：类目的 name/aliases 修改后触发 BullMQ `regenerate:search-text` 更新关联产业带与工厂（PRD 3.8）；publish/unpublish 的 MAP purge 已由 M2-T6 前置交付。
 - [ ] **M5-T4 Payload 文章**：F-7.1 + `/guides`（F-10.2）+ 文章内产业带卡片。
