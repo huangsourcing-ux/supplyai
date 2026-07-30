@@ -34,6 +34,7 @@ function request(body: unknown, origin = "https://staging.chinasupply.ai") {
 
 const validBody = {
   collectionSlug: "media",
+  docPrefix: "articles",
   filename: "cover.webp",
   filesize: 1234,
   mimeType: "image/webp",
@@ -66,7 +67,7 @@ describe("CMS media presign route", () => {
     [{ ...validBody, mimeType: "image/gif" }, "wrong MIME"],
     [{ ...validBody, filesize: 0 }, "zero bytes"],
     [{ ...validBody, filesize: 10 * 1024 * 1024 + 1 }, "oversize"],
-    [{ ...validBody, docPrefix: "production/articles" }, "client path"],
+    [{ ...validBody, docPrefix: "production/articles" }, "wrong prefix"],
   ])("rejects %s (%s)", async (body, _label) => {
     expect((await POST(request(body))).status).toBe(400);
     expect(mocks.createUpload).not.toHaveBeenCalled();
