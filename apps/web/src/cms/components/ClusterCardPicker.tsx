@@ -14,7 +14,7 @@ interface ClusterOption {
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const clusterApiUrl = apiBaseUrl
-  ? `${apiBaseUrl.replace(/\/+$/u, "")}/map/clusters`
+  ? `${apiBaseUrl.replace(/\/+$/u, "")}/map/clusters/points`
   : null;
 const messages = enMessages.Cms.clusterPicker;
 
