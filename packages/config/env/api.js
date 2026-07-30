@@ -44,6 +44,16 @@ const privateObjectStorageShape = {
   R2_ENDPOINT: networkUrlSchema.optional(),
 };
 
+const publicMediaStorageShape = {
+  APP_ENV: deploymentEnvironmentSchema,
+  R2_ACCOUNT_ID: secretSchema,
+  R2_ACCESS_KEY_ID: secretSchema,
+  R2_SECRET_ACCESS_KEY: secretSchema,
+  R2_MEDIA_BUCKET: z.string().min(3),
+  R2_PREFIX: z.string(),
+  R2_ENDPOINT: networkUrlSchema.optional(),
+};
+
 /** @type {readonly ["DATABASE_URL", "REDIS_URL"]} */
 const remoteConnectionFields = ["DATABASE_URL", "REDIS_URL"];
 
@@ -77,6 +87,14 @@ const privateObjectStorageSecretFields = [
   "R2_ACCESS_KEY_ID",
   "R2_SECRET_ACCESS_KEY",
   "R2_PRIVATE_BUCKET",
+];
+
+/** @type {readonly ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_MEDIA_BUCKET"]} */
+const publicMediaStorageSecretFields = [
+  "R2_ACCOUNT_ID",
+  "R2_ACCESS_KEY_ID",
+  "R2_SECRET_ACCESS_KEY",
+  "R2_MEDIA_BUCKET",
 ];
 
 export const apiRuntimeEnvSchema = z
@@ -280,6 +298,29 @@ export const privateObjectStorageEnvSchema = z
     }
   });
 
+export const publicMediaStorageEnvSchema = z
+  .object(publicMediaStorageShape)
+  .superRefine((environment, context) => {
+    requireR2Prefix(environment.R2_PREFIX, environment.APP_ENV, context);
+
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.R2_ENDPOINT !== undefined
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["R2_ENDPOINT"],
+        message: "may only override the Cloudflare endpoint locally",
+      });
+    }
+
+    if (environment.APP_ENV !== "local") {
+      for (const field of publicMediaStorageSecretFields) {
+        rejectPlaceholder(environment[field], field, context);
+      }
+    }
+  });
+
 export const importCliEnvSchema = privateObjectStorageEnvSchema.and(
   z.object({
     REDIS_URL: networkUrlSchema,
@@ -334,6 +375,18 @@ export function parsePrivateObjectStorageEnv(source) {
     privateObjectStorageEnvSchema,
     source,
     "Private object storage",
+  );
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof publicMediaStorageEnvSchema>}
+ */
+export function parsePublicMediaStorageEnv(source) {
+  return parseEnvironment(
+    publicMediaStorageEnvSchema,
+    source,
+    "Public media storage",
   );
 }
 

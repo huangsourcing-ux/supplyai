@@ -12,6 +12,7 @@ import {
   parseApiRuntimeEnv,
   parseImportCliEnv,
   parsePrivateObjectStorageEnv,
+  parsePublicMediaStorageEnv,
   parseSeedCliEnv,
 } from "../env/api.js";
 import { parseMobileEnv } from "../env/mobile.js";
@@ -115,6 +116,30 @@ test("private R2 endpoint overrides are local-only", async () => {
         R2_ACCESS_KEY_ID: "real-staging-access",
         R2_SECRET_ACCESS_KEY: "real-staging-secret",
         R2_PRIVATE_BUCKET: "chinasupply-staging",
+        R2_ENDPOINT: "https://minio.example.test",
+      }),
+    /R2_ENDPOINT/,
+  );
+});
+
+test("public media R2 validation is scoped and endpoint overrides are local-only", async () => {
+  const api = await readExample("apps/api/.env.example");
+  assert.equal(
+    parsePublicMediaStorageEnv({
+      ...api,
+      R2_ENDPOINT: "http://127.0.0.1:9000",
+    }).R2_MEDIA_BUCKET,
+    api.R2_MEDIA_BUCKET,
+  );
+  assert.throws(
+    () =>
+      parsePublicMediaStorageEnv({
+        APP_ENV: "staging",
+        R2_PREFIX: "staging",
+        R2_ACCOUNT_ID: "real-staging-account",
+        R2_ACCESS_KEY_ID: "real-staging-access",
+        R2_SECRET_ACCESS_KEY: "real-staging-secret",
+        R2_MEDIA_BUCKET: "chinasupply-staging-media",
         R2_ENDPOINT: "https://minio.example.test",
       }),
     /R2_ENDPOINT/,
