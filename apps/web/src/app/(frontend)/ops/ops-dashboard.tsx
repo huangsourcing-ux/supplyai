@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  createAdminCluster,
+  createAdminFactory,
   getAdminCluster,
   getAdminClusters,
   getAdminFactories,
@@ -12,6 +14,8 @@ import {
   updateAdminCluster,
   updateAdminFactory,
   verifyAdminFactory,
+  type CreateAdminClusterBody,
+  type CreateAdminFactoryBody,
   type GetAdminCluster200Data,
   type GetAdminClusters200DataItem,
   type GetAdminFactories200DataItem,
@@ -26,10 +30,18 @@ import React from "react";
 import { useCallback, useState } from "react";
 
 import {
+  buildClusterCreate,
   buildClusterUpdate,
+  buildFactoryCreate,
   buildFactoryUpdate,
   serializeProducts,
 } from "./ops-form-data";
+import {
+  ClusterMediaEditor,
+  FactoryMediaEditor,
+  type OpsMediaLabels,
+} from "./ops-media-editor";
+import { OpsPointPicker, type OpsPointPickerLabels } from "./ops-point-picker";
 import styles from "./ops-dashboard.module.css";
 
 export interface OpsLabels {
@@ -70,6 +82,11 @@ export interface OpsLabels {
   formError: string;
   instructions: string;
   loading: string;
+  map: Omit<OpsPointPickerLabels, "latitude" | "longitude">;
+  media: OpsMediaLabels;
+  newCluster: string;
+  newFactory: string;
+  newRecord: string;
   noSelection: string;
   publish: string;
   publishingBlocked: string;
@@ -85,12 +102,19 @@ export interface OpsLabels {
   verificationReset: string;
   verified: string;
   verify: string;
+  uploadAfterCreate: string;
 }
 
 type EntitySelection =
-  { id: string; kind: "cluster" } | { id: string; kind: "factory" };
+  | { id: string | null; kind: "cluster" }
+  | {
+      id: string | null;
+      kind: "factory";
+    };
 
 type OpsMutation =
+  | { body: CreateAdminClusterBody; type: "createCluster" }
+  | { body: CreateAdminFactoryBody; type: "createFactory" }
   | { body: UpdateAdminClusterBody; id: string; type: "updateCluster" }
   | { body: UpdateAdminFactoryBody; id: string; type: "updateFactory" }
   | {
@@ -159,8 +183,19 @@ export function OpsEntityLists({
     <div className={styles.lists}>
       <section aria-labelledby="ops-clusters-heading">
         <div className={styles.listHeading}>
-          <h2 id="ops-clusters-heading">{labels.clusterList}</h2>
-          <span>{translate("clusterCount", { count: clusters.length })}</span>
+          <div>
+            <h2 id="ops-clusters-heading">{labels.clusterList}</h2>
+            <span>{translate("clusterCount", { count: clusters.length })}</span>
+          </div>
+          <button
+            aria-pressed={
+              selection?.kind === "cluster" && selection.id === null
+            }
+            onClick={() => onSelect({ id: null, kind: "cluster" })}
+            type="button"
+          >
+            {labels.newCluster}
+          </button>
         </div>
         {clusters.length === 0 ? (
           <p className={styles.empty}>{labels.emptyList}</p>
@@ -189,8 +224,21 @@ export function OpsEntityLists({
 
       <section aria-labelledby="ops-factories-heading">
         <div className={styles.listHeading}>
-          <h2 id="ops-factories-heading">{labels.factoryList}</h2>
-          <span>{translate("factoryCount", { count: factories.length })}</span>
+          <div>
+            <h2 id="ops-factories-heading">{labels.factoryList}</h2>
+            <span>
+              {translate("factoryCount", { count: factories.length })}
+            </span>
+          </div>
+          <button
+            aria-pressed={
+              selection?.kind === "factory" && selection.id === null
+            }
+            onClick={() => onSelect({ id: null, kind: "factory" })}
+            type="button"
+          >
+            {labels.newFactory}
+          </button>
         </div>
         {factories.length === 0 ? (
           <p className={styles.empty}>{labels.emptyList}</p>
@@ -306,6 +354,14 @@ function FormError({ children }: Readonly<{ children: React.ReactNode }>) {
   );
 }
 
+function pointPickerLabels(labels: OpsLabels): OpsPointPickerLabels {
+  return {
+    ...labels.map,
+    latitude: labels.fields.latitude,
+    longitude: labels.fields.longitude,
+  };
+}
+
 function ActionError({
   labels,
   onRetry,
@@ -328,16 +384,20 @@ function ActionError({
 export function ClusterEditor({
   actionError,
   data,
+  getRequest,
   labels,
   onAction,
+  onMediaUpdate,
   onRetry,
   onSave,
   pending,
 }: Readonly<{
   actionError: boolean;
   data: GetAdminCluster200Data;
+  getRequest: () => Promise<RequestInit>;
   labels: OpsLabels;
   onAction: (type: "publishCluster" | "unpublishCluster") => void;
+  onMediaUpdate: (body: UpdateAdminClusterBody) => Promise<unknown>;
   onRetry: () => void;
   onSave: (body: UpdateAdminClusterBody) => void;
   pending: boolean;
@@ -404,19 +464,11 @@ export function ClusterEditor({
             name="categoryIds"
             required
           />
-          <Field
-            defaultValue={data.centroid.coordinates[0]}
-            label={labels.fields.longitude}
-            name="centroidLng"
-            required
-            type="number"
-          />
-          <Field
-            defaultValue={data.centroid.coordinates[1]}
-            label={labels.fields.latitude}
-            name="centroidLat"
-            required
-            type="number"
+          <OpsPointPicker
+            initialCoordinates={data.centroid.coordinates}
+            labels={pointPickerLabels(labels)}
+            latitudeName="centroidLat"
+            longitudeName="centroidLng"
           />
           <TextAreaField
             defaultValue={data.summary.en}
@@ -468,6 +520,13 @@ export function ClusterEditor({
         </div>
       </form>
 
+      <ClusterMediaEditor
+        data={data}
+        getRequest={getRequest}
+        labels={labels.media}
+        onUpdate={onMediaUpdate}
+      />
+
       <div className={styles.reviewActions}>
         {data.status === "draft" ? (
           <>
@@ -502,18 +561,22 @@ export function ClusterEditor({
 export function FactoryEditor({
   actionError,
   data,
+  getRequest,
   labels,
   onAction,
+  onMediaUpdate,
   onRetry,
   onSave,
   pending,
 }: Readonly<{
   actionError: boolean;
   data: GetAdminFactory200Data;
+  getRequest: () => Promise<RequestInit>;
   labels: OpsLabels;
   onAction: (
     type: "publishFactory" | "unpublishFactory" | "verifyFactory",
   ) => void;
+  onMediaUpdate: (body: UpdateAdminFactoryBody) => Promise<unknown>;
   onRetry: () => void;
   onSave: (body: UpdateAdminFactoryBody) => void;
   pending: boolean;
@@ -586,19 +649,11 @@ export function FactoryEditor({
             name="categoryIds"
             required
           />
-          <Field
-            defaultValue={data.location.coordinates[0]}
-            label={labels.fields.longitude}
-            name="locationLng"
-            required
-            type="number"
-          />
-          <Field
-            defaultValue={data.location.coordinates[1]}
-            label={labels.fields.latitude}
-            name="locationLat"
-            required
-            type="number"
+          <OpsPointPicker
+            initialCoordinates={data.location.coordinates}
+            labels={pointPickerLabels(labels)}
+            latitudeName="locationLat"
+            longitudeName="locationLng"
           />
           <TextAreaField
             defaultValue={data.address.en}
@@ -683,6 +738,13 @@ export function FactoryEditor({
         </div>
       </form>
 
+      <FactoryMediaEditor
+        data={data}
+        getRequest={getRequest}
+        labels={labels.media}
+        onUpdate={onMediaUpdate}
+      />
+
       <div className={styles.reviewActions}>
         {!data.verified ? (
           <>
@@ -726,6 +788,294 @@ export function FactoryEditor({
   );
 }
 
+export function ClusterCreateEditor({
+  actionError,
+  labels,
+  onRetry,
+  onSave,
+  pending,
+}: Readonly<{
+  actionError: boolean;
+  labels: OpsLabels;
+  onRetry: () => void;
+  onSave: (body: CreateAdminClusterBody) => void;
+  pending: boolean;
+}>) {
+  const [formInvalid, setFormInvalid] = useState(false);
+
+  return (
+    <section className={styles.editor} aria-labelledby="ops-editor-heading">
+      <header className={styles.editorHeader}>
+        <div>
+          <p>{labels.clusterList}</p>
+          <h2 id="ops-editor-heading">{labels.newRecord}</h2>
+          <small>{labels.uploadAfterCreate}</small>
+        </div>
+        <StatusBadge labels={labels} status="draft" />
+      </header>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          try {
+            onSave(buildClusterCreate(new FormData(event.currentTarget)));
+            setFormInvalid(false);
+          } catch {
+            setFormInvalid(true);
+          }
+        }}
+      >
+        <div className={styles.formGrid}>
+          <Field
+            defaultValue=""
+            label={labels.fields.slug}
+            name="slug"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.region}
+            name="regionId"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.nameEn}
+            name="nameEn"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.nameZh}
+            name="nameZh"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.primaryCategory}
+            name="primaryCategoryId"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.categories}
+            name="categoryIds"
+            required
+          />
+          <OpsPointPicker
+            initialCoordinates={null}
+            labels={pointPickerLabels(labels)}
+            latitudeName="centroidLat"
+            longitudeName="centroidLng"
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.summaryEn}
+            name="summaryEn"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.summaryZh}
+            name="summaryZh"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.descriptionEn}
+            name="descriptionEn"
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.descriptionZh}
+            name="descriptionZh"
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.mainProducts}
+            name="mainProducts"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.boundary}
+            name="boundary"
+            rows={8}
+          />
+        </div>
+        {formInvalid ? <FormError>{labels.formError}</FormError> : null}
+        {actionError ? (
+          <ActionError labels={labels} onRetry={onRetry} pending={pending} />
+        ) : null}
+        <div className={styles.formActions}>
+          <button disabled={pending} type="submit">
+            {pending ? labels.saving : labels.newCluster}
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+}
+
+export function FactoryCreateEditor({
+  actionError,
+  labels,
+  onRetry,
+  onSave,
+  pending,
+}: Readonly<{
+  actionError: boolean;
+  labels: OpsLabels;
+  onRetry: () => void;
+  onSave: (body: CreateAdminFactoryBody) => void;
+  pending: boolean;
+}>) {
+  const [formInvalid, setFormInvalid] = useState(false);
+
+  return (
+    <section className={styles.editor} aria-labelledby="ops-editor-heading">
+      <header className={styles.editorHeader}>
+        <div>
+          <p>{labels.factoryList}</p>
+          <h2 id="ops-editor-heading">{labels.newRecord}</h2>
+          <small>{labels.uploadAfterCreate}</small>
+        </div>
+        <StatusBadge labels={labels} status="draft" verified={false} />
+      </header>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          try {
+            onSave(buildFactoryCreate(new FormData(event.currentTarget)));
+            setFormInvalid(false);
+          } catch {
+            setFormInvalid(true);
+          }
+        }}
+      >
+        <div className={styles.formGrid}>
+          <Field
+            defaultValue=""
+            label={labels.fields.slug}
+            name="slug"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.region}
+            name="regionId"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.nameEn}
+            name="nameEn"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.nameZh}
+            name="nameZh"
+            required
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.clusterId}
+            name="clusterId"
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.categories}
+            name="categoryIds"
+            required
+          />
+          <OpsPointPicker
+            initialCoordinates={null}
+            labels={pointPickerLabels(labels)}
+            latitudeName="locationLat"
+            longitudeName="locationLng"
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.addressEn}
+            name="addressEn"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.addressZh}
+            name="addressZh"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.mainProducts}
+            name="mainProducts"
+            required
+          />
+          <TextAreaField
+            defaultValue=""
+            label={labels.fields.certifications}
+            name="certifications"
+          />
+          <Field defaultValue="" label={labels.fields.moq} name="moq" />
+          <Field
+            defaultValue=""
+            label={labels.fields.establishedYear}
+            name="establishedYear"
+            type="number"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.employeeRange}
+            name="employeeRange"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.sourceName}
+            name="sourceName"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.sourceUrl}
+            name="sourceUrl"
+            type="url"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.contactWebsite}
+            name="website"
+            type="url"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.contactEmail}
+            name="email"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.contactPhone}
+            name="phone"
+          />
+          <Field
+            defaultValue=""
+            label={labels.fields.contactWechat}
+            name="wechat"
+          />
+        </div>
+        {formInvalid ? <FormError>{labels.formError}</FormError> : null}
+        {actionError ? (
+          <ActionError labels={labels} onRetry={onRetry} pending={pending} />
+        ) : null}
+        <div className={styles.formActions}>
+          <button disabled={pending} type="submit">
+            {pending ? labels.saving : labels.newFactory}
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+}
+
 export function OpsDashboard({
   diagnostics,
   labels,
@@ -757,9 +1107,9 @@ export function OpsDashboard({
     queryKey: ["ops", "factories"],
   });
   const detail = useQuery({
-    enabled: queriesEnabled && selection !== null,
+    enabled: queriesEnabled && selection !== null && selection.id !== null,
     queryFn: async ({ signal }) => {
-      if (selection === null) {
+      if (selection === null || selection.id === null) {
         throw new Error("No entity selected");
       }
       const request = await getRequest(signal);
@@ -774,6 +1124,10 @@ export function OpsDashboard({
     mutationFn: async (input: OpsMutation) => {
       const request = await getRequest();
       switch (input.type) {
+        case "createCluster":
+          return createAdminCluster(input.body, request);
+        case "createFactory":
+          return createAdminFactory(input.body, request);
         case "updateCluster":
           return updateAdminCluster(input.id, input.body, request);
         case "updateFactory":
@@ -790,7 +1144,12 @@ export function OpsDashboard({
           return unpublishAdminFactory(input.id, request);
       }
     },
-    onSuccess: async () => {
+    onSuccess: async (result, input) => {
+      if (input.type === "createCluster") {
+        setSelection({ id: result.data.id, kind: "cluster" });
+      } else if (input.type === "createFactory") {
+        setSelection({ id: result.data.id, kind: "factory" });
+      }
       await queryClient.invalidateQueries({ queryKey: ["ops"] });
     },
   });
@@ -847,6 +1206,30 @@ export function OpsDashboard({
       <main className={styles.content}>
         {selection === null ? (
           <p className={styles.noSelection}>{labels.noSelection}</p>
+        ) : selection.id === null && selection.kind === "cluster" ? (
+          <ClusterCreateEditor
+            actionError={mutation.isError}
+            labels={labels}
+            onRetry={() => {
+              if (mutation.variables !== undefined) {
+                mutation.mutate(mutation.variables);
+              }
+            }}
+            onSave={(body) => mutation.mutate({ body, type: "createCluster" })}
+            pending={mutation.isPending}
+          />
+        ) : selection.id === null ? (
+          <FactoryCreateEditor
+            actionError={mutation.isError}
+            labels={labels}
+            onRetry={() => {
+              if (mutation.variables !== undefined) {
+                mutation.mutate(mutation.variables);
+              }
+            }}
+            onSave={(body) => mutation.mutate({ body, type: "createFactory" })}
+            pending={mutation.isPending}
+          />
         ) : detail.isPending ? (
           <p className={styles.loadState} role="status">
             {labels.loading}
@@ -862,9 +1245,17 @@ export function OpsDashboard({
           <ClusterEditor
             actionError={mutation.isError}
             data={detail.data.data as GetAdminCluster200Data}
+            getRequest={getRequest}
             key={detail.data.data.updatedAt}
             labels={labels}
-            onAction={(type) => mutation.mutate({ id: selection.id, type })}
+            onAction={(type) => mutation.mutate({ id: selection.id!, type })}
+            onMediaUpdate={(body) =>
+              mutation.mutateAsync({
+                body,
+                id: selection.id!,
+                type: "updateCluster",
+              })
+            }
             onRetry={() => {
               if (mutation.variables !== undefined) {
                 mutation.mutate(mutation.variables);
@@ -873,7 +1264,7 @@ export function OpsDashboard({
             onSave={(body) =>
               mutation.mutate({
                 body,
-                id: selection.id,
+                id: selection.id!,
                 type: "updateCluster",
               })
             }
@@ -883,9 +1274,17 @@ export function OpsDashboard({
           <FactoryEditor
             actionError={mutation.isError}
             data={detail.data.data as GetAdminFactory200Data}
+            getRequest={getRequest}
             key={detail.data.data.updatedAt}
             labels={labels}
-            onAction={(type) => mutation.mutate({ id: selection.id, type })}
+            onAction={(type) => mutation.mutate({ id: selection.id!, type })}
+            onMediaUpdate={(body) =>
+              mutation.mutateAsync({
+                body,
+                id: selection.id!,
+                type: "updateFactory",
+              })
+            }
             onRetry={() => {
               if (mutation.variables !== undefined) {
                 mutation.mutate(mutation.variables);
@@ -894,7 +1293,7 @@ export function OpsDashboard({
             onSave={(body) =>
               mutation.mutate({
                 body,
-                id: selection.id,
+                id: selection.id!,
                 type: "updateFactory",
               })
             }

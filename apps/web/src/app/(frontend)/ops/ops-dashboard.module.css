@@ -59,6 +59,28 @@
   text-transform: uppercase;
 }
 
+.listHeading > div {
+  min-width: 0;
+}
+
+.listHeading > button {
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #0f766e;
+  border-radius: 999px;
+  color: #0f766e;
+  background: #ffffff;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 680;
+  cursor: pointer;
+}
+
+.listHeading > button[aria-pressed="true"] {
+  color: #ffffff;
+  background: #0f766e;
+}
+
 .listHeading span {
   color: #64756d;
   font-size: 0.75rem;
@@ -249,6 +271,39 @@
   font-size: 0.85rem;
 }
 
+.pointPicker {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 0.65rem;
+}
+
+.pointPickerMap {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  border: 1px solid #cbd7d1;
+  border-radius: 0.85rem;
+  background: #dbe7e1;
+}
+
+.pointPickerCanvas {
+  position: absolute;
+  inset: 0;
+}
+
+.pointPickerInstructions {
+  margin: 0;
+  color: #52625b;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.coordinateFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 .field textarea {
   min-height: 5rem;
   resize: vertical;
@@ -266,6 +321,14 @@
 .warning {
   color: #7c2d12;
   background: #fff7ed;
+}
+
+.success {
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.65rem;
+  color: #115e59;
+  background: #ccfbf1;
+  font-size: 0.78rem;
 }
 
 .error {
@@ -338,6 +401,141 @@
   background: #b91c1c;
 }
 
+.mediaSection {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid #e2e8e5;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sectionHeading h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.sectionHeading small {
+  color: #64756d;
+  font-size: 0.72rem;
+  text-align: right;
+}
+
+.coverPreview {
+  display: grid;
+  width: min(100%, 40rem);
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.coverPreview img,
+.imageList img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.8rem;
+  object-fit: cover;
+}
+
+.coverPreview figcaption,
+.imageFields > small {
+  color: #64756d;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
+}
+
+.mediaForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem;
+}
+
+.mediaForm .field,
+.fileField {
+  flex: 1 1 15rem;
+}
+
+.fileField {
+  display: grid;
+  gap: 0.35rem;
+  color: #45564e;
+  font-size: 0.72rem;
+  font-weight: 680;
+}
+
+.fileField input {
+  width: 100%;
+  min-height: 2.65rem;
+  padding: 0.45rem;
+  border: 1px solid #cbd7d1;
+  border-radius: 0.65rem;
+  background: #fbfdfc;
+}
+
+.mediaForm button,
+.inlineActions button {
+  min-height: 2.65rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #0f766e;
+  border-radius: 0.65rem;
+  color: #ffffff;
+  background: #0f766e;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 680;
+  cursor: pointer;
+}
+
+.mediaForm button:disabled,
+.inlineActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+.mediaForm .secondaryButton {
+  color: #0f766e;
+  background: #ffffff;
+}
+
+.imageList {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.imageList li {
+  display: grid;
+  grid-template-columns: minmax(10rem, 15rem) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #d9e2de;
+  border-radius: 0.85rem;
+}
+
+.imageFields {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.inlineActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.inlineActions .dangerButton {
+  border-color: #b91c1c;
+  background: #b91c1c;
+}
+
 .confirmation {
   display: flex;
   flex: 1 1 24rem;
@@ -395,8 +593,27 @@
 
 @media (max-width: 42rem) {
   .lists,
-  .formGrid {
+  .formGrid,
+  .coordinateFields {
     grid-template-columns: 1fr;
+  }
+
+  .pointPickerMap {
+    min-height: 19rem;
+  }
+
+  .sectionHeading,
+  .imageList li {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sectionHeading small {
+    text-align: left;
   }
 
   .editorHeader {

@@ -1,4 +1,6 @@
 import type {
+  CreateAdminClusterBody,
+  CreateAdminFactoryBody,
   UpdateAdminClusterBody,
   UpdateAdminFactoryBody,
 } from "@chinasupply/api-client";
@@ -19,10 +21,15 @@ function optionalText(data: FormData, name: string): string | null {
   return value.trim();
 }
 
-function requireNumber(data: FormData, name: string): number {
+function requireNumber(
+  data: FormData,
+  name: string,
+  minimum: number,
+  maximum: number,
+): number {
   const value = Number(requireText(data, name));
-  if (!Number.isFinite(value)) {
-    throw new Error(`${name} must be a number`);
+  if (!Number.isFinite(value) || value < minimum || value > maximum) {
+    throw new Error(`${name} must be from ${minimum} to ${maximum}`);
   }
   return value;
 }
@@ -114,17 +121,61 @@ function parseBoundary(
   return parsed as NonNullable<UpdateAdminClusterBody["boundary"]>;
 }
 
+function parsePoint(data: FormData, prefix: "centroid" | "location") {
+  return {
+    coordinates: [
+      requireNumber(data, `${prefix}Lng`, -180, 180),
+      requireNumber(data, `${prefix}Lat`, -90, 90),
+    ] as [number, number],
+    type: "Point" as const,
+  };
+}
+
+function parseContact(data: FormData) {
+  const website = optionalText(data, "website");
+  const email = optionalText(data, "email");
+  const phone = optionalText(data, "phone");
+  const wechat = optionalText(data, "wechat");
+  return website === null && email === null && phone === null && wechat === null
+    ? null
+    : {
+        ...(email === null ? {} : { email }),
+        ...(phone === null ? {} : { phone }),
+        ...(wechat === null ? {} : { wechat }),
+        ...(website === null ? {} : { website }),
+      };
+}
+
+function parseCertifications(data: FormData) {
+  return (optionalText(data, "certifications") ?? "")
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+export function buildClusterCreate(data: FormData): CreateAdminClusterBody {
+  const boundary = parseBoundary(optionalText(data, "boundary"));
+  const description = parseNullableLocalized(data, "description");
+
+  return {
+    ...(boundary === null ? {} : { boundary }),
+    categoryIds: parseIdList(requireText(data, "categoryIds")),
+    centroid: parsePoint(data, "centroid"),
+    ...(description === null ? {} : { description }),
+    mainProducts: parseProducts(requireText(data, "mainProducts")),
+    name: parseLocalized(data, "name"),
+    primaryCategoryId: requireText(data, "primaryCategoryId"),
+    regionId: requireText(data, "regionId"),
+    slug: requireText(data, "slug"),
+    summary: parseLocalized(data, "summary"),
+  };
+}
+
 export function buildClusterUpdate(data: FormData): UpdateAdminClusterBody {
   return {
     boundary: parseBoundary(optionalText(data, "boundary")),
     categoryIds: parseIdList(requireText(data, "categoryIds")),
-    centroid: {
-      coordinates: [
-        requireNumber(data, "centroidLng"),
-        requireNumber(data, "centroidLat"),
-      ],
-      type: "Point",
-    },
+    centroid: parsePoint(data, "centroid"),
     description: parseNullableLocalized(data, "description"),
     mainProducts: parseProducts(requireText(data, "mainProducts")),
     name: parseLocalized(data, "name"),
@@ -135,40 +186,42 @@ export function buildClusterUpdate(data: FormData): UpdateAdminClusterBody {
   };
 }
 
-export function buildFactoryUpdate(data: FormData): UpdateAdminFactoryBody {
-  const website = optionalText(data, "website");
-  const email = optionalText(data, "email");
-  const phone = optionalText(data, "phone");
-  const wechat = optionalText(data, "wechat");
-  const contact =
-    website === null && email === null && phone === null && wechat === null
-      ? null
-      : {
-          ...(email === null ? {} : { email }),
-          ...(phone === null ? {} : { phone }),
-          ...(wechat === null ? {} : { wechat }),
-          ...(website === null ? {} : { website }),
-        };
+export function buildFactoryCreate(data: FormData): CreateAdminFactoryBody {
+  const contact = parseContact(data);
   const establishedYear = optionalText(data, "establishedYear");
 
   return {
     address: parseLocalized(data, "address"),
     categoryIds: parseIdList(requireText(data, "categoryIds")),
-    certifications: (optionalText(data, "certifications") ?? "")
-      .split("\n")
-      .map((item) => item.trim())
-      .filter(Boolean),
+    certifications: parseCertifications(data),
+    clusterId: optionalText(data, "clusterId"),
+    ...(contact === null ? {} : { contact }),
+    employeeRange: optionalText(data, "employeeRange"),
+    establishedYear: parseEstablishedYear(establishedYear),
+    location: parsePoint(data, "location"),
+    mainProducts: parseProducts(requireText(data, "mainProducts")),
+    moq: optionalText(data, "moq"),
+    name: parseLocalized(data, "name"),
+    regionId: requireText(data, "regionId"),
+    slug: requireText(data, "slug"),
+    sourceName: optionalText(data, "sourceName"),
+    sourceUrl: optionalText(data, "sourceUrl"),
+  };
+}
+
+export function buildFactoryUpdate(data: FormData): UpdateAdminFactoryBody {
+  const contact = parseContact(data);
+  const establishedYear = optionalText(data, "establishedYear");
+
+  return {
+    address: parseLocalized(data, "address"),
+    categoryIds: parseIdList(requireText(data, "categoryIds")),
+    certifications: parseCertifications(data),
     clusterId: optionalText(data, "clusterId"),
     contact,
     employeeRange: optionalText(data, "employeeRange"),
     establishedYear: parseEstablishedYear(establishedYear),
-    location: {
-      coordinates: [
-        requireNumber(data, "locationLng"),
-        requireNumber(data, "locationLat"),
-      ],
-      type: "Point",
-    },
+    location: parsePoint(data, "location"),
     mainProducts: parseProducts(requireText(data, "mainProducts")),
     moq: optionalText(data, "moq"),
     name: parseLocalized(data, "name"),
