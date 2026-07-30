@@ -107,6 +107,21 @@
 | `dehua-longhe-ceramics`         | https://www.dehualonghe.com/                              |
 | `dehua-luchi-ceramics`          | https://www.luchiceramic.com/                             |
 
+## M5-T2 联系方式与制造证据复核（2026-07-30）
+
+Owner 于 2026-07-30 明确确认已独立完成 Jinkanghong 与 Yayu 的完整数据核验
+SOP，批准保存、verify，并在状态规则允许时 publish。以下官方页面于
+2026-07-30 02:48 EDT 重新访问；canonical staging 写入仅通过 `/ops` 完成。
+
+| slug                          | 官方来源                                                                 | 已批准字段与用途                                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `nantong-jinkanghong-textile` | https://en.kifro.com/contacts.html?isPreview=true；https://en.kifro.com/ | Phone `+86-15262853575`、Email `max.jkh@kifro.com`；企业主体、自有工厂、数码印花床品与设计制造证据             |
+| `yiwu-yayu-textile`           | https://ywyayu.com/contact/7；https://ywyayu.com/aboutus.aspx?classid=15 | Phone `+86 17280940617`、Email `yayuexport@163.com`、WeChat `yayutextile`；纺织制造/出口及毛巾、毯子等产品证据 |
+
+写入后两条 A-5 公开记录均为 `published + verified`。Jinkanghong 保留既有获授权
+图片引用；M5-T2 浏览器上传链的独立素材授权、对象摘要与 CDN 复验记录见
+[`2026-07-30-m5-t2-acceptance.md`](docs/operations/reviews/staging/2026-07-30-m5-t2-acceptance.md)。
+
 ## 合成测试数据
 
 | 记录                     | 分类             | 来源、用途和许可                                                         | 更新时间   |

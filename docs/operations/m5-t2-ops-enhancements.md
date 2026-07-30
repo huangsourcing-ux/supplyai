@@ -1,6 +1,7 @@
 # M5-T2 `/ops` enhancements and staging acceptance
 
-Status: implementation complete; canonical staging acceptance pending.
+Status: implementation complete; canonical staging acceptance has one remaining
+authorized browser-upload gate.
 
 ## Implemented scope
 
@@ -32,3 +33,17 @@ The acceptance PR must record all of the following without using SQL, seed data,
 6. iOS and Android rerun the M4-T2c media/contact path. The system dialers receive `tel:+8615262853575` for Jinkanghong and `tel:+8617280940617` for Yayu; Yayu WeChat is copyable.
 
 No production operation, synthetic staging entity, or M5-T2 completion checkbox is authorized by this implementation PR.
+
+## Acceptance progress
+
+Implementation PR #86 was merged as
+`5bebce485bb96a4a924f66dbd495d2bf102c225b` and deployed to canonical staging.
+The authenticated `/ops` create/map/media controls, Owner-approved SOP writes,
+anonymous A-5 responses, and iOS/Android media/contact rerun are recorded in
+[`2026-07-30-m5-t2-acceptance.md`](reviews/staging/2026-07-30-m5-t2-acceptance.md).
+
+Jinkanghong and Yayu are now `published + verified` with the approved contacts.
+M5-T2 remains unchecked only because a synthetic generated image is not valid
+evidence for the required real browser upload. The Owner must attach the
+authorized source again or explicitly authorize reuse of the existing M5-T1
+source before the acceptance PR can close.

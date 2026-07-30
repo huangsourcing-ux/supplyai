@@ -3,10 +3,32 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { loadRealSeedData } from "../src/seeds/real-seed-data.js";
+import {
+  loadRealSeedData,
+  validateRealSeedData,
+} from "../src/seeds/real-seed-data.js";
 
 const workspaceRoot = resolve(import.meta.dirname, "../../..");
 const seedDirectory = resolve(workspaceRoot, "data/staging/real-seed");
+const approvedContacts = new Map([
+  [
+    "nantong-jinkanghong-textile",
+    {
+      website: "https://en.kifro.com/",
+      email: "max.jkh@kifro.com",
+      phone: "+86-15262853575",
+    },
+  ],
+  [
+    "yiwu-yayu-textile",
+    {
+      website: "https://ywyayu.com/",
+      email: "yayuexport@163.com",
+      phone: "+86 17280940617",
+      wechat: "yayutextile",
+    },
+  ],
+]);
 
 describe("M1-T8 real seed canonical data", () => {
   it("contains exactly ten clusters and five real factories per cluster", async () => {
@@ -35,7 +57,7 @@ describe("M1-T8 real seed canonical data", () => {
     }
   });
 
-  it("keeps unverified contact and media fields safe", async () => {
+  it("keeps contact and media fields limited to independently reviewed data", async () => {
     const data = await loadRealSeedData(seedDirectory);
 
     for (const factory of data.factories) {
@@ -43,15 +65,46 @@ describe("M1-T8 real seed canonical data", () => {
       expect(factory.images).toEqual([]);
       expect(factory.sourceUrl).toMatch(/^https:\/\//u);
       expect(factory.contact).not.toBeNull();
+      const approvedContact = approvedContacts.get(factory.slug);
+      if (approvedContact !== undefined) {
+        expect(factory.contact).toEqual(approvedContact);
+        continue;
+      }
       expect(Object.keys(factory.contact ?? {})).toEqual(["website"]);
       expect(factory.contact?.website).toBe(factory.sourceUrl);
       expect(JSON.stringify(factory.contact)).not.toMatch(
         /example\.(com|test)|@|wechat|微信|\+86/u,
       );
     }
+    expect(approvedContacts.size).toBe(2);
     for (const cluster of data.clusters) {
       expect(cluster.coverImage).toBeNull();
     }
+  });
+
+  it("rejects contact additions outside the reviewed slug set", async () => {
+    const data = await loadRealSeedData(seedDirectory);
+    const unreviewedFactory = data.factories.find(
+      ({ slug }) => slug === "shenzhen-dji-innovation",
+    );
+
+    expect(unreviewedFactory).toBeDefined();
+    expect(() =>
+      validateRealSeedData({
+        ...data,
+        factories: data.factories.map((factory) =>
+          factory.slug === unreviewedFactory?.slug
+            ? {
+                ...factory,
+                contact: {
+                  ...(factory.contact ?? {}),
+                  email: "unreviewed@example.test",
+                },
+              }
+            : factory,
+        ),
+      }),
+    ).toThrow(/without an approved SOP review/u);
   });
 
   it("has a source-ledger entry for every real cluster and factory", async () => {
