@@ -1,6 +1,6 @@
 # M5-T1 Admin Create and media upload acceptance
 
-> Status: implementation validation complete; canonical staging acceptance pending
+> Status: complete; canonical staging acceptance passed
 >
 > Scope: ADM-1/ADM-3 Create, ADM-6, G-7/G-10/G-11, and N-3/N-5
 
@@ -34,29 +34,51 @@ this file or terminal output. The presigned URL is a bearer token until expiry.
 
 ## Acceptance record
 
-- [ ] Owner supplied the authorized image and selected factory slug/ID.
-- [ ] Source/authorization:
-- [ ] Local SHA-256:
-- [ ] Declared and actual Content-Type:
-- [ ] Byte length (1–10 MB):
-- [ ] Main commit and GitHub CI run:
-- [ ] Railway deployment ID/commit and `/health/ready` result:
-- [ ] ADM-6 returned HTTP 200, a five-minute expiry, and an objectKey matching
-      `staging/factories/{entityId}/image-{random}.{jpg|png|webp}`.
-- [ ] PUT with the exact returned `Content-Type` header succeeded.
-- [ ] PATCH returned HTTP 200 after the server-side HEAD check and returned the
-      objectKey plus the expected `https://cdn-staging.chinasupply.ai/...` URL.
-- [ ] The existing `/ops` verify action restored `verified=true` with reviewer
-      and timestamps after PATCH invalidated the prior verification.
-- [ ] Public A-5 returned HTTP 200 with the same CDN URL and no `objectKey`.
-- [ ] CDN GET/HEAD returned HTTP 200, the expected Content-Type, and byte length.
-- [ ] No unrelated staging entity, status, category, coordinate, contact, or
-      production resource was changed.
+- [x] Owner supplied and authorized `0515(345)-封面.jpg` directly in the M5-T1
+      task on 2026-07-29 and authorized using any staging factory. The selected
+      target was `Nantong Jinkanghong Textile Co., Ltd.`, slug
+      `nantong-jinkanghong-textile`, ID `7xkIy5So-yz4eUZodAVMj`.
+- [x] Local SHA-256:
+      `023b846e373cd04f629d5fa4516ea7bb1aa63ae176c4c048b242c8754eb7ab86`.
+- [x] Declared and actual Content-Type: `image/jpeg`.
+- [x] Byte length: `245869` bytes; image dimensions: `1080 × 1920`.
+- [x] Exact main commit `f272747b848f7c4aeaed4558a69eb4b436158bff`
+      passed [GitHub Actions run 30506214678](https://github.com/huangsourcing-ux/supplyai/actions/runs/30506214678):
+      CI Gate, CMS migration, Core migration, and Staging Release Gate all
+      succeeded.
+- [x] Railway API deployment `9f149deb-bad1-4d0b-89b4-eb67f7b647c4`
+      deployed commit `f272747b848f7c4aeaed4558a69eb4b436158bff`; the instance
+      was `RUNNING` and `/health/ready` returned HTTP 200 on
+      `2026-07-30T03:59:42Z`.
+- [x] ADM-6 returned HTTP 200 and an approximately 300-second expiry. The
+      generated objectKey was
+      `staging/factories/7xkIy5So-yz4eUZodAVMj/image-CHtZFuPO8ZTY-gkZNuTgb.jpg`,
+      matching the required staging/entity path and MIME-derived extension.
+- [x] PUT with the exact returned `Content-Type: image/jpeg` header returned
+      HTTP 200.
+- [x] PATCH returned HTTP 200 after the server-side HEAD check, changed the
+      target from verified to unverified as required, and returned the
+      objectKey plus
+      `https://cdn-staging.chinasupply.ai/staging/factories/7xkIy5So-yz4eUZodAVMj/image-CHtZFuPO8ZTY-gkZNuTgb.jpg`.
+- [x] The existing `/ops` reviewer acknowledgement and `Verify factory` action
+      restored `verified=true` while status remained `published`; `verifiedAt`,
+      `lastVerifiedAt`, and `updatedAt` were written at
+      `2026-07-30T04:13:21.013Z` for reviewer
+      `user_3Gr8DpJw59xwHVz70XQ2VCm6yma`.
+- [x] Public A-5 returned HTTP 200 with the same CDN URL and no `objectKey`
+      response field.
+- [x] CDN HEAD and GET both returned HTTP 200 with `Content-Type: image/jpeg`
+      and `Content-Length: 245869`. The downloaded object SHA-256 exactly
+      matched the authorized source image.
+- [x] Only the selected factory's image list and required verification audit
+      fields changed. Its published status, category, coordinates, contacts,
+      and all unrelated staging entities remained unchanged; no production
+      resource was accessed.
 
 ## Current result
 
-Pending. The implementation PR deliberately leaves the M5-T1 development-plan
-checkbox unchecked. After every item above passes, create the separate
-`codex/m5-t1-staging-acceptance` documentation branch, append the immutable
-evidence, update the approved plan and derived AGENTS summary to M5-T2, and add
-a second development-log entry.
+Passed. The implementation from PR #84 was deployed from the exact tested main
+commit before the canonical staging chain was executed. The authorized source
+image, ADM-6 presign, direct PUT, PATCH/HEAD validation, `/ops` re-verification,
+A-5 response, CDN metadata, and byte-for-byte SHA-256 comparison all passed.
+No token, R2 credential, cookie, or complete presigned URL is recorded here.
