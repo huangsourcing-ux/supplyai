@@ -27,7 +27,10 @@ database; builds and application startup never apply migrations implicitly.
 M1-T7 adds the private-R2-backed `import:clusters` and `import:factories`
 commands plus the Worker consumer. Their fixed CSV/JSON contracts, object
 paths, report semantics, and operating procedure are documented in
-`docs/operations/data-imports.md`.
+`docs/operations/data-imports.md`. M5-T3 adds the reusable
+`regenerate:search-text` system job. `seed:real` enqueues it only when an
+existing category's name or aliases actually changes, and waits while the
+Worker rebuilds that category and all related cluster/factory search columns.
 M1-T6 rate-limits each public search and MAP route independently at 60 requests
 per minute per validated client IP, using an atomic Redis rolling window shared
 by all API instances. Redis failures fail closed. Successful MAP responses use

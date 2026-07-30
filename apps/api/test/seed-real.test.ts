@@ -4,8 +4,24 @@ import { describe, expect, it } from "vitest";
 
 import {
   assertRealSeedEnvironment,
+  findChangedCategorySearchIds,
   runRealSeed,
 } from "../src/seeds/seed-real.js";
+import type { CategorySeedRow } from "../src/seeds/real-seed-data.js";
+
+function category(overrides: Partial<CategorySeedRow> = {}): CategorySeedRow {
+  return {
+    aliases: { en: ["lamps"], zh: ["灯具"] },
+    color: "#112233",
+    icon: "lightbulb",
+    id: "category0000000000000",
+    name: { en: "Lighting", zh: "照明" },
+    parentSlug: null,
+    slug: "lighting",
+    sortOrder: 10,
+    ...overrides,
+  };
+}
 
 describe("M1-T8 real seed environment guard", () => {
   it("rejects production before reading data or parsing provider variables", async () => {
@@ -41,5 +57,35 @@ describe("M1-T8 real seed environment guard", () => {
     expect(() => assertRealSeedEnvironment(undefined, [])).toThrow(
       "Real seed requires APP_ENV=local or APP_ENV=staging",
     );
+  });
+
+  it("detects only actual name or aliases changes for existing categories", () => {
+    const source = category();
+    const existing = {
+      aliases: source.aliases,
+      id: source.id,
+      name: source.name,
+      slug: source.slug,
+    };
+
+    expect(
+      findChangedCategorySearchIds(
+        [existing],
+        [category({ icon: "different-icon", sortOrder: 99 })],
+      ),
+    ).toEqual([]);
+    expect(
+      findChangedCategorySearchIds(
+        [existing],
+        [category({ name: { en: "Luminaires", zh: "灯饰" } })],
+      ),
+    ).toEqual([source.id]);
+    expect(
+      findChangedCategorySearchIds(
+        [existing],
+        [category({ aliases: { en: ["lights"], zh: ["灯饰"] } })],
+      ),
+    ).toEqual([source.id]);
+    expect(findChangedCategorySearchIds([], [source])).toEqual([]);
   });
 });

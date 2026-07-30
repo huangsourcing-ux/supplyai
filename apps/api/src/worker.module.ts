@@ -8,7 +8,9 @@ import {
   RuntimeConfigModule,
   type RuntimeConfig,
 } from "./config/runtime-config.module.js";
+import { DatabaseModule } from "./database/database.module.js";
 import { ImportModule } from "./imports/import.module.js";
+import { SearchTextRegenerationService } from "./queue/search-text-regeneration.service.js";
 import { SYSTEM_QUEUE } from "./queue/system.constants.js";
 import { SystemProcessor } from "./queue/system.processor.js";
 
@@ -23,8 +25,9 @@ import { SystemProcessor } from "./queue/system.processor.js";
       }),
     }),
     ImportModule,
+    DatabaseModule,
     BullModule.registerQueue({ name: SYSTEM_QUEUE }),
   ],
-  providers: [SystemProcessor],
+  providers: [SearchTextRegenerationService, SystemProcessor],
 })
 export class WorkerModule {}
