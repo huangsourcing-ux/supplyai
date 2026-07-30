@@ -443,6 +443,13 @@ describe.sequential("M1-T7 import pipeline", () => {
       argumentsList: [],
       seedDirectory,
     });
+    expect(first.searchTextRegeneration).toMatchObject({
+      categoriesRegenerated: 1,
+      categoryIds: [categoryId],
+      clustersRegenerated: 90,
+      factoriesRegenerated: 90,
+    });
+    expect(first.searchTextRegeneration?.jobId).toEqual(expect.any(String));
     expect(first.clusters.totals).toEqual({
       received: 10,
       inserted: 10,
@@ -455,6 +462,22 @@ describe.sequential("M1-T7 import pipeline", () => {
       updated: 0,
       failed: 0,
     });
+    const regeneratedSearchText = await pool.query<{
+      cluster_search: string;
+      factory_search: string;
+    }>(
+      `select
+         (select search_text_en from clusters where slug = 'cluster-000')
+           as cluster_search,
+         (select search_text_en from factories where slug = 'factory-000')
+           as factory_search`,
+    );
+    expect(regeneratedSearchText.rows[0]?.cluster_search).toContain(
+      "Lighting lights lamps luminaires",
+    );
+    expect(regeneratedSearchText.rows[0]?.factory_search).toContain(
+      "Lighting lights lamps luminaires",
+    );
 
     const firstIds = await pool.query<{ id: string; slug: string }>(
       `select id, slug from clusters where slug = any($1::text[])
@@ -473,6 +496,7 @@ describe.sequential("M1-T7 import pipeline", () => {
       argumentsList: [],
       seedDirectory,
     });
+    expect(second.searchTextRegeneration).toBeNull();
     expect(second.clusters.totals).toEqual({
       received: 10,
       inserted: 0,

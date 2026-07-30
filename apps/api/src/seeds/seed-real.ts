@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from "node:util";
+
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { parseSeedCliEnv } from "@chinasupply/config/env/api";
 import {
@@ -8,6 +10,8 @@ import {
   importReportSchema,
   type ImportEntity,
   type ImportReport,
+  type LocalizedAliases,
+  type LocalizedText,
 } from "@chinasupply/schemas";
 import { Queue, QueueEvents } from "bullmq";
 import { inArray, sql } from "drizzle-orm";
@@ -27,6 +31,13 @@ import {
 import { buildImportObjectKeys } from "../imports/import-object-keys.js";
 import { createPrivateObjectStorageClient } from "../imports/private-object-storage.service.js";
 import {
+  enqueueSearchTextRegeneration,
+  searchTextRegenerationJobResultSchema,
+  type SearchTextRegenerationJobData,
+  type SearchTextRegenerationJobResult,
+} from "../queue/search-text-regeneration.job.js";
+import { SYSTEM_QUEUE } from "../queue/system.constants.js";
+import {
   loadRealSeedData,
   type CategorySeedRow,
   type RealSeedData,
@@ -40,12 +51,25 @@ export interface SeedImportEvidence {
   totals: ImportReport["totals"];
 }
 
+export interface SearchTextRegenerationEvidence extends SearchTextRegenerationJobResult {
+  categoryIds: string[];
+  jobId: string;
+}
+
 export interface RealSeedResult {
   environment: "local" | "staging";
   regions: number;
   categories: number;
+  searchTextRegeneration: SearchTextRegenerationEvidence | null;
   clusters: SeedImportEvidence;
   factories: SeedImportEvidence;
+}
+
+export interface ExistingCategorySearchSource {
+  aliases: LocalizedAliases;
+  id: string;
+  name: LocalizedText;
+  slug: string;
 }
 
 export function assertRealSeedEnvironment(
@@ -92,11 +116,32 @@ function categoryValues(category: CategorySeedRow, parentId: string | null) {
   };
 }
 
+export function findChangedCategorySearchIds(
+  existingCategories: readonly ExistingCategorySearchSource[],
+  seedCategories: readonly CategorySeedRow[],
+): string[] {
+  const seedBySlug = new Map(
+    seedCategories.map((category) => [category.slug, category]),
+  );
+
+  return existingCategories
+    .filter((existing) => {
+      const source = seedBySlug.get(existing.slug);
+      return (
+        source !== undefined &&
+        (!isDeepStrictEqual(existing.name, source.name) ||
+          !isDeepStrictEqual(existing.aliases, source.aliases))
+      );
+    })
+    .map((category) => category.id)
+    .sort();
+}
+
 async function upsertReferenceData(
   database: CoreDatabase,
   data: RealSeedData,
-): Promise<void> {
-  await database.transaction(async (transaction) => {
+): Promise<string[]> {
+  return database.transaction(async (transaction) => {
     for (const region of data.regions) {
       await transaction
         .insert(regions)
@@ -141,6 +186,20 @@ async function upsertReferenceData(
         );
       }
     }
+
+    const existingBySlug = await transaction
+      .select({
+        aliases: categories.aliases,
+        id: categories.id,
+        name: categories.name,
+        slug: categories.slug,
+      })
+      .from(categories)
+      .where(inArray(categories.slug, seedSlugs));
+    const changedCategoryIds = findChangedCategorySearchIds(
+      existingBySlug,
+      data.categories,
+    );
 
     const roots = data.categories.filter(
       (category) => category.parentSlug === null,
@@ -193,6 +252,8 @@ async function upsertReferenceData(
           },
         });
     }
+
+    return changedCategoryIds;
   });
 }
 
@@ -275,6 +336,25 @@ async function enqueueAndWait(
   };
 }
 
+async function enqueueAndWaitForSearchTextRegeneration(
+  categoryIds: string[],
+  queue: Queue<SearchTextRegenerationJobData, SearchTextRegenerationJobResult>,
+  events: QueueEvents,
+): Promise<SearchTextRegenerationEvidence> {
+  const job = await enqueueSearchTextRegeneration(queue, categoryIds);
+  const result = searchTextRegenerationJobResultSchema.parse(
+    await job.waitUntilFinished(events, IMPORT_TIMEOUT_MS),
+  );
+  if (job.id === undefined) {
+    throw new Error("Search-text regeneration job has no ID");
+  }
+  return {
+    categoryIds,
+    jobId: job.id,
+    ...result,
+  };
+}
+
 export async function runRealSeed(input: {
   environment?: NodeJS.ProcessEnv;
   argumentsList?: string[];
@@ -294,41 +374,68 @@ export async function runRealSeed(input: {
   });
   const database = drizzle(pool, { schema: coreSchema });
   const storage = createPrivateObjectStorageClient(config);
-  const queue = new Queue(IMPORT_QUEUE, {
+  const importQueue = new Queue(IMPORT_QUEUE, {
     connection: createRedisOptions(config.REDIS_URL, 1),
   });
-  const events = new QueueEvents(IMPORT_QUEUE, {
+  const importEvents = new QueueEvents(IMPORT_QUEUE, {
+    connection: createRedisOptions(config.REDIS_URL, null),
+  });
+  const systemQueue = new Queue<
+    SearchTextRegenerationJobData,
+    SearchTextRegenerationJobResult
+  >(SYSTEM_QUEUE, {
+    connection: createRedisOptions(config.REDIS_URL, 1),
+  });
+  const systemEvents = new QueueEvents(SYSTEM_QUEUE, {
     connection: createRedisOptions(config.REDIS_URL, null),
   });
 
   try {
-    await events.waitUntilReady();
-    await upsertReferenceData(database, data);
+    await Promise.all([
+      importEvents.waitUntilReady(),
+      systemEvents.waitUntilReady(),
+    ]);
+    const changedCategoryIds = await upsertReferenceData(database, data);
+    const searchTextRegeneration =
+      changedCategoryIds.length === 0
+        ? null
+        : await enqueueAndWaitForSearchTextRegeneration(
+            changedCategoryIds,
+            systemQueue,
+            systemEvents,
+          );
     const clusterEvidence = await enqueueAndWait(
       "clusters",
       data.clusters,
       config,
-      queue,
-      events,
+      importQueue,
+      importEvents,
       storage,
     );
     const factoryEvidence = await enqueueAndWait(
       "factories",
       data.factories,
       config,
-      queue,
-      events,
+      importQueue,
+      importEvents,
       storage,
     );
     return {
       environment: appEnvironment,
       regions: data.regions.length,
       categories: data.categories.length,
+      searchTextRegeneration,
       clusters: clusterEvidence,
       factories: factoryEvidence,
     };
   } finally {
-    await Promise.allSettled([events.close(), queue.close(), pool.end()]);
+    await Promise.allSettled([
+      importEvents.close(),
+      importQueue.close(),
+      systemEvents.close(),
+      systemQueue.close(),
+      pool.end(),
+    ]);
     storage.destroy();
   }
 }

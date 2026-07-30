@@ -10,8 +10,13 @@ JSON report back to R2. CLI and Worker never share a filesystem.
 
 `seed:real` completely preflights `data/staging/real-seed/`, idempotently
 upserts regions/categories, then reuses the R2 → BullMQ → Worker pipeline below
-for clusters and factories in that order. A cluster report with any failure
-prevents the factory job from starting.
+for clusters and factories in that order. When an existing category's `name`
+or `aliases` actually changes, the command enqueues and waits for the
+`regenerate:search-text` system job before starting the entity imports. The
+Worker rebuilds the category plus every cluster/factory related through
+`cluster_categories` or `factory_categories`, always through the shared
+`buildSearchText` generator. A cluster report with any failure prevents the
+factory job from starting.
 
 ```bash
 APP_ENV=staging pnpm seed:real -- --confirm-staging
@@ -19,9 +24,11 @@ APP_ENV=staging pnpm seed:real -- --confirm-staging
 
 The command allows only local, or staging with that exact confirmation
 argument. Production is rejected before environment parsing or any database,
-R2, or Redis operation. Output contains only counts, job IDs, and report object
-keys. Correct canonical files and rerun after a failure; no delete, publish, or
-verify operation exists.
+R2, or Redis operation. Output contains only counts, job IDs, category IDs, and
+report object keys. `searchTextRegeneration` is `null` when category search
+inputs did not change; otherwise it records the system job ID and regenerated
+category/cluster/factory counts. Correct canonical files and rerun after a
+failure; no delete, publish, or verify operation exists.
 
 Synthetic load files are rebuilt locally and `.generated/load/` is ignored:
 
