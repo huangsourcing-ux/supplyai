@@ -10,13 +10,17 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  ClusterCreateEditor,
   ClusterEditor,
+  FactoryCreateEditor,
   FactoryEditor,
   OpsEntityLists,
   type OpsLabels,
 } from "../app/(frontend)/ops/ops-dashboard";
 import {
+  buildClusterCreate,
   buildClusterUpdate,
+  buildFactoryCreate,
   buildFactoryUpdate,
   parseIdList,
   parseProducts,
@@ -66,6 +70,39 @@ const labels: OpsLabels = {
   formError: "Review the form values.",
   instructions: "Review staging records.",
   loading: "Loading operations data…",
+  map: {
+    ariaLabel: "WGS-84 location picker",
+    attributionLabel: "Map attribution",
+    instructions: "Click the map or drag the pin.",
+    loading: "Loading map…",
+    mapError: "Map unavailable.",
+    mapTilerLogoAlt: "MapTiler",
+    retry: "Retry",
+  },
+  media: {
+    altEn: "Alt (English)",
+    altZh: "Alt (Chinese)",
+    attachRetry: "Retry reference",
+    chooseImage: "Image file",
+    clear: "Clear reference",
+    clusterCover: "Cluster cover image",
+    detach: "Detach image",
+    factoryImages: "Factory images",
+    fileRequirements: "JPEG, PNG, or WebP; 1 byte–10 MB.",
+    moveDown: "Move down",
+    moveUp: "Move up",
+    noMedia: "No media is referenced.",
+    referenceError: "Reference failed.",
+    saveAlt: "Save alt text",
+    success: "Media saved.",
+    upload: "Upload and attach",
+    uploadError: "Upload failed.",
+    uploading: "Uploading…",
+    verificationReset: "Saving marks this factory unverified.",
+  },
+  newCluster: "New cluster",
+  newFactory: "New factory",
+  newRecord: "New draft record",
   noSelection: "Select a record.",
   publish: "Publish",
   publishingBlocked: "Verify this factory before publishing it.",
@@ -81,6 +118,7 @@ const labels: OpsLabels = {
   verificationReset: "Saving marks this factory unverified.",
   verified: "Verified",
   verify: "Verify factory",
+  uploadAfterCreate: "Save the draft first.",
 };
 
 const cluster: GetAdminCluster200Data = {
@@ -178,6 +216,58 @@ describe("operations data forms", () => {
     expect(update.mainProducts).toEqual([{ en: "Fasteners", zh: "紧固件" }]);
   });
 
+  it("builds cluster and factory create bodies without media references", () => {
+    const clusterCreate = buildClusterCreate(
+      formData({
+        boundary: "",
+        categoryIds: categoryId,
+        centroidLat: "30.5",
+        centroidLng: "120.5",
+        descriptionEn: "",
+        descriptionZh: "",
+        mainProducts: "Fasteners | 紧固件",
+        nameEn: "Ningbo Fasteners",
+        nameZh: "宁波紧固件",
+        primaryCategoryId: categoryId,
+        regionId,
+        slug: "ningbo-fasteners",
+        summaryEn: "Fastener cluster",
+        summaryZh: "紧固件产业带",
+      }),
+    );
+    const factoryCreate = buildFactoryCreate(
+      formData({
+        addressEn: "1 Factory Road",
+        addressZh: "工厂路1号",
+        categoryIds: categoryId,
+        certifications: "",
+        clusterId: "",
+        email: "",
+        employeeRange: "",
+        establishedYear: "",
+        locationLat: "30.6",
+        locationLng: "120.6",
+        mainProducts: "Bolts | 螺栓",
+        moq: "",
+        nameEn: "Ningbo Bolt Factory",
+        nameZh: "宁波螺栓厂",
+        phone: "",
+        regionId,
+        slug: "ningbo-bolt-factory",
+        sourceName: "",
+        sourceUrl: "",
+        website: "",
+        wechat: "",
+      }),
+    );
+
+    expect(clusterCreate).not.toHaveProperty("coverImageObjectKey");
+    expect(clusterCreate).not.toHaveProperty("boundary");
+    expect(factoryCreate).not.toHaveProperty("images");
+    expect(factoryCreate.contact).toBeUndefined();
+    expect(factoryCreate.clusterId).toBeNull();
+  });
+
   it("builds a factory PATCH body and normalizes nullable contact fields", () => {
     const update = buildFactoryUpdate(
       formData({
@@ -227,9 +317,56 @@ describe("operations data forms", () => {
       ),
     ).toThrow();
   });
+
+  it("rejects longitude and latitude outside WGS-84 bounds", () => {
+    expect(() =>
+      buildClusterCreate(
+        formData({
+          categoryIds: categoryId,
+          centroidLat: "91",
+          centroidLng: "181",
+          mainProducts: "Fasteners | 紧固件",
+          nameEn: "Ningbo Fasteners",
+          nameZh: "宁波紧固件",
+          primaryCategoryId: categoryId,
+          regionId,
+          slug: "ningbo-fasteners",
+          summaryEn: "Fastener cluster",
+          summaryZh: "紧固件产业带",
+        }),
+      ),
+    ).toThrow();
+  });
 });
 
 describe("operations review components", () => {
+  it("renders cluster and factory create forms with manual map fallback", () => {
+    const clusterMarkup = renderToStaticMarkup(
+      <ClusterCreateEditor
+        actionError={false}
+        labels={labels}
+        onRetry={vi.fn()}
+        onSave={vi.fn()}
+        pending={false}
+      />,
+    );
+    const factoryMarkup = renderToStaticMarkup(
+      <FactoryCreateEditor
+        actionError={false}
+        labels={labels}
+        onRetry={vi.fn()}
+        onSave={vi.fn()}
+        pending={false}
+      />,
+    );
+
+    expect(clusterMarkup).toContain("New draft record");
+    expect(clusterMarkup).toContain('name="centroidLng"');
+    expect(clusterMarkup).toContain('data-coordinate-order="lng-lat"');
+    expect(factoryMarkup).toContain('name="locationLat"');
+    expect(factoryMarkup).toContain("Save the draft first.");
+  });
+
   it("renders list status, verification state, and singular ICU counts", () => {
     const clusters: GetAdminClusters200DataItem[] = [
       {
@@ -361,8 +498,10 @@ describe("operations review components", () => {
       <ClusterEditor
         actionError={false}
         data={cluster}
+        getRequest={vi.fn(async () => ({}))}
         labels={labels}
         onAction={vi.fn()}
+        onMediaUpdate={vi.fn(async () => undefined)}
         onRetry={vi.fn()}
         onSave={vi.fn()}
         pending={false}
@@ -379,8 +518,10 @@ describe("operations review components", () => {
       <FactoryEditor
         actionError
         data={factory}
+        getRequest={vi.fn(async () => ({}))}
         labels={labels}
         onAction={vi.fn()}
+        onMediaUpdate={vi.fn(async () => undefined)}
         onRetry={vi.fn()}
         onSave={vi.fn()}
         pending={false}
@@ -394,5 +535,57 @@ describe("operations review components", () => {
     expect(markup).toContain("Retry");
     expect(markup).toContain('role="alert"');
     expect(markup).toMatch(/<button[^>]*disabled=""[^>]*>Publish<\/button>/u);
+  });
+
+  it("renders cover replacement, factory image management, and verification warning", () => {
+    const clusterMarkup = renderToStaticMarkup(
+      <ClusterEditor
+        actionError={false}
+        data={{
+          ...cluster,
+          coverImage: {
+            objectKey: "staging/clusters/cover.jpg",
+            url: "https://media.example.test/cover.jpg",
+          },
+        }}
+        getRequest={vi.fn(async () => ({}))}
+        labels={labels}
+        onAction={vi.fn()}
+        onMediaUpdate={vi.fn(async () => undefined)}
+        onRetry={vi.fn()}
+        onSave={vi.fn()}
+        pending={false}
+      />,
+    );
+    const factoryMarkup = renderToStaticMarkup(
+      <FactoryEditor
+        actionError={false}
+        data={{
+          ...factory,
+          images: [
+            {
+              alt: { en: "Factory front", zh: "工厂正面" },
+              objectKey: "staging/factories/front.jpg",
+              url: "https://media.example.test/front.jpg",
+            },
+          ],
+        }}
+        getRequest={vi.fn(async () => ({}))}
+        labels={labels}
+        onAction={vi.fn()}
+        onMediaUpdate={vi.fn(async () => undefined)}
+        onRetry={vi.fn()}
+        onSave={vi.fn()}
+        pending={false}
+      />,
+    );
+
+    expect(clusterMarkup).toContain("Cluster cover image");
+    expect(clusterMarkup).toContain("Clear reference");
+    expect(factoryMarkup).toContain("Factory front");
+    expect(factoryMarkup).toContain("Save alt text");
+    expect(factoryMarkup).toContain("Move up");
+    expect(factoryMarkup).toContain("Detach image");
+    expect(factoryMarkup).toContain("Saving marks this factory unverified.");
   });
 });
