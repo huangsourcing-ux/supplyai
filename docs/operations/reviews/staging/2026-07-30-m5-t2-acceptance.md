@@ -1,6 +1,6 @@
 # M5-T2 canonical staging acceptance
 
-Status: pending one authorized browser-upload source.
+Status: pending completion of the canonical browser upload.
 
 ## Release under review
 
@@ -68,15 +68,27 @@ unreviewed contacts and does not change an API or import schema.
 
 ## Browser media upload
 
-Pending. The Owner requested an image be generated, but a synthetic image cannot
-satisfy the approved requirement for a real authorized source and is not used as
-acceptance evidence. Complete this section only after the Owner either attaches
-the authorized source again or explicitly authorizes reuse of the existing
-M5-T1 source image for a new canonical `/ops` browser upload.
+On 2026-07-30 the Owner revised the project rule so display, marketing,
+placeholder, and editorial images default to direct AI generation. Generated
+images must be labeled as illustrative and cannot serve as evidence of a real
+facility, manufacturing capability, product, identity, qualification, or SOP
+fact. M5-T2 therefore uses the independently approved official pages for factual
+review and the following generated asset only for gallery presentation:
 
-The completed record must include source authorization, MIME type, byte count,
-SHA-256, the new object key (never the presigned URL), presign/PUT/PATCH/HEAD
-results, `/ops` preview, and A-5/CDN equality.
+- Classification: Owner-approved AI-generated illustration; not documentary
+  evidence
+- Intended alt (English): `AI-generated illustration of home textile production`
+- Intended alt (Chinese): `AI 生成的家纺生产展示插图`
+- Format and dimensions: PNG, 1448 × 1086, RGB
+- Byte count: `2697397`
+- Source SHA-256:
+  `bb93082788c74adf638a39505a2c788625178f455e436039dc092a5bf2614504`
+- Prompt constraints: modern home-textile production; no specific real facility,
+  brand, logo, text, flag, watermark, or identifiable real person
+
+Pending browser reconnection: record the new object key (never the presigned
+URL), presign/PUT/PATCH/HEAD results, `/ops` preview, and A-5/CDN equality after
+the canonical upload succeeds.
 
 ## Mobile media and contact rerun
 
@@ -108,5 +120,5 @@ results, `/ops` preview, and A-5/CDN equality.
 
 ## Closure decision
 
-Do not check M5-T2 yet. The real canonical browser upload remains the only open
+Do not check M5-T2 yet. The canonical browser upload remains the only open
 acceptance gate. No production operation was performed.

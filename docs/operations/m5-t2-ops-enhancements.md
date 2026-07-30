@@ -25,7 +25,7 @@ M5-T2 remains incomplete until the implementation PR is merged and deployed to c
 
 The acceptance PR must record all of the following without using SQL, seed data, fixtures, or temporary scripts:
 
-1. The Owner supplies the previously authorized Jinkanghong image again, or another authorized image of the same subject. A real browser on the canonical staging origin completes presign → PUT → PATCH/HEAD → `/ops` preview → A-5/CDN.
+1. The Owner supplies or approves a Jinkanghong display image. Under development-plan v1.6 this may be an AI-generated illustration when its alt and review record clearly identify it as illustrative and it is not used as factual SOP evidence. A real browser on the canonical staging origin completes presign → PUT → PATCH/HEAD → `/ops` preview → A-5/CDN.
 2. Jinkanghong Phone `+86-15262853575` and Email `max.jkh@kifro.com` are independently checked against its official contact page and pass the data-verification SOP.
 3. Yayu Phone `+86 17280940617`, Email `yayuexport@163.com`, WeChat `yayutextile`, manufacturing evidence, and every other applicable SOP item are independently checked. Any failed item leaves Yayu draft and unverified and blocks M5-T2 closure.
 4. Only after the Owner explicitly confirms the independent review may `/ops` save, verify, or publish the reviewed records.
@@ -43,7 +43,8 @@ anonymous A-5 responses, and iOS/Android media/contact rerun are recorded in
 [`2026-07-30-m5-t2-acceptance.md`](reviews/staging/2026-07-30-m5-t2-acceptance.md).
 
 Jinkanghong and Yayu are now `published + verified` with the approved contacts.
-M5-T2 remains unchecked only because a synthetic generated image is not valid
-evidence for the required real browser upload. The Owner must attach the
-authorized source again or explicitly authorize reuse of the existing M5-T1
-source before the acceptance PR can close.
+On 2026-07-30 the Owner revised the image rule to make generated display imagery
+the default. The selected Jinkanghong image is therefore an Owner-approved,
+explicitly labeled AI illustration and is not used as manufacturing or SOP
+evidence. M5-T2 remains unchecked only until that file completes the real
+canonical browser upload and CDN checks.
