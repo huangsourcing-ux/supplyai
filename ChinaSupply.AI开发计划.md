@@ -1,6 +1,6 @@
 # ChinaSupply.AI 开发计划
 
-> 版本：**v1.5** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M5-T2** ｜ 日期：2026-07-29
+> 版本：**v1.6** ｜ Status: **Frozen / Approved for Execution** ｜ Next Action: **M5-T3** ｜ 日期：2026-07-30
 > 依据：《ChinaSupply.AI技术栈-最终冻结版.md》+《ChinaSupply.AI产品PRD.md v1.5 Frozen》
 > 开发方式：Codex（AI 编码代理）执行，人工负责验收、真机测试与数据录入。
 > 引用规则：G-* / F-* / A-* / MAP-* / ADM-* / N-* 指向 PRD 条目，实现细节以 PRD 为准。
@@ -9,6 +9,7 @@
 > v1.3 变更：经 Owner 批准，将 M4-T2b/T2c 的验收口径收敛为双端 canonical staging 主路径 smoke + 固定 fixture/自动化分支覆盖；真实图片受 ADM-6 时序约束，联系方式与 21+ 同产业带真实数据属于 M5 数据增强后的回归，不再阻塞 M4。现状核查确认 Admin 业务 controller 仅有 GET/PATCH/verify/publish/unpublish，没有 Create/Upload 写入端点；M1 import 可新增 `draft + unverified`，但不能替代 `/ops` 审核留痕。Unverified 继续由 fixture 验收，不为测试长期发布未核验工厂。未修改 PRD V1 功能范围或 API wire contract。
 > v1.4 变更：经 Owner 批准，M4-T7 以代码、原生隐私清单、权限加固、App 法律入口和离线商店声明包为完成定义；Apple Developer/Play Console 账号、正式 Bundle ID/package、Clerk/Apple 控制台配置、商店表单录入、真实 Apple 成功登录和内测包移入 M4-T8，Production Submit 前由 M5-T10 复核。依据 Apple Guideline 4.8，iOS 保留 Google 时同步提供原生 Sign in with Apple；能力未启用时 iOS 同时隐藏两种社交登录，Production 配置强制启用。M0-T0、M4-T8 与 M4 出口继续阻塞，M4-T3a 不回退。
 > v1.5 变更：经 Owner 批准，暂不启用 Apple Developer/Google Play Console，将剩余外部账号、正式标识符保留、Apple/Clerk 控制台配置前置到 M5-T9，将商店表单、真实 Apple 成功登录、TestFlight/Play 内测与 Production Submit 统一由 M5-T10 完成。M4-T8 改为并勾选“商店门禁迁移”，只表示计划重排完成，不表示任何商店侧验收通过；M4 出口改为 App 功能、Maestro、双端核心路径与导航真机验收通过，Next Action 推进到 M5-T1。Production 标识候选由 Owner 改为 `ai.chinasupply.mobile`，scheme 保留 `chinasupply`，实际可用性仍须 M5-T9 双平台确认。
+> v1.6 变更：经 Owner 批准，展示、营销、占位和编辑配图默认由 Codex 直接生成，无需 Owner 先上传素材或逐张确认版权；生成图必须避免未授权品牌/人物身份，使用准确 alt，并明确标注为 AI-generated illustration，不能作为真实厂区、制造能力、产品、资质、身份或 SOP 事实证据。只有任务明确要求纪实真实性或图片本身承担事实证明时，才需要可追溯真实素材。M5-T2 的 R2 浏览器链允许使用 Owner 批准的 AI 生成展示图，事实核验仍完全依据独立 SOP 与官方来源；未修改 PRD 功能范围、ADM-6 wire contract 或 production 数据门禁。
 
 ---
 
@@ -163,7 +164,7 @@ chinasupply/
 ## M5 内容、数据增强与上线加固（预计 2 周）
 
 - [x] **M5-T1 Admin API 补全**：在 M2-T6 已交付的 Read/Update/verify/publish/unpublish 基础上补 ADM-1/3 Create 与 ADM-6 上传链。**不提供产业带/工厂硬删除**（避免收藏悬空、文章引用失效、溯源丢失）。objectKey 由服务端生成（客户端不得指定路径）；仅 JPEG/PNG/WebP、声明 ≤10MB、限定路径 + 短有效期 presign；上传后服务端 HEAD 复验类型与大小；实体 PATCH 引用 objectKey 时验证对象存在且属于当前环境。验收须以获授权真实图片完成 presign→PUT→HEAD→PATCH→A-5 CDN URL 全链路，不得用 fixture 冒充上传链。**实现 PR #84 已从 main commit `f272747b848f7c4aeaed4558a69eb4b436158bff` 通过 CI、CMS/Core migration、Staging Release Gate 与 Railway 部署；Owner 于 2026-07-29 直接提供并授权真实 JPEG，canonical staging 已完成 ADM-6 presign → PUT → PATCH/HEAD → `/ops` 重新 verify → A-5/CDN，公开响应无 `objectKey` 字段，CDN Content-Type/字节数及下载 SHA-256 均与源图一致。证据见 `docs/operations/m5-t1-admin-uploads.md`；Next Action 推进到 M5-T2。**
-- [ ] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）M5-T1 完成后，通过 `/ops` 对含获授权图片及经 SOP 审核 Phone/Email/WeChat 的 staging 工厂完成预览、verify、publish，并复跑 M4-T2c 图片/联系方式分支；Phone 另由人工在 iOS/Android 验证系统拨号器接收规范化号码。
+- [x] **M5-T2 /ops 增强**：在 M2-T7 最小后台上补新建表单 + 地图选点 + 图片上传。（导入任务状态 UI 超出 PRD F-9 范围，移入 P1；V1 由 CLI 输出 job ID，日志 + Sentry + R2 报告承担运维。）**实现 PR #86 已以 exact commit `5bebce485bb96a4a924f66dbd495d2bf102c225b` 合并并部署 canonical staging；已登录 `/ops` 通过新建入口、WGS-84 地图点击/拖拽与手工坐标七位小数同步、attribution 和完整媒体管理检查。Owner 独立 SOP 确认后，仅通过 `/ops` 写入并核验 Jinkanghong/Yayu 的 Phone/Email/WeChat；两条记录均为 `published + verified`。Owner 批准的 AI 展示图完成浏览器 presign → R2 PUT → PATCH/HEAD → 自动重置 verification → reviewer acknowledgement/Verify → `/ops` `next/image` 预览 → A-5/CDN；公开响应不含 objectKey，CDN MIME、字节数和 SHA-256 与源图一致。iOS Simulator 与 Android Emulator 已分别复跑图片、Phone/Email/WeChat、号码规范化和复制分支；iOS LaunchServices 收到两条精确 `tel:` URL（Simulator 无电话 handler），Android Google Dialer 实际收到并显示两条号码。未创建 synthetic staging 实体、未使用 SQL/seed/临时写脚本、未触及 production；证据见 `docs/operations/reviews/staging/2026-07-30-m5-t2-acceptance.md`。Next Action 推进到 M5-T3。**
 - [ ] **M5-T3 搜索列联动**：类目的 name/aliases 修改后触发 BullMQ `regenerate:search-text` 更新关联产业带与工厂（PRD 3.8）；publish/unpublish 的 MAP purge 已由 M2-T6 前置交付。
 - [ ] **M5-T4 Payload 文章**：F-7.1 + `/guides`（F-10.2）+ 文章内产业带卡片。
 - [ ] **M5-T5 导入增强**：`geocode:factories`（高德 + 转换 + verified=false）。（批量图片与任务监控告警超出 PRD，移入 P1。）

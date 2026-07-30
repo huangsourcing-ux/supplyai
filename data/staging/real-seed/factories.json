@@ -608,10 +608,15 @@
         { "en": "Towels", "zh": "毛巾" },
         { "en": "Blankets", "zh": "毯子" }
       ],
-      "contact": { "website": "https://ywyayu.com/" },
+      "contact": {
+        "website": "https://ywyayu.com/",
+        "email": "yayuexport@163.com",
+        "phone": "+86 17280940617",
+        "wechat": "yayutextile"
+      },
       "images": [],
       "sourceName": "Yiwu Yayu official website",
-      "sourceUrl": "https://ywyayu.com/"
+      "sourceUrl": "https://ywyayu.com/contact/7"
     },
     {
       "slug": "yiwu-first-eyew-jewelry",
@@ -909,10 +914,14 @@
         { "en": "Digitally printed bedding", "zh": "数码印花床品" },
         { "en": "Quilt covers and sheets", "zh": "被套及床单" }
       ],
-      "contact": { "website": "https://en.kifro.com/" },
+      "contact": {
+        "website": "https://en.kifro.com/",
+        "email": "max.jkh@kifro.com",
+        "phone": "+86-15262853575"
+      },
       "images": [],
       "sourceName": "Jinkanghong official website",
-      "sourceUrl": "https://en.kifro.com/"
+      "sourceUrl": "https://en.kifro.com/contacts.html?isPreview=true"
     },
     {
       "slug": "nantong-nanshing-home-textile",

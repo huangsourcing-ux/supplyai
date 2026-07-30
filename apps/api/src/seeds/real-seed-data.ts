@@ -21,6 +21,10 @@ import { z } from "zod";
 const REAL_CLUSTER_COUNT = 10;
 const REAL_FACTORY_COUNT = 50;
 const FACTORIES_PER_CLUSTER = 5;
+const CONTACT_REVIEWED_FACTORY_SLUGS = new Set([
+  "nantong-jinkanghong-textile",
+  "yiwu-yayu-textile",
+]);
 
 export const regionSeedRowSchema = z.strictObject({
   id: z
@@ -183,10 +187,11 @@ export function validateRealSeedData(data: RealSeedData): RealSeedData {
     }
     if (
       factory.contact !== null &&
-      Object.keys(factory.contact).some((key) => key !== "website")
+      Object.keys(factory.contact).some((key) => key !== "website") &&
+      !CONTACT_REVIEWED_FACTORY_SLUGS.has(factory.slug)
     ) {
       throw new Error(
-        `Unverified factory ${factory.slug} may only include its official website`,
+        `Factory ${factory.slug} has contact fields without an approved SOP review`,
       );
     }
     if (
