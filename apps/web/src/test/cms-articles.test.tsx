@@ -138,38 +138,40 @@ describe("Payload articles and Cluster Cards", () => {
   });
 
   it("blocks publication when any Cluster Card is not in public MAP-1", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockImplementation(() =>
-        Promise.resolve(
-          Response.json({
-            data: {
-              features: [
-                {
-                  geometry: { coordinates: [113.75, 23.02], type: "Point" },
-                  properties: {
-                    color: "#0F766E",
-                    factoryCount: 10,
-                    id: CLUSTER_ID,
-                    name_en: "Dongguan Electronics Cluster",
-                    primaryCategoryId: "C12345678901234567890",
-                    slug: "dongguan-electronics",
-                  },
-                  type: "Feature",
+    const fetchMock = vi.fn().mockImplementation(() =>
+      Promise.resolve(
+        Response.json({
+          data: {
+            features: [
+              {
+                geometry: { coordinates: [113.75, 23.02], type: "Point" },
+                properties: {
+                  color: "#0F766E",
+                  factoryCount: 10,
+                  id: CLUSTER_ID,
+                  name_en: "Dongguan Electronics Cluster",
+                  primaryCategoryId: "C12345678901234567890",
+                  slug: "dongguan-electronics",
                 },
-              ],
-              type: "FeatureCollection",
-            },
-            error: null,
-            meta: {},
-          }),
-        ),
+                type: "Feature",
+              },
+            ],
+            type: "FeatureCollection",
+          },
+          error: null,
+          meta: {},
+        }),
       ),
     );
+    vi.stubGlobal("fetch", fetchMock);
 
     await expect(
       assertPublishedClusterCards(bodyWithCards(CLUSTER_ID)),
     ).resolves.toBeUndefined();
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "http://127.0.0.1:3001/api/v1/map/clusters/points",
+      { cache: "no-store" },
+    );
     await expect(
       assertPublishedClusterCards(bodyWithCards(OTHER_CLUSTER_ID)),
     ).rejects.toThrow(OTHER_CLUSTER_ID);

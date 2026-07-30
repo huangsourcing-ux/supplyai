@@ -18,7 +18,7 @@ type NextFetchInit = RequestInit & {
 function mapClusterUrl(): string {
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   if (!apiBaseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL is required");
-  return `${apiBaseUrl.replace(/\/+$/u, "")}/map/clusters`;
+  return `${apiBaseUrl.replace(/\/+$/u, "")}/map/clusters/points`;
 }
 
 export async function fetchPublishedClusters(

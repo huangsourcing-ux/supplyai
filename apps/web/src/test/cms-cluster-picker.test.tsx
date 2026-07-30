@@ -98,7 +98,7 @@ describe("Cluster Card Admin picker", () => {
       "Zhongshan Lighting",
     ]);
     expect(fetch).toHaveBeenCalledWith(
-      "http://127.0.0.1:3001/api/v1/map/clusters",
+      "http://127.0.0.1:3001/api/v1/map/clusters/points",
       expect.objectContaining({ credentials: "omit" }),
     );
 
