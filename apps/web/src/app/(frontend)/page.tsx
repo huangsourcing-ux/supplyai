@@ -1,6 +1,19 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
+import { buildPublicPageMetadata } from "@/seo/metadata";
+
 import { IndustrialMap } from "./map/industrial-map";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const translate = await getTranslations("Home.metadata");
+
+  return buildPublicPageMetadata({
+    description: translate("description"),
+    path: "/",
+    title: translate("title"),
+  });
+}
 
 export default async function HomePage() {
   const [home, map] = await Promise.all([

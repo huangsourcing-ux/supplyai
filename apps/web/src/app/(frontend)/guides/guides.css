@@ -110,6 +110,10 @@
   text-align: center;
 }
 
+.guides-loading {
+  margin-top: 3rem;
+}
+
 .guide-page > article {
   max-width: 54rem;
   margin: 0 auto;

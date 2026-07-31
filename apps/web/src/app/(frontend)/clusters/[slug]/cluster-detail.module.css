@@ -447,6 +447,10 @@
   text-align: center;
 }
 
+.nextPageSkeleton {
+  margin-top: 1rem;
+}
+
 .pagination {
   display: flex;
   min-height: 5rem;

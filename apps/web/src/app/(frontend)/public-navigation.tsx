@@ -16,9 +16,11 @@ import {
 import styles from "./public-navigation.module.css";
 
 export interface PublicNavigationLabels {
+  about: string;
   account: string;
   analytics: string;
   brand: string;
+  guides: string;
   map: string;
   saved: string;
 }
@@ -44,6 +46,8 @@ export function PublicNavigation({
 
   const links = [
     { href: "/", label: labels.map },
+    { href: "/guides", label: labels.guides },
+    { href: "/about", label: labels.about },
     { href: PUBLIC_FAVORITES_PATH, label: labels.saved },
     { href: PUBLIC_ACCOUNT_PATH, label: labels.account },
   ] as const;

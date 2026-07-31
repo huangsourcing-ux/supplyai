@@ -32,8 +32,10 @@ describe("Web internationalization contract", () => {
       signInTitle: "Save suppliers for later",
     });
     expect(messages.Navigation).toMatchObject({
+      about: "About",
       account: "Account",
       analytics: "Analytics",
+      guides: "Guides",
       map: "Map",
       saved: "Saved",
     });
@@ -153,6 +155,15 @@ describe("Web internationalization contract", () => {
       },
       empty: "No published guides are available yet.",
       title: "Explore China's industrial clusters",
+    });
+    expect(messages.About).toMatchObject({
+      contact: {
+        title: "Questions, corrections, or feedback",
+      },
+      metadata: {
+        title: "About ChinaSupply.AI",
+      },
+      title: "A clearer way to understand where China makes things",
     });
     expect(messages.Favorites).toMatchObject({
       remove: "Remove",

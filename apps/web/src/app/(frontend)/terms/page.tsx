@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import React from "react";
 
 import { PUBLIC_PRIVACY_PATH } from "@/legal/legal-routes";
+import { buildPublicPageMetadata } from "@/seo/metadata";
 
 import {
   LegalPage,
@@ -14,10 +15,11 @@ import {
 export async function generateMetadata(): Promise<Metadata> {
   const translate = await getTranslations("Legal.terms.metadata");
 
-  return {
+  return buildPublicPageMetadata({
     description: translate("description"),
+    path: "/terms",
     title: translate("title"),
-  };
+  });
 }
 
 export default async function TermsPage() {

@@ -29,6 +29,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 import { useCallback, useState } from "react";
 
+import { ListSkeleton } from "../list-skeleton";
 import {
   buildClusterCreate,
   buildClusterUpdate,
@@ -1183,9 +1184,9 @@ export function OpsDashboard({
             </button>
           </div>
         ) : loading ? (
-          <p className={styles.loadState} role="status">
-            {labels.loading}
-          </p>
+          <div className={styles.listSkeleton}>
+            <ListSkeleton items={6} label={labels.loading} layout="rows" />
+          </div>
         ) : (
           <OpsEntityLists
             clusters={clusters.data?.data ?? []}

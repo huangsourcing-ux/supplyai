@@ -1,4 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import React from "react";
@@ -8,6 +9,13 @@ import {
   PUBLIC_SIGN_IN_PATH,
 } from "@/auth/public-auth-routes";
 import { PUBLIC_PRIVACY_PATH, PUBLIC_TERMS_PATH } from "@/legal/legal-routes";
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
+};
 
 export default async function PublicSignInPage() {
   const translate = await getTranslations("Authentication");

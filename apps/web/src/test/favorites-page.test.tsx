@@ -166,6 +166,18 @@ afterEach(() => {
 });
 
 describe("favorites page", () => {
+  it("shows an accessible list skeleton while authentication loads", () => {
+    authState.isLoaded = false;
+
+    const markup = renderToStaticMarkup(
+      <FavoritesPageClient labels={labels} />,
+    );
+
+    expect(markup).toContain('role="status"');
+    expect(markup).toContain('aria-label="Loading…"');
+    expect(markup).toContain('data-layout="cards"');
+  });
+
   it("shows a sign-in empty state without enabling the protected query", () => {
     const markup = renderToStaticMarkup(
       <FavoritesPageClient labels={labels} />,

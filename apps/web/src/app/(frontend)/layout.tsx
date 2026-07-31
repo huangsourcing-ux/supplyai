@@ -59,9 +59,11 @@ export default async function FrontendLayout({
               <ApiQueryProvider>
                 <PublicNavigation
                   labels={{
+                    about: navigation("about"),
                     account: navigation("account"),
                     analytics: navigation("analytics"),
                     brand: navigation("brand"),
+                    guides: navigation("guides"),
                     map: navigation("map"),
                     saved: navigation("saved"),
                   }}
