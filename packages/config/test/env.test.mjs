@@ -8,6 +8,9 @@ import { fileURLToPath } from "node:url";
 import {
   AMAP_GEOCODING_ENDPOINT,
   parseAmapGeocodingEnv,
+  parseBackupRestoreCliEnv,
+  parseBackupRunCliEnv,
+  parseBackupWorkerEnv,
   parseClerkUserSyncCliEnv,
   parseApiEnv,
   parseApiHttpEnv,
@@ -155,6 +158,57 @@ test("Amap geocoding configuration is optional, secret-safe, and local-only over
         AMAP_WEB_SERVICE_KEY: "replace_me",
       }),
     /AMAP_WEB_SERVICE_KEY/,
+  );
+});
+
+test("backup worker is disabled locally and mandatory with an age recipient remotely", async () => {
+  assert.equal(
+    parseBackupWorkerEnv({ APP_ENV: "local" }).BACKUP_ENABLED,
+    false,
+  );
+  assert.throws(
+    () =>
+      parseBackupWorkerEnv({
+        APP_ENV: "staging",
+        BACKUP_ENABLED: "false",
+      }),
+    /BACKUP_ENABLED/,
+  );
+  assert.throws(
+    () =>
+      parseBackupWorkerEnv({
+        APP_ENV: "staging",
+        BACKUP_ENABLED: "true",
+      }),
+    /BACKUP_AGE_RECIPIENT/,
+  );
+
+  const recipient =
+    "age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsapx8d";
+  assert.deepEqual(
+    parseBackupWorkerEnv({
+      APP_ENV: "production",
+      BACKUP_ENABLED: "true",
+      BACKUP_AGE_RECIPIENT: recipient,
+    }),
+    {
+      APP_ENV: "production",
+      BACKUP_ENABLED: true,
+      BACKUP_AGE_RECIPIENT: recipient,
+    },
+  );
+});
+
+test("backup CLI parsers expose only their scoped dependencies", async () => {
+  const api = await readExample("apps/api/.env.example");
+  assert.equal(parseBackupRunCliEnv(api).REDIS_URL, api.REDIS_URL);
+  assert.equal(
+    parseBackupRestoreCliEnv({
+      ...api,
+      RESTORE_DATABASE_URL:
+        "postgresql://restore:restore@127.0.0.1:5433/restore",
+    }).RESTORE_DATABASE_URL,
+    "postgresql://restore:restore@127.0.0.1:5433/restore",
   );
 });
 

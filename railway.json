@@ -1,10 +1,12 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "builder": "RAILPACK",
-    "buildCommand": "pnpm exec turbo run build --filter=@chinasupply/api",
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile",
     "watchPatterns": [
+      ".dockerignore",
       "apps/api/**",
+      "Dockerfile",
       "packages/config/**",
       "packages/geo/**",
       "packages/schemas/**",
@@ -18,7 +20,6 @@
   "deploy": {
     "drainingSeconds": 30,
     "restartPolicyMaxRetries": 10,
-    "restartPolicyType": "ON_FAILURE",
-    "startCommand": "pnpm --filter @chinasupply/api start:$SERVICE_ROLE"
+    "restartPolicyType": "ON_FAILURE"
   }
 }

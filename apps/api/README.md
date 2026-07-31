@@ -75,10 +75,11 @@ idempotent under concurrent requests. User mutations share the Redis-backed
 requests Clerk deletion first; the signed `user.deleted` webhook remains the
 only path that tombstones the local user and hard-deletes favorites.
 
-Railway uses the shared root `railway.json` for the API-only build. Its start
-command dispatches to the distinct `start:api` or `start:worker` script from
-the service's non-secret `SERVICE_ROLE`; only `api` receives a public domain
-and `/health/ready` deployment check. Both services track `main` through
+Railway uses the shared root `Dockerfile` and `railway.json`. The locked
+runtime contains Node, pnpm, PostgreSQL 17 client tools, and age; its compiled
+entrypoint dispatches to the API or Worker from the service's non-secret
+`SERVICE_ROLE`. Only `api` receives a public domain and `/health/ready`
+deployment check. Both services track `main` through
 Railway's GitHub autodeploy integration with **Wait for CI** enabled, so a
 commit is not built or released until all required GitHub checks succeed.
 

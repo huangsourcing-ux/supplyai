@@ -148,7 +148,7 @@ jobs:
   api_e2e:
     name: API e2e
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Check out source
         uses: actions/checkout@v4

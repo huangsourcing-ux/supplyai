@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "backup:restore": "node --env-file-if-exists=.env.local --enable-source-maps dist/backup-restore.js",
+    "backup:run": "node --env-file-if-exists=.env.local --enable-source-maps dist/backup-run.js",
     "build": "nest build",
     "clerk:sync-users": "node --env-file-if-exists=.env.local --enable-source-maps dist/clerk-sync-users.js",
     "db:check": "node --env-file-if-exists=.env.local ./node_modules/drizzle-kit/bin.cjs check --config=drizzle.config.ts",
@@ -19,6 +21,7 @@
     "import:factories": "pnpm --filter @chinasupply/geo build && tsx scripts/import-factories.ts",
     "lint": "eslint .",
     "start:api": "node --env-file-if-exists=.env.local --enable-source-maps dist/main.js",
+    "start:service": "node --env-file-if-exists=.env.local --enable-source-maps dist/start-service.js",
     "start:worker": "node --env-file-if-exists=.env.local --enable-source-maps dist/worker.js",
     "sentry:smoke": "node --env-file-if-exists=.env.local --enable-source-maps dist/sentry-smoke.js",
     "seed:real": "pnpm --filter @chinasupply/geo build && tsx scripts/seed-real.ts",

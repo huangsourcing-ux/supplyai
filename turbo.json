@@ -3,6 +3,7 @@
   "globalEnv": [
     "APP_ENV",
     "AMAP_*",
+    "BACKUP_*",
     "CI",
     "CLERK_SECRET_KEY",
     "CLERK_WEBHOOK_SECRET",
@@ -11,6 +12,7 @@
     "EDGE_PROXY_SECRET",
     "PORT",
     "REDIS_URL",
+    "RESTORE_DATABASE_URL",
     "WEB_ORIGIN",
     "NEXT_PUBLIC_*",
     "PAYLOAD_SECRET",
@@ -22,8 +24,10 @@
     "PLAYWRIGHT_STAGING_BASE_URL",
     "PLAYWRIGHT_TEST",
     "RAILWAY_GIT_COMMIT_SHA",
+    "SERVICE_ROLE",
     "VERCEL_GIT_COMMIT_SHA"
   ],
+  "globalPassThroughEnv": ["PATH"],
   "ui": "stream",
   "tasks": {
     "build": {

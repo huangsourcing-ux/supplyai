@@ -30,6 +30,17 @@ export class DatabaseService implements OnModuleDestroy {
     await this.pool.query("select 1");
   }
 
+  async postgresServerMajor(): Promise<number> {
+    const result = await this.pool.query<{ serverVersionNum: string }>(
+      "select current_setting('server_version_num') as \"serverVersionNum\"",
+    );
+    const version = result.rows[0]?.serverVersionNum;
+    if (version === undefined) {
+      throw new Error("PostgreSQL did not return server_version_num");
+    }
+    return Math.floor(Number.parseInt(version, 10) / 10_000);
+  }
+
   async onModuleDestroy(): Promise<void> {
     await this.pool.end();
   }

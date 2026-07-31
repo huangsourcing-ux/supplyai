@@ -83,9 +83,12 @@ External status on 2026-07-23:
   have Autodeploy + Wait for CI enabled. Both services remained `WAITING` until
   the GitHub check suite passed, then successfully released the verified
   commit.
-- Railway runs the filtered Turbo API build, so `^build` compiles runtime
-  workspace dependencies such as `@chinasupply/schemas` to JavaScript before
-  `node dist/main.js` starts. CI launches that compiled entrypoint and probes
+- Railway builds the repository-root multi-stage Dockerfile. Its filtered
+  Turbo build compiles runtime workspace dependencies such as
+  `@chinasupply/schemas`, then creates a production-only API deployment.
+  The runtime locks Node 22.23.1, pnpm 10.33.2, PostgreSQL client 17, and age
+  1.3.0 before the compiled `start-service` entrypoint dispatches by
+  `SERVICE_ROLE`. CI separately launches the compiled API entrypoint and probes
   `/health/live` to prevent source-only workspace exports from reaching
   staging.
 
@@ -111,9 +114,10 @@ remain allowed and use the staging project Preview environment values.
 - Wait for CI: enabled on both services
 - Config file: `/railway.json`
 
-Both services use the same watch paths. `SERVICE_ROLE` continues to select the
-HTTP or Worker start command. The API retains `/health/ready` as its deployment
-health check; the Worker has no public domain.
+Both services use the same Dockerfile and watch paths. `SERVICE_ROLE` continues
+to select the HTTP or Worker compiled entrypoint. The API retains
+`/health/ready` as its deployment health check; the Worker has no public
+domain.
 
 The 2026-07-23 acceptance run used commit
 `5a5f7fad9ae07ecb7e376eb458f7c5d002bf1f8f`. GitHub Actions run

@@ -15,6 +15,6 @@ import {
     },
     PrivateObjectStorageService,
   ],
-  exports: [PrivateObjectStorageService],
+  exports: [PRIVATE_OBJECT_STORAGE_CONFIG, PrivateObjectStorageService],
 })
 export class PrivateObjectStorageModule {}
