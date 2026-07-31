@@ -19,6 +19,7 @@
     "geocode:factories": "pnpm --filter @chinasupply/geo build && tsx scripts/geocode-factories.ts",
     "import:clusters": "pnpm --filter @chinasupply/geo build && tsx scripts/import-clusters.ts",
     "import:factories": "pnpm --filter @chinasupply/geo build && tsx scripts/import-factories.ts",
+    "production:content": "tsx scripts/production-content.ts",
     "lint": "eslint .",
     "start:api": "node --env-file-if-exists=.env.local --enable-source-maps dist/main.js",
     "start:service": "node --env-file-if-exists=.env.local --enable-source-maps dist/start-service.js",
