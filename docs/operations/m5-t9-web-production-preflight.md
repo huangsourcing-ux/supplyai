@@ -54,10 +54,10 @@ changed.
   - secret:
     `306a639eac3ac55bc6f39a0e0affd940390c053abe0a636900c23d5136bd24f3`.
 
-DNS currently resolves all five expected CNAMEs publicly. Clerk has verified
-the Frontend API record; the Account Portal, mail, DKIM, and certificate
-issuance remain pending provider-side verification. Google Production OAuth,
-the API webhook, Native Application, and Apple connection are not complete.
+DNS resolves all five expected CNAMEs publicly. Clerk now reports the complete
+DNS configuration as Verified and its SSL certificates as Issued. Google
+Production OAuth, the API webhook, Native Application, and Apple connection
+are not complete.
 
 ### Railway
 
@@ -105,8 +105,8 @@ deployment until the API, content, and preview smoke are ready.
 2. An authorized Cloudflare account member creates one object-read/write R2
    API token scoped only to the two production buckets; install it in
    Railway/Vercel and run an S3 smoke.
-3. Finish Clerk DNS/certificate verification, create the production webhook
-   after the API domain exists, and install its Svix secret.
+3. Create the Clerk production webhook after the API domain exists and install
+   its Svix secret.
 4. Run M5-T8a export/import/review/publish.
 5. Configure API/Worker variables, release exact commit, verify readiness,
    backup, logs, rate limits, R2, webhook, and rollback.
