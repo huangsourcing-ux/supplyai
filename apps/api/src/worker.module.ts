@@ -2,6 +2,7 @@ import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { SentryModule } from "@sentry/nestjs/setup";
 
+import { BackupModule } from "./backups/backup.module.js";
 import { createRedisOptions } from "./common/redis/redis-options.js";
 import {
   RUNTIME_CONFIG,
@@ -24,6 +25,7 @@ import { SystemProcessor } from "./queue/system.processor.js";
         connection: createRedisOptions(config.REDIS_URL, null),
       }),
     }),
+    BackupModule,
     ImportModule,
     DatabaseModule,
     BullModule.registerQueue({ name: SYSTEM_QUEUE }),

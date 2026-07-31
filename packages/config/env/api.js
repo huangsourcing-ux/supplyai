@@ -62,6 +62,22 @@ const amapGeocodingShape = {
   AMAP_GEOCODING_BASE_URL: networkUrlSchema.default(AMAP_GEOCODING_ENDPOINT),
 };
 
+const ageX25519RecipientSchema = z
+  .string()
+  .regex(
+    /^age1[023456789acdefghjklmnpqrstuvwxyz]{58}$/,
+    "must be an age X25519 recipient",
+  );
+
+const backupWorkerShape = {
+  APP_ENV: deploymentEnvironmentSchema,
+  BACKUP_ENABLED: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
+  BACKUP_AGE_RECIPIENT: ageX25519RecipientSchema.optional(),
+};
+
 /** @type {readonly ["DATABASE_URL", "REDIS_URL"]} */
 const remoteConnectionFields = ["DATABASE_URL", "REDIS_URL"];
 
@@ -355,6 +371,41 @@ export const amapGeocodingEnvSchema = z
     }
   });
 
+export const backupWorkerEnvSchema = z
+  .object(backupWorkerShape)
+  .superRefine((environment, context) => {
+    if (!environment.BACKUP_ENABLED) {
+      if (environment.APP_ENV !== "local") {
+        context.addIssue({
+          code: "custom",
+          path: ["BACKUP_ENABLED"],
+          message: "must be true outside local development",
+        });
+      }
+      return;
+    }
+
+    if (environment.BACKUP_AGE_RECIPIENT === undefined) {
+      context.addIssue({
+        code: "custom",
+        path: ["BACKUP_AGE_RECIPIENT"],
+        message: "is required when backups are enabled",
+      });
+    }
+  });
+
+export const backupRunCliEnvSchema = z.object({
+  APP_ENV: deploymentEnvironmentSchema,
+  REDIS_URL: networkUrlSchema,
+});
+
+export const backupRestoreCliEnvSchema = privateObjectStorageEnvSchema.and(
+  z.object({
+    DATABASE_URL: networkUrlSchema,
+    RESTORE_DATABASE_URL: networkUrlSchema,
+  }),
+);
+
 export const importCliEnvSchema = privateObjectStorageEnvSchema.and(
   z.object({
     REDIS_URL: networkUrlSchema,
@@ -430,6 +481,34 @@ export function parsePublicMediaStorageEnv(source) {
  */
 export function parseAmapGeocodingEnv(source) {
   return parseEnvironment(amapGeocodingEnvSchema, source, "Amap geocoding");
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof backupWorkerEnvSchema>}
+ */
+export function parseBackupWorkerEnv(source) {
+  return parseEnvironment(backupWorkerEnvSchema, source, "Backup worker");
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof backupRunCliEnvSchema>}
+ */
+export function parseBackupRunCliEnv(source) {
+  return parseEnvironment(backupRunCliEnvSchema, source, "Backup run CLI");
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof backupRestoreCliEnvSchema>}
+ */
+export function parseBackupRestoreCliEnv(source) {
+  return parseEnvironment(
+    backupRestoreCliEnvSchema,
+    source,
+    "Backup restore CLI",
+  );
 }
 
 /**

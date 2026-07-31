@@ -43,7 +43,7 @@ test("CI runs the frozen PR checks and gates staging on serial CMS and core migr
   assert.doesNotMatch(source, /pull_request_target|workflow_dispatch/);
 
   const expectedJobTimeouts = {
-    api_e2e: 10,
+    api_e2e: 20,
     build: 10,
     changes: 5,
     ci_gate: 5,

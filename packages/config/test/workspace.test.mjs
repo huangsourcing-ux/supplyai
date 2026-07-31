@@ -81,17 +81,23 @@ test("schemas exposes compiled JavaScript and declaration runtime entries", asyn
   assert.equal(schemasBuildConfig.compilerOptions.noEmit, false);
 });
 
-test("Railway builds API runtime workspace dependencies through Turbo", async () => {
+test("Railway builds the locked API runtime through Docker and Turbo", async () => {
   const railwayConfig = JSON.parse(
     await readFile(resolve(workspaceRoot, "railway.json"), "utf8"),
   );
-
-  assert.equal(
-    railwayConfig.build.buildCommand,
-    "pnpm exec turbo run build --filter=@chinasupply/api",
+  const dockerfile = await readFile(
+    resolve(workspaceRoot, "Dockerfile"),
+    "utf8",
   );
+
+  assert.equal(railwayConfig.build.builder, "DOCKERFILE");
+  assert.equal(railwayConfig.build.dockerfilePath, "Dockerfile");
+  assert.equal(railwayConfig.build.buildCommand, undefined);
   assert.ok(railwayConfig.build.watchPatterns.includes("packages/schemas/**"));
-  assert.match(railwayConfig.deploy.startCommand, /start:\$SERVICE_ROLE/);
+  assert.ok(railwayConfig.build.watchPatterns.includes("Dockerfile"));
+  assert.equal(railwayConfig.deploy.startCommand, undefined);
+  assert.match(dockerfile, /turbo run build --filter=@chinasupply\/api\.\.\./);
+  assert.match(dockerfile, /dist\/start-service\.js/);
 });
 
 test("mobile pins the Sentry CLI required by the Gradle upload task", async () => {

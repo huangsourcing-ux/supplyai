@@ -1,0 +1,10 @@
+export const MAINTENANCE_QUEUE = "maintenance";
+export const BACKUP_DAILY_JOB = "backup:daily";
+export const BACKUP_DAILY_SCHEDULER = "postgres-backup-daily-v1";
+export const BACKUP_CRON_PATTERN = "0 0 3 * * *";
+export const BACKUP_CRON_TIMEZONE = "UTC";
+export const BACKUP_ATTEMPTS = 3;
+export const BACKUP_TIMEOUT_MS = 30 * 60 * 1_000;
+export const BACKUP_RETENTION_MS = 30 * 24 * 60 * 60 * 1_000;
+export const BACKUP_POSTGRES_MAJOR = 17;
+export const BACKUP_MANIFEST_VERSION = 1;
