@@ -90,12 +90,26 @@ are not complete.
   `R2_CDN_BASE_URL`. They are not referenced by PostGIS and did not trigger a
   deployment.
 
-The Railway Trial plan permits only the current service. Redis, API, and
-Worker creation now requires additional resource capacity. The Owner chose to
-retain the current free Trial state without payment for non-commercial R&D.
-That is valid for the retained database and shared-variable preflight, but it
-does not satisfy the Redis-backed G-11 throttle or the M5-T9 API/Worker
-deployment gate.
+The Railway account UI identifies the workspace as a verified Trial and, on
+2026-07-31, showed 21 days and USD 3.74 of trial credit remaining. Railway's
+current public Trial documentation says a Trial project can contain up to five
+services and a Trial project can contain up to three volumes. Despite that
+published allowance, the production project rejected both supported creation
+paths tested against the real account:
+
+- the managed Redis database path returned `Free plan resource provision limit
+exceeded. Please upgrade to provision more resources!`;
+- a direct `redis:8.2.1` Docker image service returned `Free plan resource
+creation has been exceeded` and opened the Hobby upgrade gate.
+
+Neither attempt created a service, deployment, volume, or billable resource.
+The Owner chose to retain the current no-payment Trial state for
+non-commercial R&D. The existing production PostGIS service and shared-variable
+preflight remain valid, but the account-specific provisioning gate blocks any
+new Redis/API/Worker service. This does not satisfy the Redis-backed G-11
+throttle or the M5-T9 API/Worker deployment gate. Reusing or deleting the
+canonical staging services would break the approved environment-isolation and
+CI/CD contract and was not performed.
 
 ### Vercel
 
@@ -118,9 +132,11 @@ deployment until the API, content, and preview smoke are ready.
 
 ## Remaining Web cutover gates
 
-1. Create Railway Redis, API, and Worker services when the account has enough
-   resource capacity. The current free Trial may remain for R&D, but the
-   cutover cannot proceed with only PostGIS.
+1. Have Railway lift the account-specific provisioning gate, or explicitly
+   authorize a paid plan, then create Railway Redis, API, and Worker services.
+   The current no-payment Trial may retain PostGIS for R&D, but the cutover
+   cannot proceed with only PostGIS. Do not repurpose or delete canonical
+   staging resources as a workaround.
 2. Create the Clerk production webhook after the API domain exists and install
    its Svix secret.
 3. Run M5-T8a export/import/review/publish.
