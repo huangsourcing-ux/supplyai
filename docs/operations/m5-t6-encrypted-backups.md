@@ -166,6 +166,76 @@ Railway service and volume, remove local ciphertext, and return the identity to
 offline storage. Record only non-sensitive evidence in the separate
 `codex/m5-t6-staging-acceptance` PR before checking M5-T6 complete.
 
+## Canonical staging acceptance — 2026-07-31
+
+Implementation PR #96 merged as main commit
+`30b112be98c4e6e5efdcd6a5b427a6b322b58eea`. GitHub Actions run
+`30602026928` passed CI Gate, CMS migration, Core migration, and Staging
+Release Gate. Railway then deployed that exact commit successfully as API
+deployment `ab6169c4-fae0-43c1-9939-5649b90d5df9` and Worker deployment
+`422ba6c4-6df8-4f12-b70f-14894c2f175c`. The Worker image reported Node
+22.23.1, pnpm 10.33.2, pg_dump/pg_restore 17.5, and age 1.3.0. Only the
+Worker received `BACKUP_ENABLED=true` and the public age recipient; the API
+had neither backup variable.
+
+The Owner-authorized dedicated age identity was generated locally with the
+locked age 1.3.0 image. Its directory was mode `0700`; the identity and public
+recipient files were mode `0600`, and an in-memory encrypt/decrypt round trip
+passed. The identity was never copied to Railway, R2, Git, a command argument,
+or an environment variable.
+
+The persisted BullMQ scheduler had key `postgres-backup-daily-v1`, job name
+`backup:daily`, pattern `0 0 3 * * *`, timezone `UTC`, and next occurrence
+`2026-08-01T03:00:00.000Z`. A package-local invocation with an extra `--` was
+rejected by the confirmation preflight before Redis or R2 access. The
+subsequent compiled CLI invocation created job
+`backup-rlbJxdxJJCmku2SBo7OfJ` and completed this stable pair:
+
+```text
+staging/backups/postgres/2026/07/31/2026-07-31T03-48-16-514Z.dump.age
+staging/backups/postgres/2026/07/31/2026-07-31T03-48-16-514Z.manifest.json
+```
+
+Independent reads confirmed a 699-byte manifest, a 166813-byte encrypted
+object, and matching R2 HEAD/manifest SHA-256
+`9efdac16a203dfde6cb3b9bcd2f5e09c84ef402cd6f64334c4e9690b2218e2e9`.
+The manifest recorded environment `staging`, trigger `manual`, source commit
+`30b112be98c4e6e5efdcd6a5b427a6b322b58eea`, PostgreSQL major 17, pg_dump and
+pg_restore 17.5, and age 1.3.0.
+
+A disposable Railway service `m5-t6-restore`
+(`6eba0b94-b2bf-4150-a2e8-094ebd65e1d0`) used
+`postgis/postgis:17-3.5`, dedicated volume
+`515cdf3a-57f3-4345-bf2c-55de842d5709`, and a temporary TCP proxy. The
+`restore_target` database was created from `template0`; preflight reported
+PostgreSQL `170005`, zero user tables, and zero non-public user schemas. The
+first credential fetch hit a transient Railway TLS EOF and failed before
+target connection or restore. The retry made credential retrieval atomic,
+mounted the local identity read-only into the maintenance image, and exited
+zero after decrypt/list/restore and the built-in comparison.
+
+The final independent read-only comparison produced identical source and
+restored results:
+
+```text
+PostgreSQL server_version_num: 170005
+PostGIS: 3.5.2
+non-extension user tables: 21
+total rows: 293
+inventory + per-table row-count SHA-256:
+eaee2d27214e7a6a1b0bf6b1909f66ec518af5bb05e941c693f04cd54c4a55fe
+drizzle.__drizzle_migrations rows: 1
+public.payload_migrations rows: 2
+```
+
+The source and target resolved to distinct live database identities, and the
+source connection was used only for read-only inventory queries. The
+disposable service and TCP proxy were removed. Its dedicated volume entered
+Railway pending deletion, with physical purge scheduled after Railway's
+recovery window. No local ciphertext or restore container remained; the
+identity stayed only in the Owner-controlled local directory. Production was
+not accessed or modified.
+
 ## Failure handling
 
 - **Startup version error:** do not bypass it. Confirm the deployed image and
