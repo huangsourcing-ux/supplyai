@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import React from "react";
 
 import { PUBLIC_TERMS_PATH } from "@/legal/legal-routes";
+import { buildPublicPageMetadata } from "@/seo/metadata";
 
 import {
   LegalPage,
@@ -16,10 +17,11 @@ const ICO_COMPLAINT_URL =
 export async function generateMetadata(): Promise<Metadata> {
   const translate = await getTranslations("Legal.privacy.metadata");
 
-  return {
+  return buildPublicPageMetadata({
     description: translate("description"),
+    path: "/privacy",
     title: translate("title"),
-  };
+  });
 }
 
 export default async function PrivacyPage() {

@@ -13,9 +13,11 @@ vi.mock("next/navigation", () => ({
 import { PublicNavigation } from "../app/(frontend)/public-navigation";
 
 const labels = {
+  about: "About",
   account: "Account",
   analytics: "Analytics",
   brand: "ChinaSupply.AI",
+  guides: "Guides",
   map: "Map",
   saved: "Saved",
 };
@@ -30,6 +32,8 @@ describe("public navigation", () => {
     const markup = renderToStaticMarkup(<PublicNavigation labels={labels} />);
 
     expect(markup).toContain('href="/"');
+    expect(markup).toContain('href="/guides"');
+    expect(markup).toContain('href="/about"');
     expect(markup).toContain('href="/favorites"');
     expect(markup).toContain('href="/account"');
     expect(markup).toContain('aria-current="page"');

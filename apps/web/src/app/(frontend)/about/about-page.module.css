@@ -1,0 +1,233 @@
+.page {
+  min-height: calc(100svh - var(--public-navigation-height));
+  padding: clamp(3rem, 8vw, 7rem) 1.5rem 6rem;
+  color: #1d2a25;
+  background:
+    radial-gradient(
+      circle at 82% 4%,
+      rgba(196, 225, 211, 0.6),
+      transparent 28rem
+    ),
+    #f4f5f1;
+}
+
+.shell {
+  width: min(76rem, 100%);
+  margin: 0 auto;
+}
+
+.hero {
+  max-width: 66rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.8rem;
+  color: #3c6a59;
+  font-size: 0.78rem;
+  font-weight: 730;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 17ch;
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6.8rem);
+  font-weight: 680;
+  letter-spacing: -0.06em;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 50rem;
+  margin: 1.5rem 0 0;
+  color: #4a5a54;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.primaryAction,
+.secondaryAction,
+.contactAction {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.72rem 1.05rem;
+  border: 1px solid #315447;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #315447;
+  font-size: 0.9rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.secondaryAction {
+  color: #315447;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.primaryAction:hover,
+.primaryAction:focus-visible,
+.secondaryAction:hover,
+.secondaryAction:focus-visible,
+.contactAction:hover,
+.contactAction:focus-visible {
+  border-color: #0f766e;
+  outline: 3px solid rgba(15, 118, 110, 0.3);
+  outline-offset: 3px;
+}
+
+.section {
+  padding-top: clamp(4rem, 9vw, 7rem);
+}
+
+.sectionHeading {
+  max-width: 54rem;
+}
+
+.sectionHeading h2 {
+  max-width: 22ch;
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 670;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.sectionHeading > p:last-child {
+  max-width: 48rem;
+  margin: 1.1rem 0 0;
+  color: #52625b;
+  line-height: 1.75;
+}
+
+.journey,
+.principles {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  margin: 2rem 0 0;
+  list-style: none;
+}
+
+.journey {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.principles {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.journey li,
+.principles li {
+  min-width: 0;
+  padding: 1.4rem;
+  border: 1px solid rgba(49, 84, 71, 0.15);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0.8rem 2.5rem rgba(55, 65, 61, 0.06);
+}
+
+.stepNumber {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #315447;
+  font-size: 0.78rem;
+  font-weight: 740;
+}
+
+.journey h3,
+.principles h3 {
+  margin: 1rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.journey p,
+.principles p {
+  margin: 0.65rem 0 0;
+  color: #5b6c65;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.contact {
+  display: grid;
+  gap: 2rem;
+  margin-top: clamp(4rem, 9vw, 7rem);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border-radius: 1.5rem;
+  color: #e9f5ef;
+  background: #203c33;
+  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.8fr);
+}
+
+.contact h2 {
+  max-width: 18ch;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+}
+
+.contact p {
+  max-width: 45rem;
+  margin: 1rem 0 0;
+  color: #c9ded5;
+  line-height: 1.7;
+}
+
+.contact address {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  color: #dcebe4;
+  font-size: 0.92rem;
+  font-style: normal;
+  line-height: 1.7;
+}
+
+.contact address strong {
+  color: #ffffff;
+}
+
+.contactAction {
+  margin-top: 1.2rem;
+  color: #203c33;
+  background: #dff5ea;
+}
+
+@media (max-width: 58rem) {
+  .journey,
+  .principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 38rem) {
+  .journey,
+  .principles {
+    grid-template-columns: 1fr;
+  }
+}

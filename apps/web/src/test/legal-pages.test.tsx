@@ -65,13 +65,25 @@ describe("public legal pages", () => {
   });
 
   it("generates route-specific translated metadata", async () => {
-    await expect(generatePrivacyMetadata()).resolves.toEqual({
-      description: "translated:Legal.privacy.metadata.description",
-      title: "translated:Legal.privacy.metadata.title",
+    await expect(generatePrivacyMetadata()).resolves.toMatchObject({
+      alternates: {
+        canonical: "/privacy",
+        languages: { en: "/privacy" },
+      },
+      openGraph: {
+        type: "website",
+        url: "/privacy",
+      },
     });
-    await expect(generateTermsMetadata()).resolves.toEqual({
-      description: "translated:Legal.terms.metadata.description",
-      title: "translated:Legal.terms.metadata.title",
+    await expect(generateTermsMetadata()).resolves.toMatchObject({
+      alternates: {
+        canonical: "/terms",
+        languages: { en: "/terms" },
+      },
+      openGraph: {
+        type: "website",
+        url: "/terms",
+      },
     });
   });
 });

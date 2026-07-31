@@ -19,6 +19,7 @@ import {
 import { PUBLIC_FAVORITES_PATH } from "@/auth/public-auth-routes";
 import { useProtectedApi } from "@/auth/protected-api";
 
+import { ListSkeleton } from "../list-skeleton";
 import {
   FAVORITES_PAGE_SIZE,
   flattenFavoritePages,
@@ -223,9 +224,9 @@ export function FavoritesPageClient({
         <p className={styles.description}>{labels.description}</p>
 
         {!isLoaded ? (
-          <section aria-live="polite" className={styles.stateCard}>
-            <p>{labels.loading}</p>
-          </section>
+          <div className={styles.loadingList}>
+            <ListSkeleton items={4} label={labels.loading} />
+          </div>
         ) : !isSignedIn ? (
           <section className={styles.stateCard}>
             <h2>{labels.signInTitle}</h2>
@@ -271,8 +272,8 @@ export function FavoritesPageClient({
               role="tabpanel"
             >
               {query.isPending ? (
-                <div aria-live="polite" className={styles.stateCard}>
-                  <p>{labels.loading}</p>
+                <div className={styles.loadingList}>
+                  <ListSkeleton items={4} label={labels.loading} />
                 </div>
               ) : query.isError ? (
                 <div className={styles.stateCard} role="alert">

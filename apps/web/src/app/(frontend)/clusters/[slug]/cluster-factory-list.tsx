@@ -16,6 +16,7 @@ import {
   CLUSTER_DETAIL_REVALIDATE_SECONDS,
   CLUSTER_FACTORY_PAGE_SIZE,
 } from "./cluster-constants";
+import { ListSkeleton } from "../../list-skeleton";
 import styles from "./cluster-detail.module.css";
 
 export function getNextFactoryCursor(
@@ -169,6 +170,11 @@ export function ClusterFactoryList({
           <ClusterFactoryCard factory={factory} key={factory.id} />
         ))}
       </ul>
+      {isFetchingNextPage ? (
+        <div className={styles.nextPageSkeleton}>
+          <ListSkeleton items={2} label={translate("loadingMore")} />
+        </div>
+      ) : null}
 
       <div aria-live="polite" className={styles.pagination}>
         {isFetchNextPageError ? (

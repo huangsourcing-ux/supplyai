@@ -12,6 +12,8 @@
   "Navigation": {
     "brand": "ChinaSupply.AI",
     "map": "Map",
+    "guides": "Guides",
+    "about": "About",
     "saved": "Saved",
     "account": "Account",
     "analytics": "Analytics"
@@ -27,7 +29,11 @@
     "privacyLink": "Read the Privacy Policy"
   },
   "Home": {
-    "title": "China industrial clusters"
+    "title": "China industrial clusters",
+    "metadata": {
+      "title": "China industrial clusters and factories | ChinaSupply.AI",
+      "description": "Search products, explore China's industrial clusters, and review published factory profiles on an interactive sourcing map."
+    }
   },
   "Map": {
     "ariaLabel": "Interactive map of industrial clusters in China",
@@ -83,6 +89,7 @@
   },
   "ClusterDetail": {
     "backToMap": "Back to the map",
+    "loading": "Loading industrial cluster…",
     "location": "{city}, China",
     "saveAction": {
       "save": "Save cluster",
@@ -251,6 +258,7 @@
     "eyebrow": "Sourcing guides",
     "title": "Explore China's industrial clusters",
     "description": "Practical editorial guidance for researching production regions and planning supplier visits.",
+    "loading": "Loading published sourcing guides…",
     "empty": "No published guides are available yet.",
     "readGuide": "Read guide",
     "backToGuides": "Back to sourcing guides",
@@ -262,6 +270,8 @@
       "unavailable": "This industrial cluster is currently unavailable."
     },
     "metadata": {
+      "title": "Sourcing guides | ChinaSupply.AI",
+      "description": "Explore China's industrial clusters with practical guidance for researching production regions and planning supplier visits.",
       "descriptionFallback": "Explore China's industrial clusters with practical sourcing guidance from ChinaSupply.AI."
     },
     "notFound": {
@@ -269,6 +279,69 @@
       "title": "This sourcing guide was not found",
       "description": "The link may be outdated, or the guide is not currently published.",
       "back": "Browse published guides"
+    }
+  },
+  "About": {
+    "eyebrow": "About ChinaSupply.AI",
+    "title": "A clearer way to understand where China makes things",
+    "description": "ChinaSupply.AI is a sourcing map for overseas business buyers. It connects product searches with Chinese industrial clusters, published factory profiles, and practical visit planning.",
+    "actions": {
+      "map": "Explore the supply map",
+      "guides": "Read sourcing guides"
+    },
+    "mission": {
+      "eyebrow": "Our purpose",
+      "title": "Turn an unfamiliar supply landscape into a practical starting point",
+      "description": "China's manufacturing strengths are concentrated in specialized regions. We organize that geography so buyers can discover relevant production areas, review available supplier information, and plan focused research."
+    },
+    "journey": {
+      "eyebrow": "How it works",
+      "title": "From a product idea to an individual factory visit",
+      "steps": {
+        "search": {
+          "title": "Search a product",
+          "description": "Use product names and category aliases to find relevant industrial clusters and factories."
+        },
+        "discover": {
+          "title": "Discover production regions",
+          "description": "See where related manufacturing activity is concentrated and understand each cluster's main products."
+        },
+        "review": {
+          "title": "Review factory profiles",
+          "description": "Check published business details, source information, verification status, and location before doing your own due diligence."
+        },
+        "visit": {
+          "title": "Plan an individual visit",
+          "description": "Open a factory location in a supported navigation service when you are ready to plan an on-site visit."
+        }
+      }
+    },
+    "principles": {
+      "eyebrow": "Directory principles",
+      "title": "Useful context without replacing buyer due diligence",
+      "geography": {
+        "title": "Geography first",
+        "description": "Industrial clusters provide the regional context behind individual supplier profiles."
+      },
+      "transparency": {
+        "title": "Visible trust signals",
+        "description": "Published profiles distinguish verification status and show source and review context when available."
+      },
+      "independence": {
+        "title": "Buyer decisions remain independent",
+        "description": "ChinaSupply.AI is a business directory, not a broker, certification body, or substitute for legal, commercial, or technical checks."
+      }
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Questions, corrections, or feedback",
+      "description": "Contact the company operating ChinaSupply.AI for service questions, privacy requests, or corrections to published directory information.",
+      "emailAction": "Email ChinaSupply.AI",
+      "companyNumber": "Company No. {number}"
+    },
+    "metadata": {
+      "title": "About ChinaSupply.AI",
+      "description": "Learn how ChinaSupply.AI helps overseas buyers discover Chinese industrial clusters, review factory profiles, and plan supplier research."
     }
   },
   "Cms": {
