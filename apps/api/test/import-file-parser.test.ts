@@ -1,13 +1,22 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import {
   CLUSTER_IMPORT_CSV_HEADERS,
+  FACTORY_GEOCODE_CSV_HEADERS,
   FACTORY_IMPORT_CSV_HEADERS,
   clusterImportRowSchema,
+  factoryGeocodeRowSchema,
   factoryImportRowSchema,
 } from "@chinasupply/schemas";
 
-import { parseImportFile } from "../src/imports/import-file-parser.js";
+import {
+  parseFactoryGeocodeFile,
+  parseImportFile,
+} from "../src/imports/import-file-parser.js";
 
 const regionId = "region000000000000000";
 const workspaceRoot = resolve(
@@ -91,6 +100,38 @@ describe("import file parser", () => {
     expect(factoryImportRowSchema.parse(candidate?.value).contact).toBeNull();
   });
 
+  it("normalizes a coordinate-less factory geocoding CSV", () => {
+    const values = [
+      "geocoded-factory",
+      "Geocoded Factory",
+      "地理编码工厂",
+      "",
+      regionId,
+      "6 Futong East Street, Beijing, China",
+      "北京市朝阳区阜通东大街6号",
+      ["lighting"],
+      [{ en: "Components", zh: "零部件" }],
+      [],
+      "",
+      "",
+      "",
+      "",
+      [],
+      "Directory",
+      "https://example.com/source",
+    ];
+    const source = `${FACTORY_GEOCODE_CSV_HEADERS.join(",")}\n${values
+      .map(csvCell)
+      .join(",")}\n`;
+    const [candidate] = parseFactoryGeocodeFile("csv", source);
+    const row = factoryGeocodeRowSchema.parse(candidate?.value);
+
+    expect(candidate?.row).toBe(2);
+    expect(candidate?.issues).toEqual([]);
+    expect(row).not.toHaveProperty("location");
+    expect(row.address.zh).toBe("北京市朝阳区阜通东大街6号");
+  });
+
   it("requires exact headers and a versioned JSON envelope", () => {
     expect(() =>
       parseImportFile("clusters", "csv", "slug,name\nx,y\n"),
@@ -109,9 +150,15 @@ describe("import file parser", () => {
         JSON.stringify({ version: 1, rows: [{ slug: "x" }] }),
       ),
     ).toEqual([{ row: 1, value: { slug: "x" }, issues: [] }]);
+    expect(() =>
+      parseFactoryGeocodeFile("csv", "slug,addressZh\nx,y\n"),
+    ).toThrow(/CSV headers must exactly match/);
+    expect(() =>
+      parseFactoryGeocodeFile("json", JSON.stringify({ version: 2, rows: [] })),
+    ).toThrow();
   });
 
-  it("keeps all four committed templates directly parseable", () => {
+  it("keeps every committed import and geocoding template parseable", () => {
     for (const [entity, format, schema] of [
       ["clusters", "csv", clusterImportRowSchema],
       ["clusters", "json", clusterImportRowSchema],
@@ -127,8 +174,21 @@ describe("import file parser", () => {
       expect(candidates[0]?.issues).toEqual([]);
       expect(schema.safeParse(candidates[0]?.value).success).toBe(true);
     }
+
+    for (const format of ["csv", "json"] as const) {
+      const source = readFileSync(
+        resolve(
+          workspaceRoot,
+          `docs/import-templates/factories-geocode.${format}`,
+        ),
+        "utf8",
+      );
+      const candidates = parseFactoryGeocodeFile(format, source);
+      expect(candidates).toHaveLength(1);
+      expect(candidates[0]?.issues).toEqual([]);
+      expect(
+        factoryGeocodeRowSchema.safeParse(candidates[0]?.value).success,
+      ).toBe(true);
+    }
   });
 });
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";

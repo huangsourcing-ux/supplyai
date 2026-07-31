@@ -27,7 +27,11 @@ database; builds and application startup never apply migrations implicitly.
 M1-T7 adds the private-R2-backed `import:clusters` and `import:factories`
 commands plus the Worker consumer. Their fixed CSV/JSON contracts, object
 paths, report semantics, and operating procedure are documented in
-`docs/operations/data-imports.md`. M5-T3 adds the reusable
+`docs/operations/data-imports.md`. M5-T5 adds the coordinate-less
+`geocode:factories` R2/BullMQ command. Its Worker-only Amap key is optional at
+startup but required when that job executes; successful geocoding always
+stores WGS-84 plus the original GCJ-02 point and resets factory verification.
+M5-T3 adds the reusable
 `regenerate:search-text` system job. `seed:real` enqueues it only when an
 existing category's name or aliases actually changes, and waits while the
 Worker rebuilds that category and all related cluster/factory search columns.

@@ -48,6 +48,7 @@ intended local or staging database, Redis, and private R2 bucket. Then run:
 ```bash
 pnpm --filter @chinasupply/api import:clusters -- ./clusters.csv --source-coordinate-system gcj02
 pnpm --filter @chinasupply/api import:factories -- ./factories.json --source-coordinate-system wgs84
+pnpm --filter @chinasupply/api geocode:factories -- ./factories-geocode.json
 ```
 
 Only `.csv` and `.json` files are accepted. The coordinate-system flag is
@@ -56,7 +57,7 @@ JSON object containing `jobId`, `sourceObjectKey`, and `reportObjectKey`.
 Completion is observed in Worker logs and the report object; V1 deliberately
 has no import-status HTTP endpoint or `/ops` job UI.
 
-The four canonical templates are in `docs/import-templates/`. JSON documents
+The six canonical templates are in `docs/import-templates/`. JSON documents
 use `{ "version": 1, "rows": [...] }`. CSV headers must match the template
 exactly. Array, object, and GeoJSON CSV cells contain JSON. An empty nullable
 cell becomes `null`; an empty list cell becomes `[]`.
@@ -81,6 +82,35 @@ WGS-84 and the source coordinates are discarded. Factory locations are
 converted to WGS-84 while the original point is retained in `location_gcj02`.
 WGS-84 factory input clears any previously retained GCJ-02 point.
 
+## M5-T5 coordinate-less factory geocoding
+
+`geocode:factories` accepts the dedicated `factories-geocode.csv` or
+`factories-geocode.json` contract. It contains the same import-managed factory
+fields as `import:factories` except `location`; a coordinate-less state never
+enters PostgreSQL, Admin responses, or public APIs. `address.zh` must contain a
+complete structured Chinese address. The Worker calls the domestic Amap Web
+Service without a `city` parameter, takes the first ranked result, stores that
+GCJ-02 point in `location_gcj02`, converts it through the shared
+`gcj02ToWgs84`, and only then upserts the non-null WGS-84 `location`.
+
+The Worker may start without `AMAP_WEB_SERVICE_KEY`; a geocoding job then fails
+safely and writes a fatal report. Configure a Web Service key only in the
+Worker's encrypted environment. `AMAP_GEOCODING_BASE_URL` is a local/test-only
+override; staging and production are fixed to
+`https://restapi.amap.com/v3/geocode/geo`.
+
+Rows are processed sequentially. Address parameter/content errors and zero
+matches become row failures. HTTP 429/5xx, provider throttling/busy responses,
+and `300xx` engine failures retry at most three requests; credential,
+permission, quota, malformed-response, or exhausted network failures fail the
+job. Reports contain match count/level, formatted address, GCJ-02 and WGS-84
+coordinates, but never the key, complete request URL, or raw source row.
+
+Every successful geocoding insert or update sets `verified=false` and clears
+`verified_at`, `last_verified_at`, and `verified_by`. Existing entity IDs,
+`status`, and `published_at` remain unchanged. The command never verifies,
+publishes, unpublishes, or replaces `/ops` review.
+
 ## Objects and reports
 
 Objects use these private-bucket keys:
@@ -88,6 +118,8 @@ Objects use these private-bucket keys:
 ```text
 [prefix/]imports/{clusters|factories}/{jobId}/source.{csv|json}
 [prefix/]imports/{clusters|factories}/{jobId}/report.json
+[prefix/]imports/geocode-factories/{jobId}/source.{csv|json}
+[prefix/]imports/geocode-factories/{jobId}/report.json
 ```
 
 The report contains row numbers, slugs, insert/update actions, validation or

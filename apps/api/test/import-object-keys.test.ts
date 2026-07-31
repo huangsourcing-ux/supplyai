@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { buildImportObjectKeys } from "../src/imports/import-object-keys.js";
+import {
+  buildGeocodeFactoriesObjectKeys,
+  buildImportObjectKeys,
+} from "../src/imports/import-object-keys.js";
 
 describe("import object keys", () => {
   it("isolates environment, entity, job and format", () => {
@@ -28,5 +31,20 @@ describe("import object keys", () => {
         sourceFormat: "json",
       }).sourceObjectKey,
     ).toBe("imports/clusters/import000000000000000/source.json");
+  });
+
+  it("isolates factory geocoding sources and reports from normal imports", () => {
+    expect(
+      buildGeocodeFactoriesObjectKeys({
+        prefix: "staging",
+        geocodeId: "geocode00000000000000",
+        sourceFormat: "json",
+      }),
+    ).toEqual({
+      sourceObjectKey:
+        "staging/imports/geocode-factories/geocode00000000000000/source.json",
+      reportObjectKey:
+        "staging/imports/geocode-factories/geocode00000000000000/report.json",
+    });
   });
 });

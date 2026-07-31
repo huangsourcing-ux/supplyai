@@ -1,6 +1,6 @@
 # ChinaSupply.AI 产品需求文档（PRD）
 
-> 版本：**v1.6 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-30
+> 版本：**v1.7 Frozen** ｜ Status: **Approved for Implementation** ｜ 日期：2026-07-30
 > 用途：供 AI 编码代理（Codex 等）直接执行开发。需求以可验收的结构化条目编写。
 > 技术栈：见《ChinaSupply.AI技术栈-最终冻结版.md》，本文档不重复选型讨论。
 > 优先级定义：P0 = V1 必须；P1 = V1 后第一批迭代；P2 = 路线图。
@@ -17,6 +17,8 @@
 > v1.5 变更摘要：经 Owner 批准，将 Apple Developer/Google Play Console、正式移动标识符保留、Apple/Clerk 控制台配置、商店表单、真实 Apple 登录与 TestFlight/Play 内测包从 M4-T8 迁移到 M5-T9/M5-T10。M4-T8 只记录门禁迁移，不代表任何商店侧验收通过；M4 出口改为 App 功能、Maestro 与既有双端真机验收完成。Production 移动标识候选改为 `ai.chinasupply.mobile`，仍须在 M5-T9 实际保留。未增加 V1 功能范围。
 >
 > v1.6 变更摘要：冻结 M5-T4 的 Payload 文章与 CMS 媒体契约。Payload-owned media 使用独立的已认证预签名上传链，ADM-6 继续只服务产业带/工厂媒体；两条链均执行服务端随机路径、5 分钟有效期、JPEG/PNG/WebP、1 byte–10MB、环境前缀、PUT 后 HEAD 复验与 CDN URL 派生。文章 Cluster Card 只持久化 21 位 cluster ID，不复制核心表字段、不创建 Payload relationship/FK；发布时验证引用仍为 published，运行时失效时显示 unavailable。未新增 `/api/v1`、Mobile、主导航、sitemap 或 `/about` 范围。
+>
+> v1.7 变更摘要：冻结 M5-T5 `geocode:factories` 的输入与持久化语义。“无坐标工厂”只存在于专用 CSV/JSON 导入文件，字段与 `import:factories` 相同但不含 `location`；文件仍经 R2/BullMQ，由 Worker 调高德地理编码、保留原始 GCJ-02、转换为 WGS-84 后再按 slug upsert。核心表、Admin 与公开 API 的 `location` 继续必填且数据库保持 NOT NULL；成功写入或更新必须重置为 `verified=false` 并清空验证审计字段，既有发布状态不自动改变。未新增公开 API、任务 UI、批量图片或监控告警。
 
 ---
 
@@ -389,7 +391,7 @@ CLI 上传 CSV/JSON → R2
 ```
 
 - F-9.1 `import:clusters` / `import:factories`：如上，可重跑幂等
-- F-9.2 `geocode:factories`：无坐标工厂调高德地理编码 → 转换 → 写库 → verified=false 待人工校验
+- F-9.2 `geocode:factories`：专用 CSV/JSON 输入字段与 `import:factories` 相同但不含 `location`；“无坐标”只存在于该 R2 中转文件，核心表/API 的 `location` 继续必填且数据库保持 NOT NULL。Worker 使用完整中文结构化地址调高德地理编码，首个排序结果的 GCJ-02 写入 `location_gcj02`，转换后的 WGS-84 写入 `location`，再按 slug upsert并生成 search_text。新记录保持 draft；新建或更新均写 `verified=false` 并清空 `verified_at`、`last_verified_at`、`verified_by`，既有 `status`/`published_at` 不自动改变，必须经 `/ops` 人工校验后才能恢复 verified
 - F-9.3 `backup:daily`：每日 pg_dump（镜像版本与生产 PG 主版本一致并锁定）→ 加密（age/GPG）→ R2，保留 30 天；**M5 内完成一次恢复演练**，恢复成功才算验收
 
 验收：导入 100 行含 10 行脏数据 → 90 入库、10 进报告；重跑无重复数据。

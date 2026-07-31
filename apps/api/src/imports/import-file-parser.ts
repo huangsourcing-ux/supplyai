@@ -1,7 +1,9 @@
 import {
   CLUSTER_IMPORT_CSV_HEADERS,
+  FACTORY_GEOCODE_CSV_HEADERS,
   FACTORY_IMPORT_CSV_HEADERS,
   clusterImportJsonDocumentSchema,
+  factoryGeocodeJsonDocumentSchema,
   factoryImportJsonDocumentSchema,
   type ImportEntity,
   type ImportReportIssue,
@@ -149,6 +151,57 @@ function normalizeFactoryCsvRow(
   };
 }
 
+function normalizeFactoryGeocodeCsvRow(
+  values: string[],
+  row: number,
+): ParsedImportCandidate {
+  const issues: ImportReportIssue[] = [];
+  const [
+    slug = "",
+    nameEn = "",
+    nameZh = "",
+    clusterSlug = "",
+    regionId = "",
+    addressEn = "",
+    addressZh = "",
+    categorySlugs = "",
+    mainProducts = "",
+    certifications = "",
+    moq = "",
+    establishedYear = "",
+    employeeRange = "",
+    contact = "",
+    images = "",
+    sourceName = "",
+    sourceUrl = "",
+  ] = values;
+
+  return {
+    row,
+    issues,
+    value: {
+      slug,
+      name: { en: nameEn, zh: nameZh },
+      clusterSlug: optional(clusterSlug),
+      regionId,
+      address: { en: addressEn, zh: addressZh },
+      categorySlugs: jsonValue(categorySlugs, "categorySlugs", [], issues),
+      mainProducts: jsonValue(mainProducts, "mainProducts", [], issues),
+      certifications: jsonValue(certifications, "certifications", [], issues),
+      moq: optional(moq),
+      establishedYear:
+        establishedYear.trim().length === 0
+          ? null
+          : numberValue(establishedYear),
+      employeeRange: optional(employeeRange),
+      contact: jsonValue(contact, "contact", null, issues),
+      images: jsonValue(images, "images", [], issues),
+      sourceName: optional(sourceName),
+      sourceUrl: optional(sourceUrl),
+    },
+  };
+}
+
 function parseCsv(
   entity: ImportEntity,
   source: string,
@@ -204,4 +257,42 @@ export function parseImportFile(
   return format === "csv"
     ? parseCsv(entity, source)
     : parseJson(entity, source);
+}
+
+export function parseFactoryGeocodeFile(
+  format: ImportSourceFormat,
+  source: string,
+): ParsedImportCandidate[] {
+  if (format === "json") {
+    const document = factoryGeocodeJsonDocumentSchema.parse(
+      JSON.parse(source) as unknown,
+    );
+    return document.rows.map((value, index) => ({
+      row: index + 1,
+      value,
+      issues: [],
+    }));
+  }
+
+  const rows = parse(source, {
+    bom: true,
+    relax_column_count: false,
+    skip_empty_lines: true,
+  }) as string[][];
+  const headers = rows.shift();
+  if (
+    headers === undefined ||
+    headers.length !== FACTORY_GEOCODE_CSV_HEADERS.length ||
+    headers.some(
+      (header, index) => header !== FACTORY_GEOCODE_CSV_HEADERS[index],
+    )
+  ) {
+    throw new Error(
+      `CSV headers must exactly match: ${FACTORY_GEOCODE_CSV_HEADERS.join(",")}`,
+    );
+  }
+
+  return rows.map((values, index) =>
+    normalizeFactoryGeocodeCsvRow(values, index + 2),
+  );
 }
