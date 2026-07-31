@@ -1,0 +1,2 @@
+slug,nameEn,nameZh,clusterSlug,regionId,addressEn,addressZh,categorySlugs,mainProducts,certifications,moq,establishedYear,employeeRange,contact,images,sourceName,sourceUrl
+beijing-geocoded-components,Beijing Geocoded Components,北京地理编码零部件厂,,region000000000000000,"6 Futong East Street, Chaoyang District, Beijing, China",北京市朝阳区阜通东大街6号,"[""components""]","[{""en"":""Industrial components"",""zh"":""工业零部件""}]",[],,,,,[],Example source,https://example.com/source

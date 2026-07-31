@@ -2,6 +2,7 @@ import "reflect-metadata";
 
 import { spawnSync } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { createServer, type Server } from "node:http";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,6 +14,8 @@ import {
 } from "@aws-sdk/client-s3";
 import { NestFactory } from "@nestjs/core";
 import {
+  geocodeFactoriesJobResultSchema,
+  geocodeFactoriesReportSchema,
   importJobResultSchema,
   importReportSchema,
 } from "@chinasupply/schemas";
@@ -25,6 +28,7 @@ import {
 } from "testcontainers";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
+import { runGeocodeFactoriesCli } from "../scripts/run-geocode-factories-cli.js";
 import { runImportCli } from "../scripts/run-import-cli.js";
 import { createRedisOptions } from "../src/common/redis/redis-options.js";
 import { IMPORT_QUEUE } from "../src/imports/import.constants.js";
@@ -115,10 +119,11 @@ function factoryRows() {
   }));
 }
 
-describe.sequential("M1-T7 import pipeline", () => {
+describe.sequential("M1-T7 and M5-T5 import pipelines", () => {
   let postgres: StartedTestContainer;
   let redis: StartedTestContainer;
   let minio: StartedTestContainer;
+  let amapServer: Server;
   let databaseUrl: string;
   let redisUrl: string;
   let r2Endpoint: string;
@@ -165,6 +170,65 @@ describe.sequential("M1-T7 import pipeline", () => {
     databaseUrl = `postgresql://chinasupply:imports_e2e_password@${postgres.getHost()}:${postgres.getMappedPort(5432)}/imports_e2e`;
     redisUrl = `redis://${redis.getHost()}:${redis.getMappedPort(6379)}`;
     r2Endpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
+    amapServer = createServer((request, response) => {
+      const url = new URL(request.url ?? "/", "http://127.0.0.1");
+      const address = url.searchParams.get("address") ?? "";
+      const key = url.searchParams.get("key");
+      let body: unknown;
+
+      if (key !== "amap-e2e-web-service-key") {
+        body = {
+          status: "0",
+          count: "0",
+          info: "INVALID_USER_KEY",
+          infocode: "10001",
+          geocodes: [],
+        };
+      } else if (address.includes("无法匹配")) {
+        body = {
+          status: "1",
+          count: "0",
+          info: "OK",
+          infocode: "10000",
+          geocodes: [],
+        };
+      } else {
+        const updated = address.includes("更新地址");
+        body = {
+          status: "1",
+          count: "2",
+          info: "OK",
+          infocode: "10000",
+          geocodes: [
+            {
+              formatted_address: address,
+              level: "门牌号",
+              location: updated
+                ? "116.490881,39.999410"
+                : "116.480881,39.989410",
+            },
+            {
+              formatted_address: "北京市朝阳区",
+              level: "区县",
+              location: "116.443550,39.921900",
+            },
+          ],
+        };
+      }
+
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end(JSON.stringify(body));
+    });
+    await new Promise<void>((resolvePromise, rejectPromise) => {
+      amapServer.once("error", rejectPromise);
+      amapServer.listen(0, "127.0.0.1", resolvePromise);
+    });
+    const amapAddress = amapServer.address();
+    if (amapAddress === null || typeof amapAddress === "string") {
+      throw new Error("Could not start the fake Amap service");
+    }
+    const amapEndpoint = `http://127.0.0.1:${amapAddress.port}/v3/geocode/geo`;
+
     runMigration(databaseUrl);
     pool = new Pool({ connectionString: databaseUrl });
     await pool.query(
@@ -209,6 +273,8 @@ describe.sequential("M1-T7 import pipeline", () => {
       R2_PRIVATE_BUCKET: privateBucket,
       R2_PREFIX: "dev",
       R2_ENDPOINT: r2Endpoint,
+      AMAP_WEB_SERVICE_KEY: "amap-e2e-web-service-key",
+      AMAP_GEOCODING_BASE_URL: amapEndpoint,
     };
     for (const [key, value] of Object.entries(environment)) {
       environmentBackup.set(key, process.env[key]);
@@ -234,6 +300,9 @@ describe.sequential("M1-T7 import pipeline", () => {
       queue?.close(),
       worker?.close(),
       pool?.end(),
+      new Promise<void>((resolvePromise) => {
+        amapServer?.close(() => resolvePromise());
+      }),
     ]);
     objectStorage?.destroy();
     if (temporaryDirectory !== undefined) {
@@ -305,6 +374,63 @@ describe.sequential("M1-T7 import pipeline", () => {
       }),
     );
     const report = importReportSchema.parse(
+      JSON.parse(await reportResponse.Body!.transformToString()),
+    );
+    return { cli, report, result };
+  }
+
+  async function enqueueGeocodeWithCli(rows: unknown[]) {
+    if (temporaryDirectory === undefined) {
+      throw new Error("Temporary import directory is not initialized");
+    }
+    const filePath = join(
+      temporaryDirectory,
+      `geocode-factories-${Date.now()}.json`,
+    );
+    await writeFile(
+      filePath,
+      `${JSON.stringify({ version: 1, rows })}\n`,
+      "utf8",
+    );
+    let output = "";
+    const log = vi.spyOn(console, "log").mockImplementation((value) => {
+      output = String(value);
+    });
+    try {
+      await runGeocodeFactoriesCli([filePath]);
+    } finally {
+      log.mockRestore();
+    }
+    const cli = JSON.parse(output) as {
+      jobId: string;
+      reportObjectKey: string;
+      sourceObjectKey: string;
+    };
+    const job = await queue.getJob(cli.jobId);
+    expect(job).toBeInstanceOf(Job);
+    let rawResult: unknown;
+    try {
+      rawResult = await job?.waitUntilFinished(events, 120_000);
+    } catch (error) {
+      const failedJob = await queue.getJob(cli.jobId);
+      throw new Error(
+        [
+          error instanceof Error ? error.message : String(error),
+          failedJob?.failedReason,
+          ...(failedJob?.stacktrace ?? []),
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      );
+    }
+    const result = geocodeFactoriesJobResultSchema.parse(rawResult);
+    const reportResponse = await objectStorage.send(
+      new GetObjectCommand({
+        Bucket: privateBucket,
+        Key: cli.reportObjectKey,
+      }),
+    );
+    const report = geocodeFactoriesReportSchema.parse(
       JSON.parse(await reportResponse.Body!.transformToString()),
     );
     return { cli, report, result };
@@ -435,6 +561,165 @@ describe.sequential("M1-T7 import pipeline", () => {
     });
   }, 180_000);
 
+  it("geocodes coordinate-less factories, reports dirty rows, and resets verification on rerun", async () => {
+    const baseRow = {
+      name: { en: "Geocoded Factory", zh: "地理编码工厂" },
+      clusterSlug: null,
+      regionId,
+      categorySlugs: ["lighting"],
+      mainProducts: [{ en: "LED components", zh: "LED 零部件" }],
+      certifications: [],
+      moq: null,
+      establishedYear: null,
+      employeeRange: null,
+      contact: null,
+      images: [],
+      sourceName: "geocoding-e2e",
+      sourceUrl: null,
+    };
+    const rows = [
+      {
+        ...baseRow,
+        slug: "geocode-e2e-primary",
+        address: {
+          en: "6 Futong East Street, Beijing, China",
+          zh: "北京市朝阳区阜通东大街6号",
+        },
+      },
+      {
+        ...baseRow,
+        slug: "geocode-e2e-secondary",
+        name: { en: "Second Geocoded Factory", zh: "第二地理编码工厂" },
+        address: {
+          en: "8 Futong East Street, Beijing, China",
+          zh: "北京市朝阳区阜通东大街8号",
+        },
+      },
+      {
+        ...baseRow,
+        slug: "geocode-e2e-no-result",
+        name: { en: "Unmatched Factory", zh: "无法匹配工厂" },
+        address: {
+          en: "Unmatched address",
+          zh: "无法匹配的地址",
+        },
+      },
+    ];
+
+    const first = await enqueueGeocodeWithCli(rows);
+    expect(first.result.totals).toEqual({
+      received: 3,
+      inserted: 2,
+      updated: 0,
+      failed: 1,
+    });
+    expect(first.cli.sourceObjectKey).toContain("/imports/geocode-factories/");
+    expect(first.report.successes[0]).toMatchObject({
+      slug: "geocode-e2e-primary",
+      action: "inserted",
+      candidateCount: 2,
+      formattedAddress: "北京市朝阳区阜通东大街6号",
+      matchLevel: "门牌号",
+      locationGcj02: { lng: 116.480881, lat: 39.98941 },
+    });
+    expect(first.report.failures).toEqual([
+      expect.objectContaining({
+        slug: "geocode-e2e-no-result",
+        issues: [
+          expect.objectContaining({
+            path: ["address", "zh"],
+            code: "geocoding_failed",
+          }),
+        ],
+      }),
+    ]);
+
+    const initial = await pool.query<{
+      id: string;
+      status: string;
+      verified: boolean;
+      srid: number;
+      gcj_lng: number;
+      wgs_lng: number;
+      search_text_en: string;
+    }>(
+      `select id, status, verified, ST_SRID(location) as srid,
+         (location_gcj02->>'lng')::double precision as gcj_lng,
+         ST_X(location) as wgs_lng, search_text_en
+       from factories
+       where slug = 'geocode-e2e-primary'`,
+    );
+    expect(initial.rows[0]).toMatchObject({
+      status: "draft",
+      verified: false,
+      srid: 4326,
+      gcj_lng: 116.480881,
+    });
+    expect(initial.rows[0]?.search_text_en).toContain("Lighting");
+    expect(
+      Math.abs(
+        (initial.rows[0]?.gcj_lng ?? 0) - (initial.rows[0]?.wgs_lng ?? 0),
+      ),
+    ).toBeGreaterThan(0.001);
+
+    await pool.query(
+      `update factories
+       set status = 'published', published_at = now(), verified = true,
+           verified_at = now(), last_verified_at = now(),
+           verified_by = 'admin_geocode_e2e'
+       where slug = 'geocode-e2e-primary'`,
+    );
+    const rerunRows = rows.map((row) =>
+      row.slug === "geocode-e2e-primary"
+        ? {
+            ...row,
+            address: {
+              en: "Updated address, Beijing, China",
+              zh: "北京市朝阳区更新地址10号",
+            },
+          }
+        : row,
+    );
+    const second = await enqueueGeocodeWithCli(rerunRows);
+    expect(second.result.totals).toEqual({
+      received: 3,
+      inserted: 0,
+      updated: 2,
+      failed: 1,
+    });
+
+    const rerunState = await pool.query<{
+      count: string;
+      id: string;
+      status: string;
+      published_at: Date | null;
+      verified: boolean;
+      verified_at: Date | null;
+      last_verified_at: Date | null;
+      verified_by: string | null;
+      gcj_lng: number;
+    }>(
+      `select id, status, published_at, verified, verified_at,
+         last_verified_at, verified_by,
+         (location_gcj02->>'lng')::double precision as gcj_lng,
+         (select count(*)::text from factories
+          where slug like 'geocode-e2e-%') as count
+       from factories
+       where slug = 'geocode-e2e-primary'`,
+    );
+    expect(rerunState.rows[0]).toMatchObject({
+      count: "2",
+      id: initial.rows[0]?.id,
+      status: "published",
+      published_at: expect.any(Date),
+      verified: false,
+      verified_at: null,
+      last_verified_at: null,
+      verified_by: null,
+      gcj_lng: 116.490881,
+    });
+  }, 180_000);
+
   it("seeds canonical data twice through R2 and the Worker without duplicates", async () => {
     const seedDirectory = resolve(workspaceRoot, "data/staging/real-seed");
     const seedData = await loadRealSeedData(seedDirectory);
@@ -447,7 +732,7 @@ describe.sequential("M1-T7 import pipeline", () => {
       categoriesRegenerated: 1,
       categoryIds: [categoryId],
       clustersRegenerated: 90,
-      factoriesRegenerated: 90,
+      factoriesRegenerated: 92,
     });
     expect(first.searchTextRegeneration?.jobId).toEqual(expect.any(String));
     expect(first.clusters.totals).toEqual({

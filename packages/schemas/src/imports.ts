@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
   clusterStatsSchema,
+  coordinateSchema,
   factoryContactSchema,
   factoryImagesSchema,
   localizedTextListSchema,
@@ -23,6 +24,7 @@ export const sourceCoordinateSystemSchema = z.enum(["wgs84", "gcj02"]);
 export const importJobNameSchema = z.enum([
   "import:clusters",
   "import:factories",
+  "geocode:factories",
 ]);
 
 const nullableTextSchema = z.string().trim().min(1).nullable().default(null);
@@ -86,6 +88,10 @@ export const factoryImportRowSchema = z.strictObject({
   sourceUrl: nullableTextSchema,
 });
 
+export const factoryGeocodeRowSchema = factoryImportRowSchema.omit({
+  location: true,
+});
+
 export const clusterImportJsonDocumentSchema = z.strictObject({
   version: z.literal(IMPORT_CONTRACT_VERSION),
   rows: z.array(z.unknown()),
@@ -96,12 +102,25 @@ export const factoryImportJsonDocumentSchema = z.strictObject({
   rows: z.array(z.unknown()),
 });
 
+export const factoryGeocodeJsonDocumentSchema = z.strictObject({
+  version: z.literal(IMPORT_CONTRACT_VERSION),
+  rows: z.array(z.unknown()),
+});
+
 export const importJobDataSchema = z.strictObject({
   version: z.literal(IMPORT_CONTRACT_VERSION),
   importId: coreIdSchema,
   entity: importEntitySchema,
   sourceFormat: importSourceFormatSchema,
   sourceCoordinateSystem: sourceCoordinateSystemSchema,
+  sourceObjectKey: objectKeySchema,
+  reportObjectKey: objectKeySchema,
+});
+
+export const geocodeFactoriesJobDataSchema = z.strictObject({
+  version: z.literal(IMPORT_CONTRACT_VERSION),
+  geocodeId: coreIdSchema,
+  sourceFormat: importSourceFormatSchema,
   sourceObjectKey: objectKeySchema,
   reportObjectKey: objectKeySchema,
 });
@@ -152,6 +171,37 @@ export const importJobResultSchema = z.strictObject({
   totals: importReportTotalsSchema,
 });
 
+export const geocodeFactoriesReportSuccessSchema = z.strictObject({
+  row: z.number().int().positive(),
+  slug: slugSchema,
+  action: z.enum(["inserted", "updated"]),
+  candidateCount: z.number().int().positive(),
+  formattedAddress: z.string().trim().min(1).nullable(),
+  matchLevel: z.string().trim().min(1).nullable(),
+  locationGcj02: coordinateSchema,
+  locationWgs84: wgs84PositionSchema,
+});
+
+export const geocodeFactoriesReportSchema = z.strictObject({
+  version: z.literal(IMPORT_CONTRACT_VERSION),
+  geocodeId: coreIdSchema,
+  provider: z.literal("amap"),
+  sourceFormat: importSourceFormatSchema,
+  sourceObjectKey: objectKeySchema,
+  reportObjectKey: objectKeySchema,
+  startedAt: utcDateTimeSchema,
+  finishedAt: utcDateTimeSchema,
+  totals: importReportTotalsSchema,
+  successes: z.array(geocodeFactoriesReportSuccessSchema),
+  failures: z.array(importReportFailureSchema),
+  fatal: z.string().trim().min(1).nullable(),
+});
+
+export const geocodeFactoriesJobResultSchema = z.strictObject({
+  reportObjectKey: objectKeySchema,
+  totals: importReportTotalsSchema,
+});
+
 export const CLUSTER_IMPORT_CSV_HEADERS = [
   "slug",
   "nameEn",
@@ -193,8 +243,38 @@ export const FACTORY_IMPORT_CSV_HEADERS = [
   "sourceUrl",
 ] as const;
 
+export const FACTORY_GEOCODE_CSV_HEADERS = [
+  "slug",
+  "nameEn",
+  "nameZh",
+  "clusterSlug",
+  "regionId",
+  "addressEn",
+  "addressZh",
+  "categorySlugs",
+  "mainProducts",
+  "certifications",
+  "moq",
+  "establishedYear",
+  "employeeRange",
+  "contact",
+  "images",
+  "sourceName",
+  "sourceUrl",
+] as const;
+
 export type ClusterImportRow = z.infer<typeof clusterImportRowSchema>;
+export type FactoryGeocodeRow = z.infer<typeof factoryGeocodeRowSchema>;
 export type FactoryImportRow = z.infer<typeof factoryImportRowSchema>;
+export type GeocodeFactoriesJobData = z.infer<
+  typeof geocodeFactoriesJobDataSchema
+>;
+export type GeocodeFactoriesJobResult = z.infer<
+  typeof geocodeFactoriesJobResultSchema
+>;
+export type GeocodeFactoriesReport = z.infer<
+  typeof geocodeFactoriesReportSchema
+>;
 export type ImportEntity = z.infer<typeof importEntitySchema>;
 export type ImportJobData = z.infer<typeof importJobDataSchema>;
 export type ImportJobName = z.infer<typeof importJobNameSchema>;

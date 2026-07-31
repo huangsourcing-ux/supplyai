@@ -171,6 +171,7 @@ export class ImportPersistenceService {
   async saveFactory(
     row: FactoryImportRow,
     locationGcj02: { lng: number; lat: number } | null,
+    options: { resetVerification?: boolean } = {},
   ): Promise<ImportPersistenceAction> {
     return this.database.db.transaction(async (transaction) => {
       const [region] = await transaction
@@ -267,6 +268,14 @@ export class ImportPersistenceService {
         sourceName: row.sourceName,
         sourceUrl: row.sourceUrl,
         ...searchText,
+        ...(options.resetVerification === true
+          ? {
+              lastVerifiedAt: null,
+              verified: false,
+              verifiedAt: null,
+              verifiedBy: null,
+            }
+          : {}),
       };
 
       if (existing === undefined) {

@@ -6,6 +6,8 @@ import { parseEnv } from "node:util";
 import { fileURLToPath } from "node:url";
 
 import {
+  AMAP_GEOCODING_ENDPOINT,
+  parseAmapGeocodingEnv,
   parseClerkUserSyncCliEnv,
   parseApiEnv,
   parseApiHttpEnv,
@@ -119,6 +121,40 @@ test("private R2 endpoint overrides are local-only", async () => {
         R2_ENDPOINT: "https://minio.example.test",
       }),
     /R2_ENDPOINT/,
+  );
+});
+
+test("Amap geocoding configuration is optional, secret-safe, and local-only overridable", async () => {
+  const api = await readExample("apps/api/.env.example");
+  assert.equal(
+    parseAmapGeocodingEnv({ APP_ENV: "local" }).AMAP_GEOCODING_BASE_URL,
+    AMAP_GEOCODING_ENDPOINT,
+  );
+  assert.equal(
+    parseAmapGeocodingEnv({
+      APP_ENV: "local",
+      AMAP_WEB_SERVICE_KEY: api.AMAP_WEB_SERVICE_KEY,
+      AMAP_GEOCODING_BASE_URL: "http://127.0.0.1:3100/v3/geocode/geo",
+    }).AMAP_GEOCODING_BASE_URL,
+    "http://127.0.0.1:3100/v3/geocode/geo",
+  );
+  assert.throws(
+    () =>
+      parseAmapGeocodingEnv({
+        APP_ENV: "staging",
+        AMAP_WEB_SERVICE_KEY: "real-staging-amap-key",
+        AMAP_GEOCODING_BASE_URL:
+          "https://geocoding-proxy.example.test/v3/geocode/geo",
+      }),
+    /AMAP_GEOCODING_BASE_URL/,
+  );
+  assert.throws(
+    () =>
+      parseAmapGeocodingEnv({
+        APP_ENV: "staging",
+        AMAP_WEB_SERVICE_KEY: "replace_me",
+      }),
+    /AMAP_WEB_SERVICE_KEY/,
   );
 });
 

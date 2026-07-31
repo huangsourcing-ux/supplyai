@@ -13,6 +13,8 @@ import {
 
 const secretSchema = z.string().min(8);
 const clerkWebhookSecretSchema = z.string().startsWith("whsec_").min(10);
+export const AMAP_GEOCODING_ENDPOINT =
+  "https://restapi.amap.com/v3/geocode/geo";
 
 const apiRuntimeShape = {
   APP_ENV: deploymentEnvironmentSchema,
@@ -52,6 +54,12 @@ const publicMediaStorageShape = {
   R2_MEDIA_BUCKET: z.string().min(3),
   R2_PREFIX: z.string(),
   R2_ENDPOINT: networkUrlSchema.optional(),
+};
+
+const amapGeocodingShape = {
+  APP_ENV: deploymentEnvironmentSchema,
+  AMAP_WEB_SERVICE_KEY: secretSchema.optional(),
+  AMAP_GEOCODING_BASE_URL: networkUrlSchema.default(AMAP_GEOCODING_ENDPOINT),
 };
 
 /** @type {readonly ["DATABASE_URL", "REDIS_URL"]} */
@@ -321,6 +329,32 @@ export const publicMediaStorageEnvSchema = z
     }
   });
 
+export const amapGeocodingEnvSchema = z
+  .object(amapGeocodingShape)
+  .superRefine((environment, context) => {
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.AMAP_GEOCODING_BASE_URL !== AMAP_GEOCODING_ENDPOINT
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["AMAP_GEOCODING_BASE_URL"],
+        message: "may only override the official Amap endpoint locally",
+      });
+    }
+
+    if (
+      environment.APP_ENV !== "local" &&
+      environment.AMAP_WEB_SERVICE_KEY !== undefined
+    ) {
+      rejectPlaceholder(
+        environment.AMAP_WEB_SERVICE_KEY,
+        "AMAP_WEB_SERVICE_KEY",
+        context,
+      );
+    }
+  });
+
 export const importCliEnvSchema = privateObjectStorageEnvSchema.and(
   z.object({
     REDIS_URL: networkUrlSchema,
@@ -388,6 +422,14 @@ export function parsePublicMediaStorageEnv(source) {
     source,
     "Public media storage",
   );
+}
+
+/**
+ * @param {unknown} source
+ * @returns {z.infer<typeof amapGeocodingEnvSchema>}
+ */
+export function parseAmapGeocodingEnv(source) {
+  return parseEnvironment(amapGeocodingEnvSchema, source, "Amap geocoding");
 }
 
 /**
