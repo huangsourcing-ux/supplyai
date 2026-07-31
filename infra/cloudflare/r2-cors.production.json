@@ -1,0 +1,14 @@
+{
+  "rules": [
+    {
+      "id": "production-web-media",
+      "allowed": {
+        "origins": ["https://www.chinasupply.ai", "https://chinasupply.ai"],
+        "methods": ["GET", "HEAD", "PUT"],
+        "headers": ["Content-Type", "Content-Length"]
+      },
+      "exposeHeaders": ["ETag"],
+      "maxAgeSeconds": 3600
+    }
+  ]
+}

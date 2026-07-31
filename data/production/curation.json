@@ -1,0 +1,21 @@
+{
+  "version": "m5-t8a-curation-v1",
+  "reviewedAt": "2026-07-31T00:00:00.000Z",
+  "reviewedBy": "Owner-authorized canonical staging publication",
+  "evidence": [
+    "docs/operations/reviews/staging/2026-07-25-m2-smoke.md",
+    "docs/operations/reviews/staging/2026-07-27-nantong-coordinate-remediation.md",
+    "docs/operations/reviews/staging/2026-07-30-m5-t2-acceptance.md",
+    "docs/operations/m5-t4-payload-articles.md"
+  ],
+  "clusterSlugs": ["dongguan-electronic-information", "nantong-home-textiles"],
+  "factorySlugs": [
+    "dongguan-amperex-technology",
+    "dongguan-delta-electronics",
+    "dongguan-luxshare-precision",
+    "dongguan-oppo-mobile",
+    "dongguan-vivo-mobile",
+    "nantong-jinkanghong-textile"
+  ],
+  "guideSlugs": ["how-to-explore-an-industrial-cluster"]
+}

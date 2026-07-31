@@ -119,6 +119,25 @@ already live on production does not match the observed production state.
 F-11.1 and F-11.2 cannot be accepted on production in this task. M5-T7 remains
 unchecked.
 
+## Owner-approved early Web cutover
+
+On 2026-07-31 the Owner authorized M5-T8a/M5-T9 Web production prerequisites
+to run inside the M5-T7 closure task so this repository can replace the
+unrelated old `www` content. The Owner also classified the current site as
+non-commercial development/acceptance, so the frozen documents now permit a
+separate apex/`www`-restricted MapTiler Free R&D key until the commercial
+Flex gate.
+
+Production R2/Clerk/Vercel/PostGIS prerequisites and both schema-owner
+migrations have begun. The operational evidence and remaining external gates
+are recorded in:
+
+- `docs/operations/m5-t8a-production-content.md`;
+- `docs/operations/m5-t9-web-production-preflight.md`.
+
+This authorization removes the former sequencing conflict, but it does not
+replace real production acceptance or permit a premature checkbox.
+
 ## Closure gate
 
 After this exact implementation commit is deployed to the canonical production
@@ -133,7 +152,6 @@ site, an authorized reviewer must confirm:
 4. canonical URLs and English hreflang point to the production origin;
 5. the production deployment is the reviewed exact commit.
 
-The current approved order places production cutover in M5-T9. Unless the Owner
-separately authorizes an earlier production deployment or revises the
-M5-T7 production wording, this production-only gate must remain pending until
-M5-T9.
+The Owner has authorized the early Web deployment and revised the frozen
+wording. This gate still remains pending until the exact implementation commit
+actually replaces the old `www` deployment and every check above passes.
