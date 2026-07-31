@@ -90,6 +90,10 @@ card number, expiry, and CVC. No agent may inspect or enter that payment data.
 - production app/database/Clerk/MapTiler/Sentry/PostHog/site/API/media
   variables were configured, except the pending production R2 S3
   credentials.
+- the project-specific Ignored Build Step now builds only when
+  `VERCEL_ENV=production`; non-production branches continue to use the
+  separate canonical staging Vercel project and cannot accidentally start this
+  project's production-only configuration.
 
 No new deployment has been promoted to `www` yet. This preserves the old
 deployment until the API, content, and preview smoke are ready.
