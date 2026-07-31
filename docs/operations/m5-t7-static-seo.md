@@ -55,9 +55,57 @@ Lighthouse score remains part of the closure gate after deployment.
 Commands and final results are recorded in `开发日志.md` with the delivery
 commit.
 
+## Canonical staging acceptance
+
+Implementation PR
+[#98](https://github.com/huangsourcing-ux/supplyai/pull/98) was squash-merged
+as main commit `36221cce749c2fca47368a956de7fefc53edebcd`. GitHub Actions run
+[30607459365](https://github.com/huangsourcing-ux/supplyai/actions/runs/30607459365)
+completed successfully, including CI Gate, CMS migration, Core migration, and
+Staging Release Gate.
+
+Vercel deployment `dpl_3kTYzcEy33eiKHFGPo7UtseBUo83` reached `READY` with the
+Production target of the staging-only `chinasupply-web-staging` project. Its
+aliases include `https://staging.chinasupply.ai`, and the deployment is linked
+to exact main commit `36221cce749c2fca47368a956de7fefc53edebcd`.
+
+The following acceptance checks passed on the canonical staging alias:
+
+- `/`, `/about`, `/privacy`, `/terms`, `/guides`, `/sitemap.xml`, and
+  `/robots.txt` returned HTTP 200. `/account`, `/favorites`, and `/sign-in`
+  returned HTTP 200 with `noindex, nofollow`; unauthenticated `/ops` returned
+  the expected 307 redirect to its protected sign-in route.
+- The sitemap contained 15 canonical staging URLs: five static routes, two
+  published clusters, seven published factories, and one published guide.
+  Every URL used the exact staging origin and returned HTTP 200.
+- `/`, `/about`, `/guides`, `/privacy`, and `/terms` exposed their expected
+  title, description, canonical URL, and English hreflang. Staging
+  `/robots.txt` contained `Disallow: /` as required by the environment policy.
+- `/about` rendered the approved operating-company identity and email action.
+  At a 390 px viewport, the document width remained exactly 390 px with no
+  page-level horizontal overflow.
+- The home map, Dongguan cluster preview, and Dongguan Amperex factory location
+  map each completed canvas rendering and visibly exposed `© MapTiler` and
+  `© OpenStreetMap contributors`.
+- `pnpm test:web:e2e:staging` passed 5/5 tests against the canonical alias,
+  covering both legal pages, the registration legal links, real Planet v4
+  TileJSON/PBF/glyph/sprite resources, API-backed search, all three map scenes,
+  and persistent glyph caching.
+- Vercel returned zero error-level runtime log entries for the exact deployment
+  during the acceptance window. The browser emitted only the expected Clerk
+  Development-instance warning for staging.
+
+Lighthouse 12.8.2 reported SEO 66 for canonical staging `/about`. The only
+failed audit was `is-crawlable`, caused by the required staging-wide
+`Disallow: /`; title, description, status code, link text, crawlable anchors,
+valid robots syntax, canonical, and hreflang all passed. Structured data was a
+manual audit and image alt was not applicable. This result remains an
+environment-policy consequence and is not a production SEO score.
+
 ## Production read-only review
 
-Checked at `2026-07-31T05:16Z` without changing external state:
+Initially checked at `2026-07-31T05:16Z` and repeated three times at
+`2026-07-31T05:54Z`, without changing external state:
 
 | Target                                   | Result                                                                                                                             |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
