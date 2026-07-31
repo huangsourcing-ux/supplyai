@@ -30,8 +30,12 @@ production keys.
 - private operations bucket: `chinasupply-production`;
 - public media bucket: `chinasupply-production-media`;
 - custom media domain: `media.chinasupply.ai`;
-- production media CORS: apex/`www` only, GET/HEAD/PUT, `Content-Type`,
-  exposed `ETag`, one-hour max age;
+- production media CORS: apex/`www` only, GET/HEAD/PUT, `Content-Type` and
+  `Content-Length`, exposed `ETag`, one-hour max age;
+- account token `chinasupply-api-worker-production`: Object Read & Write on
+  the production private and media buckets only;
+- account token `chinasupply-web-production-media`: Object Read & Write on
+  the production media bucket only;
 - five unproxied Clerk CNAME records were created for the Frontend API,
   Account Portal, email delivery, and both DKIM selectors.
 
@@ -39,6 +43,13 @@ Two identically named buckets were initially created in the wrong Cloudflare
 account. Read-only checks proved both were empty (zero objects/zero bytes), so
 those exact two empty buckets were deleted. No staging bucket or object was
 changed.
+
+Real S3 smoke tests wrote, HEAD-checked, and deleted one temporary object
+through the API/Worker token in each production bucket and through the Web
+token in the media bucket. All three cleanup calls succeeded. The Web token
+was separately denied access to the private bucket with HTTP 403. Token values
+were installed directly into their target platforms and were not committed or
+written to task logs.
 
 ### Clerk
 
@@ -72,12 +83,19 @@ are not complete.
   database initialized;
 - Core migration and both Payload migrations succeeded;
 - post-migration verification: PostgreSQL 17.5, PostGIS 3.5, 21 public user
-  tables, Drizzle migrations 1, Payload migrations 2, and zero content rows.
+  tables, Drizzle migrations 1, Payload migrations 2, and zero content rows;
+- seven R2 settings are stored as production shared variables:
+  `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`,
+  `R2_MEDIA_BUCKET`, `R2_PRIVATE_BUCKET`, empty `R2_PREFIX`, and
+  `R2_CDN_BASE_URL`. They are not referenced by PostGIS and did not trigger a
+  deployment.
 
 The Railway Trial plan permits only the current service. Redis, API, and
-Worker creation now requires Hobby. The checkout explicitly shows a $5
-up-front charge with $5 monthly usage credit and requires the Owner to enter
-card number, expiry, and CVC. No agent may inspect or enter that payment data.
+Worker creation now requires additional resource capacity. The Owner chose to
+retain the current free Trial state without payment for non-commercial R&D.
+That is valid for the retained database and shared-variable preflight, but it
+does not satisfy the Redis-backed G-11 throttle or the M5-T9 API/Worker
+deployment gate.
 
 ### Vercel
 
@@ -88,8 +106,8 @@ card number, expiry, and CVC. No agent may inspect or enter that payment data.
 - apex, `www`, and the previous production deployment remain attached for
   rollback;
 - production app/database/Clerk/MapTiler/Sentry/PostHog/site/API/media
-  variables were configured, except the pending production R2 S3
-  credentials.
+  variables are configured, including the media-only production R2 S3
+  credential as sensitive Production-only variables;
 - the project-specific Ignored Build Step now builds only when
   `VERCEL_ENV=production`; non-production branches continue to use the
   separate canonical staging Vercel project and cannot accidentally start this
@@ -100,17 +118,16 @@ deployment until the API, content, and preview smoke are ready.
 
 ## Remaining Web cutover gates
 
-1. The Owner upgrades Railway Hobby in the retained checkout page; then create
-   Redis, API, and Worker services.
-2. An authorized Cloudflare account member creates one object-read/write R2
-   API token scoped only to the two production buckets; install it in
-   Railway/Vercel and run an S3 smoke.
-3. Create the Clerk production webhook after the API domain exists and install
+1. Create Railway Redis, API, and Worker services when the account has enough
+   resource capacity. The current free Trial may remain for R&D, but the
+   cutover cannot proceed with only PostGIS.
+2. Create the Clerk production webhook after the API domain exists and install
    its Svix secret.
-4. Run M5-T8a export/import/review/publish.
-5. Configure API/Worker variables, release exact commit, verify readiness,
+3. Run M5-T8a export/import/review/publish.
+4. Configure the remaining API/Worker variables, attach the shared R2
+   references, release the exact commit, verify readiness,
    backup, logs, rate limits, R2, webhook, and rollback.
-6. Deploy a non-aliased Vercel production candidate, run the complete M5-T7
+5. Deploy a non-aliased Vercel production candidate, run the complete M5-T7
    closure suite, then promote it to apex/`www`.
 
 M5-T9 remains unchecked because Redis/API/Worker, production content review,
