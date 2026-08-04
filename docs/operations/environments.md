@@ -113,6 +113,11 @@ Commands are launched from `apps/mobile` through the root
 automatically; do not add an unsupported EAS `workingDirectory` field, switch
 pnpm to a hoisted linker, or hand-maintain Metro `watchFolders`.
 
+After EAS completes native prebuild, the Mobile `eas-build-post-install` hook
+builds `@chinasupply/schemas` before eager JavaScript bundling. This keeps the
+Node/API default export compiled while ensuring a clean cloud worker does not
+depend on an ignored local `packages/schemas/dist` directory.
+
 The EAS Preview environment must contain:
 
 - `EXPO_PUBLIC_APP_ENV=staging`
