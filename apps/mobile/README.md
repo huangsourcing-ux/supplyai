@@ -241,7 +241,7 @@ Run from the repository root:
 pnpm --filter @chinasupply/mobile start
 pnpm mobile:check
 pnpm test:mobile:e2e -- --udid=<device-id>
-pnpm mobile:eas:preview -- --non-interactive --wait
+pnpm mobile:eas:preview
 ```
 
 `pnpm mobile:check` runs Expo Doctor, TypeScript, Expo public configuration,
@@ -249,6 +249,11 @@ and iOS/Android export-bundle checks. Native Preview builds are submitted from
 this package directory by the root wrapper, so Expo discovers the monorepo root
 and installs the pnpm workspace without a non-existent `workingDirectory`
 property or custom Metro `watchFolders`.
+
+EAS runs the Mobile package's `eas-build-post-install` hook after native
+prebuild and before eager JavaScript bundling. The hook builds the compiled
+`@chinasupply/schemas` runtime package so a clean cloud worker never depends on
+an ignored local `packages/schemas/dist` directory.
 
 `test:mobile:e2e` requires the external `maestro` CLI and does not add Maestro
 to the App runtime. Install the current staging build on the selected simulator
